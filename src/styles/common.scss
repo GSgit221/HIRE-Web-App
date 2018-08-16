@@ -1,0 +1,350 @@
+html {
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+body {
+    background: $main-background;
+    color: $main-blue;
+    font: 13px/1.538 'Roboto', Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: $pink;
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    &:hover {
+        text-decoration: underline;
+        color: $pink;
+    }
+
+    &:active {
+        text-decoration: none;
+        color: darken($pink, 20%);
+    }
+}
+
+// margins
+.mla {
+    margin-left: auto;
+}
+
+.ml10 {
+    margin-left: 10px;
+}
+
+.ml20 {
+    margin-left: 20px;
+}
+
+.mb20 {
+    margin-bottom: 20px;
+}
+
+.mt20 {
+    margin-top: 20px;
+}
+
+.pl30 {
+    padding-left: 30px;
+}
+
+// Flex
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-aic {
+    align-items: center;
+}
+
+$steps: 5 10 15 20 25 30 33 35 40 45 50 60 75;
+
+@each $step in $steps {
+    .flex-#{$step} {
+        flex: 1 1 #{$step + "%"};
+        max-width: #{$step + "%"};
+        max-height: 100%;
+    }
+}
+
+
+.danger {
+    color: $pink;
+}
+
+// Container
+.container {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.fixed-width-container {
+    max-width: 1200px;
+}
+
+.title-block {
+    padding: 20px 0 20px;
+    position: relative;
+
+    .page-title {
+        font-size: 25px;
+        line-height: 1.32;
+        font-weight: bold;
+        margin: 0;
+    }
+
+    .controls-block {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 10px 0 0;
+    }
+
+    .control-link {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        color: $grey;
+        font-size: 14px;
+        line-height: 1.357;
+        margin: 0 15px;
+
+        .icon {
+            font-size: 0;
+            display: inline-block;
+            margin: 0 6px 0 0;
+        }
+
+        &:first-child {
+            margin: 0;
+        }
+
+        &:hover {
+            color: darken($grey, 10%);
+            cursor: pointer;
+
+            svg {
+                path {
+                    fill: darken($grey, 10%);
+                }
+            }
+        }
+
+        &:active {
+            color: lighten($grey, 10%);
+            cursor: pointer;
+
+            svg {
+                path {
+                    fill: lighten($grey, 10%);
+                }
+            }
+        }
+    }
+
+    .controls-separator {
+        width: 1px;
+        height: 25px;
+        background: $grey;
+    }
+
+    .buttons-holder {
+        width: auto;
+        position: absolute;
+        right: 0;
+        top: 50%;
+    }
+}
+
+.section-separator {
+    width: 100%;
+    height: 1px;
+    background: $grey-border;
+}
+
+.placeholder-block {
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0 0;
+
+    .text-block {
+        flex: 1;
+        padding: 30px 80px 0 0;
+
+        .block-title {
+            font-size: 33px;
+            line-height: 1.333;
+            margin: 0 0 24px;
+        }
+
+        .placeholder-content {
+            font-size: 14px;
+            line-height: 1.571;
+            color: $grey;
+            padding: 0 80px 40px 0;
+
+            p {
+                margin: 0;
+            }
+        }
+    }
+
+    .upload-block {
+        width: 451px;
+        height: 302px;
+        background: url(/assets/images/list-placeholder.png) no-repeat 100% 100%;
+        background-size: 451px 302px;
+        padding: 60px 100px 40px 20px;
+
+        .upload-block-holder {
+            width: 190px;
+            text-align: center;
+            padding: 40px 0 60px;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        .icon-holder {
+            text-align: center;
+            font-size: 0;
+            margin: 0 0 16px;
+
+            img {
+                display: inline-block;
+                margin: 0;
+            }
+        }
+
+        .title-text {
+            display: block;
+            color: $grey;
+            font-size: 12px;
+        }
+
+        .subtitle-text {
+            display: block;
+            color: $pink;
+            font-size: 12px;
+        }
+    }
+}
+
+.info-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 30px 0 0;
+
+    .info-icon {
+        margin: 0 20px 0 0;
+    }
+}
+
+.info-icon {
+    width: 20px;
+    height: 20px;
+    background: $grey;
+    color: $white;
+    text-align: center;
+    line-height: 20px;
+    border-radius: 50%;
+}
+
+.buttons-holder {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+}
+
+// Buttons
+.btn {
+    display: inline-block;
+    font-size: 13px;
+    line-height: 1.846;
+    font-weight: 300;
+    padding: 5px;
+    box-shadow: none;
+    background: none;
+    border: 1px solid transparent;
+    text-align: center;
+    outline: 0;
+    transition: all 0.2s ease;
+    border-radius: 3px;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &.w140 {
+        width: 140px;
+    }
+
+    &.btn-primary {
+        color: $white;
+        background: $pink;
+        border-color: $pink;
+
+        &:hover {
+            background: darken($pink, 10%);
+        }
+
+        &:active {
+            background: lighten($pink, 10%);
+        }
+    }
+
+    &.btn-primary-inversed {
+        color: $pink;
+        background: transparent;
+        border-color: $pink;
+
+        &:hover {
+            color: $white;
+            background: $pink;
+        }
+
+        &:active {
+            color: $white;
+            background: lighten($pink, 10%);
+        }
+    }
+
+    &.btn-icon {
+        color: $pink;
+        border: 0;
+        background: transparent;
+        outline: 0;
+        box-shadow: none;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .icon {
+            width: 15px;
+            height: 15px;
+            margin: 0 10px 0 0;
+        }
+
+        &:hover {
+            color: darken($pink, 10%);
+        }
+
+        &:active {
+            color: lighten($pink, 10%);
+        }
+    }
+}

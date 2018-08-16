@@ -1,0 +1,30 @@
+<div class="sidebar-header">
+    <div class="logo" routerLink="/dashboard">
+        <img src="/assets/images/hc-logo.svg" alt="HelloCrowd" width="30" height="30" class="hc-logo">
+        <span class="separator">/</span>
+        <span class="text-logo">HIRE</span>
+    </div>
+    <div class="user-pic">{{ initials }}</div>
+</div>
+<form class="search-form">
+    <input type="text" name="search" class="input-text" placeholder="Search anything">
+    <span class="icon">
+        <img src="/assets/images/search.svg" alt="Search icon" width="13" height="13">
+    </span>
+</form>
+<div class="sidebar-nav">
+    <div class="sidebar-nav-link">
+        <a href="#" routerLink="/dashboard/jobs" routerLinkActive="active">
+            <span class="icon"><img src="/assets/images/jobs.svg" alt="Jobs icon" width="14" height="13"></span>
+            <span class="text">Jobs</span>
+        </a>
+    </div>
+    <div class="sidebar-nav-link">
+        <a href="#" routerLink="/dashboard/people" routerLinkActive="active">
+            <span class="icon">
+                <img src="/assets/images/people.svg" alt="People icon" width="13" height="13">
+            </span>
+            <span class="text">People</span>
+        </a>
+    </div>
+</div>

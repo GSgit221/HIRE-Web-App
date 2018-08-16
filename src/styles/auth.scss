@@ -1,0 +1,372 @@
+.auth-page {
+    background-color: #F6F6F6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    font-size: 14px;
+
+    .logo-holder {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .logo {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        outline: 0 !important;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        .hc-logo {
+            display: block;
+            width: 30px;
+            height: 30px;
+            margin: 0;
+        }
+
+        .logo-separator {
+            display: block;
+            font-size: 20px;
+            line-height: 30px;
+            font-weight: 500;
+            color: $pink;
+            margin: 0 5px;
+        }
+
+        .text-logo {
+            display: block;
+            font-size: 20px;
+            line-height: 30px;
+            font-weight: 500;
+            margin: 0;
+        }
+    }
+
+    .hc-help-text {
+        font-size: 14px;
+        line-height: 1.4;
+        vertical-align: top;
+        display: inline-block;
+    }
+
+    .auth-wrapper {
+        width: 584px;
+        margin: 0 auto;
+    }
+
+    .alert {
+        max-height: 65px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    //.section-container {
+    //  width: 400px;
+    //  margin: 40px auto 10px auto;
+    //
+    //  .section-content {
+    //    min-height: 0;
+    //  }
+    //
+    //  .alert-container {
+    //    margin: 0;
+    //  }
+    //
+    //  md-checkbox {
+    //    margin-left: 0;
+    //  }
+    //
+    //  .section-header, .section-footer {
+    //    padding: 20px;
+    //  }
+    //}
+    //
+    .hellocrowd-logo-long {
+        width: 180px;
+        margin: 0 auto;
+    }
+
+    //
+    //.copyright {
+    //  text-align: center;
+    //  padding: 10px;
+    //  color: $extra-light-grey;
+    //  font-size: 13px;
+    //}
+
+    .auth-container {
+        width: 584px;
+        background: #fff;
+        border-radius: 5px;
+        margin: 20px 0 10px;
+    }
+
+    .auth-container-frame {
+        width: 584px;
+        display: flex;
+        min-height: 350px;
+        flex-direction: row;
+        align-items: stretch;
+    }
+
+    .left-block {
+        display: flex;
+        width: 193px;
+        background: #192A4D;
+        color: #fff;
+        padding: 40px 10px 0;
+        border-radius: 5px 0 0 5px;
+        text-align: center;
+        flex-direction: column;
+        position: relative;
+        font-size: 14px;
+        line-height: 1.615;
+        font-weight: 400;
+
+        h2 {
+            font-size: 30px;
+            font-weight: 300;
+            line-height: 1.1;
+            margin: 0 0 24px;
+        }
+
+        .signup-link {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            padding: 10px 10px 30px;
+            font-weight: 500;
+
+            a {
+                text-decoration: underline;
+
+                &:hover {
+                    cursor: pointer;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+
+    .main-block {
+        display: flex;
+        flex: 1;
+        padding: 65px 65px 30px 56px;
+        flex-direction: column;
+        position: relative;
+
+        .alert-container {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+    }
+
+    .google-button .hc-button-inner button {
+        position: relative;
+
+        .google-icon {
+            position: absolute;
+            left: 2px;
+            top: 2px;
+            font-size: 0;
+            line-height: 0;
+            vertical-align: top;
+            background: #fff;
+            padding: 3px;
+            border-radius: 3px;
+        }
+    }
+
+    .separator {
+        margin: 10px 0;
+        position: relative;
+        color: #A5A6A6;
+        font-size: 12px;
+        font-weight: bold;
+        text-align: center;
+
+        &:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #A5A6A6;
+        }
+
+        .separator-text {
+            display: inline-block;
+            background: #fff;
+            padding: 1px 15px;
+            position: relative;
+            z-index: 2;
+        }
+    }
+
+    .hc-form-row {
+        min-height: 35px;
+        margin: 0 0 15px;
+
+        .hc-form-control {
+            font-size: 14px;
+            background: #F7F9FA;
+            border: 1px solid #F7F9FA;
+            margin: 0;
+        }
+    }
+
+    .form-bottom {
+        md-checkbox {
+            margin: 0;
+        }
+
+        .hc-help-text {
+            color: #545454;
+        }
+    }
+
+    .signin-btn {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        height: 35px;
+        padding: 1px;
+        background: $pink;
+        border-radius: 4px;
+        border: 0;
+        transition: all 0.2s ease;
+        outline: none !important;
+
+        &:hover {
+            cursor: pointer;
+            background: darken($pink, 10%);
+        }
+
+        &:active {
+            background: lighten($pink, 10%);
+        }
+
+        .abcRioButtonIcon {
+            width: 26px;
+            height: 26px;
+            border-radius: 3px;
+            margin: 1px 0 0 3px;
+            padding: 4px !important;
+            background: $white;
+        }
+
+        .text {
+            flex: 1;
+            text-align: center;
+            font-size: 14px;
+            line-height: 29px;
+            letter-spacing: 1px;
+            color: $white;
+        }
+    }
+
+    .sign-in {
+        width: 100%;
+        min-height: 31px;
+        border-radius: 4px;
+        background: $main-blue;
+
+        span[clientid] {
+            display: block;
+            width: 100%;
+        }
+
+        .abcRioButtonBlue {
+            background: $main-blue;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+            border-radius: 4px;
+        }
+
+        .abcRioButtonBlue:hover {
+            background: darken($main-blue, 10%);
+            box-shadow: none;
+        }
+
+        .abcRioButtonContents {
+            font-size: 14px !important;
+            line-height: 29px !important;
+            letter-spacing: 1px !important;
+        }
+
+        .abcRioButtonBlue .abcRioButtonIcon {
+            border-radius: 3px;
+            margin: 2px 0 0 1px;
+            padding: 4px !important;
+        }
+    }
+
+    hc-button .hc-button-inner button {
+        font-size: 14px;
+        line-height: 29px;
+    }
+
+    .btn-right {
+        margin-left: auto;
+    }
+
+    .agreed-holder {
+        a {
+            text-decoration: underline;
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+.auth-signup {
+    .form-bottom hc-button {
+        margin-left: auto;
+    }
+
+    .form-bottom {
+        md-checkbox .md-container {
+            margin-top: -8px;
+        }
+    }
+
+    field-errors {
+        width: 100%;
+
+        p {
+            margin: 3px 0 0 16px;
+        }
+    }
+}
+
+.password-row {
+    position: relative;
+
+    .forgot {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        color: $pink;
+        font-size: 11px;
+        line-height: 1.2;
+        z-index: 3;
+
+        &:hover {
+            cursor: pointer;
+            color: darken($pink, 5%);
+            text-decoration: underline;
+        }
+    }
+}

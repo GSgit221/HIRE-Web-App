@@ -1,0 +1,65 @@
+<div class="auth-page">
+    <div class="auth-wrapper">
+        <div class="logo-holder">
+            <div class="logo" routerLink="/dashboard">
+                <img src="/assets/images/hc-logo.svg" alt="HelloCrowd" width="30" height="30" class="hc-logo">
+                <span class="logo-separator">/</span>
+                <span class="text-logo">HIRE</span>
+            </div>
+        </div>
+        <div class="auth-login animated fadeInUp">
+            <div class="auth-container">
+                <div class="auth-container-frame">
+                    <div class="left-block">
+                        <h2>Sign up</h2>
+                        <p>Sign up with Google or enter your name email address and password.</p>
+                        <div class="signup-link">
+                            <p>Already have an account?</p>
+                            <a routerLink='/signin'>Sign in</a>
+                        </div>
+                    </div>
+                    <div class="main-block">
+                        <button class="signin-btn" (click)="onSignUpWithGoogle()">
+                            <div class="abcRioButtonIcon" style="padding:6px">
+                                <div style="width:18px;height:18px;" class="abcRioButtonSvgImageWithFallback abcRioButtonIconImage abcRioButtonIconImage18">
+                                    <img src="/assets/images/google.svg" alt="Google icon" width="18" height="18">
+                                </div>
+                            </div>
+                            <span class="text">Sign up with Google</span>
+                        </button>
+                        <form [formGroup]="signupForm">
+                            <p-messages [(value)]="msgs"></p-messages>
+                            <div class="separator">
+                                <span class="separator-text">OR</span>
+                            </div>
+                            <div class="section-content">
+                                <div class="hc-form-row">
+                                    <input name="name" formControlName="name" class="form-input" type="text" placeholder="Full Name">
+                                    <!-- <div class="error-message" *ngIf="!signupForm.get('name').valid && signupForm.get('name').touched">Name is required</div> -->
+                                </div>
+                                <div class="hc-form-row">
+                                    <input name="email" formControlName="email" class="form-input" type="email" placeholder="Email address">
+                                    <!-- <div class="error-message" *ngIf="!signupForm.get('email').valid && signupForm.get('email').touched">Error</div> -->
+                                </div>
+                                <div class="hc-form-row password-row">
+                                    <input name="password" formControlName="password" type="password" class="form-input" placeholder="Password">
+                                    <!-- <div class="error-message" *ngIf="!signupForm.get('password').valid && signupForm.get('password').touched">Password is required</div> -->
+                                </div>
+                                <div>
+                                    <div class="checkbox-holder">
+                                        <p-checkbox name="agreed" formControlName="agreed" value="false" inputId="agreed"></p-checkbox>
+                                        <label for="agreed">I agree to HelloCrowd’s <a href="https://hellocrowd.net/#terms-of-service">Terms of Services</a> and <a href="https://hellocrowd.net/#privacy-policy">Privacy Policy</a></label>
+                                    </div>
+                                    <div class="error-message" *ngIf="!signupForm.get('agreed').valid && signupForm.get('agreed').touched">You need to agree to HelloCrowd's Terms of Services and Privacy Policy</div>
+                                </div>
+                                <div class="flex-row form-bottom">
+                                    <button class="btn btn-primary mla" (click)="onSignUp($event)" type="submit">Sign Up</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
