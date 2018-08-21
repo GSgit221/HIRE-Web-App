@@ -2,12 +2,14 @@
     <div class="title-block">
         <h1 class="page-title">New Job</h1>
         <div class="sections-nav">
-            <div class="section-nav-link active">Job Details</div>
-            <div class="section-nav-link">Applications</div>
-            <div class="section-nav-link">Hiring Team</div>
+            <div class="section-nav-link" (click)="onChangeSection('job-details')" [ngClass]="{'active': activeSection === 'job-details'}">Job
+                Details</div>
+            <div class="section-nav-link" (click)="onChangeSection('applications')" [ngClass]="{'active': activeSection === 'applications'}">Applications</div>
+            <div class="section-nav-link" (click)="onChangeSection('hiring-team')" [ngClass]="{'active': activeSection === 'hiring-team'}">Hiring
+                Team</div>
         </div>
         <div class="buttons-holder">
-            <button class="btn btn-icon" (click)="onClickSaveDraft($event)">
+            <button class="btn btn-icon" (click)="onSaveDraft($event)">
                 <span class="icon">
                     <svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -22,73 +24,75 @@
                 </span>
                 <span class="text">Save Draft</span>
             </button>
-            <button class="btn btn-primary ml20 w140" (click)="onClickSave($event)">Save and Next</button>
+            <button class="btn btn-primary ml20 w140" (click)="onSave($event)">Save and Next</button>
         </div>
     </div>
     <div class="section-separator mb20"></div>
-    <div class="content-section" id="job-details">
+    <div class="content-section" id="job-details" *ngIf="activeSection === 'job-details'">
         <div class="form-content-section">
             <div class="description">
                 <strong class="title">Job Details</strong>
                 <p>Your job details as you would like them to appear for candidates.</p>
-                <p>The point is keep the titles shorter and more generic and not to mix the type of position with the specific company "slot" for that position.</p>
+                <p>The point is keep the titles shorter and more generic and not to mix the type of position with the specific
+                    company "slot" for that position.</p>
                 <p>Find out more about <a href="#">Job Titles here</a></p>
             </div>
-            <div class="form-content-box">
-                <div class="form-block">
-                    <div class="input-block">
-                        <label for="" class="form-block-label">Job Title</label>
-                        <input type="text" class="form-input">
-                    </div>
-                </div>
-                <div class="form-block">
-                    <div class="input-block">
-                        <label for="" class="form-block-label">Company</label>
-                        <input type="text" class="form-input">
-                    </div>
-                </div>
-                <div class="form-block">
-                    <div class="input-block">
-                        <label for="" class="form-block-label">Primary Job Location</label>
-                        <div class="input-block right-option-block">
+            <div class="form-content-holder">
+                <div class="form-content-box">
+                    <div class="form-block">
+                        <div class="input-block">
+                            <label for="" class="form-block-label">Job Title</label>
                             <input type="text" class="form-input">
-                            <div class="right-option">
-                                <p-checkbox name="is-remote" value="false" label="Remote" [(ngModel)]="isRemote"
-                                    inputId="hide-salary"></p-checkbox>
+                        </div>
+                    </div>
+                    <div class="form-block">
+                        <div class="input-block">
+                            <label for="" class="form-block-label">Company</label>
+                            <input type="text" class="form-input">
+                        </div>
+                    </div>
+                    <div class="form-block">
+                        <div class="input-block">
+                            <label for="" class="form-block-label">Primary Job Location</label>
+                            <div class="input-block right-option-block">
+                                <input type="text" class="form-input">
+                                <div class="right-option">
+                                    <p-checkbox name="is-remote" value="false" label="Remote" [(ngModel)]="isRemote" inputId="hide-salary"></p-checkbox>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-block">
-                    <div class="form-block-columns">
-                        <div class="form-block-col">
-                            <div class="input-block">
-                                <label for="" class="form-block-label">Job Type</label>
-                                <p-dropdown [options]="jobTypeOptions" [(ngModel)]="selectedJobType"  [style]="{'width':'100%'}"></p-dropdown>
+                    <div class="form-block">
+                        <div class="form-block-columns">
+                            <div class="form-block-col">
+                                <div class="input-block">
+                                    <label for="" class="form-block-label">Job Type</label>
+                                    <p-dropdown [options]="jobTypeOptions" [(ngModel)]="selectedJobType" [style]="{'width':'100%'}"></p-dropdown>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-block-col-separator"></div>
-                        <div class="form-block-col">
-                            <div class="input-block">
-                                <label for="" class="form-block-label">Number of Positions Available</label>
-                                <p-dropdown [options]="hiresOptions" [(ngModel)]="selectedHires"  [style]="{'width':'100%'}"></p-dropdown>
+                            <div class="form-block-col-separator"></div>
+                            <div class="form-block-col">
+                                <div class="input-block">
+                                    <label for="" class="form-block-label">Number of Positions Available</label>
+                                    <p-dropdown [options]="hiresOptions" [(ngModel)]="selectedHires" [style]="{'width':'100%'}"></p-dropdown>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-block">
-                    <div class="form-block-columns">
-                        <div class="form-block-col">
-                            <div class="input-block">
-                                <label for="" class="form-block-label">Education</label>
-                                <p-dropdown [options]="educationOptions" [(ngModel)]="selectedEducation"  [style]="{'width':'100%'}"></p-dropdown>
+                    <div class="form-block">
+                        <div class="form-block-columns">
+                            <div class="form-block-col">
+                                <div class="input-block">
+                                    <label for="" class="form-block-label">Education</label>
+                                    <p-dropdown [options]="educationOptions" [(ngModel)]="selectedEducation" [style]="{'width':'100%'}"></p-dropdown>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-block-col-separator"></div>
-                        <div class="form-block-col">
-                            <div class="input-block">
-                                <label for="" class="form-block-label">Experience</label>
-                                <p-dropdown [options]="experienceOptions" [(ngModel)]="selectedExperience"  [style]="{'width':'100%'}"></p-dropdown>
+                            <div class="form-block-col-separator"></div>
+                            <div class="form-block-col">
+                                <div class="input-block">
+                                    <label for="" class="form-block-label">Experience</label>
+                                    <p-dropdown [options]="experienceOptions" [(ngModel)]="selectedExperience" [style]="{'width':'100%'}"></p-dropdown>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -101,41 +105,44 @@
                 <strong class="title">Salary</strong>
                 <p>Entering a salary is compulsary for automatic matching but you may opt to hide it from the job posting.</p>
             </div>
-            <div class="form-content-box">
-                <div class="form-block">
-                    <div class="form-block-columns">
-                        <div class="form-block-col">
-                            <div class="input-block">
-                                <label for="" class="form-block-label">From</label>
+            <div class="form-content-holder">
+                <div class="form-content-box">
+                    <div class="form-block">
+                        <div class="form-block-columns">
+                            <div class="form-block-col">
                                 <div class="input-block">
-                                    <input type="text" class="form-input pl30">
-                                    <div class="currency-symbol">R</div>
+                                    <label for="" class="form-block-label">From</label>
+                                    <div class="input-block">
+                                        <input type="text" class="form-input pl30">
+                                        <div class="currency-symbol">R</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-block-col-separator"></div>
+                            <div class="form-block-col">
+                                <div class="input-block">
+                                    <label for="" class="form-block-label">To</label>
+                                    <div class="input-block">
+                                        <input type="text" class="form-input pl30">
+                                        <div class="currency-symbol">R</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-block-col-separator"></div>
+                            <div class="form-block-col">
+                                <div class="input-block">
+                                    <label for="" class="form-block-label">&nbsp;</label>
+                                    <p-dropdown [options]="salaryOptions" [(ngModel)]="selectedSalary" [style]="{'width':'100%'}"></p-dropdown>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-block-col-separator"></div>
-                        <div class="form-block-col">
-                            <div class="input-block">
-                                <label for="" class="form-block-label">To</label>
-                                <div class="input-block">
-                                    <input type="text" class="form-input pl30">
-                                    <div class="currency-symbol">R</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-block-col-separator"></div>
-                        <div class="form-block-col">
-                            <div class="input-block">
-                                <label for="" class="form-block-label">&nbsp;</label>
-                                <p-dropdown [options]="salaryOptions" [(ngModel)]="selectedSalary"  [style]="{'width':'100%'}"></p-dropdown>
-                            </div>
-                        </div>
+                        <p class="form-tip danger">Use Single Salary</p>
                     </div>
-                    <p class="form-tip danger">Use Single Salary</p>
-                </div>
-                <div class="form-content-box-bottom">
-                    <div class="form-content-box-bottom-holder">
-                        <p-checkbox name="hide-salary" value="true" label="Hide this salary from thejob posting" [(ngModel)]="selectedHideSalary" inputId="hide-salary"></p-checkbox>
+                    <div class="form-content-box-bottom">
+                        <div class="form-content-box-bottom-holder">
+                            <p-checkbox name="hide-salary" value="true" label="Hide this salary from thejob posting" [(ngModel)]="selectedHideSalary"
+                                inputId="hide-salary"></p-checkbox>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -146,21 +153,205 @@
                 <strong class="title">Job Description</strong>
                 <p>Select from our list of job templates or enter your manually.</p>
             </div>
-            <div class="form-content-box">
-                <div class="form-block">
-                    <angular-editor  [config]="editorConfig"></angular-editor>
+            <div class="form-content-holder">
+                <div class="form-content-box">
+                    <div class="form-block">    
+                        <p-editor [(ngModel)]="jobDescription" [style]="{'height':'400px'}"></p-editor>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-
-
-    <!-- <div class="content-section" id="applications">
-        Applications
+    <div class="content-section" id="applications" *ngIf="activeSection === 'applications'">
+        <div class="form-content-section">
+            <div class="description">
+                <strong class="title">Candidate Application</strong>
+                <p>Control how candidates can apply to your position and what information is required</p>
+            </div>
+            <div class="form-content-holder">
+                <div class="form-content-box">
+                    <div class="form-block">
+                        <div class="input-block">
+                            <label for="" class="form-block-label">Job Listing</label>
+                            <p-dropdown [options]="joblistingOptions" [(ngModel)]="selectedJoblisting" [style]="{'width':'100%'}"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="form-content-box-bottom">
+                        <div class="form-content-box-bottom-holder">
+                            <div class="text-with-icon flex-row flex-aic">
+                                <img src="/assets/images/pin.svg" class="icon" alt="" width="13" height="13">
+                                <p>Accept applications on your public Career Portal and enable 3rd party job boards</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-separator mb20 mt20"></div>
+        <div class="form-content-section">
+            <div class="description">
+                <strong class="title">Application Form</strong>
+                <p>Choose the information collected for candidates applying through your Career or Employee Portals.</p>
+            </div>
+            <div class="form-content-holder">
+                <div class="form-content-box mb20">
+                    <strong class="form-content-box-title">Resume Upload</strong>
+                    <div class="form-block">
+                        <p-checkbox name="required-resume" value="true" label="The candidate is required to upload a Resume" [(ngModel)]="resumeIsRequired"
+                            inputId="required-resume"></p-checkbox>
+                    </div>
+                    <div class="form-content-box-bottom">
+                        <div class="form-content-box-bottom-holder">
+                            <div class="form-block">
+                                <p-checkbox name="missing-information" value="true" label="Email the candidate should there be missing information" [(ngModel)]="emailMissingInformation"
+                                    inputId="missing-information"></p-checkbox>
+                            </div>
+                            <div class="form-block mb0">
+                                <p-checkbox name="improve-resume" value="true" label="Email the candidate with suggestions on how they can improve their resume"
+                                    [(ngModel)]="emailImproveResume" inputId="improve-resume"></p-checkbox>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-content-box">
+                    <strong class="form-content-box-title">Application Fields</strong>
+                    <div class="options-row flex-row flex-aic mb20">
+                        <span class="text">Name</span>
+                        <div class="predefined-option mla">Required</div>
+                    </div>
+                    <div class="options-row flex-row flex-aic mb20">
+                        <span class="text">Email</span>
+                        <div class="predefined-option mla">Required</div>
+                    </div>
+                    <div class="options-row flex-row flex-aic mb20">
+                        <span class="text">Phone Number</span>
+                        <p-selectButton [options]="applicationFieldsOptions" [(ngModel)]="selectedField3" class="mla"></p-selectButton>
+                    </div>
+                    <div class="options-row flex-row flex-aic mb20">
+                        <span class="text">Current Location</span>
+                        <p-selectButton [options]="applicationFieldsOptions" [(ngModel)]="selectedField4" class="mla"></p-selectButton>
+                    </div>
+                    <div class="options-row flex-row flex-aic mb20">
+                        <span class="text">Employment Equity Status</span>
+                        <p-selectButton [options]="applicationFieldsOptions" [(ngModel)]="selectedField5" class="mla"></p-selectButton>
+                    </div>
+                    <div class="options-row flex-row flex-aic">
+                        <span class="text">Gender</span>
+                        <p-selectButton [options]="applicationFieldsOptions" [(ngModel)]="selectedField6" class="mla"></p-selectButton>
+                    </div>
+                    <div class="section-separator mb10 mt10"></div>
+                    <div class="options-row flex-row flex-aic mb20">
+                        <span class="text">Experiance Summary</span>
+                        <p-selectButton [options]="applicationFieldsOptions" [(ngModel)]="selectedField7" class="mla"></p-selectButton>
+                    </div>
+                    <div class="options-row flex-row flex-aic mb20">
+                        <span class="text">Work History</span>
+                        <p-selectButton [options]="applicationFieldsOptions" [(ngModel)]="selectedField8" class="mla"></p-selectButton>
+                    </div>
+                    <div class="options-row flex-row flex-aic mb20">
+                        <span class="text">Education</span>
+                        <p-selectButton [options]="applicationFieldsOptions" [(ngModel)]="selectedField9" class="mla"></p-selectButton>
+                    </div>
+                    <div class="section-separator mb10 mt10"></div>
+                    <div class="options-row flex-row flex-aic">
+                        <span class="text">Cover Letter</span>
+                        <p-selectButton [options]="applicationFieldsOptions" [(ngModel)]="selectedField10" class="mla"></p-selectButton>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-separator mb20 mt20"></div>
+        <div class="form-content-section">
+            <div class="description">
+                <strong class="title">Questionnaire</strong>
+                <p>You can extent your application form with custom questions.</p>
+            </div>
+            <div class="form-content-holder">
+                <div class="form-content-box">
+                    <div class="form-block">
+                        <div class="input-block">
+                            <label for="" class="form-block-label">Questionnaire</label>
+                            <div class="flex-row">
+                                <p-dropdown [options]="questionnaireOptions" [(ngModel)]="selectedQuestionnaire" [style]="{'width':'100%'}" class="flex-1" placeholder="You have not created any questionnaires, click Add" disabled="true"></p-dropdown>
+                                <button class="btn btn-primary w60 ml20">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="content-section" id="hiring-team">
-        Hiring Team
-    </div> -->
-    
+    <div class="content-section" id="hiring-team" *ngIf="activeSection === 'hiring-team'">
+        <div class="form-content-section">
+            <div class="description">
+                <strong class="title">Hiring Managers</strong>
+                <p>Hiring managers are able to add, manage and communicate with candidates for this position.</p>
+            </div>
+            <div class="form-content-holder">
+                <div class="form-content-box">
+                    <div class="form-block">
+                        <div class="input-block">
+                            <label for="" class="form-block-label">Hiring Managers</label>
+                            <p-dropdown [options]="joblistingOptions" [(ngModel)]="selectedJoblisting" [style]="{'width':'100%'}" placeholder="Add to this position"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="form-content-box-bottom">
+                        <div class="form-content-box-bottom-holder">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-separator mb20 mt20"></div>
+        <div class="form-content-section">
+            <div class="description">
+                <strong class="title">Team Members</strong>
+                <p>Members are able to review & provide feedback on candidates, including participating in interviews & submitting scorecards.</p>
+            </div>
+            <div class="form-content-holder">
+                <div class="form-content-box">
+                    <div class="form-block">
+                        <div class="input-block">
+                            <label for="" class="form-block-label">Team Members</label>
+                            <div class="flex-row flex-aic">
+                                <input type="text" class="form-input" placeholder="Full Name">
+                                <input type="text" class="form-input ml20" placeholder="Email Address">
+                                <button class="btn btn-primary w60 ml20">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-content-box-bottom">
+                        <div class="form-content-box-bottom-holder">
+        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-separator mb20 mt20"></div>
+        <div class="form-content-section">
+            <div class="description">
+                <strong class="title">Default Email</strong>
+                <p>Who should automated emails triggered by the system for this job be sent from?</p>
+            </div>
+            <div class="form-content-holder">
+                <div class="form-content-box">
+                    <div class="form-block">
+                        <div class="input-block">
+                            <label for="" class="form-block-label">Default Email Name</label>
+                            <p-dropdown [options]="joblistingOptions" [(ngModel)]="selectedJoblisting" [style]="{'width':'100%'}" placeholder="Add to this position"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="form-content-box-bottom">
+                        <div class="form-content-box-bottom-holder">
+        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>

@@ -11,6 +11,10 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
 import { MessageModule } from 'primeng/message';
 import { MessagesModule } from 'primeng/messages';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { EditorModule } from 'primeng/editor';
+import { PanelMenuModule } from 'primeng/panelmenu';
+import { PanelModule } from 'primeng/panel';
 
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -28,6 +32,10 @@ import { JobItemComponent } from './jobs/job-item/job-item.component';
 import { JobsListComponent } from './jobs/jobs-list/jobs-list.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { PeopleListComponent } from './people/people-list/people-list.component';
+import { QuestionsComponent } from './settings/questions/questions.component';
+import { ScorecardsComponent } from './settings/scorecards/scorecards.component';
+import { EmailTemplatesComponent } from './settings/email-templates/email-templates.component';
+import { IntegrationsComponent } from './settings/integrations/integrations.component';
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -52,7 +60,11 @@ export function provideConfig() {
         SidebarComponent,
         JobItemComponent,
         ResetPasswordComponent,
-        SetPasswordComponent
+        SetPasswordComponent,
+        QuestionsComponent,
+        ScorecardsComponent,
+        EmailTemplatesComponent,
+        IntegrationsComponent
     ],
     imports: [
         AppRoutingModule,
@@ -63,6 +75,10 @@ export function provideConfig() {
         DropdownModule,
         MessagesModule,
         MessageModule,
+        EditorModule,
+        PanelModule,
+        PanelMenuModule,
+        SelectButtonModule,
         BrowserAnimationsModule,
         HttpClientModule,
         AngularEditorModule,

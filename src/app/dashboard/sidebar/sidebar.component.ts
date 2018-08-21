@@ -1,5 +1,9 @@
+import { User } from './../../models/user';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../../services/user.service';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-sidebar',
@@ -7,16 +11,26 @@ import { Component, OnInit } from '@angular/core';
     styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
-    user: any;
-    initials: string;
-    constructor(private route: ActivatedRoute) { }
+    user$: Observable<Object>;
+    settingsOpened = true;
+
+
+    constructor(private userService: UserService) { }
 
     ngOnInit() {
-        this.user = this.route.snapshot.data.user;
-        this.initials = this.user.first_name.charAt(0).toUpperCase();
-        if (this.user.last_name) {
-            this.initials += this.user.last_name.charAt(0).toUpperCase();
-        }
+        this.user$ = this.userService.me().pipe(map((user: User) => {
+            user.initials = user.first_name.charAt(0).toUpperCase();
+            if (user.last_name) {
+                user.initials += user.last_name.charAt(0).toUpperCase();
+            }
+            return user;
+        }));
+    }
+
+    onToggleOcItem(event) {
+        event.preventDefault();
+        console.log('clicked');
+        this.settingsOpened = !this.settingsOpened;
     }
 
 }

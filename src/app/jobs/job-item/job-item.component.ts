@@ -13,33 +13,15 @@ export class JobItemComponent implements OnInit {
     educationOptions: SelectItem[];
     hiresOptions: SelectItem[];
     experienceOptions: SelectItem[];
-
     salaryOptions: SelectItem[];
+    joblistingOptions: SelectItem[];
+    questionnaireOptions: SelectItem[];
+    applicationFieldsOptions: SelectItem[];
+    jobDescription: string;
 
-    editorConfig: AngularEditorConfig = {
-        editable: true,
-        spellcheck: true,
-        height: '25rem',
-        minHeight: '5rem',
-        placeholder: 'Enter text here...',
-        translate: 'no',
-        uploadUrl: 'v1/images', // if needed
-        customClasses: [ // optional
-            {
-                name: "quote",
-                class: "quote",
-            },
-            {
-                name: 'redText',
-                class: 'redText'
-            },
-            {
-                name: "titleText",
-                class: "titleText",
-                tag: "h1",
-            },
-        ]
-    };
+    editorConfig: AngularEditorConfig;
+
+    activeSection = 'hiring-team';
 
 
     constructor() {
@@ -77,9 +59,59 @@ export class JobItemComponent implements OnInit {
             { label: 'per month', value: 'monthly' }
         ];
 
+        this.joblistingOptions = [
+            { label: 'Default', value: 'default' },
+            { label: 'Not Default', value: 'not-default' }
+        ];
+
+        this.questionnaireOptions = [];
+
+        this.editorConfig = {
+            editable: true,
+            spellcheck: true,
+            height: '25rem',
+            minHeight: '5rem',
+            placeholder: 'Enter text here...',
+            translate: 'no',
+            uploadUrl: 'v1/images', // if needed
+            customClasses: [ // optional
+                {
+                    name: 'quote',
+                    class: 'quote',
+                },
+                {
+                    name: 'redText',
+                    class: 'redText'
+                },
+                {
+                    name: 'titleText',
+                    class: 'titleText',
+                    tag: 'h1',
+                },
+            ]
+        };
+
+        this.applicationFieldsOptions = [
+            { label: 'Required', value: 'required' },
+            { label: 'Optional', value: 'optional' },
+            { label: 'Disabled', value: 'disabled' }
+        ];
+
     }
 
     ngOnInit() {
     }
 
+
+    onChangeSection(section: string) {
+        this.activeSection = section;
+    }
+
+    onSaveDraft(event) {
+        event.preventDefault();
+    }
+
+    onSave(event) {
+        event.preventDefault();
+    }
 }

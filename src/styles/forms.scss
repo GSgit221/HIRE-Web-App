@@ -12,7 +12,6 @@
     padding: 9px 2px 9px 10px;
     box-shadow: none;
     outline: none;
-    margin: 0;
 
     &::-webkit-input-placeholder {
         color: $grey;
@@ -70,89 +69,91 @@
     font-size: 12px;
 }
 
-.ui-dropdown {
-    .ui-dropdown-panel {
-        box-shadow: none;
-        margin: 0;
-        border-radius: 0 0 2px 2px;
-
-        .ui-dropdown-list {
-            padding: 0;
-        }
-
-        .ui-dropdown-item {
-            padding: 9px;
+p-dropdown {
+    .ui-dropdown {
+        .ui-dropdown-panel {
+            box-shadow: none;
             margin: 0;
-            border-radius: 0;
-            font-weight: 400;
-            font-size: 13px;
-        }
+            border-radius: 0 0 2px 2px;
 
-        .ui-state-highlight {
-            background: $pink;
-            color: $white;
-        }
-    }
-
-    &.ui-dropdown-open {
-        .ui-dropdown-label {
-            border: 2px solid $pink;
-            padding: 8px 11px 8px 9px;
-            transition: none;
-        }
-    }
-
-    &.ui-state-default {
-        border: 0;
-        color: $dark-blue;
-        box-shadow: none;
-    }
-
-    .ui-dropdown-label {
-        height: 36px;
-        background: $white;
-        width: 100%;
-        border-radius: 2px;
-        color: $dark-blue;
-        border: 1px solid $grey-border;
-        font-size: 13px;
-        line-height: 16px;
-        padding: 9px 12px 9px 10px;
-    }
-
-    .ui-dropdown-trigger {
-        border: 0;
-        background: none;
-
-        .ui-dropdown-trigger-icon {
-            border: none;
-            display: inline-block;
-            width: 8px;
-            height: 15px;
-            margin-top: -7px;
-
-            &:before {
-                content: '';
-                width: 0;
-                height: 0;
-                border-left: 5px solid transparent;
-                border-right: 5px solid transparent;
-                border-bottom: 5px solid $grey;
-                position: absolute;
-                left: 0;
-                top: 0;
+            .ui-dropdown-list {
+                padding: 0;
             }
 
-            &:after {
-                content: '';
-                width: 0;
-                height: 0;
-                border-left: 5px solid transparent;
-                border-right: 5px solid transparent;
-                border-top: 5px solid $grey;
-                position: absolute;
-                left: 0;
-                bottom: 0;
+            .ui-dropdown-item {
+                padding: 9px;
+                margin: 0;
+                border-radius: 0;
+                font-weight: 400;
+                font-size: 13px;
+            }
+
+            .ui-state-highlight {
+                background: $pink;
+                color: $white;
+            }
+        }
+
+        &.ui-dropdown-open {
+            .ui-dropdown-label {
+                border: 2px solid $pink;
+                padding: 8px 11px 8px 9px;
+                transition: none;
+            }
+        }
+
+        &.ui-state-default {
+            border: 0;
+            color: $dark-blue;
+            box-shadow: none;
+        }
+
+        .ui-dropdown-label {
+            height: 36px;
+            background: $white;
+            width: 100%;
+            border-radius: 2px;
+            color: $dark-blue;
+            border: 1px solid $grey-border;
+            font-size: 13px;
+            line-height: 16px;
+            padding: 9px 12px 9px 10px;
+        }
+
+        .ui-dropdown-trigger {
+            border: 0;
+            background: none;
+
+            .ui-dropdown-trigger-icon {
+                border: none;
+                display: inline-block;
+                width: 8px;
+                height: 15px;
+                margin-top: -7px;
+
+                &:before {
+                    content: '';
+                    width: 0;
+                    height: 0;
+                    border-left: 5px solid transparent;
+                    border-right: 5px solid transparent;
+                    border-bottom: 5px solid $grey;
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                }
+
+                &:after {
+                    content: '';
+                    width: 0;
+                    height: 0;
+                    border-left: 5px solid transparent;
+                    border-right: 5px solid transparent;
+                    border-top: 5px solid $grey;
+                    position: absolute;
+                    left: 0;
+                    bottom: 0;
+                }
             }
         }
     }

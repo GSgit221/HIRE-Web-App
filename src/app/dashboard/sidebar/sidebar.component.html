@@ -4,7 +4,7 @@
         <span class="separator">/</span>
         <span class="text-logo">HIRE</span>
     </div>
-    <div class="user-pic">{{ initials }}</div>
+    <div class="user-pic"  *ngIf="user$ | async as user">{{ user?.initials }}</div>
 </div>
 <form class="search-form">
     <input type="text" name="search" class="input-text" placeholder="Search anything">
@@ -26,5 +26,52 @@
             </span>
             <span class="text">People</span>
         </a>
+    </div>
+</div>
+<div class="menu-separator"></div>
+<div class="sidebar-nav-oc">
+    <div class="sidebar-nav-oc-item" [attr.aria-expanded]="settingsOpened"  routerLinkActive="active">
+        <div class="sidebar-nav-oc-item-header" (click)="onToggleOcItem($event)">
+            <span class="icon">
+                <img src="/assets/images/sidebar-settings.svg" alt="Settings" width="14" height="14">
+            </span>
+            <span class="text">Settings</span>
+            <span class="ui-button-icon-left ui-clickable pi pi-chevron-down"></span>
+            <span class="ui-button-icon-left ui-clickable pi pi-chevron-up"></span>
+        </div>
+        <div class="sidebar-nav-oc-item-content">
+            <div class="sidebar-nav">
+                <div class="sidebar-nav-link">
+                    <a href="#" routerLink="/dashboard/questions" routerLinkActive="active">
+                        <span class="icon"><img src="/assets/images/sidebar-questions.svg" alt="Jobs icon" width="14" height="13"></span>
+                        <span class="text">Questions</span>
+                    </a>
+                </div>
+                <div class="sidebar-nav-link">
+                    <a href="#" routerLink="/dashboard/scorecards" routerLinkActive="active">
+                        <span class="icon">
+                            <img src="/assets/images/sidebar-scorecards.svg" alt="People icon" width="14" height="12">
+                        </span>
+                        <span class="text">Scorecards</span>
+                    </a>
+                </div>
+                <div class="sidebar-nav-link">
+                    <a href="#" routerLink="/dashboard/email-templates" routerLinkActive="active">
+                        <span class="icon">
+                            <img src="/assets/images/sidebar-email-templates.svg" alt="People icon" width="14" height="11">
+                        </span>
+                        <span class="text">Email Templates</span>
+                    </a>
+                </div>
+                <div class="sidebar-nav-link">
+                    <a href="#" routerLink="/dashboard/integrations" routerLinkActive="active">
+                        <span class="icon">
+                            <img src="/assets/images/sidebar-integrations.svg" alt="People icon" width="13" height="13">
+                        </span>
+                        <span class="text">Integrations</span>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
