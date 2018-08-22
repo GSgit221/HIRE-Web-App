@@ -12,28 +12,29 @@ export class JobsListComponent implements OnInit {
     constructor(private router: Router) { }
 
     ngOnInit() {
-        this.list = [
-            {
-                status: 'active',
-                title: 'Senior System Engineer',
-                location: 'Johannesburg, ZA',
-                type: 'bag',
-                applications: 165,
-                created_at: '10d ago',
-                last_application: 'Today',
-                hiring_team: 1
-            },
-            {
-                status: 'inactive',
-                title: 'Graduate Recruit Program',
-                location: 'Cape Town, ZA',
-                type: 'refresh',
-                applications: 327,
-                created_at: '11m Ago',
-                last_application: 'Yesterday',
-                hiring_team: 1
-            }
-        ];
+        // this.list = [
+        //     {
+        //         status: 'active',
+        //         title: 'Senior System Engineer',
+        //         location: 'Johannesburg, ZA',
+        //         type: 'bag',
+        //         applications: 165,
+        //         created_at: '10d ago',
+        //         last_application: 'Today',
+        //         hiring_team: 1
+        //     },
+        //     {
+        //         status: 'inactive',
+        //         title: 'Graduate Recruit Program',
+        //         location: 'Cape Town, ZA',
+        //         type: 'refresh',
+        //         applications: 327,
+        //         created_at: '11m Ago',
+        //         last_application: 'Yesterday',
+        //         hiring_team: 1
+        //     }
+        // ];
+        this.list = [];
     }
 
 

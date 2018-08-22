@@ -48,7 +48,7 @@
                 </span>
                 <span class="text">Settings</span>
             </div>
-            <button class="btn btn-primary w140 mla" (click)="onAddClick($event)">Add Job</button>
+            <button class="btn btn-primary w140 mla" routerLink="/dashboard/jobs/new">Add Job</button>
         </div>
     </div>
     <div *ngIf="!list || !list.length">
@@ -60,7 +60,7 @@
                     <p>Add a job automatically by dropping the job spec here or manually by clicking the Add Job button below.</p>
                 </div>
                 <div class="buttons-holder">
-                    <button class="btn btn-primary w140">Add Job</button>
+                    <button class="btn btn-primary w140" routerLink="/dashboard/jobs/new">Add Job</button>
                     <button class="btn btn-primary btn-primary-inversed w140 ml20">Import Job</button>
                 </div>
             </div>

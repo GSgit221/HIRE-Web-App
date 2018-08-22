@@ -130,6 +130,10 @@
         position: relative;
         margin: 0;
 
+        .input-holder {
+            position: relative;
+        }
+
         .input-chars-counter {
             position: absolute;
             right: 10px;

@@ -1,6 +1,7 @@
+import { JobService } from './../../services/job.service';
+import { ActivatedRoute } from '@angular/router';
 import { SelectItem } from 'primeng/api';
 import { Component, OnInit } from '@angular/core';
-import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 
 @Component({
@@ -9,6 +10,8 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
     styleUrls: ['./job-item.component.scss']
 })
 export class JobItemComponent implements OnInit {
+    job: Object = {};
+
     jobTypeOptions: SelectItem[];
     educationOptions: SelectItem[];
     hiresOptions: SelectItem[];
@@ -19,20 +22,23 @@ export class JobItemComponent implements OnInit {
     applicationFieldsOptions: SelectItem[];
     jobDescription: string;
 
-    editorConfig: AngularEditorConfig;
+    activeSection = 'job-details';
+    contentLoading = true;
 
-    activeSection = 'hiring-team';
+
+    constructor(private route: ActivatedRoute, private jobService: JobService) {
+        this.jobService.getJob(this.route.snapshot.paramMap.get('id'))
+            .subscribe(job => {
+                console.log(job);
+                this.contentLoading = false;
+            });
 
 
-    constructor() {
         this.jobTypeOptions = [
+            { label: 'Part-time', value: 'part-time' },
             { label: 'Full-time', value: 'full-time' },
-            { label: 'Part-time', value: 'part-time' }
-        ];
-
-        this.educationOptions = [
-            { label: 'Bachelors Degree', value: 'bachelors' },
-            { label: 'Masters Degree', value: 'masters' }
+            { label: 'Temporary', value: 'temporary' },
+            { label: 'Contract', value: 'contract' }
         ];
 
         this.hiresOptions = [
@@ -45,13 +51,30 @@ export class JobItemComponent implements OnInit {
             { label: '7 hires', value: 7 },
             { label: '8 hires', value: 8 },
             { label: '9 hires', value: 9 },
-            { label: '10 hires', value: 10 }
+            { label: '10 hires', value: 10 },
+            { label: 'Ongoing', value: 'ongoing' }
+        ];
+
+
+        this.educationOptions = [
+            { label: 'Unspecified', value: 'unspecified' },
+            { label: 'High School or Equivalent', value: 'school' },
+            { label: 'Certification', value: 'certification' },
+            { label: 'Vocational', value: 'vocational' },
+            { label: 'Associate Degree', value: 'associate' },
+            { label: 'Bachelors Degree', value: 'bachelors' },
+            { label: 'Masters Degree', value: 'masters' },
+            { label: 'Professional', value: 'professional' }
         ];
 
         this.experienceOptions = [
-            { label: 'Junior Level', value: 'junior' },
+            { label: 'Internship', value: 'internship' },
+            { label: 'Graduate', value: 'graduate' },
+            { label: 'Entry Level', value: 'entry' },
+            { label: 'Associate', value: 'associate' },
             { label: 'Mid Level', value: 'mid' },
-            { label: 'Senior Level', value: 'senior' }
+            { label: 'Senior', value: 'senior' },
+            { label: 'Executive', value: 'executive' }
         ];
 
         this.salaryOptions = [
@@ -60,43 +83,16 @@ export class JobItemComponent implements OnInit {
         ];
 
         this.joblistingOptions = [
-            { label: 'Default', value: 'default' },
-            { label: 'Not Default', value: 'not-default' }
+            { label: 'Default', value: 'default' }
         ];
 
         this.questionnaireOptions = [];
-
-        this.editorConfig = {
-            editable: true,
-            spellcheck: true,
-            height: '25rem',
-            minHeight: '5rem',
-            placeholder: 'Enter text here...',
-            translate: 'no',
-            uploadUrl: 'v1/images', // if needed
-            customClasses: [ // optional
-                {
-                    name: 'quote',
-                    class: 'quote',
-                },
-                {
-                    name: 'redText',
-                    class: 'redText'
-                },
-                {
-                    name: 'titleText',
-                    class: 'titleText',
-                    tag: 'h1',
-                },
-            ]
-        };
 
         this.applicationFieldsOptions = [
             { label: 'Required', value: 'required' },
             { label: 'Optional', value: 'optional' },
             { label: 'Disabled', value: 'disabled' }
         ];
-
     }
 
     ngOnInit() {

@@ -1,3 +1,4 @@
+import { LoaderComponent } from './shared/loader/loader.component';
 import { UserResolver } from './resolvers/user.resolver';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
@@ -64,7 +65,8 @@ export function provideConfig() {
         QuestionsComponent,
         ScorecardsComponent,
         EmailTemplatesComponent,
-        IntegrationsComponent
+        IntegrationsComponent,
+        LoaderComponent
     ],
     imports: [
         AppRoutingModule,
