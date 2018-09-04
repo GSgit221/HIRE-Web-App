@@ -12,7 +12,7 @@ export class JobService {
     constructor(private http: HttpClient) { }
 
     getAll() {
-        return this.http.get(`api/tenants/${environment.tenant}/jobs`);
+        return this.http.get(`${environment.api_url}/tenants/${environment.tenant}/jobs`);
     }
 
 
@@ -55,21 +55,21 @@ export class JobService {
             };
             return of(newJob);
         } else {
-            return this.http.get(`api/tenants/${environment.tenant}/jobs/${id}`);
+            return this.http.get(`${environment.api_url}/tenants/${environment.tenant}/jobs/${id}`);
         }
     }
 
     saveJob(job, activeSection, next) {
         if (job.id) {
             // Update
-            return this.http.put(`api/tenants/${environment.tenant}/jobs/${job.id}`, {
+            return this.http.put(`${environment.api_url}/tenants/${environment.tenant}/jobs/${job.id}`, {
                 section: activeSection,
                 data: job,
                 next
             });
         } else {
             // Create
-            return this.http.post(`api/tenants/${environment.tenant}/jobs`, {
+            return this.http.post(`${environment.api_url}/tenants/${environment.tenant}/jobs`, {
                 section: activeSection,
                 data: job
             });
