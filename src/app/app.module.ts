@@ -37,6 +37,9 @@ import { QuestionsComponent } from './settings/questions/questions.component';
 import { ScorecardsComponent } from './settings/scorecards/scorecards.component';
 import { EmailTemplatesComponent } from './settings/email-templates/email-templates.component';
 import { IntegrationsComponent } from './settings/integrations/integrations.component';
+import { DisableControlDirective } from './directives/disable-control.directive';
+import { JobItemUnpublishedComponent } from './jobs/job-item-unpublished/job-item-unpublished.component';
+import { JobItemPublishedComponent } from './jobs/job-item-published/job-item-published.component';
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -66,7 +69,10 @@ export function provideConfig() {
         ScorecardsComponent,
         EmailTemplatesComponent,
         IntegrationsComponent,
-        LoaderComponent
+        LoaderComponent,
+        DisableControlDirective,
+        JobItemUnpublishedComponent,
+        JobItemPublishedComponent
     ],
     imports: [
         AppRoutingModule,

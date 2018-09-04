@@ -37,9 +37,11 @@
     }
 
     &[disabled],
-    &.disabled {
+    &.disabled,
+    &[ng-reflect-is-disabled="true"] {
         border: 1px solid $grey-border;
         background: $white;
+        cursor: not-allowed;
     }
 
     &.pl30 {
@@ -70,6 +72,14 @@
 }
 
 p-dropdown {
+    &.ng-invalid.ng-touched {
+        .ui-dropdown {
+            .ui-dropdown-label {
+                border-color: $pink;
+            }
+        }
+    }
+
     .ui-dropdown {
         .ui-dropdown-panel {
             box-shadow: none;

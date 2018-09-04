@@ -1,3 +1,4 @@
+import { Job } from './../models/job';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
@@ -10,10 +11,14 @@ export class JobService {
 
     constructor(private http: HttpClient) { }
 
+    getAll() {
+        return this.http.get(`api/tenants/${environment.tenant}/jobs`);
+    }
+
 
     getJob(id) {
         if (id === 'new') {
-            const newJob = {
+            const newJob: Job = {
                 title: '',
                 company: '',
                 location: '',
@@ -22,11 +27,11 @@ export class JobService {
                 number_of_hires: 1,
                 education: 'bachelors',
                 experience: 'mid',
-                salary_from: '',
-                salary_to: '',
+                salary_from: null,
+                salary_to: null,
                 salary_period: 'yearly',
                 hide_salary: false,
-                description: `<div><p>Description</p><p></p></div>`,
+                description: `<div><p>Description</p><p></p><p></p><p></p><p>Requirements</p></div>`,
                 job_listing: 'default',
                 resume_upload_required: true,
                 email_missing_info: true,
@@ -44,12 +49,30 @@ export class JobService {
                 questionnaire: '',
                 hiring_managers: [],
                 team_members: [],
-                default_email_name: ''
+                default_email_name: '',
+                status: 'BUILD',
+                step_completed: 0
             };
-
             return of(newJob);
         } else {
-            return this.http.get(`${environment.api_url}/jobs/${id}`);
+            return this.http.get(`api/tenants/${environment.tenant}/jobs/${id}`);
+        }
+    }
+
+    saveJob(job, activeSection, next) {
+        if (job.id) {
+            // Update
+            return this.http.put(`api/tenants/${environment.tenant}/jobs/${job.id}`, {
+                section: activeSection,
+                data: job,
+                next
+            });
+        } else {
+            // Create
+            return this.http.post(`api/tenants/${environment.tenant}/jobs`, {
+                section: activeSection,
+                data: job
+            });
         }
     }
 }

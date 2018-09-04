@@ -67,7 +67,9 @@ a {
     padding-left: 30px;
 }
 
-// Flex
+.mh500 {
+    min-height: 500px;
+}
 .flex-row {
     display: flex;
     flex-direction: row;

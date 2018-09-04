@@ -1,4 +1,4 @@
-<div class="container fixed-width-container">
+<div class="container fixed-width-container mh500">
     <div class="title-block">
         <h1 class="page-title">Jobs</h1>
         <div class="controls-block">
@@ -51,7 +51,7 @@
             <button class="btn btn-primary w140 mla" routerLink="/dashboard/jobs/new">Add Job</button>
         </div>
     </div>
-    <div *ngIf="!list || !list.length">
+    <div *ngIf="!list || !list.length && !contentLoading">
         <div class="section-separator"></div>
         <div class="placeholder-block">
             <div class="text-block">
@@ -82,7 +82,6 @@
             </span>
         </div>
     </div>
-
     <div *ngIf="list && list.length">
         <div class="hc-list">
             <div class="hc-list-header">
@@ -117,7 +116,7 @@
             </div>
             <div class="nr-list-content">
                 <div class="hc-blocker"></div>
-                <div class="hc-list-row" *ngFor="let item of list; let i = index">
+                <div class="hc-list-row" *ngFor="let item of list; let i = index" (click)="onItemClick($event, item)">
                     <div class="hc-list-row-content">
                         <div class="col col1  flex-5  hc-checkbox-col">
                             <div class="hc-checkbox">
@@ -126,21 +125,21 @@
                             </div>
                         </div>
                         <div class="col col2  flex-5 status-col">
-                            <span class="status" [ngClass]="item.status"></span>
+                            <span class="status" [ngClass]="item.status ? item.status.toLowerCase() : ''"></span>
                         </div>
                         <div class="col col3  flex-20">
                              {{item.title}}
                         </div>
                         <div class="col col4  flex-20">{{item.location}}</div>
                         <div class="col col5 flex-10">
-                            <img *ngIf="item.type === 'bag'" src="/assets/images/bag.svg" alt="" width="14" height="13">
-                            <img *ngIf="item.type === 'refresh'" src="/assets/images/refresh.svg" alt="" width="13" height="13">
+                            <img *ngIf="item.type === 'permanent'" src="/assets/images/bag.svg" alt="" width="14" height="13">
+                            <img *ngIf="item.type === 'temporary'" src="/assets/images/refresh.svg" alt="" width="13" height="13">
                         </div>
                         <div class="col col6 flex-10">{{item.applications}}
                         </div>
-                        <div class="col col7 flex-10">{{item.created_at}}
+                        <div class="col col7 flex-10">{{item.created}}
                         </div>
-                        <div class="col col8 flex-10">{{item.last_application}}
+                        <div class="col col8 flex-10">{{item.updated}}
                         </div>
                         <div class="col col9 flex-10 flex-row">
                             <div class="ava"><img src="/assets/images/hiring-team-placeholder.png" alt="" width="20" height="20"></div>
@@ -152,4 +151,5 @@
             </div>
         </div>
     </div>
+    <app-loader *ngIf="contentLoading"></app-loader>
 </div>

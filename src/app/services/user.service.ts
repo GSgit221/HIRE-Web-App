@@ -10,6 +10,6 @@ export class UserService {
     constructor(private http: HttpClient) { }
 
     me() {
-        return this.http.get(`${environment.api_url}/me`);
+        return this.http.get(`api/me`);
     }
 }

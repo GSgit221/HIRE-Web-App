@@ -13,11 +13,11 @@
         background: $grey;
         border-radius: 50%;
 
-        &.active {
+        &.live {
             background: $green;
         }
 
-        &.inactive {
+        &.build {
             background: $orange;
         }
     }
