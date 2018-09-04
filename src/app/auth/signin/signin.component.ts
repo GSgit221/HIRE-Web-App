@@ -37,17 +37,27 @@ export class SigninComponent implements OnInit {
         this.contentLoading = true;
         this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
             .then(userData => {
-                this.authService.signInWithGoogle(userData.idToken)
-                    .subscribe(response => {
-                        this.contentLoading = false;
-                        this.msgs = [];
-                        this.authService.setSession(response);
-                        this.router.navigateByUrl('/');
-                    }, response => {
-                        this.contentLoading = false;
-                        console.log(response);
-                        this.msgs = [];
-                        this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
+                this.authService.getUserData()
+                    .subscribe(user_data => {
+                        this.authService.signInWithGoogle(userData.idToken, user_data)
+                        .subscribe(response => {
+                            this.msgs = [];
+                            this.authService.setSession(response);
+                            this.router.navigateByUrl('/');
+                        }, response => {
+                            this.msgs = [];
+                            this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
+                        });
+                    }, error => {
+                        this.authService.signInWithGoogle(userData.idToken)
+                        .subscribe(response => {
+                            this.msgs = [];
+                            this.authService.setSession(response);
+                            this.router.navigateByUrl('/');
+                        }, response => {
+                            this.msgs = [];
+                            this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
+                        });
                     });
             })
             .catch(error => console.error(error));
