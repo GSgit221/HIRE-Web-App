@@ -275,7 +275,7 @@ export class JobItemComponent implements OnInit {
                 console.log(job);
                 this.contentLoading = false;
                 if (job.created && job.id) {
-                    this.router.navigate([`dashboard/jobs/${job.id}&section=applications`, { queryParams: { section: 'applications' } }]);
+                    this.router.navigateByUrl(`dashboard/jobs/${job.id}?section=applications`);
                 } else {
                     this.activeSection = this.nextSection();
                 }
