@@ -193,6 +193,14 @@
             min-width: 20px;
             max-width: 20px;
         }
+
+        &.padding-columns {
+            margin: 0 -10px;
+
+            .form-block-col {
+                padding: 0 10px;
+            }
+        }
     }
 
     .form-control {

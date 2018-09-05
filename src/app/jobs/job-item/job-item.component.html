@@ -117,18 +117,18 @@
                 <div class="form-content-holder">
                     <div class="form-content-box">
                         <div class="form-block">
-                            <div class="form-block-columns">
+                            <div class="form-block-columns padding-columns">
                                 <div class="form-block-col">
                                     <div class="input-block">
-                                        <label for="" class="form-block-label">From</label>
+                                        <label for="" class="form-block-label" *ngIf="!job?.single_salary">From</label>
+                                        <label for="" class="form-block-label" *ngIf="job?.single_salary">Salary</label>
                                         <div class="input-block">
                                             <input type="text" class="form-input pl30" formControlName="salary_from">
                                             <div class="currency-symbol">R</div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-block-col-separator"></div>
-                                <div class="form-block-col">
+                                <div class="form-block-col" *ngIf="!job?.single_salary">
                                     <div class="input-block">
                                         <label for="" class="form-block-label">To</label>
                                         <div class="input-block">
@@ -137,19 +137,19 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-block-col-separator"></div>
-                                <div class="form-block-col">
+                                <div class="form-block-col mw33p">
                                     <div class="input-block">
                                         <label for="" class="form-block-label">&nbsp;</label>
                                         <p-dropdown [options]="salaryOptions" formControlName="salary_period" [style]="{'width':'100%'}"></p-dropdown>
                                     </div>
                                 </div>
                             </div>
-                            <p class="form-tip danger">Use Single Salary</p>
+                            <p class="form-tip danger" (click)='toggleSalaryField()' *ngIf="!job?.single_salary">Use Single Salary</p>
+                            <p class="form-tip danger" (click)='toggleSalaryField()' *ngIf="job?.single_salary">Use Salary Range</p>
                         </div>
                         <div class="form-content-box-bottom">
                             <div class="form-content-box-bottom-holder">
-                                <p-checkbox name="hide_salary" binary="true" label="Hide this salary from thejob posting" formControlName="hide_salary" inputId="hide_salary"></p-checkbox>
+                                <p-checkbox name="hide_salary" binary="true" label="Hide this salary from the job posting" formControlName="hide_salary" inputId="hide_salary"></p-checkbox>
                             </div>
                         </div>
                     </div>

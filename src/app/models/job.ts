@@ -8,8 +8,9 @@ export class Job {
     number_of_hires: string | number;
     education: string;
     experience: string;
-    salary_from: number;
-    salary_to: number;
+    single_salary: boolean;
+    salary_from?: number;
+    salary_to?: number;
     salary_period: string;
     hide_salary: boolean;
     description: string;

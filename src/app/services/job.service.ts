@@ -27,6 +27,7 @@ export class JobService {
                 number_of_hires: 1,
                 education: 'bachelors',
                 experience: 'mid',
+                single_salary: false,
                 salary_from: null,
                 salary_to: null,
                 salary_period: 'yearly',

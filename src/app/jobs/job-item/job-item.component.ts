@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router, ParamMap } from '@angular/router';
-import { map } from 'rxjs/operators';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
 
 import { Job } from './../../models/job';
 import { JobService } from './../../services/job.service';
+import { ConditionalValidator } from './../../validators/conditional.validator';
+
 
 
 @Component({
@@ -150,11 +151,10 @@ export class JobItemComponent implements OnInit {
     // TEMPORARY (till Quill fixes it)
     private editorAutofocusFix() {
         setTimeout(() => {
-            let el = <HTMLElement>document.querySelector('[formControlName]');
+            const el = <HTMLElement>document.querySelector('[formControlName]');
             el.focus();
             window.scrollTo(0, 0);
         }, 0);
-        
     }
 
     private initForms() {
@@ -167,6 +167,7 @@ export class JobItemComponent implements OnInit {
             number_of_hires: [''],
             education: [''],
             experience: [''],
+            salary: [''],
             salary_from: [''],
             salary_to: [''],
             salary_period: [''],
@@ -209,8 +210,8 @@ export class JobItemComponent implements OnInit {
             number_of_hires: [this.job.number_of_hires, Validators.required],
             education: [this.job.education, Validators.required],
             experience: [this.job.experience, Validators.required],
-            salary_from: [this.job.salary_from],
-            salary_to: [this.job.salary_to],
+            salary_from: [this.job.salary_from, Validators.required],
+            salary_to: [this.job.salary_to, ConditionalValidator.validate(() => !this.job.single_salary, Validators.requiredTrue)],
             salary_period: [this.job.salary_period],
             hide_salary: [this.job.hide_salary || false],
             description: [this.job.description]
@@ -242,6 +243,17 @@ export class JobItemComponent implements OnInit {
 
     onChangeSection(section: string) {
         this.activeSection = section;
+    }
+
+    toggleSalaryField() {
+        this.job.single_salary = !this.job.single_salary;
+        const salaryToControl = this.jobDetailsForm.get('salary_to');
+        if (this.job.single_salary) {
+            salaryToControl.clearValidators();
+            salaryToControl.updateValueAndValidity();
+        } else {
+            salaryToControl.setValidators([Validators.required]);
+        }
     }
 
     onSaveDraft(event) {

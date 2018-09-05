@@ -74,6 +74,11 @@ a {
 .mh500 {
     min-height: 500px;
 }
+
+.mw33p {
+    max-width: 33.3333%;
+}
+
 .flex-row {
     display: flex;
     flex-direction: row;
@@ -94,6 +99,10 @@ a {
 
 .tac {
     text-align: center;
+}
+
+[hidden] {
+    display: none !important;
 }
 
 $steps: 5 10 15 20 25 30 33 35 40 45 50 60 75;
