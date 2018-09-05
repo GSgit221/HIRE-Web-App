@@ -5,7 +5,7 @@ export class Job {
     location: string;
     is_remote: boolean;
     job_type: string;
-    number_of_hires: number;
+    number_of_hires: string | number;
     education: string;
     experience: string;
     salary_from: number;

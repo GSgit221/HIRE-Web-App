@@ -92,6 +92,10 @@ a {
     align-items: center;
 }
 
+.tac {
+    text-align: center;
+}
+
 $steps: 5 10 15 20 25 30 33 35 40 45 50 60 75;
 
 @each $step in $steps {

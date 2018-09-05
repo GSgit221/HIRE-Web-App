@@ -100,14 +100,14 @@
                     </span>
                 </div>
                 <div class="col col4 flex-20">Location</div>
-                <div class="col col5 flex-10">Type</div>
-                <div class="col col6 flex-10">
+                <div class="col col5 flex-10 tac">Type</div>
+                <div class="col col6 flex-10 tac">
                     <img src="/assets/images/applications.svg" alt="" width="16" height="10">
                 </div>
-                <div class="col col7 flex-10">
+                <div class="col col7 flex-10 tac">
                     <img src="/assets/images/time.svg" alt="" width="13" height="13">
                 </div>
-                <div class="col col8 flex-10">
+                <div class="col col8 flex-10 tac">
                     <img src="/assets/images/recent.svg" alt="" width="14" height="12">
                 </div>
                 <div class="col col9 flex-10">
@@ -131,16 +131,13 @@
                              {{item.title}}
                         </div>
                         <div class="col col4  flex-20">{{item.location}}</div>
-                        <div class="col col5 flex-10">
-                            <img *ngIf="item.type === 'permanent'" src="/assets/images/bag.svg" alt="" width="14" height="13">
-                            <img *ngIf="item.type === 'temporary'" src="/assets/images/refresh.svg" alt="" width="13" height="13">
+                        <div class="col col5 flex-10 tac">
+                            <img *ngIf="item.number_of_hires !== 'ongoing'" src="/assets/images/bag.svg" alt="" width="14" height="13">
+                            <img *ngIf="item.number_of_hires === 'ongoing'" src="/assets/images/refresh.svg" alt="" width="13" height="13">
                         </div>
-                        <div class="col col6 flex-10">{{item.applications}}
-                        </div>
-                        <div class="col col7 flex-10">{{item.created}}
-                        </div>
-                        <div class="col col8 flex-10">{{item.updated}}
-                        </div>
+                        <div class="col col6 flex-10 tac">{{item.applications}}</div>
+                        <div class="col col7 flex-10 tac">{{item.created}}</div>
+                        <div class="col col8 flex-10 tac">{{item.updated}}</div>
                         <div class="col col9 flex-10 flex-row">
                             <div class="ava"><img src="/assets/images/hiring-team-placeholder.png" alt="" width="20" height="20"></div>
                             <button class="add-btn"></button>

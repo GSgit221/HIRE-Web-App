@@ -53,9 +53,9 @@ export class JobItemComponent implements OnInit {
         this.jobService.getJob(jobId)
             .subscribe((job: Job) => {
                 this.job = job;
-                this.populateForms();
+                setTimeout(() => this.contentLoading = false, 200);
                 console.log('FROM ROUTE-------------------- JOB:', jobId, this.job);
-                this.contentLoading = false;
+                this.populateForms();
             });
 
 
@@ -66,17 +66,15 @@ export class JobItemComponent implements OnInit {
                 this.jobService.getJob(jobId)
                     .subscribe((job: Job) => {
                         this.job = job;
-                        this.populateForms();
+                        setTimeout(() => this.contentLoading = false, 200);
                         console.log('FROM CHANGE-------------------- JOB:', jobId, this.job);
+                        this.populateForms();
 
                         const section = this.route.snapshot.queryParamMap.get('section');
                         console.log(section);
                         if (section) {
                             this.activeSection = section;
                         }
-
-
-                        this.contentLoading = false;
                     });
             }
         });
@@ -146,6 +144,17 @@ export class JobItemComponent implements OnInit {
     }
 
     ngOnInit() {
+
+    }
+
+    // TEMPORARY (till Quill fixes it)
+    private editorAutofocusFix() {
+        setTimeout(() => {
+            let el = <HTMLElement>document.querySelector('[formControlName]');
+            el.focus();
+            window.scrollTo(0, 0);
+        }, 0);
+        
     }
 
     private initForms() {
@@ -185,6 +194,8 @@ export class JobItemComponent implements OnInit {
             team_members: [''],
             default_email_name: ['']
         });
+
+        this.editorAutofocusFix();
     }
 
     private populateForms() {
@@ -225,6 +236,7 @@ export class JobItemComponent implements OnInit {
             team_members: [this.job.team_members],
             default_email_name: [this.job.default_email_name]
         });
+        this.editorAutofocusFix();
     }
 
 
