@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
@@ -6,6 +6,7 @@ import { SelectItem } from 'primeng/api';
 import { Job } from './../../models/job';
 import { JobService } from './../../services/job.service';
 import { ConditionalValidator } from './../../validators/conditional.validator';
+import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
 
 
 
@@ -15,6 +16,8 @@ import { ConditionalValidator } from './../../validators/conditional.validator';
     styleUrls: ['./job-item.component.scss']
 })
 export class JobItemComponent implements OnInit {
+    @ViewChild('placesRef') placesRef: GooglePlaceDirective;
+    @ViewChild('locationInputRef') locationInputRef: ElementRef;
     jobDetailsForm: FormGroup;
     applicationsForm: FormGroup;
     hiringForm: FormGroup;
@@ -36,6 +39,10 @@ export class JobItemComponent implements OnInit {
     activeSection = 'job-details';
     sections = ['job-details', 'applications', 'hiring-team'];
     contentLoading = true;
+
+    place: any;
+    inputAddress: string;
+    locationOptions: any;
 
 
     constructor(
@@ -142,6 +149,13 @@ export class JobItemComponent implements OnInit {
         ];
 
         this.hiringManagersOptions = [];
+        this.locationOptions = {
+            bounds: null,
+            componentRestrictions: {
+                country: []
+            },
+            types: ['(cities)']
+        };
     }
 
     ngOnInit() {
@@ -204,19 +218,21 @@ export class JobItemComponent implements OnInit {
         this.jobDetailsForm = this.fb.group({
             title: [this.job.title, Validators.required],
             company: [this.job.company, Validators.required],
-            location: [{ value: this.job.location, disabled: false }],
+            location: [
+                { value: this.job.location, disabled: false },
+                ConditionalValidator.validate(() => !this.job.is_remote, Validators.required)],
             is_remote: [this.job.is_remote || false],
             job_type: [this.job.job_type, Validators.required],
             number_of_hires: [this.job.number_of_hires, Validators.required],
             education: [this.job.education, Validators.required],
             experience: [this.job.experience, Validators.required],
             salary_from: [this.job.salary_from, Validators.required],
-            salary_to: [this.job.salary_to, ConditionalValidator.validate(() => !this.job.single_salary, Validators.requiredTrue)],
+            salary_to: [this.job.salary_to, ConditionalValidator.validate(() => !this.job.single_salary, Validators.required)],
             salary_period: [this.job.salary_period],
             hide_salary: [this.job.hide_salary || false],
             description: [this.job.description]
-
         });
+        this.inputAddress = this.job.location;
         this.applicationsForm = this.fb.group({
             job_listing: ['default'],
             resume_upload_required: [this.job.resume_upload_required],
@@ -238,6 +254,21 @@ export class JobItemComponent implements OnInit {
             default_email_name: [this.job.default_email_name]
         });
         this.editorAutofocusFix();
+
+
+        // Location
+        console.log('SUBSCRIBE');
+        const locationControl = this.jobDetailsForm.get('location');
+        this.jobDetailsForm.get('is_remote').valueChanges.subscribe(value => {
+            console.log(value);
+            if (value) {
+                locationControl.clearValidators();
+                locationControl.updateValueAndValidity();
+            } else {
+                locationControl.setValidators([Validators.required]);
+                locationControl.updateValueAndValidity();
+            }
+        });
     }
 
 
@@ -304,6 +335,25 @@ export class JobItemComponent implements OnInit {
                     this.activeSection = this.nextSection();
                 }
             });
+    }
+
+    onLocationChange(address) {
+        this.place = address;
+        this.job.location = (address && address.formatted_address) ? this.locationInputRef.nativeElement.value : '';
+        this.jobDetailsForm.patchValue({location: this.job.location});
+    }
+
+    handleAddressTextChange(event) {
+        setTimeout(() => {
+            if (event.target.value !== this.job.location) {
+                this.place = null;
+                this.job.location = '';
+                this.jobDetailsForm.patchValue({ location: this.job.location });
+                this.inputAddress = '';
+                this.placesRef.reset();
+                this.locationInputRef.nativeElement.value = '';
+            }
+        }, 400);
     }
 
     private getActiveForm() {

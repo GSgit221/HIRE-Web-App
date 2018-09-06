@@ -64,11 +64,29 @@
                             <div class="input-block">
                                 <label for="" class="form-block-label">Primary Job Location</label>
                                 <div class="input-block right-option-block">
-                                    <input type="text" class="form-input" placeholder="Enter a city" formControlName="location" [appDisableControl]="jobDetailsForm.get('is_remote').value">
+                                    <!-- <input type="text" class="form-input" placeholder="Enter a city" formControlName="location" [appDisableControl]="jobDetailsForm.get('is_remote').value"> -->
+                                    <input type="hidden" formControlName="location" id="location-input">
+                                    <input 
+                                    type="text"
+                                    class="form-input"
+                                    placeholder="Enter a city"
+                                    ngx-google-places-autocomplete 
+                                    #placesRef="ngx-places" 
+                                    #locationInputRef
+                                    [options]="locationOptions"
+                                    (onAddressChange)="onLocationChange($event)"
+                                    [(value)]="inputAddress"
+                                    (change)="handleAddressTextChange($event)"
+                                    [disabled]="jobDetailsForm.get('is_remote').value"
+                                    />
                                     <div class="right-option">
                                         <p-checkbox label="Remote" formControlName="is_remote" binary="true" inputId="is_remote"></p-checkbox>
                                     </div>
                                 </div>
+                                <div class="input-block">
+                                    
+                                </div>
+
                             </div>
                         </div>
                         <div class="form-block">

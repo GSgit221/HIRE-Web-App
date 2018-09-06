@@ -16,6 +16,8 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { EditorModule } from 'primeng/editor';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { PanelModule } from 'primeng/panel';
+import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
+
 
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -91,7 +93,8 @@ export function provideConfig() {
         HttpClientModule,
         AngularEditorModule,
         SocialLoginModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        GooglePlaceModule
     ],
     providers: [
         {
