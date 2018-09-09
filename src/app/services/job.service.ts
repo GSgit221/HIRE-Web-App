@@ -76,4 +76,12 @@ export class JobService {
             });
         }
     }
+
+    updateJob(id, data) {
+        return this.http.put(`${environment.api_url}/tenants/${environment.tenant}/jobs/${id}`, {
+            section: '',
+            data: data,
+            next: false
+        });
+    }
 }
