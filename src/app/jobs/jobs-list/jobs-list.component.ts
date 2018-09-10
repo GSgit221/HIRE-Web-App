@@ -15,6 +15,8 @@ export class JobsListComponent implements OnInit {
     contentLoading = true;
     list = [];
     statusOptions: SelectItem[];
+    selectedAll = false;
+    selectedItems = 0;
 
     constructor(private router: Router, private jobService: JobService) {
         this.jobService.getAll()
@@ -46,10 +48,43 @@ export class JobsListComponent implements OnInit {
         }
     }
 
-    onStatusChange(event, item) {
-        console.log(event);
-        console.log(item);
-        this.jobService.updateJob(item.id, {status: item.status}).subscribe(() => console.log('updated'));
+    onJobStatusChange(item) {
+        this.jobService.updateJob(item.id, { status: item.status }).subscribe(() => console.log('updated'));
     }
 
+
+    onSelectAllChange() {
+        if (this.selectedAll) {
+            this.list.forEach(item => item.selected = true);
+        } else {
+            this.list.forEach(item => item.selected = false);
+        }
+        this.calculateSelectedItems();
+    }
+
+    onItemSeletectedChange() {
+        this.calculateSelectedItems();
+    }
+
+    private calculateSelectedItems() {
+        this.selectedItems = this.list.filter(item => item.selected).length;
+        if (!this.selectedItems) {
+            this.selectedAll = false;
+        }
+    }
+
+    onItemsBulkRemove() {
+        this.contentLoading = true;
+        const itemsToRemove = this.list.filter(item => item.selected).map(item => item.id);
+        console.log(itemsToRemove);
+        this.jobService.bulkDeleteJobs(itemsToRemove)
+            .subscribe(() => {
+                this.jobService.getAll()
+                    .subscribe((jobs: Job[]) => {
+                        this.list = jobs;
+                        this.contentLoading = false;
+                        this.calculateSelectedItems();
+                    });
+            });
+    }
 }

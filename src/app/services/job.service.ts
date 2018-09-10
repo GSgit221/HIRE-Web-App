@@ -84,4 +84,12 @@ export class JobService {
             next: false
         });
     }
+
+    deleteJob(id) {
+        return this.http.delete(`${environment.api_url}/tenants/${environment.tenant}/jobs/${id}`);
+    }
+
+    bulkDeleteJobs(ids) {
+        return this.http.post(`${environment.api_url}/tenants/${environment.tenant}/jobs/bulk-delete`, {items: ids});
+    }
 }

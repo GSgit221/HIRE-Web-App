@@ -166,7 +166,9 @@ export class JobItemComponent implements OnInit {
     private editorAutofocusFix() {
         setTimeout(() => {
             const el = <HTMLElement>document.querySelector('[formControlName]');
-            el.focus();
+            if (el) {
+                el.focus();
+            }
             window.scrollTo(0, 0);
         }, 0);
     }
