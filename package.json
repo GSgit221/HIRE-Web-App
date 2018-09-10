@@ -24,6 +24,7 @@
     "@ng-select/ng-select": "^2.3.6",
     "angularx-social-login": "^1.2.3",
     "animate.css": "^3.7.0",
+    "closest": "0.0.1",
     "core-js": "^2.5.4",
     "ngx-google-places-autocomplete": "^2.0.1",
     "primeicons": "^1.0.0-beta.10",

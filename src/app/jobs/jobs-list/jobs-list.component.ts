@@ -1,10 +1,10 @@
 import { SelectItem } from 'primeng/api';
+import * as closest from 'closest';
 import { Job } from './../../models/job';
 import { Component, OnInit } from '@angular/core';
 
 import { Router } from '../../../../node_modules/@angular/router';
 import { JobService } from './../../services/job.service';
-import { UtilitiesService } from './../../services/utilities.service';
 
 @Component({
     selector: 'app-jobs-list',
@@ -16,7 +16,7 @@ export class JobsListComponent implements OnInit {
     list = [];
     statusOptions: SelectItem[];
 
-    constructor(private router: Router, private jobService: JobService, private Utilities: UtilitiesService) {
+    constructor(private router: Router, private jobService: JobService) {
         this.jobService.getAll()
             .subscribe((jobs: Job[]) => {
                 this.list = jobs;
@@ -37,7 +37,7 @@ export class JobsListComponent implements OnInit {
     onItemClick(event, item) {
         event.preventDefault();
         const target = event.target;
-        const escapeDD = this.Utilities.getClosest(event.target, '[data-escape-click]');
+        const escapeDD = closest(event.target, '[data-escape-click]');
         if (escapeDD) {
             console.log('DO NOTHING');
         } else {

@@ -1,9 +1,0 @@
-<svg width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Job-View" transform="translate(-365.000000, -113.000000)" fill="#637381" fill-rule="nonzero">
-            <g id="icons8-import" transform="translate(365.000000, 113.000000)">
-                <path d="M1.5,0 C0.675781,0 0,0.675781 0,1.5 L0,11.5 C0,12.324219 0.675781,13 1.5,13 L11.5,13 C12.324219,13 13,12.324219 13,11.5 L13,9 L12,9 L12,11.5 C12,11.78125 11.78125,12 11.5,12 L1.5,12 C1.21875,12 1,11.78125 1,11.5 L1,1.5 C1,1.21875 1.21875,1 1.5,1 L11.5,1 C11.78125,1 12,1.21875 12,1.5 L12,4 L13,4 L13,1.5 C13,0.675781 12.324219,0 11.5,0 L1.5,0 Z M7.273438,3.023438 L3.792969,6.5 L7.273438,9.980469 L7.976563,9.269531 L5.707031,7 L13,7 L13,6 L5.707031,6 L7.976563,3.726563 L7.273438,3.023438 Z" id="Shape"></path>
-            </g>
-        </g>
-    </g>
-</svg>
