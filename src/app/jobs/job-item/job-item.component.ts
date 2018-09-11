@@ -228,8 +228,9 @@ export class JobItemComponent implements OnInit {
             number_of_hires: [this.job.number_of_hires, Validators.required],
             education: [this.job.education, Validators.required],
             experience: [this.job.experience, Validators.required],
-            salary_from: [this.job.salary_from, Validators.required],
-            salary_to: [this.job.salary_to, ConditionalValidator.validate(() => !this.job.single_salary, Validators.required)],
+            salary_from: [this.job.salary_from],
+            salary_to: [this.job.salary_to],
+            // ConditionalValidator.validate(() => !this.job.single_salary, Validators.required)
             salary_period: [this.job.salary_period],
             hide_salary: [this.job.hide_salary || false],
             description: [this.job.description]
@@ -280,13 +281,13 @@ export class JobItemComponent implements OnInit {
 
     toggleSalaryField() {
         this.job.single_salary = !this.job.single_salary;
-        const salaryToControl = this.jobDetailsForm.get('salary_to');
-        if (this.job.single_salary) {
-            salaryToControl.clearValidators();
-            salaryToControl.updateValueAndValidity();
-        } else {
-            salaryToControl.setValidators([Validators.required]);
-        }
+        // const salaryToControl = this.jobDetailsForm.get('salary_to');
+        // if (this.job.single_salary) {
+        //     salaryToControl.clearValidators();
+        //     salaryToControl.updateValueAndValidity();
+        // } else {
+        //     salaryToControl.setValidators([Validators.required]);
+        // }
     }
 
     onSaveDraft(event) {
