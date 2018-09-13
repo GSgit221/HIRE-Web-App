@@ -1,3 +1,4 @@
+import { User } from './../../models/user';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
@@ -25,6 +26,8 @@ export class JobItemComponent implements OnInit {
     job: Job;
     titleMaxLength: number;
 
+    users: User[];
+
     jobTypeOptions: SelectItem[];
     educationOptions: SelectItem[];
     hiresOptions: SelectItem[];
@@ -36,7 +39,8 @@ export class JobItemComponent implements OnInit {
     hiringManagersOptions: SelectItem[];
     jobDescription: string;
 
-    activeSection = 'job-details';
+    // activeSection = 'job-details';
+    activeSection = 'hiring-team';
     sections = ['job-details', 'applications', 'hiring-team'];
     contentLoading = true;
 
@@ -53,7 +57,6 @@ export class JobItemComponent implements OnInit {
     ) {
 
         this.titleMaxLength = 250;
-
         this.initForms();
 
         // Job
@@ -64,6 +67,7 @@ export class JobItemComponent implements OnInit {
                 setTimeout(() => this.contentLoading = false, 200);
                 console.log('FROM ROUTE-------------------- JOB:', jobId, this.job);
                 this.populateForms();
+
             });
 
 
@@ -86,6 +90,23 @@ export class JobItemComponent implements OnInit {
                     });
             }
         });
+
+        this.jobService.getUsers().subscribe((users: User[]) => {
+            this.users = users || [];
+            console.log(this.users);
+
+            // this.hiringManagersOptions = [];
+            // if (users.length) {
+            //     users.forEach((user: any) => {
+            //         this.hiringManagersOptions.push({
+            //             label: user.first_name + ' ' + user.last_name,
+            //             value: user.id,
+            //             icon: user.icon_url_small || ''
+            //         });
+            //     });
+            // }
+        });
+
 
         // Options
         this.jobTypeOptions = [
@@ -343,7 +364,7 @@ export class JobItemComponent implements OnInit {
     onLocationChange(address) {
         this.place = address;
         this.job.location = (address && address.formatted_address) ? this.locationInputRef.nativeElement.value : '';
-        this.jobDetailsForm.patchValue({location: this.job.location});
+        this.jobDetailsForm.patchValue({ location: this.job.location });
     }
 
     handleAddressTextChange(event) {

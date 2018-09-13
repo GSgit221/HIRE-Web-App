@@ -16,6 +16,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { EditorModule } from 'primeng/editor';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { PanelModule } from 'primeng/panel';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 
 
@@ -42,6 +43,7 @@ import { IntegrationsComponent } from './settings/integrations/integrations.comp
 import { DisableControlDirective } from './directives/disable-control.directive';
 import { JobItemUnpublishedComponent } from './jobs/job-item-unpublished/job-item-unpublished.component';
 import { JobItemPublishedComponent } from './jobs/job-item-published/job-item-published.component';
+import { MultiSelectComponent } from './shared/multi-select/multi-select.component';
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -74,7 +76,8 @@ export function provideConfig() {
         LoaderComponent,
         DisableControlDirective,
         JobItemUnpublishedComponent,
-        JobItemPublishedComponent
+        JobItemPublishedComponent,
+        MultiSelectComponent
     ],
     imports: [
         AppRoutingModule,
@@ -88,6 +91,7 @@ export function provideConfig() {
         EditorModule,
         PanelModule,
         PanelMenuModule,
+        MultiSelectModule,
         SelectButtonModule,
         BrowserAnimationsModule,
         HttpClientModule,

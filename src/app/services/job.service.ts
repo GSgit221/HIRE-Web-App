@@ -92,4 +92,8 @@ export class JobService {
     bulkDeleteJobs(ids) {
         return this.http.post(`${environment.api_url}/tenants/${environment.tenant}/jobs/bulk-delete`, {items: ids});
     }
+
+    getUsers() {
+        return this.http.get(`${environment.api_url}/tenants/${environment.tenant}/users`);
+    }
 }
