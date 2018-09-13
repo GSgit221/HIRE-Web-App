@@ -1,3 +1,4 @@
+import { SignoutComponent } from './auth/signout.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -19,6 +20,7 @@ import { ScorecardsComponent } from './settings/scorecards/scorecards.component'
 const appRoutes: Routes = [
     { path: 'signin', component: SigninComponent },
     { path: 'signup', component: SignupComponent },
+    { path: 'signout', component: SignoutComponent },
     { path: 'reset-password', component: ResetPasswordComponent },
     { path: 'set-password', component: SetPasswordComponent },
     {

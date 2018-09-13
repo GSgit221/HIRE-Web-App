@@ -28,6 +28,7 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
 import { SetPasswordComponent } from './auth/set-password/set-password.component';
 import { SigninComponent } from './auth/signin/signin.component';
 import { SignupComponent } from './auth/signup/signup.component';
+import { SignoutComponent } from './auth/signout.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SidebarComponent } from './dashboard/sidebar/sidebar.component';
 import { AuthGuard } from './guards/auth.guard';
@@ -61,6 +62,7 @@ export function provideConfig() {
         AppComponent,
         SigninComponent,
         SignupComponent,
+        SignoutComponent,
         DashboardComponent,
         PageNotFoundComponent,
         JobsListComponent,
