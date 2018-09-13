@@ -1,6 +1,8 @@
-import { SelectItem } from 'primeng/api';
-import { Component, OnInit, ElementRef, HostListener, Input, forwardRef } from '@angular/core';
+import { UserService } from './../../services/user.service';
+import { Component, OnInit, ElementRef, HostListener, Input, forwardRef, Output, EventEmitter } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { environment } from '../../../environments/environment';
+import { User } from '../../models/user';
 
 
 @Component({
@@ -20,13 +22,42 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
     newItemMode = false;
     selectedValue = [];
     selectedItems = [];
+    contentLoading = false;
     newUserForm: FormGroup;
 
-    _items: any[];
+    _items: any[] = [];
     @Input()
     set items(items: any[]) {
-        this._items = items;
-        console.log('SET', this._items);
+        console.log('SET ITEMS', items);
+        if (items && items.length) {
+            this.selectedItems = [];
+            items.forEach(item => {
+                if (!this._items.find(_item => _item.user_id === item.user_id)) {
+                    this._items.push(item);
+                }
+            });
+            this.setSelected();
+        }
+    }
+    @Output() newUser = new EventEmitter<User>();
+
+    // Click outside of drop-down
+    @HostListener('document:click', ['$event'])
+    clickout(event) {
+        if (!this.elRef.nativeElement.children[0].contains(event.target)) {
+            this.menuIsVisible = false;
+        }
+    }
+
+
+    constructor(private elRef: ElementRef, private fb: FormBuilder, private userService: UserService) {
+        this.newUserForm = this.fb.group({
+            full_name: ['', Validators.required],
+            email: ['', [Validators.required, Validators.email]]
+        });
+    }
+
+    private setSelected() {
         if (this.selectedValue && this.selectedValue.length) {
             this.selectedValue.forEach(sv => {
                 const item = this._items.find(_item => _item.user_id === sv);
@@ -38,27 +69,11 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
         }
     }
 
-    // Click outside of drop-down
-    @HostListener('document:click', ['$event'])
-    clickout(event) {
-        if (!this.elRef.nativeElement.children[0].contains(event.target)) {
-            this.menuIsVisible = false;
-        }
-    }
-
-
-    constructor(private elRef: ElementRef, private fb: FormBuilder) {
-        this.newUserForm = this.fb.group({
-            full_name: ['', Validators.required],
-            email: ['', [Validators.required, Validators.email]]
-        });
-    }
-
     writeValue(value: any) {
         if (value !== undefined) {
-            console.log('VALUE PASSED TO COMPONENT');
-            console.log(value);
+            console.log('VALUE PASSED TO COMPONENT:', value);
             this.selectedValue = value;
+            this.setSelected();
         }
     }
 
@@ -79,9 +94,7 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
 
 
     onSelectItem(item) {
-        console.log('select');
         item.selected = true;
-        console.log(item);
         this.selectedItems.push(item);
         this.menuIsVisible = false;
 
@@ -89,14 +102,34 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
         this.propagateChange(this.selectedValue);
     }
     onAddNewClick() {
-        console.log('add new');
         this.menuIsVisible = false;
         this.newItemMode = true;
     }
 
-    onAddnewItem(event) {
+    onAddNewItem(event) {
         event.preventDefault();
-        this.newItemMode = false;
+        const form = this.newUserForm;
+        if (!form.valid) {
+            this.markFormGroupTouched(form);
+            return;
+        }
+        this.contentLoading = true;
+        this.userService.create(environment.tenant, form.value)
+            .subscribe((response: User) => {
+                this.contentLoading = false;
+                this.newItemMode = false;
+                this.newUser.next(response);
+                setTimeout(() => {
+                    const newItem = this._items.find(_item => _item.user_id === response.user_id);
+                    if (newItem) {
+                        newItem.selected = true;
+                        this.selectedItems.push(newItem);
+                    }
+                }, 1000);
+            }, error => {
+                console.log(error);
+                this.contentLoading = false;
+            });
     }
 
     onCancelAddNewItem() {
@@ -112,4 +145,14 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
         this.selectedValue = this.selectedItems.map(si => si.user_id);
         this.propagateChange(this.selectedValue);
     }
+
+    private markFormGroupTouched(formGroup: FormGroup) {
+        (<any>Object).values(formGroup.controls).forEach(control => {
+            control.markAsTouched();
+            if (control.controls) {
+                control.controls.forEach(c => this.markFormGroupTouched(c));
+            }
+        });
+    }
+
 }

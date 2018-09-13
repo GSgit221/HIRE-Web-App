@@ -2,3 +2,5 @@ node_modules
 src/environments
 proxy.conf.json
 dist
+.project
+.settings/

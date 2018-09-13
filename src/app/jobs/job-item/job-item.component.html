@@ -348,26 +348,7 @@
                 </div>
                 <div class="form-content-holder">
                     <div class="form-content-box">
-                        <app-multi-select [(items)]="users" formControlName="hiring_managers"></app-multi-select>
-                        <!-- <div class="form-block">
-                            <div class="input-block">
-                                <label for="" class="form-block-label">Hiring Managers</label>
-                                <p-multiSelect [options]="hiringManagersOptions" formControlName="hiring_managers" [style]="{'width':'100%'}" placeholder="Add to this
-                                position">
-                                    <ng-template let-selectedCars pTemplate="selectedItems">
-                                        <span>Add to this position</span>
-                                    </ng-template>
-                                    <ng-template let-opt let-i="index" pTemplate="item">
-                                        <div>{{opt.label}}</div>
-                                    </ng-template>
-                                </p-multiSelect>
-                            </div>
-                        </div>
-                        <div class="form-content-box-bottom">
-                            <div class="form-content-box-bottom-holder">
-
-                            </div>
-                        </div> -->
+                        <app-multi-select [items]="users" (newUser)="onNewUserAdded($event)" formControlName="hiring_managers"></app-multi-select>
                     </div>
                 </div>
             </div>
@@ -379,21 +360,7 @@
                 </div>
                 <div class="form-content-holder">
                     <div class="form-content-box">
-                        <div class="form-block">
-                            <div class="input-block">
-                                <label for="" class="form-block-label">Team Members</label>
-                                <div class="flex-row flex-aic">
-                                    <input type="text" class="form-input" placeholder="Full Name">
-                                    <input type="text" class="form-input ml20" placeholder="Email Address">
-                                    <button class="btn btn-primary w60 ml20">Add</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-content-box-bottom">
-                            <div class="form-content-box-bottom-holder">
-
-                            </div>
-                        </div>
+                        <app-multi-select [items]="users" (newUser)="onNewUserAdded($event)" formControlName="team_members"></app-multi-select>
                     </div>
                 </div>
             </div>

@@ -18,12 +18,13 @@
         </div>
     </div>
     <div class="new-item" *ngIf="newItemMode">
-        <div class="flex-row flex-aic">
-            <input type="text" class="form-input" placeholder="Full Name">
-            <input type="text" class="form-input ml20" placeholder="Email Address">
-            <button class="btn btn-primary w60 ml20" (click)="onAddnewItem($event)">Add</button>
+        <form [formGroup]="newUserForm" class="flex-row flex-aic pos-rel">
+            <input type="text" class="form-input" placeholder="Full Name" formControlName="full_name">
+            <input type="text" class="form-input ml20" placeholder="Email Address" formControlName="email">
+            <button class="btn btn-primary w60 ml20" (click)="onAddNewItem($event)">Add</button>
             <button class="btn btn-primary-inversed btn-w60 ml20" (click)="onCancelAddNewItem($event)">Cancel</button>
-        </div>
+            <div class="light-overlay" *ngIf="contentLoading"></div>
+        </form>
     </div>
 </div>
 <div class="form-content-box-bottom" *ngIf="selectedItems && selectedItems.length">

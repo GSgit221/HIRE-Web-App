@@ -12,4 +12,8 @@ export class UserService {
     me() {
         return this.http.get(`${environment.api_url}/me`);
     }
+
+    create(tenantId, data) {
+        return this.http.post(`${environment.api_url}/tenants/${tenantId}/users`, {data});
+    }
 }

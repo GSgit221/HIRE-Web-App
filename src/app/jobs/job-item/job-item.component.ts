@@ -39,8 +39,8 @@ export class JobItemComponent implements OnInit {
     hiringManagersOptions: SelectItem[];
     jobDescription: string;
 
-    // activeSection = 'job-details';
-    activeSection = 'hiring-team';
+    activeSection = 'job-details';
+    // activeSection = 'hiring-team';
     sections = ['job-details', 'applications', 'hiring-team'];
     contentLoading = true;
 
@@ -93,18 +93,6 @@ export class JobItemComponent implements OnInit {
 
         this.jobService.getUsers().subscribe((users: User[]) => {
             this.users = users || [];
-            console.log(this.users);
-
-            // this.hiringManagersOptions = [];
-            // if (users.length) {
-            //     users.forEach((user: any) => {
-            //         this.hiringManagersOptions.push({
-            //             label: user.first_name + ' ' + user.last_name,
-            //             value: user.id,
-            //             icon: user.icon_url_small || ''
-            //         });
-            //     });
-            // }
         });
 
 
@@ -378,6 +366,13 @@ export class JobItemComponent implements OnInit {
                 this.locationInputRef.nativeElement.value = '';
             }
         }, 400);
+    }
+
+    onNewUserAdded(user: User) {
+        console.log('=============== New user added', user);
+        this.users = this.users.slice(0);
+        this.users.push(user);
+        console.log('USERS ARRAY:', this.users);
     }
 
     private getActiveForm() {
