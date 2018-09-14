@@ -37,6 +37,7 @@ export class JobItemComponent implements OnInit {
     questionnaireOptions: SelectItem[];
     applicationFieldsOptions: SelectItem[];
     hiringManagersOptions: SelectItem[];
+    defaultNameOptions: SelectItem[];
     jobDescription: string;
 
     activeSection = 'job-details';
@@ -93,6 +94,7 @@ export class JobItemComponent implements OnInit {
 
         this.jobService.getUsers().subscribe((users: User[]) => {
             this.users = users || [];
+            this.setDefaultNameOptions();
         });
 
 
@@ -373,6 +375,22 @@ export class JobItemComponent implements OnInit {
         this.users = this.users.slice(0);
         this.users.push(user);
         console.log('USERS ARRAY:', this.users);
+        this.setDefaultNameOptions();
+    }
+
+    private setDefaultNameOptions() {
+        this.defaultNameOptions = [];
+        if (this.job.hiring_managers) {
+            this.job.hiring_managers.forEach(hm => {
+                const user = this.users.find(u => u.user_id === hm);
+                if (user) {
+                    this.defaultNameOptions.push({
+                        value: user.first_name + ' ' + user.last_name,
+                        label: user.first_name + ' ' + user.last_name
+                    });
+                }
+            });
+        }
     }
 
     private getActiveForm() {
