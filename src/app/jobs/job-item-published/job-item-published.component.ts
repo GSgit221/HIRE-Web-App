@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Job } from './../../models/job';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-job-item-published',
-  templateUrl: './job-item-published.component.html',
-  styleUrls: ['./job-item-published.component.scss']
+    selector: 'app-job-item-published',
+    templateUrl: './job-item-published.component.html',
+    styleUrls: ['./job-item-published.component.scss']
 })
 export class JobItemPublishedComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
+    @Input() job: Job;
+    contentLoading = false;
+    constructor() { }
+    ngOnInit() {
+        console.log('published component');
+    }
 
 }
