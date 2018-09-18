@@ -1,0 +1,233 @@
+@import "../../../styles/variables.scss";
+
+.header-block {
+    display: flex;
+    flex-direction: row;
+
+    .add-btn {
+        height: 36px;
+    }
+}
+
+.status-dropdown {
+    width: 47px;
+    height: 47px;
+    background: $white;
+    border-radius: 3px;
+    margin-right: 20px;
+}
+
+.heading {
+    .job-title-block {
+        margin: 0;
+
+        .view, .edit {
+            display: flex;
+            flex-direction: row;
+        }
+    }
+
+    .title {
+        display: inline-block;
+        font-size: 25px;
+        line-height: 30px;
+    }
+
+    .address {
+        font-size: 13px;
+        line-height: 14px;
+        color: $grey;
+        vertical-align: top;
+
+        .ico, span {
+            display: inline-block;
+        }
+
+        .ico {
+            margin: 0 12px 0 0;
+        }
+    }
+}
+
+.vertical-separator {
+    display: block;
+    width: 1px;
+    height: 30px;
+    background: $grey-border;
+    margin: 0 20px;
+}
+
+.hiring-managers-block {
+    display: flex;
+    flex-direction: row;
+
+    .item {
+        margin: 0 10px 0 0;
+    }
+}
+
+.stages-section {
+    width: 100%;
+    overflow: hidden;
+}
+
+.stage-column {
+    float: left;
+    width: 270px;
+    margin: 0 30px 0 0;
+
+    .btn-dash-bordered {
+        font-size: 16px;
+        font-weight: 500;
+        color: $grey;
+    }
+}
+
+.stage-header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 3px 0 0;
+    margin: 0 0 12px;
+
+    .title {
+        font-size: 16px;
+        line-height: 18px;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .counter {
+        display: block;
+        width: 22px;
+        height: 16px;
+        font-size: 12px;
+        line-height: 16px;
+        font-weight: 500;
+        background: $grey-border;
+        text-align: center;
+        border-radius: 8px;
+        margin: 0 0 0 8px;
+    }
+}
+
+.settings-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    width: 20px;
+    height: 29px;
+    background: $grey-border;
+
+    &:hover {
+        background: darken($grey-border, 5%);
+    }
+
+    &:active {
+        background: lighten($grey-border, 5%);
+    }
+}
+
+.stage-content {
+    .block {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        border-radius: 5px;
+        background: $white;
+        box-shadow: 0 0 5px 0 rgba($color: #000000, $alpha: 0.1);
+        margin: 0 0 10px;
+        padding: 14px 10px;
+        position: relative;
+    }
+
+    .ava-column {
+        width: 30px;
+        margin: 0 10px;
+    }
+
+    .ava {
+        display: block;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: $blue;
+        overflow: hidden;
+
+        img {
+            display: block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin: 0;
+        }
+    }
+
+    .ava-placeholder {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+        color: $white;
+    }
+
+    .block-content {
+        flex: 1;
+        padding: 8px 0 0;
+    }
+
+    .title {
+        display: block;
+        font-size: 13px;
+        line-height: 15px;
+        margin: 0 0 8px;
+    }
+
+    .position {
+        display: block;
+        font-size: 12px;
+        line-height: 15px;
+        color: $grey;
+        margin: 0 0 8px;
+    }
+
+    .stats-actions-block {
+        display: flex;
+        flex-direction: row;
+        padding: 4px 0 0;
+        font-size: 10px;
+        color: $grey;
+    }
+
+    .text-with-icon {
+        .icon {
+            margin: 0 4px 0 0;
+        }
+    }
+
+    .status {
+        position: absolute;
+        right: 10px;
+        top: 18px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+
+        &.green {
+            background: $dark-green;
+        }
+
+        &.orange {
+            background: $orange2;
+        }
+
+        &.red {
+            background: $light-red;
+        }
+    }
+}
