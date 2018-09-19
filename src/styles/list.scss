@@ -6,22 +6,6 @@
     position: relative;
     box-shadow: 0 0 10px 0 rgba(82, 95, 127, 0.2);
 
-    .status {
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        background: $grey;
-        border-radius: 50%;
-
-        &.live {
-            background: $green;
-        }
-
-        &.build {
-            background: $orange;
-        }
-    }
-
     .hc-list-header {
         display: flex;
         flex-direction: row;

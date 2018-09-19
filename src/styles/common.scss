@@ -559,3 +559,40 @@ p-selectbutton {
 [hidden] {
     display: none !important;
 }
+
+// Status indicator
+.status {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: $grey;
+    border-radius: 50%;
+
+    &.live {
+        background: $green;
+    }
+
+    &.build {
+        background: $orange;
+    }
+}
+
+// Drop-downs
+.status-dd-no-borders {
+    .ui-dropdown .ui-dropdown-label {
+        border: 0 !important;
+        padding: 9px 12px 9px 10px !important;
+    }
+}
+
+.status-dd.caret-down {
+    .ui-dropdown .ui-dropdown-trigger .ui-dropdown-trigger-icon:before {
+        display: none;
+    }
+
+    .ui-dropdown .ui-dropdown-trigger .ui-dropdown-trigger-icon:after {
+        bottom: 0;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
