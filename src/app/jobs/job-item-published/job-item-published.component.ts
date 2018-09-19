@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Job } from './../../models/job';
 import { Component, OnInit, Input } from '@angular/core';
 
@@ -9,9 +10,14 @@ import { Component, OnInit, Input } from '@angular/core';
 export class JobItemPublishedComponent implements OnInit {
     @Input() job: Job;
     contentLoading = false;
-    constructor() { }
+    constructor(private router: Router) { }
     ngOnInit() {
-        console.log('published component');
+        
+    }
+
+    onCandidateClick($event) {
+        console.log('Clicked on candidate', 'REDIRECT', `dashboard/jobs/${this.job.id}/candidate`);
+        this.router.navigateByUrl(`dashboard/jobs/${this.job.id}/candidate`);
     }
 
 }

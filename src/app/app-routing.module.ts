@@ -1,3 +1,4 @@
+import { CandidateItemComponent } from './candidates/candidate-item/candidate-item.component';
 import { SignoutComponent } from './auth/signout.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -42,6 +43,9 @@ const appRoutes: Routes = [
         }, {
             path: 'jobs/:id',
             component: JobItemComponent
+        }, {
+            path: 'jobs/:id/candidate',
+            component: CandidateItemComponent
         }, {
             path: 'people',
             component: PeopleListComponent

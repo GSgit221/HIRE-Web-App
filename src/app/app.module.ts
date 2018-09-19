@@ -45,6 +45,7 @@ import { DisableControlDirective } from './directives/disable-control.directive'
 import { JobItemUnpublishedComponent } from './jobs/job-item-unpublished/job-item-unpublished.component';
 import { JobItemPublishedComponent } from './jobs/job-item-published/job-item-published.component';
 import { MultiSelectComponent } from './shared/multi-select/multi-select.component';
+import { CandidateItemComponent } from './candidates/candidate-item/candidate-item.component';
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -79,7 +80,8 @@ export function provideConfig() {
         DisableControlDirective,
         JobItemUnpublishedComponent,
         JobItemPublishedComponent,
-        MultiSelectComponent
+        MultiSelectComponent,
+        CandidateItemComponent
     ],
     imports: [
         AppRoutingModule,
