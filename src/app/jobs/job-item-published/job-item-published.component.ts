@@ -32,4 +32,9 @@ export class JobItemPublishedComponent implements OnInit {
         this.router.navigateByUrl(`dashboard/jobs/${this.job.id}/candidate`);
     }
 
+    onSettigsClick(stageId: string) {
+        console.log('Clicked on stage settings:', stageId);
+        this.router.navigateByUrl(`dashboard/jobs/${this.job.id}/stages/${stageId}`);
+    }
+
 }
