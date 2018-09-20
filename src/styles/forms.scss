@@ -254,7 +254,7 @@ p-messages {
 }
 
 p-slider {
-    .threshold-slider {
+    .hc-slider {
         background: $grey-border;
         box-shadow: none;
         height: 2px;
@@ -280,9 +280,11 @@ p-slider {
                 padding: 7px 0 0;
                 font-size: 10px;
                 font-weight: 300;
+
                 &:hover {
                     cursor: grab;
                 }
+
                 &:active {
                     cursor: grabbing;
                 }

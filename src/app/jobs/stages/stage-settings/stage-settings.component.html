@@ -6,14 +6,14 @@
         </button>
     </div>
     <div class="title-block">
-        <h1 class="page-title">Applied Settings</h1>
+        <h1 class="page-title">{{stage?.title}} Settings</h1>
         <div class="buttons-holder">
             <button class="btn btn-primary ml20 w140" (click)="onSave()">Save</button>
         </div>
     </div>
     <div class="section-separator mb20"></div>
     <div class="content-section">
-        <form [formGroup]="stageSettingsForm">
+        <form [formGroup]="stageSettingsForm" *ngIf="stage && stage.id === 'applied'">
             <div class="form-content-section">
                 <div class="description">
                     <strong class="title">Resume Matching Threshold</strong>
@@ -25,16 +25,16 @@
                         <div class="form-block">
                             <div class="input-block">
                                 <label class="form-block-label">Resume Bimatching Threshold</label>
-                                <div class="threshold-slider-block">
+                                <div class="hc-slider-block">
                                     <p-slider 
-                                        styleClass="threshold-slider"
+                                        styleClass="hc-slider"
                                         formControlName="resume_matching_threshold"
                                         [animate]="true"
                                         [min]="0"
                                         [max]="100" 
                                         [step]="5"
-                                        (onChange)="onThresholdSliderChange()"
-                                        #thresholdSlider
+                                        (onChange)="onHcSliderChange()"
+                                        #hcSlider
                                     ></p-slider>
                                     <div class="slider-values flex-row">
                                         <span>0</span>
@@ -58,5 +58,89 @@
                 </div>
             </div>
         </form>
+        <form [formGroup]="stageSettingsForm" *ngIf="stage && stage.id !== 'applied'">
+            <div class="form-content-section">
+                <div class="description">
+                    <strong class="title">Stage Details</strong>
+                    <p>Edit your stage name and select an automation action if required.</p>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <div class="form-block">
+                            <div class="input-block">
+                                <label class="form-block-label">Stage Name</label>
+                                <div class="input-holder">
+                                    <input type="text" class="form-input" formControlName="title" maxlength="{{titleMaxLength}}" autofocus>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="section-separator mb20 mt20"></div>
+            <div class="form-content-section">
+                <div class="description">
+                    <strong class="title">Select an Integration (optional)</strong>
+                    <p>Select an action for this stage.</p>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <div class="form-content-box-top">
+                            <div class="form-content-box-top-holder">
+                                <div class="form-block">
+                                    <svg class="search-icon" width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <g id="Default-Screen" transform="translate(-25.000000, -82.000000)" fill="#637381" fill-rule="nonzero">
+                                                <g id="icons8-search" transform="translate(25.000000, 82.000000)">
+                                                    <path d="M8.5,0 C6.019531,0 4,2.019531 4,4.5 C4,5.558594 4.382813,6.523438 5,7.292969 L0.023438,12.269531 L0.726563,12.980469 L5.707031,8 C6.476563,8.617188 7.441406,9 8.5,9 C10.980469,9 13,6.980469 13,4.5 C13,2.019531 10.980469,0 8.5,0 Z M8.5,1 C10.4375,1 12,2.5625 12,4.5 C12,6.4375 10.4375,8 8.5,8 C6.5625,8 5,6.4375 5,4.5 C5,2.5625 6.5625,1 8.5,1 Z"
+                                                        id="Shape"></path>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                    <input type="text" name="search"  placeholder="Search for an integration">
+                                </div>
+                            </div>
+                        </div>
+                        <p>Content</p>
+                    </div>
+                </div>
+            </div> -->
+            <div class="section-separator mb20 mt20"></div>
+            <div class="form-content-section">
+                <div class="description">
+                    <strong class="title">Acceptace Criteria</strong>
+                    <p>Candidates who score above this acceptance critieria will be elegable for consideration</p>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <div class="form-block">
+                            <div class="input-block">
+                                <label class="form-block-label">Video Interview</label>
+                                <div class="hc-slider-block">
+                                    <p-slider styleClass="hc-slider" formControlName="acceptance_criteria" [animate]="true"
+                                        [min]="0" [max]="100" [step]="5" (onChange)="onHcSliderChange()" #hcSlider></p-slider>
+                                    <div class="slider-values flex-row">
+                                        <span>0</span>
+                                        <span class="mla">100</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-content-box-bottom">
+                            <div class="form-content-box-bottom-holder">
+                                <div class="form-block">
+                                    <p-checkbox name="automatically_progress_meeting_criteria" 
+                                    binary="true" 
+                                    label="Automatically progress candidates meet the acceptance criteria"
+                                    formControlName="automatically_progress_meeting_criteria" inputId="automatically_progress_meeting_criteria"></p-checkbox>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
+<app-loader *ngIf="contentLoading"></app-loader>

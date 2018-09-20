@@ -216,6 +216,16 @@
     .form-content-box-bottom-holder {
         padding: 20px;
     }
+
+    .form-content-top-bottom {
+        margin: -20px -20px 0;
+        background: $light;
+        border-radius: 0 0 5px 5px;
+    }
+
+    .form-content-top-bottom-holder {
+        padding: 20px;
+    }
 }
 
 .ui-button-text-only .ui-button-text {
