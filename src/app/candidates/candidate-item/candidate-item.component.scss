@@ -14,9 +14,6 @@
         align-items: center;
         justify-content: center;
         padding: 4px;
-        img {
-            margin: 0;
-        }
         &:after {
             content: '';
             position: absolute;
@@ -30,6 +27,7 @@
         }
         img {
             width: 100%;
+            margin: 0;
         }
     }
     .information-block {
@@ -219,11 +217,11 @@ p-slider {
     .circle {
         display: inline-flex;
         position: relative;
-        &.green-bg {
-
+        .green-bg {
+            stroke: $dark-green;
         }
-        &.red-bg {
-
+        .red-bg {
+            stroke: $light-red;
         }
     }
     .result {
