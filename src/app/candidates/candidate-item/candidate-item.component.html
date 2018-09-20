@@ -1,4 +1,5 @@
-<div class="candidate-holder">
+<div class="container fixed-width-container">
+    <div class="candidate-holder">
     <div class="pages-nav">
         <button class="back-btn">
             <span class="icon"><img src="assets/images/left.svg" height="16px" alt="Left icon"></span>
@@ -86,7 +87,9 @@
             </div>
             <h4>Predictive Job Index</h4>
             <div class="chart-job-index">
-                <p-slider [(ngModel)]="predictiveIndex" styleClass="chart"></p-slider>
+                <div class="indicator">
+                    <div class="indicator-icon" [ngStyle]="{'left': '75%'}"></div>
+                </div>
                 <div class="chart-values">
                     <span>temp / contractor</span>
                     <span>full-time / direct-hire</span>
@@ -134,9 +137,9 @@
         <div class="content-section" *ngIf="activeSection === 'details'">
             <div class="wrap-title">
                 <h3>Summary</h3>
-                <button class="hide-btn" [ngClass]="{'active': !summaryContentShow}" (click)="toggleSummaryContent()"></button>
+                <button class="hide-btn" [ngClass]="{'active': !summaryContentShow}" (click)="onToggleContent('summary')"></button>
             </div>
-            <p *ngIf="summaryContentShow">An energetic and proactive Head of Operations who can produce the                  desired effect with the minimum of effort, expense, or waste. Maxine can drive a business to increase             profits by avoiding procrastination and acting instead of worrying. She is someone who consistently               looks to identify how she can optimise efficiency and improve staff performance. In her current role              she works closely with all teams and individuals across the company to develop and coordinate the                 execution of strategies that will lead to an increase in operational efficiency. One of her strongest             points is her advanced knowledge of corporate policy, laws and regulatory requirements specific to her            areas of responsibility. Aside from her leadership skills she is a true professional who champions                company culture and employee engagement at every opportunity. Right now, she is looking for a position            with a reputable company where she can build a long-term career.</p>
+            <p *ngIf="summaryContentShow" class="content-summary">An energetic and proactive Head of Operations                 who can produce the desired effect with the minimum of effort, expense, or waste. Maxine can drive a              business to increase profits by avoiding procrastination and acting instead of worrying. She is                   someone who consistently looks to identify how she can optimise efficiency and improve staff                      performance. In her current role she works closely with all teams and individuals across the company              to develop and coordinate the execution of strategies that will lead to an increase in operational                efficiency. One of her strongest points is her advanced knowledge of corporate policy, laws and                   regulatory requirements specific to her areas of responsibility. Aside from her leadership skills                she is a true professional who champions company culture and employee engagement at every opportunity.             Right now, she is looking for a position with a reputable company where she can build a                           long-term career.</p>
             <h3>Skills</h3>
             <div class="skills-list">
                 <div class="skill-name green-bg">Operations</div>
@@ -150,7 +153,7 @@
             </div>
             <div class="wrap-title">
                 <h3>Work Experience</h3>
-                <button class="hide-btn" [ngClass]="{'active': !experienceContentShow}" (click)="toggleExperienceContent()"></button>
+                <button class="hide-btn" [ngClass]="{'active': !experienceContentShow}" (click)="onToggleContent('experience')"></button>
             </div>
             <div class="experience" *ngIf="experienceContentShow">
                 <div class="item">
@@ -176,7 +179,7 @@
             </div>
             <div class="wrap-title">
                 <h3>Education</h3>
-                <button class="hide-btn" [ngClass]="{'active': !educationContentShow}" (click)="toggleEducationContent()"></button>
+                <button class="hide-btn" [ngClass]="{'active': !educationContentShow}" (click)="onToggleContent('education')"></button>
             </div>
             <div class="education" *ngIf="educationContentShow">
                 <div class="item">
@@ -293,4 +296,5 @@
             <div class="interactivity-content" *ngIf="activeInteractivity === 'report'">report</div>
         </div>
     </div>
+</div>
 </div>
