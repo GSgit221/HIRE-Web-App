@@ -150,9 +150,9 @@
             </div>
             <div class="wrap-title">
                 <h3>Work Experience</h3>
-                <button class="hide-btn"></button>
+                <button class="hide-btn" [ngClass]="{'active': !experienceContentShow}" (click)="toggleExperienceContent()"></button>
             </div>
-            <div class="experience">
+            <div class="experience" *ngIf="experienceContentShow">
                 <div class="item">
                     <div class="detail">
                         <div class="position">Cheif Digital Officer</div>
@@ -176,9 +176,9 @@
             </div>
             <div class="wrap-title">
                 <h3>Education</h3>
-                <button class="hide-btn"></button>
+                <button class="hide-btn" [ngClass]="{'active': !educationContentShow}" (click)="toggleEducationContent()"></button>
             </div>
-            <div class="education">
+            <div class="education" *ngIf="educationContentShow">
                 <div class="item">
                     <div class="institution">University of Cape Town</div>
                     <div class="degree"><strong>BCom LLB</strong> (Bachelors)</div>
