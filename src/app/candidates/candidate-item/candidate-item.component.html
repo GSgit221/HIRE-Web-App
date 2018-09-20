@@ -1,23 +1,23 @@
 <div class="candidate-holder">
     <div class="pages-nav">
-        <a class="back-btn">
+        <button class="back-btn">
             <span class="icon"><img src="assets/images/left.svg" height="16px" alt="Left icon"></span>
             <span class="text">Graduate Recruit Program</span>
-        </a>
+        </button>
         <div class="prev-next-nav">
-            <a class="prev-btn"><img src="assets/images/left.svg" height="16px" alt="Left icon"></a>
-            <a class="next-btn"><img src="assets/images/right.svg" height="16px" alt="Right icon"></a>
+            <button class="prev-btn"><img src="assets/images/left.svg" height="16px" alt="Left icon"></button>
+            <button class="next-btn"><img src="assets/images/right.svg" height="16px" alt="Right icon"></button>
         </div>
     </div>
     <div class="candidate-header">
         <div class="img-block"><img src="assets/images/placeholders/1.png" alt=""></div>
         <div class="information-block">
             <div class="name">Juan Evans</div>
-            <div class="email">
+            <div class="detail-information">
                 <img src="assets/images/email-send.svg" height="13px" alt="Email icon">
                 <p><a href="mailto:greg@hellocrowd.net">greg@hellocrowd.net</a></p>
             </div>
-            <div class="phone">
+            <div class="detail-information">
                 <img src="assets/images/phone.svg" height="13px" alt="Phone icon">
                 <p class="text">Add a phone number</p>
             </div>
@@ -28,11 +28,9 @@
                 <li><a href=""><img src="assets/images/linkedin.svg" alt="Linkedin icon"></a></li>
                 <li><a href=""><img src="assets/images/twitter.svg" alt="Twitter icon"></a></li>
             </ul>
-            <div class="location">
-                <span class="icon">
-                    <img src="assets/images/location.svg" height="14px" alt="Location icon">
-                </span>
-                <span class="text">Birmingham, UK</span>
+            <div class="detail-information">
+                <img src="assets/images/location.svg" height="14px" alt="Location icon">
+                <p>Birmingham, UK</p>
             </div>
         </div>
     </div>
@@ -55,47 +53,47 @@
         <div class="content-section" *ngIf="activeSection === 'overview'">
             <h3>Our Summary</h3>
             <p>Juan Evens’s experience appears to be somewhat concentrated in Business Operations and General                    Business(mostly Management Activities or Functions), and somewhat concentrated in Marketing (mostly               Audience). Juan Evens has 15 years of work experience, with 15 years of management experience,                    including a low-level position.</p>
+            <h3>AI Matching</h3>
             <div class="matching-candidate">
-                <h3>AI Matching</h3>
                 <div class="candidate-fit">
                     <div class="circle">
                         <svg class="progress" width="80" height="80">
                             <circle class="progress-meter" cx="40" cy="40" r="30" stroke-width="3"></circle>
-                            <circle class="progress-value" cx="40" cy="40" r="30" stroke-width="7" stroke="#65B7A9"
+                            <circle class="progress-value green-color" cx="40" cy="40" r="30" stroke-width="7" stroke="#65B7A9"
                                     style="stroke-dasharray: 188.496; stroke-dashoffset: 47;"></circle>
                         </svg>
-                        <div class="result" [ngStyle]="{'color': '#65B7A9'}">75%</div>
+                        <div class="result green-color">75%</div>
                     </div>
                     <div class="text">
                         <span>Candidate Fit</span>
-                        <strong [ngStyle]="{'color': '#65B7A9'}">Good</strong>
+                        <strong class="green-color">Good</strong>
                     </div>
                 </div>
                 <div class="job-fit">
                     <div class="circle">
                         <svg class="progress" width="80" height="80">
                             <circle class="progress-meter" cx="40" cy="40" r="30" stroke-width="3"></circle>
-                            <circle class="progress-value" cx="40" cy="40" r="30" stroke-width="7" stroke="#FE7F7F"
+                            <circle class="progress-value red-bg" cx="40" cy="40" r="30" stroke-width="7"
                                     stroke-dasharray="188.496" stroke-dashoffset="143"></circle>
                         </svg>
-                        <div class="result" [ngStyle]="{'color': '#FE7F7F'}">25%</div>
+                        <div class="result red-color">25%</div>
                     </div>
                     <div class="text">
                         <span>Job Fit</span>
-                        <strong [ngStyle]="{'color': '#FE7F7F'}">Poor</strong>
+                        <strong class="red-color">Poor</strong>
                     </div>
                 </div>
             </div>
+            <h4>Predictive Job Index</h4>
             <div class="chart-job-index">
-                <h4>Predictive Job Index</h4>
                 <p-slider [(ngModel)]="predictiveIndex" styleClass="chart"></p-slider>
                 <div class="chart-values">
                     <span>temp / contractor</span>
                     <span>full-time / direct-hire</span>
                 </div>
             </div>
+            <h3 class="title">Unweighted Scores</h3>
             <div class="scores">
-                <h3 class="title">Unweighted Scores</h3>
                 <div class="score-item">
                     <div class="score-name">Skills</div>
                     <div class="score-chart">
@@ -134,10 +132,13 @@
             </div>
         </div>
         <div class="content-section" *ngIf="activeSection === 'details'">
-            <h3>Summary</h3>
-            <p>An energetic and proactive Head of Operations who can produce the desired effect with the minimum                of effort, expense, or waste. Maxine can drive a business to increase profits by avoiding                         procrastination and acting instead of worrying. She is someone who consistently looks to identify                 how she can optimise efficiency and improve staff performance. In her current role she works closely              with all teams and individuals across the company to develop and coordinate the execution of                      strategies that will lead to an increase in operational efficiency. One of her strongest points is                her advanced knowledge of corporate policy, laws and regulatory requirements specific to her areas                of responsibility. Aside from her leadership skills she is a true professional who champions company              culture and employee engagement at every opportunity. Right now, she is looking for a position with               a reputable company where she can build a long-term career.</p>
+            <div class="wrap-title">
+                <h3>Summary</h3>
+                <button class="hide-btn" [ngClass]="{'active': !summaryContentShow}" (click)="toggleSummaryContent()"></button>
+            </div>
+            <p *ngIf="summaryContentShow">An energetic and proactive Head of Operations who can produce the                  desired effect with the minimum of effort, expense, or waste. Maxine can drive a business to increase             profits by avoiding procrastination and acting instead of worrying. She is someone who consistently               looks to identify how she can optimise efficiency and improve staff performance. In her current role              she works closely with all teams and individuals across the company to develop and coordinate the                 execution of strategies that will lead to an increase in operational efficiency. One of her strongest             points is her advanced knowledge of corporate policy, laws and regulatory requirements specific to her            areas of responsibility. Aside from her leadership skills she is a true professional who champions                company culture and employee engagement at every opportunity. Right now, she is looking for a position            with a reputable company where she can build a long-term career.</p>
+            <h3>Skills</h3>
             <div class="skills-list">
-                <h3>Skills</h3>
                 <div class="skill-name green-bg">Operations</div>
                 <div class="skill-name green-bg" >Relationship Building</div>
                 <div class="skill-name green-bg">Self Motivated</div>
@@ -147,8 +148,11 @@
                 <div class="skill-name">Budgeting</div>
                 <div class="skill-name">Employee Engagement</div>
             </div>
-            <div class="experience">
+            <div class="wrap-title">
                 <h3>Work Experience</h3>
+                <button class="hide-btn" [ngClass]="{'active': !experienceContentShow}" (click)="toggleExperienceContent()"></button>
+            </div>
+            <div class="experience" *ngIf="experienceContentShow">
                 <div class="item">
                     <div class="detail">
                         <div class="position">Cheif Digital Officer</div>
@@ -170,8 +174,11 @@
                     </div>
                 </div>
             </div>
-            <div class="education">
+            <div class="wrap-title">
                 <h3>Education</h3>
+                <button class="hide-btn" [ngClass]="{'active': !educationContentShow}" (click)="toggleEducationContent()"></button>
+            </div>
+            <div class="education" *ngIf="educationContentShow">
                 <div class="item">
                     <div class="institution">University of Cape Town</div>
                     <div class="degree"><strong>BCom LLB</strong> (Bachelors)</div>

@@ -6,7 +6,15 @@
     align-items: center;
     margin: 0 0 15px;
     font-size: 14px;
-    a {
+    button {
+        border: none;
+        background: none;
+        box-shadow: none;
+        outline: none;
+        padding: 0;
+        font: 14px/1.538 'Roboto', Helvetica, Arial, sans-serif;
+    }
+    button {
         color: $grey;
         &:hover {
             text-decoration: none;
@@ -23,7 +31,9 @@
         margin: 0 8px 0 0;
     }
     .prev-next-nav {
-        a {
+        display: flex;
+        align-items: center;
+        button {
             margin: 0;
             display: inline-flex;
             cursor: pointer;
