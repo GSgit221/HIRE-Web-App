@@ -1,12 +1,12 @@
 <div class="candidate-holder">
     <div class="pages-nav">
-        <a class="back-btn">
+        <button class="back-btn">
             <span class="icon"><img src="assets/images/left.svg" height="16px" alt="Left icon"></span>
             <span class="text">Graduate Recruit Program</span>
-        </a>
+        </button>
         <div class="prev-next-nav">
-            <a class="prev-btn"><img src="assets/images/left.svg" height="16px" alt="Left icon"></a>
-            <a class="next-btn"><img src="assets/images/right.svg" height="16px" alt="Right icon"></a>
+            <button class="prev-btn"><img src="assets/images/left.svg" height="16px" alt="Left icon"></button>
+            <button class="next-btn"><img src="assets/images/right.svg" height="16px" alt="Right icon"></button>
         </div>
     </div>
     <div class="candidate-header">
@@ -61,28 +61,28 @@
                     <div class="circle">
                         <svg class="progress" width="80" height="80">
                             <circle class="progress-meter" cx="40" cy="40" r="30" stroke-width="3"></circle>
-                            <circle class="progress-value" cx="40" cy="40" r="30" stroke-width="7" stroke="#65B7A9"
+                            <circle class="progress-value green-color" cx="40" cy="40" r="30" stroke-width="7" stroke="#65B7A9"
                                     style="stroke-dasharray: 188.496; stroke-dashoffset: 47;"></circle>
                         </svg>
-                        <div class="result" [ngStyle]="{'color': '#65B7A9'}">75%</div>
+                        <div class="result green-color">75%</div>
                     </div>
                     <div class="text">
                         <span>Candidate Fit</span>
-                        <strong [ngStyle]="{'color': '#65B7A9'}">Good</strong>
+                        <strong class="green-color">Good</strong>
                     </div>
                 </div>
                 <div class="job-fit">
                     <div class="circle">
                         <svg class="progress" width="80" height="80">
                             <circle class="progress-meter" cx="40" cy="40" r="30" stroke-width="3"></circle>
-                            <circle class="progress-value" cx="40" cy="40" r="30" stroke-width="7" stroke="#FE7F7F"
+                            <circle class="progress-value red-color" cx="40" cy="40" r="30" stroke-width="7" stroke="#FE7F7F"
                                     stroke-dasharray="188.496" stroke-dashoffset="143"></circle>
                         </svg>
-                        <div class="result" [ngStyle]="{'color': '#FE7F7F'}">25%</div>
+                        <div class="result red-color">25%</div>
                     </div>
                     <div class="text">
                         <span>Job Fit</span>
-                        <strong [ngStyle]="{'color': '#FE7F7F'}">Poor</strong>
+                        <strong class="red-color">Poor</strong>
                     </div>
                 </div>
             </div>
