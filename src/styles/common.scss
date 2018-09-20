@@ -129,6 +129,7 @@ $steps: 5 10 15 20 25 30 33 35 40 45 50 60 75;
         position: absolute;
         right: 0;
         top: 50%;
+        transform: translateY(-50%);
     }
 }
 

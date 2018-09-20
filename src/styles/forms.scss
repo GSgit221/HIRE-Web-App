@@ -252,3 +252,41 @@ p-messages {
     margin: 0;
     padding: 4px 0;
 }
+
+p-slider {
+    .threshold-slider {
+        background: $grey-border;
+        box-shadow: none;
+        height: 2px;
+
+        .ui-slider-range {
+            background: $pink;
+            box-shadow: none;
+        }
+
+        .ui-slider-handle {
+            width: 26px !important;
+            height: 32px !important;
+            background: url(/assets/images/slider-handle.png) no-repeat;
+            background-size: contain;
+        }
+
+        &.ui-slider-horizontal {
+            .ui-slider-handle {
+                top: -32px !important;
+                margin-left: -13px;
+                text-align: center;
+                color: #fff;
+                padding: 7px 0 0;
+                font-size: 10px;
+                font-weight: 300;
+                &:hover {
+                    cursor: grab;
+                }
+                &:active {
+                    cursor: grabbing;
+                }
+            }
+        }
+    }
+}
