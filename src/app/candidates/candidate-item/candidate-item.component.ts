@@ -8,10 +8,9 @@ import {Component, OnInit} from '@angular/core';
 export class CandidateItemComponent implements OnInit {
     activeSection = 'overview';
     activeInteractivity = 'chat';
-    predictiveIndex: number = 75;
-    summaryContentShow:boolean = true;
-    experienceContentShow:boolean = true;
-    educationContentShow:boolean = true;
+    summaryContentShow = true;
+    experienceContentShow = true;
+    educationContentShow = true;
     constructor() {}
 
     ngOnInit() {
@@ -22,14 +21,15 @@ export class CandidateItemComponent implements OnInit {
     onChangeInteractivity(section: string) {
         this.activeInteractivity = section;
     }
-    toggleSummaryContent() {
-        this.summaryContentShow = !this.summaryContentShow;
+    onToggleContent(paragraph: string) {
+        if (paragraph === 'summary') {
+            this.summaryContentShow = !this.summaryContentShow;
+        } else if (paragraph === 'experience') {
+            this.experienceContentShow = !this.experienceContentShow;
+        } else if (paragraph === 'education') {
+            this.educationContentShow = !this.educationContentShow;
+        }
     }
-    toggleExperienceContent() {
-        this.experienceContentShow = !this.experienceContentShow;
-    }
-    toggleEducationContent() {
-        this.educationContentShow = !this.educationContentShow;
-    }
+
 
 }
