@@ -1,0 +1,32 @@
+@import "variables.scss";
+
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 0 15px;
+    font-size: 14px;
+    a {
+        color: $grey;
+    }
+    .back {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+    .icon {
+        display: flex;
+        align-items: center;
+        margin: 0 8px 0 0;
+    }
+    .nav-candidate {
+        a {
+            margin: 0;
+            display: inline-flex;
+            cursor: pointer;
+        }
+        .next {
+            margin: 0 0 0 22px;
+        }
+    }
+}

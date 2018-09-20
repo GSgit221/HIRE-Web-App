@@ -17,6 +17,7 @@ import { EditorModule } from 'primeng/editor';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { PanelModule } from 'primeng/panel';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { SliderModule } from 'primeng/slider';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 
 
@@ -96,6 +97,7 @@ export function provideConfig() {
         PanelModule,
         PanelMenuModule,
         MultiSelectModule,
+        SliderModule,
         SelectButtonModule,
         BrowserAnimationsModule,
         HttpClientModule,
