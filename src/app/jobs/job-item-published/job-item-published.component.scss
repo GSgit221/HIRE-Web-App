@@ -9,12 +9,13 @@
     }
 }
 
-.status-dropdown {
+.status-dropdown-block {
     width: 47px;
     height: 47px;
     background: $white;
     border-radius: 3px;
     margin-right: 20px;
+    padding: 7px 0 0;
 }
 
 .heading {
@@ -210,7 +211,7 @@
         }
     }
 
-    .status {
+    .compliance-rate {
         position: absolute;
         right: 10px;
         top: 18px;

@@ -96,4 +96,8 @@ export class JobService {
     getUsers() {
         return this.http.get(`${environment.api_url}/tenants/${environment.tenant}/users`);
     }
+
+    getStage(jobId: string, stageId: string) {
+        return this.http.get(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/stages/${stageId}`);
+    }
 }
