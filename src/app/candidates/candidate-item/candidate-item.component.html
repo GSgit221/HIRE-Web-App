@@ -1,12 +1,12 @@
 <div class="candidate-holder">
-    <div class="navigation">
-        <a class="back">
+    <div class="pages-nav">
+        <a class="back-btn">
             <span class="icon"><img src="assets/images/left.svg" height="16px" alt="Left icon"></span>
             <span class="text">Graduate Recruit Program</span>
         </a>
-        <div class="nav-candidate">
-            <a class="previous"><img src="assets/images/left.svg" height="16px" alt="Left icon"></a>
-            <a class="next"><img src="assets/images/right.svg" height="16px" alt="Right icon"></a>
+        <div class="prev-next-nav">
+            <a class="prev-btn"><img src="assets/images/left.svg" height="16px" alt="Left icon"></a>
+            <a class="next-btn"><img src="assets/images/right.svg" height="16px" alt="Right icon"></a>
         </div>
     </div>
     <div class="candidate-header">
@@ -14,14 +14,14 @@
         <div class="information-block">
             <div class="name">Juan Evans</div>
             <div class="email">
-                <span class="icon"><img src="assets/images/email-send.svg" height="13px" alt="Email icon"></span>
-                <span class="text">greg@hellocrowd.net</span>
+                <img src="assets/images/email-send.svg" height="13px" alt="Email icon">
+                <p><a href="mailto:greg@hellocrowd.net">greg@hellocrowd.net</a></p>
             </div>
             <div class="phone">
-                <span class="icon"><img src="assets/images/phone.svg" height="13px" alt="Phone icon"></span>
-                <span class="text">Add a phone number</span>
+                <img src="assets/images/phone.svg" height="13px" alt="Phone icon">
+                <p class="text">Add a phone number</p>
             </div>
-            <ul class="social-link">
+            <ul class="social-links">
                 <li><a href=""><img src="assets/images/facebook.svg" alt="Facebook icon"></a></li>
                 <li><a href=""><img src="assets/images/instagram_new.svg" alt="Instagram icon"></a></li>
                 <li><a href=""><img src="assets/images/github.svg" alt="Github icon"></a></li>
@@ -99,35 +99,35 @@
                 <div class="score-item">
                     <div class="score-name">Skills</div>
                     <div class="score-chart">
-                        <div class="line" [ngStyle]="{'width': 75 + '%', 'background': '#65B7A9'}"></div>
+                        <div class="line green-bg" [ngStyle]="{'width': 75 + '%'}"></div>
                     </div>
                     <div class="score-result">75%</div>
                 </div>
                 <div class="score-item">
                     <div class="score-name">Languages</div>
                     <div class="score-chart">
-                        <div class="line" [ngStyle]="{'width': 45 + '%', 'background': '#FEBA8B'}"></div>
+                        <div class="line orange-bg" [ngStyle]="{'width': 45 + '%'}"></div>
                     </div>
                     <div class="score-result">45%</div>
                 </div>
                 <div class="score-item">
                     <div class="score-name">Management</div>
                     <div class="score-chart">
-                        <div class="line" [ngStyle]="{'width': 85 + '%', 'background': '#65B7A9'}"></div>
+                        <div class="line green-bg" [ngStyle]="{'width': 85 + '%'}"></div>
                     </div>
                     <div class="score-result">85%</div>
                 </div>
                 <div class="score-item">
                     <div class="score-name">Education</div>
                     <div class="score-chart">
-                        <div class="line" [ngStyle]="{'width': 70 + '%', 'background': '#65B7A9'}"></div>
+                        <div class="line green-bg" [ngStyle]="{'width': 70 + '%'}"></div>
                     </div>
                     <div class="score-result">70%</div>
                 </div>
                 <div class="score-item">
                     <div class="score-name">Location</div>
                     <div class="score-chart">
-                        <div class="line" [ngStyle]="{'width': 20 + '%', 'background': '#FE7F7F'}"></div>
+                        <div class="line red-bg" [ngStyle]="{'width': 20 + '%'}"></div>
                     </div>
                     <div class="score-result">20%</div>
                 </div>
@@ -138,14 +138,14 @@
             <p>An energetic and proactive Head of Operations who can produce the desired effect with the minimum                of effort, expense, or waste. Maxine can drive a business to increase profits by avoiding                         procrastination and acting instead of worrying. She is someone who consistently looks to identify                 how she can optimise efficiency and improve staff performance. In her current role she works closely              with all teams and individuals across the company to develop and coordinate the execution of                      strategies that will lead to an increase in operational efficiency. One of her strongest points is                her advanced knowledge of corporate policy, laws and regulatory requirements specific to her areas                of responsibility. Aside from her leadership skills she is a true professional who champions company              culture and employee engagement at every opportunity. Right now, she is looking for a position with               a reputable company where she can build a long-term career.</p>
             <div class="skills-list">
                 <h3>Skills</h3>
-                <div class="skill-name" [ngStyle]="{'background': '#65B7A9'}">Operations</div>
-                <div class="skill-name" [ngStyle]="{'background': '#65B7A9'}">Relationship Building</div>
-                <div class="skill-name" [ngStyle]="{'background': '#65B7A9'}">Self Motivated</div>
-                <div class="skill-name" [ngStyle]="{'background': '#FEBA8B'}">LeadershipSkills</div>
-                <div class="skill-name" [ngStyle]="{'background': '#FEBA8B'}">Marketing</div>
-                <div class="skill-name" [ngStyle]="{'background': '#D7DBDF'}">Networking</div>
-                <div class="skill-name" [ngStyle]="{'background': '#D7DBDF'}">Budgeting</div>
-                <div class="skill-name" [ngStyle]="{'background': '#D7DBDF'}">Employee Engagement</div>
+                <div class="skill-name green-bg">Operations</div>
+                <div class="skill-name green-bg" >Relationship Building</div>
+                <div class="skill-name green-bg">Self Motivated</div>
+                <div class="skill-name orange-bg">LeadershipSkills</div>
+                <div class="skill-name orange-bg">Marketing</div>
+                <div class="skill-name">Networking</div>
+                <div class="skill-name">Budgeting</div>
+                <div class="skill-name">Employee Engagement</div>
             </div>
             <div class="experience">
                 <h3>Work Experience</h3>
@@ -253,10 +253,10 @@
                         </div>
                         <div class="timeline-item-content">
                             <div class="timeline-item-header">
-                                <div class="timeline-item-author">
+                                <div class="timeline-item-heading">
                                     <p><strong>Timothy Barnes </strong> on <strong> Juan Evans</strong></p>
                                 </div>
-                                <em class="date"><span>13m</span> ago</em>
+                                <em class="date">13m ago</em>
                             </div>
                             <div class="timeline-item-message">
                                 <div class="inner">Good candidate, let’s get them in for a chat.</div>
@@ -271,11 +271,11 @@
                         </div>
                         <div class="timeline-item-content">
                                 <div class="timeline-item-header">
-                                    <div class="timeline-item-author">
+                                    <div class="timeline-item-heading">
                                         <p><strong>Juan Evans</strong> was added to <strong>Graduate Recruit Program</strong> from
                                             <strong>Indeed.com</strong></p>
                                     </div>
-                                    <em class="date"><span>4d</span>ago</em>
+                                    <em class="date">4d ago</em>
                                 </div>
                             </div>
                     </div>

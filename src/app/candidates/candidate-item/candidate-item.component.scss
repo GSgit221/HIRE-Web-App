@@ -35,8 +35,11 @@
         align-items: flex-start;
         color: $grey;
         font-size: 13px;
+        p {
+            margin: 0;
+        }
     }
-    .icon {
+    img {
         display: inline-flex;
         width: 15px;
         align-items: center;
@@ -75,13 +78,16 @@
         align-items: center;
     }
 }
-.social-link {
+.social-links {
     margin: 0;
     padding: 0 0 0 28px;
     list-style: none;
     display: flex;
     li {
         margin: 0 20px 0 0;
+    }
+    img {
+        margin: 0;
     }
 }
 .scores {
@@ -332,7 +338,7 @@ p-slider {
         padding: 0 0px 0 20px;
         flex: 1;
     }
-    .timeline-item-author {
+    .timeline-item-heading {
         flex: 1;
         display: flex;
         flex-wrap: wrap;
@@ -422,6 +428,7 @@ p-slider {
         display: inline-flex;
         border-radius: 100px;
         color: $white;
+        background: $grey-border;
     }
 }
 .experience {

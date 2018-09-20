@@ -1,6 +1,6 @@
 @import "variables.scss";
 
-.navigation {
+.pages-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -12,7 +12,7 @@
             text-decoration: none;
         }
     }
-    .back {
+    .back-btn {
         display: flex;
         align-items: center;
         cursor: pointer;
@@ -22,13 +22,13 @@
         align-items: center;
         margin: 0 8px 0 0;
     }
-    .nav-candidate {
+    .prev-next-nav {
         a {
             margin: 0;
             display: inline-flex;
             cursor: pointer;
         }
-        .next {
+        .next-btn {
             margin: 0 0 0 22px;
         }
     }
