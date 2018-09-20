@@ -1,6 +1,13 @@
 <div class="header-block">
-    <div class="status-dropdown">
-
+    <div class="status-dropdown-block">
+        <p-dropdown [options]="statusOptions" [(ngModel)]="job.status" [style]="{'width':'47px'}" class="status-dd status-dd-no-borders caret-down" (onChange)="onJobStatusChange(job, $event)">
+            <ng-template let-item pTemplate="selectedItem">
+                <span class="status" [ngClass]="item.label.toLowerCase()"></span>
+            </ng-template>
+            <ng-template let-status pTemplate="item">
+                <span class="status" [ngClass]="status.label.toLowerCase()"></span>
+            </ng-template>
+        </p-dropdown>
     </div>
     <div class="heading">
         <div class="job-title-block">
@@ -42,7 +49,7 @@
             <div class="stage-header">
                 <h2 class="title">Applied</h2>
                 <span class="counter">4</span>
-                <button class="btn settings-btn mla">
+                <button class="btn settings-btn mla" (click)="onSettigsClick('applied')">
                     <img src="/assets/images/settings-dots.svg" alt="" width="2" height="10">
                 </button>
                 <button class="btn btn-square ml10">
@@ -51,7 +58,7 @@
             </div>
             <div class="stage-content">
                 <div class="block" (click)="onCandidateClick($event)">
-                    <div class="status green"></div>
+                    <div class="compliance-rate green"></div>
                     <div class="ava-column">
                         <div class="ava">
                             <div class="ava-placeholder">G</div>
@@ -77,7 +84,7 @@
                     </div>
                 </div>
                 <div class="block" (click)="onCandidateClick($event)">
-                    <div class="status green"></div>
+                    <div class="compliance-rate green"></div>
                     <div class="ava-column">
                         <div class="ava">
                             <img src="/assets/images/placeholders/1.png" alt="" width="30" height="30">
@@ -103,7 +110,7 @@
                     </div>
                 </div>
                 <div class="block" (click)="onCandidateClick($event)">
-                    <div class="status orange"></div>
+                    <div class="compliance-rate orange"></div>
                     <div class="ava-column">
                         <div class="ava">
                             <img src="/assets/images/placeholders/2.png" alt="" width="30" height="30">
@@ -129,7 +136,7 @@
                     </div>
                 </div>
                 <div class="block" (click)="onCandidateClick($event)">
-                    <div class="status red"></div>
+                    <div class="compliance-rate red"></div>
                     <div class="ava-column">
                         <div class="ava">
                             <img src="/assets/images/placeholders/3.png" alt="" width="30" height="30">
@@ -179,13 +186,13 @@
             <div class="stage-header">
                 <h2 class="title">Video Interview</h2>
                 <span class="counter">1</span>
-                <button class="btn settings-btn mla">
+                <button class="btn settings-btn mla" (click)="onSettigsClick('video')">
                     <img src="/assets/images/settings-dots.svg" alt="" width="2" height="10">
                 </button>
             </div>
             <div class="stage-content">
                 <div class="block" (click)="onCandidateClick($event)">
-                    <div class="status green"></div>
+                    <div class="compliance-rate green"></div>
                     <div class="ava-column">
                         <div class="ava">
                             <img src="/assets/images/placeholders/2.png" alt="" width="30" height="30">

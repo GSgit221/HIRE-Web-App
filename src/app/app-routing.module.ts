@@ -1,3 +1,4 @@
+import { StageSettingsComponent } from './jobs/stages/stage-settings/stage-settings.component';
 import { CandidateItemComponent } from './candidates/candidate-item/candidate-item.component';
 import { SignoutComponent } from './auth/signout.component';
 import { NgModule } from '@angular/core';
@@ -46,6 +47,9 @@ const appRoutes: Routes = [
         }, {
             path: 'jobs/:id/candidate',
             component: CandidateItemComponent
+        }, {
+            path: 'jobs/:id/stages/:stageId',
+            component: StageSettingsComponent
         }, {
             path: 'people',
             component: PeopleListComponent

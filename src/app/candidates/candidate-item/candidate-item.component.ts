@@ -19,4 +19,5 @@ export class CandidateItemComponent implements OnInit {
     onChangeInteractivity(section: string) {
         this.activeInteractivity = section;
     }
+
 }

@@ -47,6 +47,7 @@ import { JobItemUnpublishedComponent } from './jobs/job-item-unpublished/job-ite
 import { JobItemPublishedComponent } from './jobs/job-item-published/job-item-published.component';
 import { MultiSelectComponent } from './shared/multi-select/multi-select.component';
 import { CandidateItemComponent } from './candidates/candidate-item/candidate-item.component';
+import { StageSettingsComponent } from './jobs/stages/stage-settings/stage-settings.component';
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -82,7 +83,8 @@ export function provideConfig() {
         JobItemUnpublishedComponent,
         JobItemPublishedComponent,
         MultiSelectComponent,
-        CandidateItemComponent
+        CandidateItemComponent,
+        StageSettingsComponent
     ],
     imports: [
         AppRoutingModule,
