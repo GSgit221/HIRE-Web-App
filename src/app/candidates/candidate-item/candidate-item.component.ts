@@ -8,11 +8,10 @@ import {Component, OnInit} from '@angular/core';
 export class CandidateItemComponent implements OnInit {
     activeSection = 'overview';
     activeInteractivity = 'chat';
-    predictiveIndex: number;
+    predictiveIndex: number = 75;
     constructor() {}
 
     ngOnInit() {
-        this.predictiveIndex = 75;
     }
     onChangeSection(section: string) {
         this.activeSection = section;
