@@ -9,9 +9,7 @@ export class CandidateItemComponent implements OnInit {
     activeSection = 'overview';
     activeInteractivity = 'chat';
     predictiveIndex: number;
-    constructor() {
-
-    }
+    constructor() {}
 
     ngOnInit() {
         this.predictiveIndex = 75;
@@ -22,5 +20,4 @@ export class CandidateItemComponent implements OnInit {
     onChangeInteractivity(section: string) {
         this.activeInteractivity = section;
     }
-
 }
