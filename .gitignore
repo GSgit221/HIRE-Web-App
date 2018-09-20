@@ -4,4 +4,4 @@ proxy.conf.json
 dist
 .project
 .settings/
-.idea/
+.idea
