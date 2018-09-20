@@ -560,6 +560,26 @@ p-selectbutton {
     display: none !important;
 }
 
+.red-bg {
+    background: $light-red !important;
+}
+.green-bg {
+    background: $dark-green !important;
+}
+.orange-bg {
+    background: $orange2 !important;
+}
+.red-color {
+    background: $light-red !important;
+}
+.green-color {
+    background: $dark-green !important;
+}
+.orange-color {
+    background: $orange2 !important;
+}
+
+
 // Status indicator
 .status {
     display: inline-block;

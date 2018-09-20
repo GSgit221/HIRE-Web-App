@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>icons8-linkedin</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Candidate-View---Default" transform="translate(-854.000000, -136.000000)" fill="#505F6E" fill-rule="nonzero">
+            <g id="Group-3" transform="translate(757.000000, 136.000000)">
+                <g id="icons8-linkedin" transform="translate(97.000000, 0.000000)">
+                    <path d="M1.757813,0 C0.792969,0 0,0.792969 0,1.757813 L0,11.246094 C0,12.207031 0.792969,13 1.757813,13 L11.246094,13 C12.207031,13 13,12.207031 13,11.246094 L13,1.757813 C13,0.792969 12.207031,0 11.246094,0 L1.757813,0 Z M1.757813,1 L11.246094,1 C11.667969,1 12,1.332031 12,1.757813 L12,11.246094 C12,11.667969 11.667969,12 11.246094,12 L1.757813,12 C1.332031,12 1,11.667969 1,11.246094 L1,1.757813 C1,1.332031 1.332031,1 1.757813,1 Z M3,2 C2.449219,2 2,2.449219 2,3 C2,3.550781 2.449219,4 3,4 C3.550781,4 4,3.550781 4,3 C4,2.449219 3.550781,2 3,2 Z M2,5 L2,11 L4,11 L4,5 L2,5 Z M5,5 L5,11 L7,11 L7,8.320313 C7,7.488281 7.078125,6.742188 8.078125,6.742188 C9.0625,6.742188 9,7.636719 9,8.375 L9,11 L11,11 L11,8.039063 C11,6.320313 10.640625,5 8.691406,5 C7.753906,5 7.28125,5.375 7.023438,5.875 L7,5.875 L7,5 L5,5 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

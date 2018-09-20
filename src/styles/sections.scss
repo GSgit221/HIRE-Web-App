@@ -230,3 +230,24 @@
     box-shadow: none;
     border-radius: 5px;
 }
+.chart.ui-slider {
+    background: red;
+    background: linear-gradient(to right, #FE7F7F, #ECAAAC, #E1C4C7, #D7DBDF,#AFCECC,#8DC4BC,#65B7A9);
+    box-shadow: none;
+    border-radius: 100px;
+    padding: 0 3px;
+}
+.chart.ui-slider .ui-slider-handle {
+    background: transparent;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid $sapphire-blue;
+    position: relative;
+    top: -3px !important;
+}
+.chart.ui-slider .ui-slider-range {
+    background: transparent;
+    box-shadow: none;
+}

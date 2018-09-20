@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
     selector: 'app-candidate-item',
@@ -6,10 +6,18 @@ import { Component, OnInit } from '@angular/core';
     styleUrls: ['./candidate-item.component.scss']
 })
 export class CandidateItemComponent implements OnInit {
-
-    constructor() { }
+    activeSection = 'overview';
+    activeInteractivity = 'chat';
+    predictiveIndex: number = 75;
+    constructor() {}
 
     ngOnInit() {
+    }
+    onChangeSection(section: string) {
+        this.activeSection = section;
+    }
+    onChangeInteractivity(section: string) {
+        this.activeInteractivity = section;
     }
 
 }
