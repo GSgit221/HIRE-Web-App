@@ -38,7 +38,6 @@ import { JobItemComponent } from './jobs/job-item/job-item.component';
 import { JobsListComponent } from './jobs/jobs-list/jobs-list.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { PeopleListComponent } from './people/people-list/people-list.component';
-import { QuestionsComponent } from './settings/questions/questions.component';
 import { ScorecardsComponent } from './settings/scorecards/scorecards.component';
 import { EmailTemplatesComponent } from './settings/email-templates/email-templates.component';
 import { IntegrationsComponent } from './settings/integrations/integrations.component';
@@ -48,6 +47,9 @@ import { JobItemPublishedComponent } from './jobs/job-item-published/job-item-pu
 import { MultiSelectComponent } from './shared/multi-select/multi-select.component';
 import { CandidateItemComponent } from './candidates/candidate-item/candidate-item.component';
 import { StageSettingsComponent } from './jobs/stages/stage-settings/stage-settings.component';
+import { QuestionnairesListComponent } from './settings/questionnaires/questionnaires-list/questionnaires-list.component';
+import { QuestionsListComponent } from './settings/questionnaires/questions-list/questions-list.component';
+import { QuestionItemComponent } from './settings/questionnaires/question-item/question-item.component';
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -74,7 +76,6 @@ export function provideConfig() {
         JobItemComponent,
         ResetPasswordComponent,
         SetPasswordComponent,
-        QuestionsComponent,
         ScorecardsComponent,
         EmailTemplatesComponent,
         IntegrationsComponent,
@@ -84,7 +85,10 @@ export function provideConfig() {
         JobItemPublishedComponent,
         MultiSelectComponent,
         CandidateItemComponent,
-        StageSettingsComponent
+        StageSettingsComponent,
+        QuestionnairesListComponent,
+        QuestionsListComponent,
+        QuestionItemComponent
     ],
     imports: [
         AppRoutingModule,

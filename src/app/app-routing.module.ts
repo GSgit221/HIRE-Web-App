@@ -1,3 +1,5 @@
+import { QuestionItemComponent } from './settings/questionnaires/question-item/question-item.component';
+import { QuestionnairesListComponent } from './settings/questionnaires/questionnaires-list/questionnaires-list.component';
 import { StageSettingsComponent } from './jobs/stages/stage-settings/stage-settings.component';
 import { CandidateItemComponent } from './candidates/candidate-item/candidate-item.component';
 import { SignoutComponent } from './auth/signout.component';
@@ -16,7 +18,6 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { PeopleListComponent } from './people/people-list/people-list.component';
 import { EmailTemplatesComponent } from './settings/email-templates/email-templates.component';
 import { IntegrationsComponent } from './settings/integrations/integrations.component';
-import { QuestionsComponent } from './settings/questions/questions.component';
 import { ScorecardsComponent } from './settings/scorecards/scorecards.component';
 
 const appRoutes: Routes = [
@@ -54,18 +55,18 @@ const appRoutes: Routes = [
             path: 'people',
             component: PeopleListComponent
         }, {
-            path: 'questions',
-            component: QuestionsComponent
-        },
-        {
+            path: 'questionnaires',
+            component: QuestionnairesListComponent
+        }, {
+            path: 'questionnaires/:id/questions/:questionId',
+            component: QuestionItemComponent
+        }, {
             path: 'scorecards',
             component: ScorecardsComponent
-        },
-        {
+        }, {
             path: 'email-templates',
             component: EmailTemplatesComponent
-        },
-        {
+        }, {
             path: 'integrations',
             component: IntegrationsComponent
         }]
