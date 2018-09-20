@@ -81,6 +81,8 @@
     display: flex;
     li {
         margin: 0 20px 0 0;
+        display: flex;
+        align-items: center;
     }
     img {
         margin: 0;
@@ -307,6 +309,7 @@ p-slider {
         height: 34px;
         flex: 0 0 34px;
         border-radius: 100px;
+        cursor: pointer;
         &.active {
             background: $sapphire-blue;
             g {
