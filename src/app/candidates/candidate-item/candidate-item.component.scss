@@ -27,12 +27,14 @@
         }
         img {
             width: 100%;
+            margin: 0;
+            display: block;
         }
     }
     .information-block {
         display: flex;
         flex-wrap: wrap;
-        align-items: flex-start;
+        align-items: center;
         color: $grey;
         font-size: 13px;
         p {
@@ -57,30 +59,24 @@
         flex: 0 0 100%;
         margin: 0 0 4px;
     }
-    .phone {
+    .detail-information {
         display: flex;
         align-items: center;
-    }
-    .email {
         margin: 0 28px 0 0;
-        color: $pink;
-        display: flex;
-        align-items: center;
-    }
-    .phone {
+        &:last-child {
+            flex: 0 0 100%;
+        }
+        a:hover {
+            text-decoration: none;
+        }
         .icon {
             margin: 0 6px 0 0;
         }
     }
-    .location {
-        flex: 0 0 100%;
-        display: flex;
-        align-items: center;
-    }
 }
 .social-links {
     margin: 0;
-    padding: 0 0 0 28px;
+    padding: 0;
     list-style: none;
     display: flex;
     li {
@@ -88,10 +84,15 @@
     }
     img {
         margin: 0;
+        display: block;
+    }
+    a {
+        display: block;
     }
 }
 .scores {
     color: $main-blue;
+    padding: 10px 0 0;
     .title {
         margin: 0 0 20px;
     }
@@ -136,6 +137,7 @@
 .candidate-holder {
     padding: 30px 45px 0;
     margin: 0 0 -30px;
+    height: 100%;
     .sections-nav {
         padding: 18px 0 17px 0;
     }
@@ -143,12 +145,40 @@
 .candidate-content {
     display: flex;
     margin: -8px 0 0;
+    height: 100%;
     h3 {
         color: $main-blue;
         font-size: 16px;
         line-height: 19px;
         font-weight: normal;
         margin: 0 0 11px;
+    }
+    h4 {
+        margin: 0 0 15px;
+        font-size: 11px;
+        color: $sapphire-blue;
+        text-transform: uppercase;
+    }
+    .wrap-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .hide-btn {
+        width: 16px;
+        height: 9px;
+        border: none;
+        box-shadow: none;
+        outline: none;
+        padding: 0;
+        cursor: pointer;
+        font: 14px/1.538 'Roboto', Helvetica, Arial, sans-serif;
+        background: url('/assets/images/bottom.svg') no-repeat center;
+        margin: 0 0 11px;
+        transition: 0.25s;
+        &.active {
+            transform: rotate(180deg);
+        }
     }
     p {
         line-height: 22px;
@@ -169,12 +199,6 @@ p-slider {
 
 .chart-job-index {
     margin: 0 0 31px;
-    h4 {
-        margin: 0 0 15px;
-        font-size: 11px;
-        color: $sapphire-blue;
-        text-transform: uppercase;
-    }
     .chart-values {
         display: flex;
         justify-content: space-between;
@@ -185,11 +209,7 @@ p-slider {
     flex-wrap: wrap;
     justify-content: flex-start;
     margin: 0 0 30px;
-    padding: 16px 0 0;
-    h3 {
-        flex: 0 0 100%;
-        margin: 0 0 10px;
-    }
+    padding: 0 0 0;
     .candidate-fit {
         flex: 0 0 50%;
         position: relative;
@@ -216,6 +236,12 @@ p-slider {
     .circle {
         display: inline-flex;
         position: relative;
+        .green-bg {
+            stroke: $dark-green;
+        }
+        .red-bg {
+            stroke: $light-red;
+        }
     }
     .result {
         position: absolute;
@@ -292,6 +318,7 @@ p-slider {
 .message-form {
     margin: 0 0 25px;
     textarea {
+        color: $grey;
         width: 100%;
         height: 71px;
         outline: none;
@@ -299,7 +326,7 @@ p-slider {
         border-radius: 2px;
         padding: 10px;
         margin: 0 0 5px;
-        border-radius: 2px;
+        font-size: 12px;
         resize: none;
     }
     button {
@@ -417,10 +444,7 @@ p-slider {
     }
 }
 .skills-list {
-    padding: 16px 0 0;
-    h3 {
-        margin: 0 0 20px;
-    }
+    padding: 10px 0 24px;
     .skill-name {
         font-size: 12px;
         padding: 5px 11px;
@@ -432,10 +456,7 @@ p-slider {
     }
 }
 .experience {
-    padding: 23px 0 0 0;
-    h3 {
-        margin: 0 0 20px;
-    }
+    padding: 10px 0 0 0;
     .item {
         padding: 0 0 15px;
         border-bottom: 1px solid $grey-border;
@@ -479,9 +500,8 @@ p-slider {
     }
 }
 .education {
-    h3 {
-        margin: 0 0 20px;
-    }
+    padding: 10px 0 0;
+    font-size: 14px;
     .item {
         padding: 0 0 15px;
         border-bottom: 1px solid $grey-border;

@@ -9,6 +9,9 @@ export class CandidateItemComponent implements OnInit {
     activeSection = 'overview';
     activeInteractivity = 'chat';
     predictiveIndex: number = 75;
+    summaryContentShow:boolean = true;
+    experienceContentShow:boolean = true;
+    educationContentShow:boolean = true;
     constructor() {}
 
     ngOnInit() {
@@ -18,6 +21,15 @@ export class CandidateItemComponent implements OnInit {
     }
     onChangeInteractivity(section: string) {
         this.activeInteractivity = section;
+    }
+    toggleSummaryContent() {
+        this.summaryContentShow = !this.summaryContentShow;
+    }
+    toggleExperienceContent() {
+        this.experienceContentShow = !this.experienceContentShow;
+    }
+    toggleEducationContent() {
+        this.educationContentShow = !this.educationContentShow;
     }
 
 }
