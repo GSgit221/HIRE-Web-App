@@ -3,6 +3,9 @@
     left: 8px;
     top: calc(50% - 1px);
     transform: translate(0,-50%);
-    display: flex;
     align-items: center;
+    display: none;
+}
+.hc-list-row-content:hover .drag-handler {
+    display: flex;
 }
