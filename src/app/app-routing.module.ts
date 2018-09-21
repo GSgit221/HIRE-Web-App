@@ -58,7 +58,7 @@ const appRoutes: Routes = [
         }, {
             path: 'questionnaires',
             component: QuestionnairesListComponent
-        },{
+        }, {
             path: 'questionnaires/:id/questions',
             component: QuestionsListComponent
         }, {
