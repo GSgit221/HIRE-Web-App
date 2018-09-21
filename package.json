@@ -26,6 +26,7 @@
     "animate.css": "^3.7.0",
     "closest": "0.0.1",
     "core-js": "^2.5.4",
+    "ngx-autosize-input": "^2.2.2",
     "ngx-google-places-autocomplete": "^2.0.1",
     "primeicons": "^1.0.0-beta.10",
     "primeng": "^6.1.0-rc.1",

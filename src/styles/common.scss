@@ -335,11 +335,14 @@ $steps: 5 10 15 20 25 30 33 35 40 45 50 60 75;
     display: flex;
     width: 30px;
     height: 30px;
+    min-width: 30px;
+    min-height: 30px;
     border-radius: 50%;
     align-items: center;
     justify-content: center;
     line-height: 30px;
     background: $pink;
+    padding: 0;
 
     img {
         display: block;

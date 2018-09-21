@@ -20,11 +20,13 @@
 
 .heading {
     .job-title-block {
-        margin: 0;
+        margin: 0 0 2px;
 
         .view, .edit {
             display: flex;
+            height: 30px;
             flex-direction: row;
+            position: relative;
         }
     }
 
@@ -32,6 +34,26 @@
         display: inline-block;
         font-size: 25px;
         line-height: 30px;
+    }
+
+    .form-input-title {
+        width: auto;
+        height: 30px;
+        padding: 1px;
+        margin: -1px 0 0 -2px;
+        outline: 0;
+        font-size: 25px;
+        line-height: 26px;
+        font-weight: 700;
+        position: relative;
+
+        &:focus {
+            padding: 0;
+        }
+    }
+    
+    .light-overlay {
+        z-index: 2;
     }
 
     .address {

@@ -1,171 +1,58 @@
-<div class="header-block">
-    <div class="status-dropdown-block">
-        <p-dropdown [options]="statusOptions" [(ngModel)]="job.status" [style]="{'width':'47px'}" class="status-dd status-dd-no-borders caret-down" (onChange)="onJobStatusChange(job, $event)">
-            <ng-template let-item pTemplate="selectedItem">
-                <span class="status" [ngClass]="item.label.toLowerCase()"></span>
-            </ng-template>
-            <ng-template let-status pTemplate="item">
-                <span class="status" [ngClass]="status.label.toLowerCase()"></span>
-            </ng-template>
-        </p-dropdown>
-    </div>
-    <div class="heading">
-        <div class="job-title-block">
-            <div class="view">
-                <strong class="title">Graduate Recruit Program</strong>
-                <button class="btn btn-round ml20">
-                    <img src="/assets/images/edit.svg" alt="" width="14" height="13">
-                </button>
+<div class="container fixed-width-container">
+    <div class="header-block">
+        <div class="status-dropdown-block">
+            <p-dropdown [options]="statusOptions" [(ngModel)]="job.status" [style]="{'width':'47px'}" class="status-dd status-dd-no-borders caret-down" (onChange)="onJobStatusChange(job, $event)">
+                <ng-template let-item pTemplate="selectedItem">
+                    <span class="status" [ngClass]="item.label.toLowerCase()"></span>
+                </ng-template>
+                <ng-template let-status pTemplate="item">
+                    <span class="status" [ngClass]="status.label.toLowerCase()"></span>
+                </ng-template>
+            </p-dropdown>
+        </div>
+        <div class="heading">
+            <div class="job-title-block">
+                <div class="view" *ngIf="!editTitleMode">
+                    <strong class="title">{{job.title}}</strong>
+                    <button class="btn btn-round ml20" (click)="editTitleMode = true">
+                        <img src="/assets/images/edit.svg" alt="" width="14" height="13">
+                    </button>
+                </div>
+                <form [formGroup]="jobTitleForm" class="edit" *ngIf="editTitleMode">
+                    <div class="light-overlay" *ngIf="formIsSaving"></div>
+                    <input type="text" 
+                        class="form-input form-input-title" 
+                        formControlName="title"
+                        maxlength="{{titleMaxLength}}"
+                        AutoSizeInput
+                        [extraWidth]="4"
+                    >
+                    <button class="btn btn-round ml20" (click)="onSaveTitle($event)">
+                        <svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <g id="Add-Job---Details" transform="translate(-956.000000, -92.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                                    <g id="icons8-save_close" transform="translate(956.000000, 92.000000)">
+                                        <path d="M1.59375,0 C0.714844,0 0,0.714844 0,1.59375 L0,11.40625 C0,12.285156 0.714844,13 1.59375,13 L6.761719,13 C7.570313,14.203125 8.945313,15 10.5,15 C12.980469,15 15,12.980469 15,10.5 C15,8.945313 14.203125,7.570313 13,6.761719 L13,2.476563 L10.527344,0 L1.59375,0 Z M1.59375,1 L2,1 L2,3.125 C2,4.113281 2.703125,5 3.667969,5 L8.332031,5 C9.296875,5 10,4.113281 10,3.125 L10,1 L10.109375,1 L12,2.890625 L12,6.273438 C11.527344,6.105469 11.027344,6 10.5,6 C8.945313,6 7.570313,6.796875 6.761719,8 L4.5,8 C3.671875,8 3,8.671875 3,9.5 L3,12 L1.59375,12 C1.265625,12 1,11.734375 1,11.40625 L1,1.59375 C1,1.265625 1.265625,1 1.59375,1 Z M3,1 L6,1 L6,3 L8,3 L8,1 L9,1 L9,3.125 C9,3.65625 8.660156,4 8.332031,4 L3.667969,4 C3.339844,4 3,3.65625 3,3.125 L3,1 Z M10.5,7 C12.4375,7 14,8.5625 14,10.5 C14,12.4375 12.4375,14 10.5,14 C8.5625,14 7,12.4375 7,10.5 C7,8.5625 8.5625,7 10.5,7 Z M12,8.859375 L10.160156,10.703125 L9.015625,9.558594 L8.304688,10.265625 L10.160156,12.117188 L12.707031,9.566406 L12,8.859375 Z M4.5,9 L6.273438,9 C6.105469,9.472656 6,9.972656 6,10.5 C6,11.027344 6.105469,11.527344 6.273438,12 L4,12 L4,9.5 C4,9.222656 4.226563,9 4.5,9 Z"
+                                            id="Shape"></path>
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+            <div class="address">
+                <img src="/assets/images/location.svg" class="ico" alt="" width="10" height="14">
+                <span>Johannesburg, ZA</span>
             </div>
         </div>
-        <div class="address">
-            <img src="/assets/images/location.svg" class="ico" alt="" width="10" height="14">
-            <span>Johannesburg, ZA</span>
-        </div>
-    </div>
-    <div class="vertical-separator"></div>
-    <div class="hiring-managers-block">
-        <div class="item">
-            <img src="/assets/images/hiring-team-placeholder.png" alt="" width="30" height="30">
-        </div>
-        <button class="btn btn-round btn-grey">
-            <svg width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                    <g id="Job-View---Default" transform="translate(-503.000000, -144.000000)" fill="#505F6E" fill-rule="nonzero">
-                        <g id="icons8-plus_math" transform="translate(503.000000, 144.000000)">
-                            <polygon id="Shape" points="6 0 6 6 0 6 0 7 6 7 6 13 7 13 7 7 13 7 13 6 7 6 7 0"></polygon>
-                        </g>
-                    </g>
-                </g>
-            </svg>
-        </button>
-    </div>
-    <button class="btn btn-primary w140 mla add-btn">Add Candidate</button>
-</div>
-<div class="blocks-separator mt10 mb10"></div>
-<div class="stages-section">
-    <div class="stages-holder">
-        <div class="stage-column">
-            <div class="stage-header">
-                <h2 class="title">Applied</h2>
-                <span class="counter">4</span>
-                <button class="btn settings-btn mla" (click)="onSettigsClick('applied')">
-                    <img src="/assets/images/settings-dots.svg" alt="" width="2" height="10">
-                </button>
-                <button class="btn btn-square ml10">
-                    <img src="/assets/images/plus.svg" alt="" width="13" height="13">
-                </button>
+        <div class="vertical-separator"></div>
+        <div class="hiring-managers-block">
+            <div class="item">
+                <img src="/assets/images/hiring-team-placeholder.png" alt="" width="30" height="30">
             </div>
-            <div class="stage-content">
-                <div class="block" (click)="onCandidateClick($event)">
-                    <div class="compliance-rate green"></div>
-                    <div class="ava-column">
-                        <div class="ava">
-                            <div class="ava-placeholder">G</div>
-                        </div>
-                    </div>
-                    <div class="block-content">
-                        <strong class="title">Greg Kockott</strong>
-                        <span class="position">CEO @ HelloCrowd, Inc</span>
-                        <div class="stats-actions-block">
-                            <div class="text-with-icon flex-row flex-aic">
-                                <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10">
-                                <p>13d Ago</p>
-                            </div>
-                            <div class="text-with-icon flex-row flex-aic ml20">
-                                <img src="/assets/images/update.svg" class="icon" alt="" width="12" height="13">
-                                <p>2d Ago</p>
-                            </div>
-                            <div class="actions mla">
-                                <span class="icon-btn"><img src="/assets/images/refresh.svg" alt="" width="10" height="10"></span>
-                                <span class="icon-btn ml10"><img src="/assets/images/delete.svg" alt="" width="10" height="10"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="block" (click)="onCandidateClick($event)">
-                    <div class="compliance-rate green"></div>
-                    <div class="ava-column">
-                        <div class="ava">
-                            <img src="/assets/images/placeholders/1.png" alt="" width="30" height="30">
-                        </div>
-                    </div>
-                    <div class="block-content">
-                        <strong class="title">Juan Evans</strong>
-                        <span class="position">CEO @ HelloCrowd, Inc</span>
-                        <div class="stats-actions-block">
-                            <div class="text-with-icon flex-row flex-aic">
-                                <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10">
-                                <p>13d Ago</p>
-                            </div>
-                            <div class="text-with-icon flex-row flex-aic ml20">
-                                <img src="/assets/images/update.svg" class="icon" alt="" width="12" height="13">
-                                <p>2d Ago</p>
-                            </div>
-                            <div class="actions mla">
-                                <span class="icon-btn"><img src="/assets/images/refresh.svg" alt="" width="10" height="10"></span>
-                                <span class="icon-btn ml10"><img src="/assets/images/delete.svg" alt="" width="10" height="10"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="block" (click)="onCandidateClick($event)">
-                    <div class="compliance-rate orange"></div>
-                    <div class="ava-column">
-                        <div class="ava">
-                            <img src="/assets/images/placeholders/2.png" alt="" width="30" height="30">
-                        </div>
-                    </div>
-                    <div class="block-content">
-                        <strong class="title">Joan Murphy</strong>
-                        <span class="position">CEO @ HelloCrowd, Inc</span>
-                        <div class="stats-actions-block">
-                            <div class="text-with-icon flex-row flex-aic">
-                                <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10">
-                                <p>13d Ago</p>
-                            </div>
-                            <div class="text-with-icon flex-row flex-aic ml20">
-                                <img src="/assets/images/update.svg" class="icon" alt="" width="12" height="13">
-                                <p>2d Ago</p>
-                            </div>
-                            <div class="actions mla">
-                                <span class="icon-btn"><img src="/assets/images/refresh.svg" alt="" width="10" height="10"></span>
-                                <span class="icon-btn ml10"><img src="/assets/images/delete.svg" alt="" width="10" height="10"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="block" (click)="onCandidateClick($event)">
-                    <div class="compliance-rate red"></div>
-                    <div class="ava-column">
-                        <div class="ava">
-                            <img src="/assets/images/placeholders/3.png" alt="" width="30" height="30">
-                        </div>
-                    </div>
-                    <div class="block-content">
-                        <strong class="title">Linda Woods</strong>
-                        <span class="position">CEO @ HelloCrowd, Inc</span>
-                        <div class="stats-actions-block">
-                            <div class="text-with-icon flex-row flex-aic">
-                                <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10">
-                                <p>13d Ago</p>
-                            </div>
-                            <div class="text-with-icon flex-row flex-aic ml20">
-                                <img src="/assets/images/update.svg" class="icon" alt="" width="12" height="13">
-                                <p>2d Ago</p>
-                            </div>
-                            <div class="actions mla">
-                                <span class="icon-btn"><img src="/assets/images/refresh.svg" alt="" width="10" height="10"></span>
-                                <span class="icon-btn ml10"><img src="/assets/images/delete.svg" alt="" width="10" height="10"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="stage-column">
-            <button class="btn fw btn-dash-bordered tal mb10">
-                <svg class="ml10 mr10" width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <button class="btn btn-round btn-grey">
+                <svg width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                         <g id="Job-View---Default" transform="translate(-503.000000, -144.000000)" fill="#505F6E" fill-rule="nonzero">
                             <g id="icons8-plus_math" transform="translate(503.000000, 144.000000)">
@@ -174,45 +61,182 @@
                         </g>
                     </g>
                 </svg>
-                <span class="text">
-                    Add Stage
-                </span>
             </button>
-            <div class="stage-content">
-               <input type="text" class="form-input" name="" id="">
-            </div>
         </div>
-        <div class="stage-column">
-            <div class="stage-header">
-                <h2 class="title">Video Interview</h2>
-                <span class="counter">1</span>
-                <button class="btn settings-btn mla" (click)="onSettigsClick('video')">
-                    <img src="/assets/images/settings-dots.svg" alt="" width="2" height="10">
-                </button>
-            </div>
-            <div class="stage-content">
-                <div class="block" (click)="onCandidateClick($event)">
-                    <div class="compliance-rate green"></div>
-                    <div class="ava-column">
-                        <div class="ava">
-                            <img src="/assets/images/placeholders/2.png" alt="" width="30" height="30">
+        <button class="btn btn-primary w140 mla add-btn">Add Candidate</button>
+    </div>
+    <div class="blocks-separator mt10 mb10"></div>
+    <div class="stages-section">
+        <div class="stages-holder">
+            <div class="stage-column">
+                <div class="stage-header">
+                    <h2 class="title">Applied</h2>
+                    <span class="counter">4</span>
+                    <button class="btn settings-btn mla" (click)="onSettigsClick('applied')">
+                        <img src="/assets/images/settings-dots.svg" alt="" width="2" height="10">
+                    </button>
+                    <button class="btn btn-square ml10">
+                        <img src="/assets/images/plus.svg" alt="" width="13" height="13">
+                    </button>
+                </div>
+                <div class="stage-content">
+                    <div class="block" (click)="onCandidateClick($event)">
+                        <div class="compliance-rate green"></div>
+                        <div class="ava-column">
+                            <div class="ava">
+                                <div class="ava-placeholder">G</div>
+                            </div>
+                        </div>
+                        <div class="block-content">
+                            <strong class="title">Greg Kockott</strong>
+                            <span class="position">CEO @ HelloCrowd, Inc</span>
+                            <div class="stats-actions-block">
+                                <div class="text-with-icon flex-row flex-aic">
+                                    <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10">
+                                    <p>13d Ago</p>
+                                </div>
+                                <div class="text-with-icon flex-row flex-aic ml20">
+                                    <img src="/assets/images/update.svg" class="icon" alt="" width="12" height="13">
+                                    <p>2d Ago</p>
+                                </div>
+                                <div class="actions mla">
+                                    <span class="icon-btn"><img src="/assets/images/refresh.svg" alt="" width="10" height="10"></span>
+                                    <span class="icon-btn ml10"><img src="/assets/images/delete.svg" alt="" width="10" height="10"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="block-content">
-                        <strong class="title">Joan Murphy</strong>
-                        <span class="position">CEO @ HelloCrowd, Inc</span>
-                        <div class="stats-actions-block">
-                            <div class="text-with-icon flex-row flex-aic">
-                                <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10">
-                                <p>13d Ago</p>
+                    <div class="block" (click)="onCandidateClick($event)">
+                        <div class="compliance-rate green"></div>
+                        <div class="ava-column">
+                            <div class="ava">
+                                <img src="/assets/images/placeholders/1.png" alt="" width="30" height="30">
                             </div>
-                            <div class="text-with-icon flex-row flex-aic ml20">
-                                <img src="/assets/images/update.svg" class="icon" alt="" width="12" height="13">
-                                <p>2d Ago</p>
+                        </div>
+                        <div class="block-content">
+                            <strong class="title">Juan Evans</strong>
+                            <span class="position">CEO @ HelloCrowd, Inc</span>
+                            <div class="stats-actions-block">
+                                <div class="text-with-icon flex-row flex-aic">
+                                    <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10">
+                                    <p>13d Ago</p>
+                                </div>
+                                <div class="text-with-icon flex-row flex-aic ml20">
+                                    <img src="/assets/images/update.svg" class="icon" alt="" width="12" height="13">
+                                    <p>2d Ago</p>
+                                </div>
+                                <div class="actions mla">
+                                    <span class="icon-btn"><img src="/assets/images/refresh.svg" alt="" width="10" height="10"></span>
+                                    <span class="icon-btn ml10"><img src="/assets/images/delete.svg" alt="" width="10" height="10"></span>
+                                </div>
                             </div>
-                            <div class="actions mla">
-                                <span class="icon-btn"><img src="/assets/images/refresh.svg" alt="" width="10" height="10"></span>
-                                <span class="icon-btn ml10"><img src="/assets/images/delete.svg" alt="" width="10" height="10"></span>
+                        </div>
+                    </div>
+                    <div class="block" (click)="onCandidateClick($event)">
+                        <div class="compliance-rate orange"></div>
+                        <div class="ava-column">
+                            <div class="ava">
+                                <img src="/assets/images/placeholders/2.png" alt="" width="30" height="30">
+                            </div>
+                        </div>
+                        <div class="block-content">
+                            <strong class="title">Joan Murphy</strong>
+                            <span class="position">CEO @ HelloCrowd, Inc</span>
+                            <div class="stats-actions-block">
+                                <div class="text-with-icon flex-row flex-aic">
+                                    <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10">
+                                    <p>13d Ago</p>
+                                </div>
+                                <div class="text-with-icon flex-row flex-aic ml20">
+                                    <img src="/assets/images/update.svg" class="icon" alt="" width="12" height="13">
+                                    <p>2d Ago</p>
+                                </div>
+                                <div class="actions mla">
+                                    <span class="icon-btn"><img src="/assets/images/refresh.svg" alt="" width="10" height="10"></span>
+                                    <span class="icon-btn ml10"><img src="/assets/images/delete.svg" alt="" width="10" height="10"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="block" (click)="onCandidateClick($event)">
+                        <div class="compliance-rate red"></div>
+                        <div class="ava-column">
+                            <div class="ava">
+                                <img src="/assets/images/placeholders/3.png" alt="" width="30" height="30">
+                            </div>
+                        </div>
+                        <div class="block-content">
+                            <strong class="title">Linda Woods</strong>
+                            <span class="position">CEO @ HelloCrowd, Inc</span>
+                            <div class="stats-actions-block">
+                                <div class="text-with-icon flex-row flex-aic">
+                                    <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10">
+                                    <p>13d Ago</p>
+                                </div>
+                                <div class="text-with-icon flex-row flex-aic ml20">
+                                    <img src="/assets/images/update.svg" class="icon" alt="" width="12" height="13">
+                                    <p>2d Ago</p>
+                                </div>
+                                <div class="actions mla">
+                                    <span class="icon-btn"><img src="/assets/images/refresh.svg" alt="" width="10" height="10"></span>
+                                    <span class="icon-btn ml10"><img src="/assets/images/delete.svg" alt="" width="10" height="10"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="stage-column">
+                <button class="btn fw btn-dash-bordered tal mb10">
+                    <svg class="ml10 mr10" width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <g id="Job-View---Default" transform="translate(-503.000000, -144.000000)" fill="#505F6E" fill-rule="nonzero">
+                                <g id="icons8-plus_math" transform="translate(503.000000, 144.000000)">
+                                    <polygon id="Shape" points="6 0 6 6 0 6 0 7 6 7 6 13 7 13 7 7 13 7 13 6 7 6 7 0"></polygon>
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                    <span class="text">
+                        Add Stage
+                    </span>
+                </button>
+                <div class="stage-content">
+                <input type="text" class="form-input" name="" id="">
+                </div>
+            </div>
+            <div class="stage-column">
+                <div class="stage-header">
+                    <h2 class="title">Video Interview</h2>
+                    <span class="counter">1</span>
+                    <button class="btn settings-btn mla" (click)="onSettigsClick('video')">
+                        <img src="/assets/images/settings-dots.svg" alt="" width="2" height="10">
+                    </button>
+                </div>
+                <div class="stage-content">
+                    <div class="block" (click)="onCandidateClick($event)">
+                        <div class="compliance-rate green"></div>
+                        <div class="ava-column">
+                            <div class="ava">
+                                <img src="/assets/images/placeholders/2.png" alt="" width="30" height="30">
+                            </div>
+                        </div>
+                        <div class="block-content">
+                            <strong class="title">Joan Murphy</strong>
+                            <span class="position">CEO @ HelloCrowd, Inc</span>
+                            <div class="stats-actions-block">
+                                <div class="text-with-icon flex-row flex-aic">
+                                    <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10">
+                                    <p>13d Ago</p>
+                                </div>
+                                <div class="text-with-icon flex-row flex-aic ml20">
+                                    <img src="/assets/images/update.svg" class="icon" alt="" width="12" height="13">
+                                    <p>2d Ago</p>
+                                </div>
+                                <div class="actions mla">
+                                    <span class="icon-btn"><img src="/assets/images/refresh.svg" alt="" width="10" height="10"></span>
+                                    <span class="icon-btn ml10"><img src="/assets/images/delete.svg" alt="" width="10" height="10"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -221,6 +245,5 @@
         </div>
     </div>
 </div>
-
 
 <app-loader *ngIf="contentLoading"></app-loader>

@@ -24,7 +24,7 @@ export class JobItemUnpublishedComponent implements OnInit {
     hiringForm: FormGroup;
 
     @Input() job: Job;
-    titleMaxLength: number;
+    titleMaxLength = 250;
 
     users: User[];
 
@@ -56,8 +56,6 @@ export class JobItemUnpublishedComponent implements OnInit {
         private fb: FormBuilder,
         private router: Router
     ) {
-
-        this.titleMaxLength = 250;
 
         this.route.paramMap.subscribe((params: ParamMap) => {
             console.log('ROUTE CHANGE:');

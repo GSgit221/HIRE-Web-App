@@ -19,6 +19,7 @@ import { PanelModule } from 'primeng/panel';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { SliderModule } from 'primeng/slider';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
+import { AutoSizeInputModule } from 'ngx-autosize-input';
 
 
 import { environment } from '../environments/environment';
@@ -110,7 +111,8 @@ export function provideConfig() {
         AngularEditorModule,
         SocialLoginModule,
         ReactiveFormsModule,
-        GooglePlaceModule
+        GooglePlaceModule,
+        AutoSizeInputModule
     ],
     providers: [
         {

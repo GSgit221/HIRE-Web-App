@@ -1,3 +1,5 @@
+import { JobService } from './../../services/job.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { Router } from '@angular/router';
 import { Job } from './../../models/job';
@@ -12,14 +14,25 @@ export class JobItemPublishedComponent implements OnInit {
     @Input() job: Job;
     statusOptions: SelectItem[];
     contentLoading = false;
-    constructor(private router: Router) {
+    jobTitleForm: FormGroup;
+    titleMaxLength = 250;
+    editTitleMode = false;
+    formIsSaving = false;
+
+    constructor(
+        private router: Router,
+        private fb: FormBuilder,
+        private jobService: JobService
+    ) {
         this.statusOptions = [
             { label: 'LIVE', value: 'LIVE' },
             { label: 'BUILD', value: 'BUILD' }
         ];
     }
     ngOnInit() {
-
+        this.jobTitleForm = this.fb.group({
+            title: [this.job.title, Validators.required]
+        });
     }
 
     onJobStatusChange(item) {
@@ -35,6 +48,23 @@ export class JobItemPublishedComponent implements OnInit {
     onSettigsClick(stageId: string) {
         console.log('Clicked on stage settings:', stageId);
         this.router.navigateByUrl(`dashboard/jobs/${this.job.id}/stages/${stageId}`);
+    }
+
+    onSaveTitle($event) {
+        event.preventDefault();
+        const formValue = this.jobTitleForm.value;
+        this.formIsSaving = true;
+        if (this.job.title !== formValue.title) {
+            this.jobService.updateJob(this.job.id, formValue)
+                .subscribe(() => {
+                    this.formIsSaving = false;
+                    this.editTitleMode = false;
+                    this.job = Object.assign(this.job, formValue);
+                });
+        } else {
+            this.formIsSaving = false;
+            this.editTitleMode = false;
+        }
     }
 
 }
