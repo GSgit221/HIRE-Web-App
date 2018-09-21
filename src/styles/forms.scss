@@ -65,19 +65,19 @@
     outline: none;
     margin: 0;
     &::-webkit-input-placeholder {
-        color: red;
+        color: $grey;
         font-size: 13px;
         line-height: 16px;
     }
 
     &::-moz-placeholder {
-        color: red;
+        color: $grey;
         font-size: 13px;
         line-height: 16px;
     }
 
     &:-ms-input-placeholder {
-        color: red;
+        color: $grey;
         font-size: 13px;
         line-height: 16px;
     }
