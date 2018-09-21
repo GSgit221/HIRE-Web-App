@@ -19,6 +19,7 @@ import { PeopleListComponent } from './people/people-list/people-list.component'
 import { EmailTemplatesComponent } from './settings/email-templates/email-templates.component';
 import { IntegrationsComponent } from './settings/integrations/integrations.component';
 import { ScorecardsComponent } from './settings/scorecards/scorecards.component';
+import {QuestionsListComponent} from "./settings/questionnaires/questions-list/questions-list.component";
 
 const appRoutes: Routes = [
     { path: 'signin', component: SigninComponent },
@@ -57,6 +58,9 @@ const appRoutes: Routes = [
         }, {
             path: 'questionnaires',
             component: QuestionnairesListComponent
+        },{
+            path: 'questionnaires/:id/questions',
+            component: QuestionsListComponent
         }, {
             path: 'questionnaires/:id/questions/:questionId',
             component: QuestionItemComponent
