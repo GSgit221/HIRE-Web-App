@@ -10,19 +10,31 @@ import { Component, OnInit } from '@angular/core';
 export class QuestionItemComponent implements OnInit {
     contentLoading = false;
     questionForm: FormGroup;
+    questionTypeShow = 'multiple';
     constructor(
         private fb: FormBuilder,
         private formHelper: FormHelperService
     ) { }
-
+    questionType = [
+        {label: 'Multiple Choice', value: 'multiple'},
+        {label: 'Single Choice', value: 'single'}
+    ];
     ngOnInit() {
         this.questionForm = this.fb.group({
             question: [''],
             type: ['multiple'],
-            is_required: [true]
+            is_required: [true],
+            answerFirst: [''],
+            answer_is_knockout1: [''],
+            answerSecond: [''],
+            answer_is_knockout2: [true]
         });
     }
-
+    onChangeType() {
+        console.log('change dropdown');
+        console.log(this.questionForm.controls['type'].value);
+        this.questionTypeShow = this.questionForm.controls['type'].value;
+    }
     onSave() {
         const form = this.questionForm;
         if (!form.valid) {
