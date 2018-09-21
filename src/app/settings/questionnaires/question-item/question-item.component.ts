@@ -1,5 +1,5 @@
 import { FormHelperService } from './../../../services/form-helper.service';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -10,20 +10,39 @@ import { Component, OnInit } from '@angular/core';
 export class QuestionItemComponent implements OnInit {
     contentLoading = false;
     questionForm: FormGroup;
+    typeQuestion = 'multiple';
     constructor(
         private fb: FormBuilder,
         private formHelper: FormHelperService
     ) { }
-
+    questionTypeOptions = [
+        {label: 'Multiple Choice', value: 'multiple'},
+        {label: 'Single Choice', value: 'single'}
+    ];
     ngOnInit() {
         this.questionForm = this.fb.group({
-            question: [''],
-            type: ['multiple'],
-            is_required: [true]
+            question: ['', Validators.required],
+            type: ['multiple', Validators.required],
+            is_required: [true],
+            answer: ['', Validators.required],
+            answer_is_knockout1: [''],
+            answer2: ['', Validators.required],
+            answer_is_knockout2: [true]
         });
     }
+    onChangeType() {
+        this.typeQuestion = this.questionForm.controls['type'].value;
+        if (this.typeQuestion === 'single') {
+            this.questionForm.get('answer2').clearValidators();
+            this.questionForm.get('answer2').updateValueAndValidity();
+        } else {
+            this.questionForm.get('answer2').setValidators([Validators.required]);
+            this.questionForm.get('answer2').updateValueAndValidity();
 
+        }
+    }
     onSave() {
+        console.log('save');
         const form = this.questionForm;
         if (!form.valid) {
             this.formHelper.markFormGroupTouched(form);
