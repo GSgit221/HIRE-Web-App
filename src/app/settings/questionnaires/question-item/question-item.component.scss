@@ -1,11 +1,12 @@
 .textarea {
     resize: none;
     height: 80px;
+    color: #212B35;
 }
 .checkbox-required {
     padding-top: 32px;
     display: block;
 }
-.form-block-col.hide {
-    opacity: 0;
+.form-block-columns.w50 {
+    width: calc(50% + 10px);
 }

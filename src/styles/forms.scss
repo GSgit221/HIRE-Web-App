@@ -12,7 +12,6 @@
     padding: 9px 2px 9px 10px;
     box-shadow: none;
     outline: none;
-
     &::-webkit-input-placeholder {
         color: $grey;
         font-size: 13px;
@@ -65,6 +64,30 @@
     box-shadow: none;
     outline: none;
     margin: 0;
+    &::-webkit-input-placeholder {
+        color: red;
+        font-size: 13px;
+        line-height: 16px;
+    }
+
+    &::-moz-placeholder {
+        color: red;
+        font-size: 13px;
+        line-height: 16px;
+    }
+
+    &:-ms-input-placeholder {
+        color: red;
+        font-size: 13px;
+        line-height: 16px;
+    }
+    &.ng-invalid.ng-touched {
+        border-color: $pink;
+    }
+    &:focus {
+        border: 2px solid $pink;
+        padding: 8px 1px 8px 9px;
+    }
 }
 
 .form-tip {
