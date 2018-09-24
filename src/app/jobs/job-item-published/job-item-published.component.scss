@@ -94,8 +94,18 @@
     overflow: hidden;
 }
 
+.stages-holder {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    display: flex;
+    flex-direction: row;
+
+}
+
 .stage-column {
-    float: left;
+    min-width: 270px;
+    max-width: 270px;
     width: 270px;
     margin: 0 30px 0 0;
 

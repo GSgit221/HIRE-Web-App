@@ -1,3 +1,4 @@
+import { JobStage } from './../../models/job-stage';
 import { JobService } from './../../services/job.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
@@ -15,9 +16,13 @@ export class JobItemPublishedComponent implements OnInit {
     statusOptions: SelectItem[];
     contentLoading = false;
     jobTitleForm: FormGroup;
+    newJobStageForm: FormGroup;
     titleMaxLength = 250;
     editTitleMode = false;
     formIsSaving = false;
+    stageFormIsSaving = false;
+    appliedStage: JobStage;
+    stages: JobStage[] = [];
 
     constructor(
         private router: Router,
@@ -33,9 +38,16 @@ export class JobItemPublishedComponent implements OnInit {
         this.jobTitleForm = this.fb.group({
             title: [this.job.title, Validators.required]
         });
-        this.jobService.getStages(this.job.id).subscribe(stages => {
-            console.log(stages);
+        this.newJobStageForm = this.fb.group({
+            title: ['']
         });
+        this.appliedStage = this.job.stages.find(stage => stage.id === 'applied');
+        this.stages = this.job.stages.filter(stage => stage.id !== 'applied');
+
+
+        // this.jobService.getStages(this.job.id).subscribe(stages => {
+        //     console.log(stages);
+        // });
     }
 
     onJobStatusChange(item) {
@@ -67,6 +79,28 @@ export class JobItemPublishedComponent implements OnInit {
         } else {
             this.formIsSaving = false;
             this.editTitleMode = false;
+        }
+    }
+
+    onAddCandidateClick() {
+        console.log('Add candidate');
+    }
+
+    onNewJobStageFormSubmit(event) {
+        event.preventDefault();
+        const formValue = this.newJobStageForm.value;
+        console.log(formValue);
+        if (formValue && formValue.title && formValue.title.length) {
+            this.stageFormIsSaving = true;
+            this.jobService.createStage(this.job.id, formValue).subscribe((stage: JobStage) => {
+                console.log(stage);
+                this.stages.push(stage);
+                this.stageFormIsSaving = false;
+                this.newJobStageForm.reset();
+            }, (error) => {
+                this.stageFormIsSaving = false;
+                console.error(error);
+            });
         }
     }
 }

@@ -5,6 +5,7 @@ import { JobStage } from './../../../models/job-stage';
 import { JobService } from './../../../services/job.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Slider } from 'primeng/slider';
+import { Job } from '../../../models/job';
 
 @Component({
     selector: 'app-stage-settings',
@@ -16,12 +17,10 @@ export class StageSettingsComponent implements OnInit {
     contentLoading = false;
     stage: JobStage;
     jobId: string;
+    job: Job;
     stageId: string;
     titleMaxLength: 30;
     stageSettingsForm: FormGroup;
-
-
-
 
     constructor(
         private jobService: JobService,
@@ -33,6 +32,8 @@ export class StageSettingsComponent implements OnInit {
         this.jobId = this.route.snapshot.paramMap.get('id');
         this.stageId = this.route.snapshot.paramMap.get('stageId');
         this.contentLoading = true;
+
+        this.jobService.getJob(this.jobId).subscribe((job: Job) => this.job = job);
         this.jobService.getStage(this.jobId, this.stageId).subscribe((stage: JobStage) => {
             this.contentLoading = false;
             this.stage = stage;
@@ -113,5 +114,19 @@ export class StageSettingsComponent implements OnInit {
         }
         // VALID
         console.log('FORM IS VALID:', form.value);
+        this.contentLoading = true;
+        this.jobService.updateStage(this.jobId, this.stageId, form.value)
+            .subscribe(() => {
+                console.log('updated');
+                this.contentLoading = false;
+            }, error => {
+                console.log(error);
+                this.contentLoading = false;
+            });
+
+    }
+
+    onBackClick() {
+        this.router.navigateByUrl(`dashboard/jobs/${this.jobId}`);
     }
 }

@@ -104,4 +104,12 @@ export class JobService {
     getStage(jobId: string, stageId: string) {
         return this.http.get(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/stages/${stageId}`);
     }
+
+    createStage(jobId: string, data: {title: string}) {
+        return this.http.post(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/stages`, {data});
+    }
+
+    updateStage(jobId: string, stageId: string, data: object) {
+        return this.http.put(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/stages/${stageId}`, { data });
+    }
 }
