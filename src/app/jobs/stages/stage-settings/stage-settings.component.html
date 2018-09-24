@@ -77,14 +77,14 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="section-separator mb20 mt20"></div>
+            <div class="section-separator mb20 mt20"></div>
             <div class="form-content-section">
                 <div class="description">
                     <strong class="title">Select an Integration (optional)</strong>
                     <p>Select an action for this stage.</p>
                 </div>
                 <div class="form-content-holder">
-                    <div class="form-content-box">
+                    <div class="form-content-box top-position">
                         <div class="form-content-box-top">
                             <div class="form-content-box-top-holder">
                                 <div class="form-block">
@@ -101,11 +101,91 @@
                                     <input type="text" name="search"  placeholder="Search for an integration">
                                 </div>
                             </div>
+                            <div class="list-searching-wrap">
+                                <div class="list-searching">
+                                    <div class="item">
+                                        <div class="img-block">
+                                            <img src="/assets/images/spark.jpg" alt="Spark Hire">
+                                        </div>
+                                        <p>Spark Hire</p>
+                                    </div>
+                                    <div class="item">
+                                        <div class="img-block">
+                                        </div>
+                                        <p>Future App</p>
+                                    </div>
+                                    <div class="item">
+                                        <div class="img-block">
+                                        </div>
+                                        <p>Future App</p>
+                                    </div>
+                                    <div class="item">
+                                        <div class="img-block">
+                                        </div>
+                                        <p>Future App</p>
+                                    </div>
+                                    <div class="item">
+                                        <div class="img-block">
+                                        </div>
+                                        <p>Future App</p>
+                                    </div>
+                                    <div class="item">
+                                        <div class="img-block">
+                                        </div>
+                                        <p>Future App</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <p>Content</p>
                     </div>
                 </div>
-            </div> -->
+            </div>
+            <div class="form-content-section">
+                <div class="description"></div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <div class="form-content-box-top">
+                            <div class="form-block">
+                                <div class="selected-integration">
+                                    <div class="img-block">
+                                        <img src="assets/images/spark.jpg" alt="Spark icon">
+                                    </div>
+                                        <div class="title">Set up <strong>Spark Hire</strong> One-Way Interview</div>
+                                        <button class="remove"><img src="/assets/images/delete_sign.svg" alt=""></button>
+
+                                </div>
+                            </div>
+                            <div class="form-block">
+                                <div class="form-block-columns">
+                                    <div class="form-block-col">
+                                        <div class="input-block">
+                                            <label for="" class="form-block-label">Select a question set</label>
+                                            <p-dropdown [options]="questionOptions" formControlName="question" [style]="{'width':'100%'}" placeholder="Please select an option"></p-dropdown>
+                                        </div>
+                                    </div>
+                                    <div class="form-block-col-separator"></div>
+                                    <div class="form-block-col">
+                                        <div class="input-block">
+                                            <label for="" class="form-block-label">Time allowance</label>
+                                            <p-dropdown [options]="allowanceOptions" formControlName="allowance" [style]="{'width':'100%'}" placeholder="Please select an option"></p-dropdown>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-content-box-bottom">
+                                <div class="form-content-box-bottom-holder">
+                                    <div class="form-block">
+                                        <p-checkbox name="send_reminder_emails"
+                                                    binary="true"
+                                                    label="Send reminder emails to candidates who have not completed this step."
+                                                    formControlName="send_reminder_emails" inputId="send_reminder_emails"></p-checkbox>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="section-separator mb20 mt20"></div>
             <div class="form-content-section">
                 <div class="description">

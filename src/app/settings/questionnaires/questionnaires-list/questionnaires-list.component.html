@@ -1,6 +1,9 @@
 <div class="container fixed-width-container mh500">
     <div class="title-block">
         <h1 class="page-title">Questionnaires</h1>
+        <div class="buttons-holder">
+            <button class="btn btn-primary w140 mla" routerLink="/dashboard/questionnaires/sa/questions/new">Add Questionnaire</button>
+        </div>
     </div>
     <div *ngIf="!list || !list.length && !contentLoading">
         <div class="section-separator"></div>
@@ -52,9 +55,9 @@
                         <p-checkbox binary="true" [(ngModel)]="selectedAll" (onChange)="onSelectAllChange()"></p-checkbox>
                     </div>
                 </div>
-                <div class="col col3 flex-50">Questionnaire</div>
-                <div class="col col4 flex-25"># of Questions</div>
-                <div class="col col5 flex-20">Created</div>
+                <div class="col col2 flex-50">Questionnaire</div>
+                <div class="col col3 flex-25"># of Questions</div>
+                <div class="col col4 flex-20">Created</div>
             </div>
             <div class="nr-list-content">
                 <div class="hc-blocker"></div>
@@ -65,15 +68,15 @@
                                 <p-checkbox binary="true" [(ngModel)]="item.selected" (onChange)="onItemSeletectedChange()"></p-checkbox>
                             </div>
                         </div>
-                        <div class="col col3 flex-50">
+                        <div class="col col2 flex-50">
                             <p class="hc-content-p">{{item.title}}</p>
                         </div>
-                        <div class="col col4  flex-25">
+                        <div class="col col3  flex-25">
                             <p class="hc-content-p">
                                 {{item.countQuestions}}
                             </p>
                         </div>
-                        <div class="col col5 flex-20">
+                        <div class="col col4 flex-20">
                             {{ item.created }}
                         </div>
                     </div>

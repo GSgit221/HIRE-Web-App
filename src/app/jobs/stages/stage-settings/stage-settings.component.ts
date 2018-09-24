@@ -22,6 +22,7 @@ export class StageSettingsComponent implements OnInit {
 
 
 
+
     constructor(
         private jobService: JobService,
         private router: Router,
@@ -37,6 +38,9 @@ export class StageSettingsComponent implements OnInit {
             this.stage = stage;
             if (this.stage.id === 'applied') {
                 this.stageSettingsForm = this.fb.group({
+                    question: [''],
+                    allowance: [''],
+                    send_reminder_emails: [true],
                     resume_matching_threshold: [this.stage.resume_matching_threshold],
                     automatically_progress_matching_threshold: [this.stage.automatically_progress_matching_threshold]
                 });
@@ -47,6 +51,9 @@ export class StageSettingsComponent implements OnInit {
             } else {
                 console.log('It is not applied form');
                 this.stageSettingsForm = this.fb.group({
+                    question: [''],
+                    allowance: [''],
+                    send_reminder_emails: [true],
                     title: [this.stage.title, Validators.required],
                     integration: [this.stage.integration],
                     acceptance_criteria: [this.stage.acceptance_criteria],
@@ -62,11 +69,25 @@ export class StageSettingsComponent implements OnInit {
             this.router.navigateByUrl('dashboard/jobs/' + this.jobId);
         });
     }
+    questionOptions = [
+        {label: 'Graduate Recruit Program', value: 'Graduate Recruit Program'},
+        {label: 'Graduate Recruit Program2', value: 'Graduate Recruit Program2'},
+        {label: 'Graduate Recruit Program3', value: 'Graduate Recruit Program3'}
+    ];
+    allowanceOptions = [
+        {label: '1 days', value: '1'},
+        {label: '2 days', value: '2'},
+        {label: '3 days', value: '3'}
+    ];
 
     ngOnInit() {
         this.stageSettingsForm = this.fb.group({
+            question: [''],
+            allowance: [''],
+            send_reminder_emails: [true],
             resume_matching_threshold: [60],
             automatically_progress_matching_threshold: [true]
+
         });
     }
 
