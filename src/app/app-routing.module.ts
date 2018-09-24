@@ -1,3 +1,6 @@
+import { ApplicationsSigninComponent } from './applications/auth/signin/signin.component';
+import { ApplicationsSignupComponent } from './applications/auth/signup/signup.component';
+import { JobApplicationComponent } from './applications/job-application/job-application.component';
 import { QuestionItemComponent } from './settings/questionnaires/question-item/question-item.component';
 import { QuestionnairesListComponent } from './settings/questionnaires/questionnaires-list/questionnaires-list.component';
 import { StageSettingsComponent } from './jobs/stages/stage-settings/stage-settings.component';
@@ -70,6 +73,15 @@ const appRoutes: Routes = [
             path: 'integrations',
             component: IntegrationsComponent
         }]
+    }, {
+        path: 'applications/jobs/:jobId',
+        component: JobApplicationComponent
+    }, {
+        path: 'applications/signin',
+        component: ApplicationsSigninComponent
+    }, {
+        path: 'applications/signup',
+        component: ApplicationsSignupComponent
     },
     { path: 'not-found', component: PageNotFoundComponent },
     { path: '**', redirectTo: 'not-found' }

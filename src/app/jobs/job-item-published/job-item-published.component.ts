@@ -33,6 +33,9 @@ export class JobItemPublishedComponent implements OnInit {
         this.jobTitleForm = this.fb.group({
             title: [this.job.title, Validators.required]
         });
+        this.jobService.getStages(this.job.id).subscribe(stages => {
+            console.log(stages);
+        });
     }
 
     onJobStatusChange(item) {
@@ -66,5 +69,4 @@ export class JobItemPublishedComponent implements OnInit {
             this.editTitleMode = false;
         }
     }
-
 }

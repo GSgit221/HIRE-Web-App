@@ -51,6 +51,9 @@ import { StageSettingsComponent } from './jobs/stages/stage-settings/stage-setti
 import { QuestionnairesListComponent } from './settings/questionnaires/questionnaires-list/questionnaires-list.component';
 import { QuestionsListComponent } from './settings/questionnaires/questions-list/questions-list.component';
 import { QuestionItemComponent } from './settings/questionnaires/question-item/question-item.component';
+import { JobApplicationComponent } from './applications/job-application/job-application.component';
+import { ApplicationsSigninComponent } from './applications/auth/signin/signin.component';
+import { ApplicationsSignupComponent } from './applications/auth/signup/signup.component';
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -89,7 +92,10 @@ export function provideConfig() {
         StageSettingsComponent,
         QuestionnairesListComponent,
         QuestionsListComponent,
-        QuestionItemComponent
+        QuestionItemComponent,
+        JobApplicationComponent,
+        ApplicationsSigninComponent,
+        ApplicationsSignupComponent
     ],
     imports: [
         AppRoutingModule,
