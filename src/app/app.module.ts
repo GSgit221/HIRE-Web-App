@@ -54,6 +54,11 @@ import { QuestionItemComponent } from './settings/questionnaires/question-item/q
 import { JobApplicationComponent } from './applications/job-application/job-application.component';
 import { ApplicationsSigninComponent } from './applications/auth/signin/signin.component';
 import { ApplicationsSignupComponent } from './applications/auth/signup/signup.component';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './reducers';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
+import { AppEffects } from './app.effects';
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -118,7 +123,10 @@ export function provideConfig() {
         SocialLoginModule,
         ReactiveFormsModule,
         GooglePlaceModule,
-        AutoSizeInputModule
+        AutoSizeInputModule,
+        StoreModule.forRoot(reducers, { metaReducers }),
+        !environment.production ? StoreDevtoolsModule.instrument() : [],
+        EffectsModule.forRoot([AppEffects])
     ],
     providers: [
         {
