@@ -60,6 +60,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './app.effects';
 import { InitialsPipe } from './pipes/initials.pipe';
+import { NewCandidateItemComponent } from './candidates/new-candidate-item/new-candidate-item.component';
+import { ExistingCandidateItemComponent } from './candidates/existing-candidate-item/existing-candidate-item.component';
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -102,7 +104,9 @@ export function provideConfig() {
         JobApplicationComponent,
         ApplicationsSigninComponent,
         ApplicationsSignupComponent,
-        InitialsPipe
+        InitialsPipe,
+        NewCandidateItemComponent,
+        ExistingCandidateItemComponent
     ],
     imports: [
         AppRoutingModule,

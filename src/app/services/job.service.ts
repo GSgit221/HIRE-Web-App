@@ -112,4 +112,12 @@ export class JobService {
     updateStage(jobId: string, stageId: string, data: object) {
         return this.http.put(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/stages/${stageId}`, { data });
     }
+
+    getCandidate(jobId: string, candidateId) {
+        if (jobId === 'new') {
+            return of({title: ''});
+        } else {
+            return this.http.get(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/candidates/${candidateId}`);
+        }
+    }
 }

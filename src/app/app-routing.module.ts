@@ -22,7 +22,7 @@ import { PeopleListComponent } from './people/people-list/people-list.component'
 import { EmailTemplatesComponent } from './settings/email-templates/email-templates.component';
 import { IntegrationsComponent } from './settings/integrations/integrations.component';
 import { ScorecardsComponent } from './settings/scorecards/scorecards.component';
-import {QuestionsListComponent} from "./settings/questionnaires/questions-list/questions-list.component";
+import { QuestionsListComponent } from './settings/questionnaires/questions-list/questions-list.component';
 
 const appRoutes: Routes = [
     { path: 'signin', component: SigninComponent },
@@ -50,7 +50,7 @@ const appRoutes: Routes = [
             path: 'jobs/:id',
             component: JobItemComponent
         }, {
-            path: 'jobs/:id/candidate',
+            path: 'jobs/:jobId/candidate/:candidateId',
             component: CandidateItemComponent
         }, {
             path: 'jobs/:id/stages/:stageId',

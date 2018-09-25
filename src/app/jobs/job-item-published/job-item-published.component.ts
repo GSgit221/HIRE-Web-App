@@ -63,8 +63,8 @@ export class JobItemPublishedComponent implements OnInit {
     }
 
     onCandidateClick($event) {
-        console.log('Clicked on candidate', 'REDIRECT', `dashboard/jobs/${this.job.id}/candidate`);
-        this.router.navigateByUrl(`dashboard/jobs/${this.job.id}/candidate`);
+        console.log('Clicked on candidate', 'REDIRECT', `dashboard/jobs/${this.job.id}/candidate/candidateId`);
+        this.router.navigateByUrl(`dashboard/jobs/${this.job.id}/candidate/candidateId`);
     }
 
     onSettigsClick(stageId: string) {
@@ -91,6 +91,7 @@ export class JobItemPublishedComponent implements OnInit {
 
     onAddCandidateClick() {
         console.log('Add candidate');
+        this.router.navigateByUrl(`dashboard/jobs/${this.job.id}/candidate/new`);
     }
 
     onNewJobStageFormSubmit(event) {
