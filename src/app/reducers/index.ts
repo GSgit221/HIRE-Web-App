@@ -18,13 +18,8 @@ export interface State {
 
 export const reducers: ActionReducerMap<State> = {
     user: fromUser.reducer,
-    jobs: fromJobs.reducer,
+    jobs: fromJobs.reducer
 };
 
 
 export const metaReducers: MetaReducer<State>[] = !environment.production ? [] : [];
-
-export interface AppState {
-    user: User;
-    jobs: Job[];
-}

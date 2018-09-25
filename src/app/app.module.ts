@@ -62,6 +62,8 @@ import { AppEffects } from './app.effects';
 import { InitialsPipe } from './pipes/initials.pipe';
 import { NewCandidateItemComponent } from './candidates/new-candidate-item/new-candidate-item.component';
 import { ExistingCandidateItemComponent } from './candidates/existing-candidate-item/existing-candidate-item.component';
+import { UserEffects } from './effects/user/user.effects';
+import { JobEffects } from './effects/job/job.effects';
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -132,7 +134,7 @@ export function provideConfig() {
         AutoSizeInputModule,
         StoreModule.forRoot(reducers, { metaReducers }),
         !environment.production ? StoreDevtoolsModule.instrument() : [],
-        EffectsModule.forRoot([AppEffects])
+        EffectsModule.forRoot([AppEffects, UserEffects, JobEffects])
     ],
     providers: [
         {

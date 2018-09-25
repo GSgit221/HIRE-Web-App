@@ -1,10 +1,10 @@
-import { State, AppState } from './../../reducers/index';
+import { State } from './../../reducers/index';
 import { User } from './../../models/user';
 import { ActivatedRoute } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as fromUserActions from './../../actions/user/user.actions';
 
@@ -13,31 +13,16 @@ import * as fromUserActions from './../../actions/user/user.actions';
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit {
-    user$: Observable<Object>;
-    userState: Observable<User>;
+export class SidebarComponent implements OnInit, OnDestroy {
+    userSubscription: Subscription;
+    user: User;
     settingsOpened = true;
 
 
-    constructor(private userService: UserService, private store: Store<AppState>) { }
+    constructor(private userService: UserService, private store: Store<State>) { }
 
     ngOnInit() {
-
-        // TEMPORARY
-        this.store.dispatch(new fromUserActions.GetAuthUser());
-        this.userState = this.store.select('user');
-        this.userState.subscribe((user: User) => {
-            console.log('From store', user);
-        });
-
-
-        this.user$ = this.userService.me().pipe(map((user: User) => {
-            user.initials = user.first_name.charAt(0).toUpperCase();
-            if (user.last_name) {
-                user.initials += user.last_name.charAt(0).toUpperCase();
-            }
-            return user;
-        }));
+        this.userSubscription = this.store.select('user').subscribe((user: User) => this.user = user);
     }
 
     onToggleOcItem(event) {
@@ -46,4 +31,8 @@ export class SidebarComponent implements OnInit {
         this.settingsOpened = !this.settingsOpened;
     }
 
+
+    ngOnDestroy(): void {
+        this.userSubscription.unsubscribe();
+    }
 }

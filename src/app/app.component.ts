@@ -1,4 +1,7 @@
+import { State } from './reducers/index';
+import { Store } from '@ngrx/store';
 import { Component, ViewEncapsulation } from '@angular/core';
+import * as fromUserActions from './actions/user/user.actions';
 
 @Component({
     selector: 'app-root',
@@ -6,5 +9,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-    title = 'app';
+    constructor(private store: Store<State>) {
+        this.store.dispatch(new fromUserActions.GetAuthUser());
+    }
 }
