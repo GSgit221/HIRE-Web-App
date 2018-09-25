@@ -59,6 +59,7 @@ import { reducers, metaReducers } from './reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './app.effects';
+import { InitialsPipe } from './pipes/initials.pipe';
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -100,7 +101,8 @@ export function provideConfig() {
         QuestionItemComponent,
         JobApplicationComponent,
         ApplicationsSigninComponent,
-        ApplicationsSignupComponent
+        ApplicationsSignupComponent,
+        InitialsPipe
     ],
     imports: [
         AppRoutingModule,

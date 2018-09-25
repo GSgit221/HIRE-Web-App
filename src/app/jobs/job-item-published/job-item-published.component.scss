@@ -51,7 +51,7 @@
             padding: 0;
         }
     }
-    
+
     .light-overlay {
         z-index: 2;
     }
@@ -85,7 +85,31 @@
     flex-direction: row;
 
     .item {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        overflow: hidden;
         margin: 0 10px 0 0;
+
+        img {
+            display: block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+
+        span {
+            display: block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: $pink;
+            line-height: 30px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: $white;
+        }
     }
 }
 
@@ -100,7 +124,6 @@
     overflow-x: auto;
     display: flex;
     flex-direction: row;
-
 }
 
 .stage-column {

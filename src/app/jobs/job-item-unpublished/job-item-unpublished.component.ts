@@ -1,3 +1,4 @@
+import { FormHelperService } from './../../services/form-helper.service';
 import { User } from './../../models/user';
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -54,7 +55,8 @@ export class JobItemUnpublishedComponent implements OnInit {
         private route: ActivatedRoute,
         private jobService: JobService,
         private fb: FormBuilder,
-        private router: Router
+        private router: Router,
+        private formHelper: FormHelperService
     ) {
 
         this.route.paramMap.subscribe((params: ParamMap) => {
@@ -282,7 +284,7 @@ export class JobItemUnpublishedComponent implements OnInit {
         event.preventDefault();
         const form = this.getActiveForm();
         if (!form.valid) {
-            this.markFormGroupTouched(form);
+            this.formHelper.markFormGroupTouched(form);
             console.log('FORM IS INVALID');
             console.log(form);
             return;
@@ -306,7 +308,7 @@ export class JobItemUnpublishedComponent implements OnInit {
         event.preventDefault();
         const form = this.getActiveForm();
         if (!form.valid) {
-            this.markFormGroupTouched(form);
+            this.formHelper.markFormGroupTouched(form);
             console.log('FORM IS INVALID');
             console.log(form);
             return;
@@ -323,7 +325,7 @@ export class JobItemUnpublishedComponent implements OnInit {
                 if (job.created && job.id) {
                     this.router.navigateByUrl(`dashboard/jobs/${job.id}?section=applications`);
                 } else {
-                    this.activeSection = this.nextSection();
+                    this.goToNextSection();
                 }
             });
     }
@@ -386,18 +388,14 @@ export class JobItemUnpublishedComponent implements OnInit {
         return form;
     }
 
-    private markFormGroupTouched(formGroup: FormGroup) {
-        (<any>Object).values(formGroup.controls).forEach(control => {
-            control.markAsTouched();
-            if (control.controls) {
-                control.controls.forEach(c => this.markFormGroupTouched(c));
-            }
-        });
+    private goToNextSection() {
+        const index = this.sections.indexOf(this.activeSection);
+        if (index + 1 >= this.sections.length) {
+            this.router.navigateByUrl(`dashboard/jobs`);
+        } else {
+            const nextIndex = (index + 1 < this.sections.length) ? index + 1 : 0;
+            this.activeSection = this.sections[nextIndex];
+        }
     }
 
-    private nextSection() {
-        const index = this.sections.indexOf(this.activeSection);
-        const nextIndex = (index + 1 < this.sections.length) ? index + 1 : 0;
-        return this.sections[nextIndex];
-    }
 }

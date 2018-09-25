@@ -5,6 +5,7 @@ import { SelectItem } from 'primeng/api';
 import { Router } from '@angular/router';
 import { Job } from './../../models/job';
 import { Component, OnInit, Input } from '@angular/core';
+import { User } from '../../models/user';
 
 @Component({
     selector: 'app-job-item-published',
@@ -23,6 +24,7 @@ export class JobItemPublishedComponent implements OnInit {
     stageFormIsSaving = false;
     appliedStage: JobStage;
     stages: JobStage[] = [];
+    users: User[] = [];
 
     constructor(
         private router: Router,
@@ -33,6 +35,11 @@ export class JobItemPublishedComponent implements OnInit {
             { label: 'LIVE', value: 'LIVE' },
             { label: 'BUILD', value: 'BUILD' }
         ];
+
+        this.jobService.getUsers().subscribe((users: User[]) => {
+            this.users = users || [];
+            console.log(this.users);
+        });
     }
     ngOnInit() {
         this.jobTitleForm = this.fb.group({
@@ -102,5 +109,10 @@ export class JobItemPublishedComponent implements OnInit {
                 console.error(error);
             });
         }
+    }
+
+
+    getHm(id: string) {
+        return this.users.find((user: User) => user.user_id === id) || null;
     }
 }

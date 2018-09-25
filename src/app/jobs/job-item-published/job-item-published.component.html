@@ -46,10 +46,11 @@
         </div>
         <div class="vertical-separator"></div>
         <div class="hiring-managers-block">
-            <div class="item">
-                <img src="/assets/images/hiring-team-placeholder.png" alt="" width="30" height="30">
+            <div class="item" *ngFor="let hm of job.hiring_managers">
+                <img *ngIf="getHm(hm) && getHm(hm).icon_url_small" [src]="getHm(hm).icon_url_small" alt="">
+                <span *ngIf="getHm(hm) && !getHm(hm).icon_url_small">{{getHm(hm) | initials }}</span>
             </div>
-            <button class="btn btn-round btn-grey">
+            <!-- <button class="btn btn-round btn-grey">
                 <svg width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink">
                     <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -61,7 +62,7 @@
                         </g>
                     </g>
                 </svg>
-            </button>
+            </button> -->
         </div>
         <button class="btn btn-primary w140 mla add-btn" (click)="onAddCandidateClick()">Add Candidate</button>
     </div>

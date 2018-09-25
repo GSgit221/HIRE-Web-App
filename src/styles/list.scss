@@ -18,13 +18,13 @@
         position: relative;
     }
 
-    // .hc-checkbox-col {
-    //     max-width: 40px;
-    // }
+    .hc-checkbox-col {
+        min-width: 28px;
+    }
 
-    // .status-col {
-    //     max-width: 40px;
-    // }
+    .status-col {
+        min-width: 50px;
+    }
 
     .has-sort {
         display: flex;
@@ -204,7 +204,29 @@
     }
 
     .ava {
-        margin: 0 12px 0 0;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: $grey;
+        color: $white;
+        font-size: 10px;
+        text-align: center;
+        line-height: 20px;
+        overflow: hidden;
+        margin: 0 6px 0 0;
+
+        img {
+            display: block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .name {
+            width: 20px;
+            height: 20px;
+        }
     }
 
     .hc-selected-items {

@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Router } from '../../../../node_modules/@angular/router';
 import { JobService } from './../../services/job.service';
+import { User } from '../../models/user';
 
 @Component({
     selector: 'app-jobs-list',
@@ -17,6 +18,7 @@ export class JobsListComponent implements OnInit {
     statusOptions: SelectItem[];
     selectedAll = false;
     selectedItems = 0;
+    users: User[] = [];
 
     constructor(private router: Router, private jobService: JobService) {
         this.jobService.getAll()
@@ -24,6 +26,11 @@ export class JobsListComponent implements OnInit {
                 this.list = jobs;
                 this.contentLoading = false;
             });
+
+        this.jobService.getUsers().subscribe((users: User[]) => {
+            this.users = users || [];
+            console.log(this.users);
+        });
 
 
         this.statusOptions = [
@@ -71,6 +78,10 @@ export class JobsListComponent implements OnInit {
         if (!this.selectedItems) {
             this.selectedAll = false;
         }
+    }
+
+    getHm(id: string) {
+        return this.users.find((user: User) => user.user_id === id) || null;
     }
 
     onItemsBulkRemove() {
