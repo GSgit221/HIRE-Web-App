@@ -1,9 +1,9 @@
 <div class="container fixed-width-container">
     <div class="candidate-holder">
         <div class="pages-nav">
-            <button class="back-btn">
+            <button class="back-btn" (click)="onBackClick()">
                 <span class="icon"><img src="assets/images/left.svg" height="16px" alt="Left icon"></span>
-                <span class="text">Graduate Recruit Program</span>
+                <span class="text">{{job?.title}}</span>
             </button>
             <div class="prev-next-nav">
                 <button class="prev-btn"><img src="assets/images/left.svg" height="16px" alt="Left icon"></button>

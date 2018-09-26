@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="212px" height="212px" viewBox="0 0 212 212" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.1 (57501) - http://www.bohemiancoding.com/sketch -->
+    <title>icons8-plus</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Job-View-Default" transform="translate(-534.000000, -306.000000)" fill-rule="nonzero">
+            <g id="icons8-plus" transform="translate(534.000000, 306.000000)">
+                <path d="M212,106 C212,164.5385 164.5385,212 106,212 C47.4615,212 0,164.5385 0,106 C0,47.4615 47.4615,0 106,0 C164.5385,0 212,47.4615 212,106 Z" id="Shape" fill="#65C97A"></path>
+                <polygon id="Shape" fill="#FFFFFF" points="95 53 117 53 117 159 95 159"></polygon>
+                <polygon id="Shape" fill="#FFFFFF" points="53 95 159 95 159 117 53 117"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

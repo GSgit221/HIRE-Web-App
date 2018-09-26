@@ -1,0 +1,99 @@
+@import "../../../styles/variables.scss";
+
+.upload-block {
+    width: 451px;
+    height: 302px;
+    background: url(/assets/images/list-placeholder.png) no-repeat 100% 100%;
+    background-size: 451px 302px;
+    padding: 60px 100px 40px 20px;
+    margin: 0 auto -20px;
+    position: relative;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    .input-file {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        outline: 0;
+        opacity: 0;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    .upload-block-holder {
+        width: 190px;
+        text-align: center;
+        padding: 40px 0 60px;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    .icon-holder {
+        text-align: center;
+        font-size: 0;
+        margin: 0 0 16px;
+
+        img {
+            display: inline-block;
+            margin: 0;
+        }
+    }
+
+    .title-text {
+        display: block;
+        color: $grey;
+        font-size: 12px;
+    }
+
+    .subtitle-text {
+        display: block;
+        color: $pink;
+        font-size: 12px;
+    }
+
+    .drop-overlay {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: none;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        background: rgba($color: $white, $alpha: 0.9);
+        pointer-events: none;
+
+        .drop-overlay-holder {
+            display: inline-block;
+        }
+
+        img {
+            display: block;
+            margin: 0 0 20px;
+        }
+
+        .text {
+            display: block;
+            font-size: 20px;
+            font-weight: normal;
+            text-align: center;
+            color: $main-blue;
+        }
+    }
+
+    &.over {
+        .drop-overlay {
+            display: flex;
+        }
+    }
+}

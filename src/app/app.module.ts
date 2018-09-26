@@ -20,6 +20,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { SliderModule } from 'primeng/slider';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 import { AutoSizeInputModule } from 'ngx-autosize-input';
+import { FileDropModule } from 'ngx-file-drop';
 
 
 import { environment } from '../environments/environment';
@@ -64,6 +65,8 @@ import { NewCandidateItemComponent } from './candidates/new-candidate-item/new-c
 import { ExistingCandidateItemComponent } from './candidates/existing-candidate-item/existing-candidate-item.component';
 import { UserEffects } from './effects/user/user.effects';
 import { JobEffects } from './effects/job/job.effects';
+import { UploadFileNamePipe } from './pipes/upload-file-name.pipe';
+import { DragEnterDirective } from './directives/drag-enter.directive';
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -95,6 +98,7 @@ export function provideConfig() {
         IntegrationsComponent,
         LoaderComponent,
         DisableControlDirective,
+        DragEnterDirective,
         JobItemUnpublishedComponent,
         JobItemPublishedComponent,
         MultiSelectComponent,
@@ -108,7 +112,8 @@ export function provideConfig() {
         ApplicationsSignupComponent,
         InitialsPipe,
         NewCandidateItemComponent,
-        ExistingCandidateItemComponent
+        ExistingCandidateItemComponent,
+        UploadFileNamePipe
     ],
     imports: [
         AppRoutingModule,
@@ -132,6 +137,7 @@ export function provideConfig() {
         ReactiveFormsModule,
         GooglePlaceModule,
         AutoSizeInputModule,
+        FileDropModule,
         StoreModule.forRoot(reducers, { metaReducers }),
         !environment.production ? StoreDevtoolsModule.instrument() : [],
         EffectsModule.forRoot([AppEffects, UserEffects, JobEffects])

@@ -120,4 +120,8 @@ export class JobService {
             return this.http.get(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/candidates/${candidateId}`);
         }
     }
+
+    createCandidate(jobId: string, formData: object) {
+        return this.http.post(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/candidates`, formData);
+    }
 }

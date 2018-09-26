@@ -1,3 +1,64 @@
 <div class="container fixed-width-container">
-    <h1>NEW CANDIDATE PAGE</h1>
+    <div class="pages-nav">
+        <button class="back-btn" (click)="onBackClick()">
+            <span class="icon"><img src="assets/images/left.svg" height="16px" alt="Left icon"></span>
+            <span class="text">{{job?.title}}</span>
+        </button>
+    </div>
+    <div class="title-block">
+        <h1 class="page-title">New Candidate</h1>
+        <div class="buttons-holder">
+            <button class="btn btn-primary ml20 w140" (click)="onSave()">Save</button>
+        </div>
+    </div>
+    <div class="section-separator mb20"></div>
+    <div class="content-section">
+        <form [formGroup]="candidateForm">
+            <div class="form-content-section">
+                <div class="description">
+                    <strong class="title">Candidate</strong>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <div class="form-block">
+                            <div class="input-block">
+                                <label for="" class="form-block-label">Candidate Email</label>
+                                <input type="text" class="form-input" formControlName="email">
+                            </div>
+                        </div>
+                        <div class="form-block">
+                            <div class="input-block">
+                                <label for="" class="form-block-label">Candidate Resume</label>
+                                <div *ngIf="resumeField.invalid && resumeField.touched" class="error-message">Resume is required</div>
+                                <div class="upload-block" appDragEnter>
+                                    <input class="input-file" type="file" formControlName="resume" (change)="onFileChange($event)" #fileInput>
+                                    <div class="upload-block-holder">
+                                        <div class="icon-holder">
+                                            <img alt="Upload icon" class="upload-icon" height="49" src="/assets/images/portal/submit_resume_filled.svg"
+                                                width="60">
+                                        </div>
+                                        <div *ngIf="!resumeField.value">
+                                            <span class="title-text">Drop candidate resume</span>
+                                            <span class="subtitle-text" [ngStyle]="{'color': mainColor}">Upload Resume</span>
+                                        </div>
+                                        <div *ngIf="resumeField.value">
+                                            {{ resumeField.value | uploadFileName }}
+                                        </div>
+                                    </div>
+                                    <div class="drop-overlay">
+                                        <div class="drop-overlay-holder">
+                                            <img src="/assets/images/drop.svg" alt="" width="212" height="212">
+                                            <span class="text">Drop to Upload</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
+<app-loader *ngIf="contentLoading"></app-loader>
