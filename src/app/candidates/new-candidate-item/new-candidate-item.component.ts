@@ -15,7 +15,7 @@ export class NewCandidateItemComponent implements OnInit {
     jobId: string;
     job: Job;
     candidateForm: FormGroup;
-    resume: { filename: string, filetype: string, value: string };
+    resume: File;
 
     constructor(
         private jobService: JobService,
@@ -45,13 +45,12 @@ export class NewCandidateItemComponent implements OnInit {
         }
         // VALID
         console.log('FORM IS VALID:', form.value);
-        const formData = {
-            email: form.value.email,
-            resume: this.resume
-        };
-        console.log(formData);
+        const data = new FormData();
+        data.append('email', form.value.email);
+        data.append('resume', this.resume);
+        console.log(data);
         this.contentLoading = true;
-        this.jobService.createCandidate(this.jobId, formData)
+        this.jobService.createCandidate(this.jobId, data)
             .subscribe(candidate => {
                 console.log(candidate);
                 this.contentLoading = false;
@@ -67,22 +66,24 @@ export class NewCandidateItemComponent implements OnInit {
     onFileChange(event) {
         const reader = new FileReader();
         if (event.target.files && event.target.files.length > 0) {
-            const file = event.target.files[0];
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                const encodedString: any = reader.result;
-                this.resume = {
-                    filename: file.name,
-                    filetype: file.type,
-                    value: encodedString.split(',')[1]
-                };
-            };
+            this.resume = event.target.files[0];
+            // const file = event.target.files[0];
+            // reader.readAsDataURL(file);
+            // reader.onload = () => {
+            //     const encodedString: any = reader.result;
+            //     this.resume = {
+            //         filename: file.name,
+            //         filetype: file.type,
+            //         value: encodedString.split(',')[1]
+            //     };
+            // };
         } else {
-            this.resume = {
-                filename: null,
-                filetype: null,
-                value: null
-            };
+            // this.resume = {
+            //     filename: null,
+            //     filetype: null,
+            //     value: null
+            // };
+            this.resume = null;
         }
     }
 
