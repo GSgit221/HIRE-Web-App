@@ -44,8 +44,8 @@ import { ScorecardsComponent } from './settings/scorecards/scorecards.component'
 import { EmailTemplatesComponent } from './settings/email-templates/email-templates.component';
 import { IntegrationsComponent } from './settings/integrations/integrations.component';
 import { DisableControlDirective } from './directives/disable-control.directive';
-import { JobItemUnpublishedComponent } from './jobs/job-item-unpublished/job-item-unpublished.component';
-import { JobItemPublishedComponent } from './jobs/job-item-published/job-item-published.component';
+import { JobItemEditComponent } from './jobs/job-item-edit/job-item-edit.component';
+import { JobItemViewComponent } from './jobs/job-item-view/job-item-view.component';
 import { MultiSelectComponent } from './shared/multi-select/multi-select.component';
 import { CandidateItemComponent } from './candidates/candidate-item/candidate-item.component';
 import { StageSettingsComponent } from './jobs/stages/stage-settings/stage-settings.component';
@@ -99,8 +99,8 @@ export function provideConfig() {
         LoaderComponent,
         DisableControlDirective,
         DragEnterDirective,
-        JobItemUnpublishedComponent,
-        JobItemPublishedComponent,
+        JobItemEditComponent,
+        JobItemViewComponent,
         MultiSelectComponent,
         CandidateItemComponent,
         StageSettingsComponent,

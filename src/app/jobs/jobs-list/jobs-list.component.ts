@@ -29,7 +29,7 @@ export class JobsListComponent implements OnInit {
 
         this.jobService.getUsers().subscribe((users: User[]) => {
             this.users = users || [];
-            console.log(this.users);
+            // console.log(this.users);
         });
 
 
@@ -48,9 +48,9 @@ export class JobsListComponent implements OnInit {
         const target = event.target;
         const escapeDD = closest(event.target, '[data-escape-click]');
         if (escapeDD) {
-            console.log('DO NOTHING');
+            // console.log('DO NOTHING');
         } else {
-            console.log('REDIRECT');
+            // console.log('REDIRECT');
             this.router.navigate([`/dashboard/jobs/${item.id}`]);
         }
     }
@@ -87,7 +87,6 @@ export class JobsListComponent implements OnInit {
     onItemsBulkRemove() {
         this.contentLoading = true;
         const itemsToRemove = this.list.filter(item => item.selected).map(item => item.id);
-        console.log(itemsToRemove);
         this.jobService.bulkDeleteJobs(itemsToRemove)
             .subscribe(() => {
                 this.jobService.getAll()

@@ -1,23 +1,23 @@
-import { FormHelperService } from './../../services/form-helper.service';
-import { User } from './../../models/user';
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { FormHelperService } from '../../services/form-helper.service';
+import { User } from '../../models/user';
+import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
 
-import { Job } from './../../models/job';
-import { JobService } from './../../services/job.service';
-import { ConditionalValidator } from './../../validators/conditional.validator';
+import { Job } from '../../models/job';
+import { JobService } from '../../services/job.service';
+import { ConditionalValidator } from '../../validators/conditional.validator';
 import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
 
 
 
 @Component({
-    selector: 'app-job-item-unpublished',
-    templateUrl: './job-item-unpublished.component.html',
-    styleUrls: ['./job-item-unpublished.component.scss']
+    selector: 'app-job-item-edit',
+    templateUrl: './job-item-edit.component.html',
+    styleUrls: ['./job-item-edit.component.scss']
 })
-export class JobItemUnpublishedComponent implements OnInit {
+export class JobItemEditComponent implements OnInit {
     @ViewChild('placesRef') placesRef: GooglePlaceDirective;
     @ViewChild('locationInputRef') locationInputRef: ElementRef;
     jobDetailsForm: FormGroup;
@@ -26,6 +26,8 @@ export class JobItemUnpublishedComponent implements OnInit {
 
     @Input() job: Job;
     titleMaxLength = 250;
+
+    @Output() setEditMode = new EventEmitter<boolean>();
 
     users: User[];
 
@@ -60,10 +62,9 @@ export class JobItemUnpublishedComponent implements OnInit {
     ) {
 
         this.route.paramMap.subscribe((params: ParamMap) => {
-            console.log('ROUTE CHANGE:');
             const section = this.route.snapshot.queryParamMap.get('section');
-            console.log(section);
-            if (section) {
+            // console.log('ROUTE CHANGE:', section);
+            if (section && this.sections.indexOf(section) !== -1) {
                 this.activeSection = section;
             }
         });
@@ -146,7 +147,7 @@ export class JobItemUnpublishedComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log('-------------- JOB', this.job);
+        console.log('📓 JOB', this.job);
         // this.initForms();
         this.populateForms();
 
@@ -250,7 +251,6 @@ export class JobItemUnpublishedComponent implements OnInit {
 
 
         // Location
-        console.log('SUBSCRIBE');
         const locationControl = this.jobDetailsForm.get('location');
         this.jobDetailsForm.get('is_remote').valueChanges.subscribe(value => {
             console.log(value);
@@ -285,18 +285,13 @@ export class JobItemUnpublishedComponent implements OnInit {
         const form = this.getActiveForm();
         if (!form.valid) {
             this.formHelper.markFormGroupTouched(form);
-            console.log('FORM IS INVALID');
-            console.log(form);
+            console.log('❌ FORM IS INVALID', form);
             return;
         }
-
-        console.log('FORM IS VALID');
-        console.log(Object.assign(this.job, form.value));
-
+        console.log('✅ FORM IS VALID', Object.assign(this.job, form.value));
         this.jobService.saveJob(Object.assign(this.job, form.value), this.activeSection, false)
             .subscribe((job: Job) => {
-                console.log('RESPONSE FROM SAVE CALL:');
-                console.log(job);
+                console.log('RESPONSE FROM SAVE CALL:', job);
                 this.contentLoading = false;
                 if (job.created && job.id) {
                     this.router.navigateByUrl(`dashboard/jobs/${job.id}`);
@@ -314,13 +309,12 @@ export class JobItemUnpublishedComponent implements OnInit {
             return;
         }
         // VALID
-        console.log('FORM IS VALID');
+        console.log('❌ FORM IS VALID');
         console.log(Object.assign(this.job, form.value));
 
         this.jobService.saveJob(Object.assign(this.job, form.value), this.activeSection, true)
             .subscribe((job: Job) => {
-                console.log('RESPONSE FROM SAVE CALL:');
-                console.log(job);
+                console.log('RESPONSE FROM SAVE CALL:', job);
                 this.contentLoading = false;
                 if (job.created && job.id) {
                     this.router.navigateByUrl(`dashboard/jobs/${job.id}?section=applications`);
@@ -350,10 +344,10 @@ export class JobItemUnpublishedComponent implements OnInit {
     }
 
     onNewUserAdded(user: User) {
-        console.log('=============== New user added', user);
+        console.log('💁🏼‍♀️ New user added', user);
         this.users = this.users.slice(0);
         this.users.push(user);
-        console.log('USERS ARRAY:', this.users);
+        console.log('👫 USERS ARRAY:', this.users);
         this.setDefaultNameOptions();
     }
 
@@ -396,6 +390,20 @@ export class JobItemUnpublishedComponent implements OnInit {
             const nextIndex = (index + 1 < this.sections.length) ? index + 1 : 0;
             this.activeSection = this.sections[nextIndex];
         }
+    }
+
+    get saveBtnText() {
+        let text = 'Save';
+        if (this.activeSection !== 'hiring-team') {
+            text = 'Save and Next';
+        } else {
+            if (this.job.status && this.job.status === 'LIVE') {
+                text = 'Save';
+            } else {
+                text = 'Save and Publish';
+            }
+        }
+        return text;
     }
 
 }

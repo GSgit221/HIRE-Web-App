@@ -1,30 +1,29 @@
-import { JobStage } from './../../models/job-stage';
-import { JobService } from './../../services/job.service';
+import { JobStage } from '../../models/job-stage';
+import { JobService } from '../../services/job.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { Router } from '@angular/router';
-import { Job } from './../../models/job';
-import { Component, OnInit, Input } from '@angular/core';
+import { Job } from '../../models/job';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { User } from '../../models/user';
 
 @Component({
-    selector: 'app-job-item-published',
-    templateUrl: './job-item-published.component.html',
-    styleUrls: ['./job-item-published.component.scss']
+    selector: 'app-job-item-view',
+    templateUrl: './job-item-view.component.html',
+    styleUrls: ['./job-item-view.component.scss']
 })
-export class JobItemPublishedComponent implements OnInit {
+export class JobItemViewComponent implements OnInit {
     @Input() job: Job;
+    @Output() setEditMode = new EventEmitter<boolean>();
     statusOptions: SelectItem[];
     contentLoading = false;
-    jobTitleForm: FormGroup;
     newJobStageForm: FormGroup;
-    titleMaxLength = 250;
-    editTitleMode = false;
     formIsSaving = false;
     stageFormIsSaving = false;
     appliedStage: JobStage;
     stages: JobStage[] = [];
     users: User[] = [];
+    createStageMode: false;
 
     constructor(
         private router: Router,
@@ -42,16 +41,11 @@ export class JobItemPublishedComponent implements OnInit {
         });
     }
     ngOnInit() {
-        this.jobTitleForm = this.fb.group({
-            title: [this.job.title, Validators.required]
-        });
         this.newJobStageForm = this.fb.group({
             title: ['']
         });
         this.appliedStage = this.job.stages.find(stage => stage.id === 'applied');
         this.stages = this.job.stages.filter(stage => stage.id !== 'applied');
-
-
         // this.jobService.getStages(this.job.id).subscribe(stages => {
         //     console.log(stages);
         // });
@@ -72,21 +66,9 @@ export class JobItemPublishedComponent implements OnInit {
         this.router.navigateByUrl(`dashboard/jobs/${this.job.id}/stages/${stageId}`);
     }
 
-    onSaveTitle($event) {
+    onEditJobClick(event) {
         event.preventDefault();
-        const formValue = this.jobTitleForm.value;
-        this.formIsSaving = true;
-        if (this.job.title !== formValue.title) {
-            this.jobService.updateJob(this.job.id, formValue)
-                .subscribe(() => {
-                    this.formIsSaving = false;
-                    this.editTitleMode = false;
-                    this.job = Object.assign(this.job, formValue);
-                });
-        } else {
-            this.formIsSaving = false;
-            this.editTitleMode = false;
-        }
+        this.setEditMode.emit(true);
     }
 
     onAddCandidateClick() {
@@ -94,8 +76,13 @@ export class JobItemPublishedComponent implements OnInit {
         this.router.navigateByUrl(`dashboard/jobs/${this.job.id}/candidate/new`);
     }
 
-    onNewJobStageFormSubmit(event) {
-        event.preventDefault();
+    onStageNameKeydown(event) {
+        if (event && event.keyCode && event.keyCode === 13) {
+            this.onNewJobStageFormSubmit();
+        }
+    }
+
+    onNewJobStageFormSubmit() {
         const formValue = this.newJobStageForm.value;
         console.log(formValue);
         if (formValue && formValue.title && formValue.title.length) {
@@ -105,6 +92,7 @@ export class JobItemPublishedComponent implements OnInit {
                 this.stages.push(stage);
                 this.stageFormIsSaving = false;
                 this.newJobStageForm.reset();
+                this.createStageMode = false;
             }, (error) => {
                 this.stageFormIsSaving = false;
                 console.error(error);
@@ -115,5 +103,11 @@ export class JobItemPublishedComponent implements OnInit {
 
     getHm(id: string) {
         return this.users.find((user: User) => user.user_id === id) || null;
+    }
+
+    onAddHiringManagerClick(event) {
+        event.preventDefault();
+        console.log('clicked');
+        this.router.navigateByUrl(`dashboard/jobs/${this.job.id}?section=hiring-team&editMode=true`);
     }
 }

@@ -19,6 +19,7 @@ import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
 export class JobItemComponent implements OnInit {
     job: Job;
     contentLoading = true;
+    editMode = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -32,6 +33,9 @@ export class JobItemComponent implements OnInit {
                 setTimeout(() => this.contentLoading = false, 200);
                 console.log('FROM ROUTE-------------------- JOB:', jobId, this.job);
 
+                if (this.job && this.job.status && this.job.status === 'BUILD') {
+                    this.editMode = true;
+                }
             });
 
 
@@ -47,9 +51,21 @@ export class JobItemComponent implements OnInit {
                     });
             }
         });
+
+        this.route.queryParamMap.subscribe((params: ParamMap) => {
+            console.log('Query params change:', params);
+            const editMode = this.route.snapshot.queryParamMap.get('editMode');
+            if (editMode) {
+                this.editMode = true;
+            }
+        });
     }
 
     ngOnInit() {
 
+    }
+
+    onSetEditMode(value) {
+        this.editMode = value;
     }
 }
