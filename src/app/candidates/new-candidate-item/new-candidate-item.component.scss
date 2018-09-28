@@ -1,99 +1,221 @@
 @import "../../../styles/variables.scss";
 
-.upload-block {
-    width: 451px;
-    height: 302px;
-    background: url(/assets/images/list-placeholder.png) no-repeat 100% 100%;
-    background-size: 451px 302px;
-    padding: 60px 100px 40px 20px;
-    margin: 0 auto -20px;
+:host {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba($color: #fff, $alpha: 0.97);
+    color: $dark-blue;
+    padding: 40px;
+    z-index: 10;
+}
+
+.content {
+    width: 600px;
+    padding: 20px 0 0;
+    margin: 0 auto;
+}
+
+h2 {
+    font-size: 25px;
+    line-height: 1.2;
+    margin: 0 0 20px;
+}
+
+.email-block {
+    width: 100%;
+    height: 51px;
+    background: $white;
+    box-shadow: 0 0 5px 0 rgba($color: #000, $alpha: 0.1);
+    border-radius: 5px;
+    margin: 0 0 10px;
     position: relative;
 
-    &:hover {
-        cursor: pointer;
-    }
-
-    .input-file {
-        position: absolute;
-        left: 0;
-        top: 0;
+    .form-input {
         width: 100%;
-        height: 100%;
-        outline: 0;
-        opacity: 0;
+        height: 51px;
+        border-radius: 5px;
+        border: 1px solid $white;
+        outline: 0 !important;
+        background: none;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 19px;
+        color: $main-blue;
+        padding: 15px 12px;
+        transition: all 0.2s ease;
 
-        &:hover {
-            cursor: pointer;
+        &.ng-touched.ng-invalid {
+            border-color: $pink;
+        }
+
+        &::placeholder {
+            color: $grey;
+            font-size: 15px;
+            font-weight: 400;
+        }
+
+        &:-ms-input-placeholder {
+            color: $grey;
+            font-size: 15px;
+            font-weight: 400;
+        }
+
+        &::-ms-input-placeholder {
+            color: $grey;
+            font-size: 15px;
+            font-weight: 400;
         }
     }
 
-    .upload-block-holder {
-        width: 190px;
-        text-align: center;
-        padding: 40px 0 60px;
-
-        &:hover {
-            cursor: pointer;
-        }
-    }
-
-    .icon-holder {
-        text-align: center;
-        font-size: 0;
-        margin: 0 0 16px;
-
-        img {
-            display: inline-block;
-            margin: 0;
-        }
-    }
-
-    .title-text {
-        display: block;
-        color: $grey;
+    .error-block {
+        position: absolute;
+        top: 50%;
+        right: 50px;
         font-size: 12px;
-    }
-
-    .subtitle-text {
-        display: block;
+        line-height: 1.2;
         color: $pink;
-        font-size: 12px;
+        transform: translateY(-50%);
     }
+}
 
-    .drop-overlay {
+.separator-block {
+    width: 100%;
+    position: relative;
+    padding: 10px 0;
+    margin: 0 0 10px;
+
+    &:before {
+        content: '';
         position: absolute;
         left: 0;
-        top: 0;
+        top: 50%;
         width: 100%;
-        height: 100%;
-        display: none;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        background: rgba($color: $white, $alpha: 0.9);
-        pointer-events: none;
-
-        .drop-overlay-holder {
-            display: inline-block;
-        }
-
-        img {
-            display: block;
-            margin: 0 0 20px;
-        }
-
-        .text {
-            display: block;
-            font-size: 20px;
-            font-weight: normal;
-            text-align: center;
-            color: $main-blue;
-        }
+        height: 1px;
+        background: $grey-border;
+        z-index: 1;
     }
+
+    .separator-text {
+        width: 29px;
+        height: 29px;
+        color: $white;
+        background: $grey-border;
+        border-radius: 50%;
+        text-align: center;
+        font-size: 12px;
+        line-height: 29px;
+        text-transform: uppercase;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+    }
+}
+
+.cv-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    height: 51px;
+    background: $white;
+    box-shadow: 0 0 5px 0 rgba($color: #000, $alpha: 0.1);
+    border-radius: 5px;
+    padding: 10px;
+    margin: 0 0 10px;
+    color: $main-blue;
+    position: relative;
+
+    app-file-type {
+        margin: 0 20px 0 0;
+    }
+
+    .text {
+        font-size: 15px;
+    }
+}
+
+.upload-block {
+    margin: 0 0 30px;
+}
+
+.drop-zone {
+    width: 100%;
+    height: 51px;
+    border: 2px dashed $grey-border;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    transition: all 0.3s ease;
 
     &.over {
-        .drop-overlay {
-            display: flex;
+        background: $grey-border;
+    }
+
+    label {
+        color: $pink;
+        text-decoration: none;
+        transition: color 0.2s ease;
+
+        &:hover {
+            cursor: pointer;
+            text-decoration: underline;
+            color: $pink;
+        }
+
+        &:active {
+            text-decoration: none;
+            color: darken($pink, 20%);
+        }
+    }
+
+    .file {
+        display: none;
+    }
+}
+
+.form-row {
+    font-size: 15px;
+    line-height: 1.2;
+    font-weight: 400;
+}
+
+.status-circle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    width: 36px;
+    height: 36px;
+    border: 3px solid transparent;
+    border-radius: 50%;
+    display: none;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-50%);
+    z-index: 2;
+
+    img {
+        display: none;
+    }
+
+    &.success {
+        display: flex;
+        border-color: $dark-green;
+        .success-img {
+            display: block;
+        }
+    }
+
+    &.warning {
+        display: flex;
+        border-color: $orange2;
+        .warning-img {
+            display: block;
         }
     }
 }

@@ -1,5 +1,5 @@
 import { Job } from './../models/job';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
@@ -123,5 +123,20 @@ export class JobService {
 
     createCandidate(jobId: string, formData: object) {
         return this.http.post(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/candidates`, formData);
+    }
+
+    createCandidateFromEmail(jobId: string, email: string) {
+        return this.http.post(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/candidates/email`, {email});
+    }
+
+    createCandidateFromCv(jobId: string, formData: object) {
+        const req = new HttpRequest('POST', `${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/candidates/cv`, formData, {
+            reportProgress: true,
+        });
+        return this.http.request(req);
+    }
+
+    sendEmailsToCandidates(jobId: string, emails: string[]) {
+        return this.http.post(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/candidates/send-emails`, { emails });
     }
 }

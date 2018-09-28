@@ -1,15 +1,15 @@
-import { Directive, Input, ElementRef, OnInit } from '@angular/core';
+import { Directive, Input, ElementRef, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Directive({
     selector: '[appDragEnter]'
 })
 export class DragEnterDirective implements OnInit {
     @Input() appDragEnter: string;
+    @Output() dropFile = new EventEmitter<File>();
     constructor(private _elementRef: ElementRef) {
     }
 
     ngOnInit() {
-        console.log('dragEnter');
         // Get the current element
         const el = this._elementRef.nativeElement;
 
@@ -24,10 +24,10 @@ export class DragEnterDirective implements OnInit {
         });
 
         el.addEventListener('dragover', (e) => {
+            el.classList.add('over');
             if (e.preventDefault) {
                 e.preventDefault();
             }
-
             e.dataTransfer.dropEffect = 'move';
             return false;
         });
@@ -38,6 +38,8 @@ export class DragEnterDirective implements OnInit {
             if (e.stopPropagation) {
                 e.stopPropagation(); // Stops some browsers from redirecting.
             }
+            this.dropFile.emit(e);
+            e.preventDefault();
 
             el.classList.remove('over');
             // const data = JSON.parse(e.dataTransfer.getData('text'));

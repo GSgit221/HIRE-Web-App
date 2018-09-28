@@ -1,64 +1,49 @@
-<div class="container fixed-width-container">
-    <div class="pages-nav">
-        <button class="back-btn" (click)="onBackClick()">
-            <span class="icon"><img src="assets/images/left.svg" height="16px" alt="Left icon"></span>
-            <span class="text">{{job?.title}}</span>
-        </button>
-    </div>
-    <div class="title-block">
-        <h1 class="page-title">New Candidate</h1>
-        <div class="buttons-holder">
-            <button class="btn btn-primary ml20 w140" (click)="onSave()">Save</button>
-        </div>
-    </div>
-    <div class="section-separator mb20"></div>
-    <div class="content-section">
-        <form [formGroup]="candidateForm">
-            <div class="form-content-section">
-                <div class="description">
-                    <strong class="title">Candidate</strong>
+<div class="content">
+    <h2>Add candidate</h2>
+    <form [formGroup]="form">
+        <div class="emails-block" formArrayName="emails">
+            <div class="email-block" *ngFor="let emailInput of emailInputs.controls; let i=index">
+                <input type="text"
+                    class="form-input"
+                    placeholder="Enter an email address and hit enter"
+                    (keydown)="onEmailInputKeydown($event, emailInput)"
+                    [formControlName]="i"
+                >
+                <div class="light-overlay" *ngIf="emailInput.pendingRequest"></div>
+                <div class="status-circle" [ngClass]="{'success': emailInput.requestStatus === 'success', 'warning': emailInput.requestStatus === 'warning'}">
+                    <img class="success-img" src="/assets/images/check.svg" alt="" width="18" height="14">
+                    <img class="warning-img" src="/assets/images/exclamation-mark.svg" alt="" width="6" height="17">
                 </div>
-                <div class="form-content-holder">
-                    <div class="form-content-box">
-                        <div class="form-block">
-                            <div class="input-block">
-                                <label for="" class="form-block-label">Candidate Email</label>
-                                <input type="text" class="form-input" formControlName="email">
-                            </div>
-                        </div>
-                        <div class="form-block">
-                            <div class="input-block">
-                                <label for="" class="form-block-label">Candidate Resume</label>
-                                <div *ngIf="resumeField.invalid && resumeField.touched" class="error-message">Resume is required</div>
-                                <div class="upload-block" appDragEnter>
-                                    <input class="input-file" type="file" formControlName="resume" (change)="onFileChange($event)" #fileInput>
-                                    <div class="upload-block-holder">
-                                        <div class="icon-holder">
-                                            <img alt="Upload icon" class="upload-icon" height="49" src="/assets/images/portal/submit_resume_filled.svg"
-                                                width="60">
-                                        </div>
-                                        <div *ngIf="!resumeField.value">
-                                            <span class="title-text">Drop candidate resume</span>
-                                            <span class="subtitle-text" [ngStyle]="{'color': mainColor}">Upload Resume</span>
-                                        </div>
-                                        <div *ngIf="resumeField.value">
-                                            {{ resumeField.value | uploadFileName }}
-                                        </div>
-                                    </div>
-                                    <div class="drop-overlay">
-                                        <div class="drop-overlay-holder">
-                                            <img src="/assets/images/drop.svg" alt="" width="212" height="212">
-                                            <span class="text">Drop to Upload</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
+                <div class="error-block" *ngIf="emailInput.requestError">{{emailInput.requestError}}</div>
+            </div>
+        </div>
+        <div class="separator-block">
+            <div class="separator-text">OR</div>
+        </div>
+        <div class="cvs-block">
+            <div class="cv-block" *ngFor="let uploadItem of uploadQueue">
+                <app-file-type [type]="uploadItem.file.type"></app-file-type>
+                <div class="text">{{uploadItem.text}}</div>
+                <app-progress-circle class="mla" [progress]="uploadItem.progress" *ngIf="uploadItem.uploadStarted && !uploadItem.uploadFinished"></app-progress-circle>
+                <div class="status-circle mla" [ngClass]="{'success': uploadItem.uploadFinished && uploadItem.success, 'warning': uploadItem.uploadFinished && !uploadItem.success}">
+                    <img class="success-img" src="/assets/images/check.svg" alt="" width="18" height="14">
+                    <img class="warning-img" src="/assets/images/exclamation-mark.svg" alt="" width="6" height="17">
                 </div>
             </div>
-        </form>
-    </div>
+            <div class="upload-block">
+                <div class="drop-zone mb10" appDragEnter (dropFile)="onDropFile($event)">
+                    <div class="upload-text">Drop document or <label for="uploader">click to upload</label></div>
+                    <input class="file" type="file" name="" id="uploader">
+                </div>
+                <div class="error-message" *ngIf="uploadError">{{uploadError}}</div>
+            </div>
+        </div>
+        <div class="blocks-separator mb20"></div>
+        <div class="form-row mb20">
+            <p-checkbox name="send_email" binary="true" label="Send candidates an email should further information be required" labelStyleClass="color-grey" formControlName="send_email" inputId="send_email"></p-checkbox>
+        </div>
+        <div class="btn-holder flex-row">
+            <button class="btn btn-primary w140 mla" (click)="onFinishClicked($event)">Finish</button>
+        </div>
+    </form>
 </div>
-<app-loader *ngIf="contentLoading"></app-loader>

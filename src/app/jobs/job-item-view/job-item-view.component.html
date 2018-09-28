@@ -237,5 +237,5 @@
         </div>
     </div>
 </div>
-
+<app-new-candidate-item *ngIf="createCandidateMode" [jobId]="job.id" (finishedCadidatesCreation)="onFinishedCandidatesCreation($event)"></app-new-candidate-item>
 <app-loader *ngIf="contentLoading"></app-loader>

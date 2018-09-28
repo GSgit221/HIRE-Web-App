@@ -23,7 +23,8 @@ export class JobItemViewComponent implements OnInit {
     appliedStage: JobStage;
     stages: JobStage[] = [];
     users: User[] = [];
-    createStageMode: false;
+    createStageMode = false;
+    createCandidateMode = false;
 
     constructor(
         private router: Router,
@@ -72,8 +73,7 @@ export class JobItemViewComponent implements OnInit {
     }
 
     onAddCandidateClick() {
-        console.log('Add candidate');
-        this.router.navigateByUrl(`dashboard/jobs/${this.job.id}/candidate/new`);
+        this.createCandidateMode = true;
     }
 
     onStageNameKeydown(event) {
@@ -109,5 +109,9 @@ export class JobItemViewComponent implements OnInit {
         event.preventDefault();
         console.log('clicked');
         this.router.navigateByUrl(`dashboard/jobs/${this.job.id}?section=hiring-team&editMode=true`);
+    }
+
+    onFinishedCandidatesCreation(event) {
+        this.createCandidateMode = false;
     }
 }

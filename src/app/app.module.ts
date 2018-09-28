@@ -62,11 +62,12 @@ import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './app.effects';
 import { InitialsPipe } from './pipes/initials.pipe';
 import { NewCandidateItemComponent } from './candidates/new-candidate-item/new-candidate-item.component';
-import { ExistingCandidateItemComponent } from './candidates/existing-candidate-item/existing-candidate-item.component';
 import { UserEffects } from './effects/user/user.effects';
 import { JobEffects } from './effects/job/job.effects';
 import { UploadFileNamePipe } from './pipes/upload-file-name.pipe';
 import { DragEnterDirective } from './directives/drag-enter.directive';
+import { FileTypeComponent } from './shared/file-type/file-type.component';
+import { ProgressCircleComponent } from './shared/progress-circle/progress-circle.component';
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -112,8 +113,9 @@ export function provideConfig() {
         ApplicationsSignupComponent,
         InitialsPipe,
         NewCandidateItemComponent,
-        ExistingCandidateItemComponent,
-        UploadFileNamePipe
+        UploadFileNamePipe,
+        FileTypeComponent,
+        ProgressCircleComponent
     ],
     imports: [
         AppRoutingModule,
