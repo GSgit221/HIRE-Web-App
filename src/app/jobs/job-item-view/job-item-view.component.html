@@ -48,7 +48,7 @@
         <button class="btn btn-primary w140 mla add-btn" (click)="onAddCandidateClick()">Add Candidate</button>
     </div>
     <div class="blocks-separator mt10 mb10"></div>
-    <div class="stages-section">
+    <div class="stages-section" appDragEnter (dropFile)="onDropFile($event)">
         <div class="stages-holder">
             <div class="stage-column">
                 <div class="stage-header">
@@ -234,6 +234,12 @@
                     <input type="text" class="form-input" formControlName="title" (keydown)="onStageNameKeydown($event)">
                 </div>
             </form>
+        </div>
+        <div class="drop-overlay">
+            <div class="drop-holder">
+                <img src="/assets/images/drop.svg" alt="" width="212" height="212" class="img">
+                <span class="text">Drop to Upload</span>
+            </div>
         </div>
     </div>
 </div>

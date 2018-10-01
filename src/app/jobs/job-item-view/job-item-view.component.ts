@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Job } from '../../models/job';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { User } from '../../models/user';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-job-item-view',
@@ -25,6 +26,9 @@ export class JobItemViewComponent implements OnInit {
     users: User[] = [];
     createStageMode = false;
     createCandidateMode = false;
+    uploadQueue: any[] = [];
+    uploadError: string;
+    supportedFileTypes: string[];
 
     constructor(
         private router: Router,
@@ -40,6 +44,14 @@ export class JobItemViewComponent implements OnInit {
             this.users = users || [];
             console.log(this.users);
         });
+
+        this.supportedFileTypes = [
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.oasis.opendocument.text',
+            'text/rtf'
+        ];
     }
     ngOnInit() {
         this.newJobStageForm = this.fb.group({
@@ -113,5 +125,70 @@ export class JobItemViewComponent implements OnInit {
 
     onFinishedCandidatesCreation(event) {
         this.createCandidateMode = false;
+    }
+
+    onDropFile(event) {
+        const files = event.target.files || event.dataTransfer.files;
+        console.log('📥 onDropFile', files);
+        for (let i = 0, file; file = files[i]; i++) {
+            console.log(file);
+            if (this.validateFileType(file, this.supportedFileTypes)) {
+                console.log('We need to upload that file 🎈');
+                this.uploadQueue.push({
+                    file: file,
+                    uploadStarted: false,
+                    uploadFinished: false,
+                    progress: 0,
+                    success: false,
+                    text: file.name
+                });
+                this.processQueue();
+            } else {
+                this.uploadError = 'Only supported formats are: pdf, doc, docx, rtf, odt';
+                setTimeout(() => this.uploadError = null, 10000);
+            }
+        }
+    }
+
+    private validateFileType(file: File, types: string[]) {
+        return types.indexOf(file.type) !== -1;
+    }
+
+    processQueue() {
+        this.uploadQueue.forEach(item => {
+            if (!item.uploadStarted && !item.uploadFinished) {
+                this.uploadFile(item);
+            }
+        });
+    }
+
+    uploadFile(item) {
+        console.log(item);
+        const data = new FormData();
+        data.append('resume', item.file);
+        item.uploadStarted = true;
+        const uploadProgressInterval = setInterval(() => {
+            item.progress = (item.progress + 1 < 97) ? item.progress + 1 : item.progress;
+        }, 200);
+        this.contentLoading = true;
+        this.jobService.createCandidateFromCv(this.job.id, data)
+            .subscribe((response: HttpResponse<any>) => {
+                console.log('📬 Uploaded:', response);
+                if (response.body && response.body.success) {
+                    item.text = response.body.filename;
+                    item.progress = 100;
+                    item.uploadFinished = true;
+                    item.success = true;
+                    clearInterval(uploadProgressInterval);
+                    this.contentLoading = false;
+                }
+            }, error => {
+                console.error(error);
+                item.text = error;
+                item.progress = 100;
+                item.uploadFinished = true;
+                clearInterval(uploadProgressInterval);
+                this.contentLoading = false;
+            });
     }
 }
