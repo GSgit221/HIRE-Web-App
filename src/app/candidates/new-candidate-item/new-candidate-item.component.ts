@@ -150,17 +150,16 @@ export class NewCandidateItemComponent implements OnInit {
         this.jobService.createCandidateFromCv(this.jobId, data)
             .subscribe((response: HttpResponse<any>) => {
                 console.log('📬 Uploaded:', response);
-                if (response.body && response.body.success) {
-                    item.text = response.body.filename;
-                    item.progress = 100;
-                    item.uploadFinished = true;
-                    item.success = true;
-                    clearInterval(uploadProgressInterval);
-                    // TODO Add parsed email to the emails list
-                }
+                const resp: any = response;
+                item.text = resp.candidate.email;
+                item.progress = 100;
+                item.uploadFinished = true;
+                item.success = true;
+                clearInterval(uploadProgressInterval);
+                this.emails.push(resp.candidate.email);
             }, error => {
                 console.error(error);
-                item.text = error;
+                item.text = error && error.error && error.error.message ? error.error.error.message : 'Error';
                 item.progress = 100;
                 item.uploadFinished = true;
                 clearInterval(uploadProgressInterval);

@@ -130,10 +130,11 @@ export class JobService {
     }
 
     createCandidateFromCv(jobId: string, formData: object) {
-        const req = new HttpRequest('POST', `${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/candidates/cv`, formData, {
-            reportProgress: true,
-        });
-        return this.http.request(req);
+        // const req = new HttpRequest('POST', `${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/candidates/cv`, formData, {
+        //     reportProgress: true,
+        // });
+        // return this.http.request(req);
+        return this.http.post(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/candidates/cv`, formData);
     }
 
     sendEmailsToCandidates(jobId: string, emails: string[]) {
