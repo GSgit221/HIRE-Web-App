@@ -33,7 +33,7 @@
             <div class="upload-block">
                 <div class="drop-zone mb10" appDragEnter (dropFile)="onDropFile($event)">
                     <div class="upload-text">Drop document or <label for="uploader">click to upload</label></div>
-                    <input class="file" type="file" name="" id="uploader">
+                    <input class="file" type="file" name="" id="uploader" formControlName="file" (change)="onFileChange($event)">
                 </div>
                 <div class="error-message" *ngIf="uploadError">{{uploadError}}</div>
             </div>

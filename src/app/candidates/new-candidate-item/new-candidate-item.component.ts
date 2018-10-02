@@ -43,6 +43,7 @@ export class NewCandidateItemComponent implements OnInit {
         console.log(this.jobId);
         this.form = this.fb.group({
             send_email: [true],
+            file: [''],
             emails: this.fb.array([
                 this.fb.control('', [Validators.required, Validators.email])
             ])
@@ -102,9 +103,7 @@ export class NewCandidateItemComponent implements OnInit {
         }
     }
 
-    onDropFile(event) {
-        const files = event.target.files || event.dataTransfer.files;
-        console.log('📥 onDropFile', files);
+    processFiles(files) {
         for (let i = 0, file; file = files[i]; i++) {
             console.log(file);
             if (this.validateFileType(file, this.supportedFileTypes)) {
@@ -124,7 +123,18 @@ export class NewCandidateItemComponent implements OnInit {
                 setTimeout(() => this.uploadError = null, 10000);
             }
         }
-        // SHOW CORRECT STATUS CIRCLE
+    }
+
+    onDropFile(event) {
+        const files = event.target.files || event.dataTransfer.files;
+        console.log('📥 onDropFile', files);
+        this.processFiles(files);
+    }
+
+    onFileChange(event) {
+        const files = event.target.files;
+        console.log('📥 onFileChange', files);
+        this.processFiles(files);
     }
 
     private validateFileType(file: File, types: string[]) {
