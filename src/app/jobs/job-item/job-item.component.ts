@@ -53,7 +53,7 @@ export class JobItemComponent implements OnInit {
         });
 
         this.route.queryParamMap.subscribe((params: ParamMap) => {
-            console.log('Query params change:', params);
+            // console.log('Query params change:', params);
             const editMode = this.route.snapshot.queryParamMap.get('editMode');
             if (editMode) {
                 this.editMode = true;

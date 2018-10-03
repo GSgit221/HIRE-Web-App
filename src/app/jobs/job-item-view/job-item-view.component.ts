@@ -30,6 +30,7 @@ export class JobItemViewComponent implements OnInit {
     uploadError: string;
     supportedFileTypes: string[];
     droppedFiles: File[] = [];
+    candidates: any[];
 
     constructor(
         private router: Router,
@@ -60,19 +61,19 @@ export class JobItemViewComponent implements OnInit {
         });
         this.appliedStage = this.job.stages.find(stage => stage.id === 'applied');
         this.stages = this.job.stages.filter(stage => stage.id !== 'applied');
-        // this.jobService.getStages(this.job.id).subscribe(stages => {
-        //     console.log(stages);
-        // });
+        this.jobService.getCandidates(this.job.id).subscribe((candidates: any[]) => {
+            console.log(candidates);
+            this.candidates = candidates;
+        });
     }
 
     onJobStatusChange(item) {
-        console.log('status change', item.status);
-        // this.jobService.updateJob(item.id, { status: item.status }).subscribe(() => console.log('updated'));
+        // console.log('status change', item.status);
+        this.jobService.updateJob(item.id, { status: item.status }).subscribe(() => console.log('updated'));
     }
 
-    onCandidateClick($event) {
-        console.log('Clicked on candidate', 'REDIRECT', `dashboard/jobs/${this.job.id}/candidate/candidateId`);
-        this.router.navigateByUrl(`dashboard/jobs/${this.job.id}/candidate/candidateId`);
+    onCandidateClick(candidateId) {
+        this.router.navigateByUrl(`dashboard/jobs/${this.job.id}/candidate/${candidateId}`);
     }
 
     onSettigsClick(stageId: string) {

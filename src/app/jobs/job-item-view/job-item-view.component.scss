@@ -116,6 +116,7 @@
 .stages-section {
     width: 100%;
     overflow: hidden;
+    min-height: 400px;
 }
 
 .stages-holder {
@@ -197,6 +198,15 @@
         margin: 0 0 10px;
         padding: 14px 10px;
         position: relative;
+        transition: all 0.4s ease;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &:active {
+            background: darken($white, 4%);
+        }
     }
 
     .ava-column {

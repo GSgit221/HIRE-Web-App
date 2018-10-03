@@ -113,6 +113,10 @@ export class JobService {
         return this.http.put(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/stages/${stageId}`, { data });
     }
 
+    getCandidates(jobId: string) {
+        return this.http.get(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/candidates`);
+    }
+
     getCandidate(jobId: string, candidateId) {
         if (jobId === 'new') {
             return of({title: ''});
@@ -130,7 +134,8 @@ export class JobService {
     }
 
     createCandidateFromCv(jobId: string, formData: object) {
-        // const req = new HttpRequest('POST', `${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/candidates/cv`, formData, {
+        // const req = new HttpRequest('POST', `${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/candidates/cv`,
+        // formData, {
         //     reportProgress: true,
         // });
         // return this.http.request(req);
