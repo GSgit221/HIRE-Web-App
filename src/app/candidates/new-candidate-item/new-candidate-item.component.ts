@@ -14,6 +14,13 @@ import { HttpResponse } from '@angular/common/http';
 export class NewCandidateItemComponent implements OnInit {
     @Output() finishedCadidatesCreation = new EventEmitter<boolean>();
     @Input() jobId: string;
+    @Input()
+    set droppedFiles(files: File[]) {
+        if (files) {
+            this.processFiles(files);
+        }
+    }
+
     contentLoading = false;
     job: Job;
     form: FormGroup;
@@ -88,8 +95,6 @@ export class NewCandidateItemComponent implements OnInit {
 
     onFinishClicked(event) {
         event.preventDefault();
-        console.log(this.form.value);
-        console.log(this.emails);
         if (this.form.value.send_email && this.emails.length) {
             this.jobService.sendEmailsToCandidates(this.jobId, this.emails)
                 .subscribe(response => console.log(response), error => console.error(error));
@@ -131,12 +136,6 @@ export class NewCandidateItemComponent implements OnInit {
         this.processFiles(files);
     }
 
-    onFileChange(event) {
-        const files = event.target.files;
-        console.log('📥 onFileChange', files);
-        this.processFiles(files);
-    }
-
     private validateFileType(file: File, types: string[]) {
         return types.indexOf(file.type) !== -1;
     }
@@ -175,65 +174,4 @@ export class NewCandidateItemComponent implements OnInit {
                 clearInterval(uploadProgressInterval);
             });
     }
-
-    // onSave() {
-    //     const form = this.form;
-    //     if (!form.valid) {
-    //         this.formHelper.markFormGroupTouched(form);
-    //         console.log('FORM IS INVALID:', form);
-    //         return;
-    //     }
-    //     // VALID
-    //     console.log('FORM IS VALID:', form.value);
-    //     const data = new FormData();
-    //     data.append('email', form.value.email);
-    //     data.append('resume', this.resume);
-    //     console.log(data);
-    //     this.contentLoading = true;
-    //     this.jobService.createCandidate(this.jobId, data)
-    //         .subscribe(candidate => {
-    //             console.log(candidate);
-    //             this.contentLoading = false;
-    //             this.router.navigateByUrl(`dashboard/jobs/${this.jobId}`);
-    //             // TODO: redirect to candidate page
-    //         }, error => {
-    //             console.log(error);
-    //             this.contentLoading = false;
-    //         });
-
-    // }
-
-    // onFileChange(event) {
-    //     const reader = new FileReader();
-    //     if (event.target.files && event.target.files.length > 0) {
-    //         this.resume = event.target.files[0];
-    //         // const file = event.target.files[0];
-    //         // reader.readAsDataURL(file);
-    //         // reader.onload = () => {
-    //         //     const encodedString: any = reader.result;
-    //         //     this.resume = {
-    //         //         filename: file.name,
-    //         //         filetype: file.type,
-    //         //         value: encodedString.split(',')[1]
-    //         //     };
-    //         // };
-    //     } else {
-    //         // this.resume = {
-    //         //     filename: null,
-    //         //     filetype: null,
-    //         //     value: null
-    //         // };
-    //         this.resume = null;
-    //     }
-    // }
-
-    // get resumeField() {
-    //     return this.form.get('resume');
-    // }
-
-
-    // onBackClick() {
-    //     this.router.navigateByUrl(`dashboard/jobs/${this.jobId}`);
-    // }
-
 }
