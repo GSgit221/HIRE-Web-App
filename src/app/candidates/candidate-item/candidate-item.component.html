@@ -157,16 +157,12 @@
                         <button class="hide-btn" [ngClass]="{'active': !summaryContentShow}" (click)="onToggleContent('summary')"></button>
                     </div>
                     <p *ngIf="summaryContentShow" class="content-summary">{{candidate.summary}}</p>
-                    <h3>Skills</h3>
-                    <div class="skills-list">
-                        <div class="skill-name green-bg">Operations</div>
-                        <div class="skill-name green-bg">Relationship Building</div>
-                        <div class="skill-name green-bg">Self Motivated</div>
-                        <div class="skill-name orange-bg">LeadershipSkills</div>
-                        <div class="skill-name orange-bg">Marketing</div>
-                        <div class="skill-name">Networking</div>
-                        <div class="skill-name">Budgeting</div>
-                        <div class="skill-name">Employee Engagement</div>
+                    <div *ngIf="candidate.skills && candidate.skills.length">
+                        <h3>Skills</h3>
+                        <div class="skills-list">
+                            <div class="skill-name" *ngFor="let skill of candidate.skills"
+                            [ngClass]="{'green-bg': skill.percent_of_overall > 30, 'orange-bg': skill.percent_of_overall >= 15 && skill.percent_of_overall < 30}">{{skill.title}}</div>
+                        </div>
                     </div>
                     <div *ngIf="candidate.employment_history && candidate.employment_history.length">
                         <div class="wrap-title">
@@ -189,18 +185,7 @@
                                     <div class="company">Penquin</div>
                                     <em class="date">Jan 2003 - Feb 2010</em>
                                 </div>
-                                <div class="description">Hella narwhal Cosby sweater McSweeney's, salvia kitsch before they
-                                    sold out High Life. Umami tattooed sriracha meggings pickled Marfa Blue Bottle High
-                                    Life
-                                    next level four loko PBR. Keytar pickled next level keffiyeh drinking vinegar street
-                                    art.
-                                    Art party vinyl Austin, retro whatever keytar mixtape. Pickled ethnic farm-to-table
-                                    distillery ugh chia. Ethical Odd Future narwhal, mlkshk fap asymmetrical next level
-                                    High
-                                    Life literally cred blog. Banh mi swag art party, fashion axe you probably haven't
-                                    heard of
-                                    them stumptown tousled food truck post-ironic quinoa bicycle rights aesthetic keytar
-                                    Pitchfork.
+                                <div class="description">Hella narwhal Cosby sweater McSweeney's, salvia kitsch before they sold out High Life. Umami tattooed sriracha meggings pickled Marfa Blue Bottle High Life next level four loko PBR. Keytar pickled next level keffiyeh drinking vinegar street art. Art party vinyl Austin, retro whatever keytar mixtape. Pickled ethnic farm-to-table distillery ugh chia. Ethical Odd Future narwhal, mlkshk fap asymmetrical next level High Life literally cred blog. Banh mi swag art party, fashion axe you probably haven't heard of them stumptown tousled food truck post-ironic quinoa bicycle rights aesthetic keytar Pitchfork.
                                 </div>
                             </div>
                         </div>
@@ -221,10 +206,19 @@
                     </div>
                 </div>
                 <div class="content-section" *ngIf="activeSection === 'questions'">
-                    Empty2
+                    <div>
+                        <h3>Legally allowed to work in South Africa</h3>
+                        <p>{{candidate.visa_status || 'No'}}</p>
+                    </div>
+                    <div>
+                        <h3>Notice period</h3>
+                        <p>{{candidate.notice_period || '-'}}</p>
+                    </div>
                 </div>
                 <div class="content-section" *ngIf="activeSection === 'attachments'">
-                    Empty3
+                    <div>
+                        <p>Download original resume</p>
+                    </div>
                 </div>
                 <div class="interactivity">
                     <div class="interactivity-nav">

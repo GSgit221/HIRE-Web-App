@@ -126,6 +126,10 @@ export class JobItemViewComponent implements OnInit {
     }
 
     onFinishedCandidatesCreation(event) {
+        this.jobService.getCandidates(this.job.id).subscribe((candidates: any[]) => {
+            console.log(candidates);
+            this.candidates = candidates;
+        });
         this.createCandidateMode = false;
     }
 
