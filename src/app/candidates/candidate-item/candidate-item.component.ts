@@ -35,6 +35,7 @@ export class CandidateItemComponent implements OnInit {
         this.jobService.getCandidate(this.jobId, this.candidateId)
             .subscribe((candidate: JobCandidate) => {
                 this.candidate = candidate;
+                console.log(this.candidate);
                 setTimeout(() => this.contentLoading = false, 200);
                 console.log('FROM ROUTE-------------------- JOB:', this.jobId, this.candidateId);
             });

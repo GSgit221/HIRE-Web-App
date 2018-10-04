@@ -168,69 +168,57 @@
                         <div class="skill-name">Budgeting</div>
                         <div class="skill-name">Employee Engagement</div>
                     </div>
-                    <div class="wrap-title">
-                        <h3>Work Experience</h3>
-                        <button class="hide-btn" [ngClass]="{'active': !experienceContentShow}" (click)="onToggleContent('experience')"></button>
-                    </div>
-                    <div class="experience" *ngIf="experienceContentShow">
-                        <div class="item">
-                            <div class="detail">
-                                <div class="position">Cheif Digital Officer</div>
-                                <span>-</span>
-                                <div class="company">Hellocrowd</div>
-                                <em class="date">Mar 2010 - Current</em>
-                            </div>
-                            <div class="description">
-                                Hella narwhal Cosby sweater McSweeney's, salvia kitsch before they sold out High Life.
-                                Umami tattooed sriracha meggings pickled Marfa Blue Bottle High Life next level four
-                                loko
-                                PBR. Keytar pickled next level keffiyeh drinking vinegar street art. Art party vinyl
-                                Austin, retro whatever keytar mixtape. Pickled ethnic farm-to-table distillery ugh
-                                chia.
-                                Ethical Odd Future narwhal, mlkshk fap asymmetrical next level High Life literally cred
-                                blog. Banh mi swag art party, fashion axe you probably haven't heard of them stumptown
-                                tousled food truck post-ironic quinoa bicycle rights aesthetic keytar Pitchfork.
-                            </div>
-
+                    <div *ngIf="candidate.employment_history && candidate.employment_history.length">
+                        <div class="wrap-title">
+                            <h3>Work Experience</h3>
+                            <button class="hide-btn" [ngClass]="{'active': !experienceContentShow}" (click)="onToggleContent('experience')"></button>
                         </div>
-                        <div class="item">
-                            <div class="detail">
-                                <div class="position">Business Unit Director</div><span>-</span>
-                                <div class="company">Penquin</div>
-                                <em class="date">Jan 2003 - Feb 2010</em>
+                        <div class="experience" *ngIf="experienceContentShow">
+                            <div class="item" *ngFor="let work of candidate.employment_history">
+                                <div class="detail">
+                                    <div class="position">{{work.title}}</div>
+                                    <span>-</span>
+                                    <div class="company">{{work.company}}</div>
+                                    <em class="date">{{work.start_date}} - {{work.end_date}}</em>
+                                </div>
+                                <div class="description">{{work.description}}</div>
                             </div>
-                            <div class="description">Hella narwhal Cosby sweater McSweeney's, salvia kitsch before they
-                                sold out High Life. Umami tattooed sriracha meggings pickled Marfa Blue Bottle High
-                                Life
-                                next level four loko PBR. Keytar pickled next level keffiyeh drinking vinegar street
-                                art.
-                                Art party vinyl Austin, retro whatever keytar mixtape. Pickled ethnic farm-to-table
-                                distillery ugh chia. Ethical Odd Future narwhal, mlkshk fap asymmetrical next level
-                                High
-                                Life literally cred blog. Banh mi swag art party, fashion axe you probably haven't
-                                heard of
-                                them stumptown tousled food truck post-ironic quinoa bicycle rights aesthetic keytar
-                                Pitchfork.
+                            <div class="item">
+                                <div class="detail">
+                                    <div class="position">Business Unit Director</div><span>-</span>
+                                    <div class="company">Penquin</div>
+                                    <em class="date">Jan 2003 - Feb 2010</em>
+                                </div>
+                                <div class="description">Hella narwhal Cosby sweater McSweeney's, salvia kitsch before they
+                                    sold out High Life. Umami tattooed sriracha meggings pickled Marfa Blue Bottle High
+                                    Life
+                                    next level four loko PBR. Keytar pickled next level keffiyeh drinking vinegar street
+                                    art.
+                                    Art party vinyl Austin, retro whatever keytar mixtape. Pickled ethnic farm-to-table
+                                    distillery ugh chia. Ethical Odd Future narwhal, mlkshk fap asymmetrical next level
+                                    High
+                                    Life literally cred blog. Banh mi swag art party, fashion axe you probably haven't
+                                    heard of
+                                    them stumptown tousled food truck post-ironic quinoa bicycle rights aesthetic keytar
+                                    Pitchfork.
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="wrap-title">
-                        <h3>Education</h3>
-                        <button class="hide-btn" [ngClass]="{'active': !educationContentShow}" (click)="onToggleContent('education')"></button>
-                    </div>
-                    <div class="education" *ngIf="educationContentShow">
-                        <div class="item">
-                            <div class="institution">University of Cape Town</div>
-                            <div class="degree"><strong>BCom LLB</strong> (Bachelors)</div>
-                            <em class="date">1997 - 2003</em>
+                    <div *ngIf="candidate.education_history && candidate.education_history.length">
+                        <div class="wrap-title">
+                            <h3>Education</h3>
+                            <button class="hide-btn" [ngClass]="{'active': !educationContentShow}" (click)="onToggleContent('education')"></button>
                         </div>
-                        <div class="item">
-                            <div class="institution">St Johns College</div>
-                            <div class="degree"><strong>Unknown Degree</strong></div>
-                            <em class="date">1993 - 1997</em>
+                        <div class="education" *ngIf="educationContentShow">
+                            <div class="item" *ngFor="let edu of candidate.education_history">
+                                <div class="institution">{{edu.school || 'Unknown school'}}</div>
+                                <div class="degree" *ngIf="edu.degree"><strong>{{edu.area_of_study}}</strong> ({{edu.degree}})</div>
+                                <div class="degree" *ngIf="!edu.degree">Unknown Degree</div>
+                                <em class="date" *ngIf="edu.start_date">{{edu.start_date}} - {{edu.end_date}}</em>
+                            </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="content-section" *ngIf="activeSection === 'questions'">
                     Empty2
