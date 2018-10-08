@@ -73,33 +73,11 @@
                     <br>
                     <h3>AI Matching</h3>
                     <div class="matching-candidate">
-                        <div class="candidate-fit">
-                            <div class="circle">
-                                <svg class="progress" width="80" height="80">
-                                    <circle class="progress-meter" cx="40" cy="40" r="30" stroke-width="3"></circle>
-                                    <circle class="progress-value green-color" cx="40" cy="40" r="30" stroke-width="7"
-                                        stroke="#65B7A9" style="stroke-dasharray: 188.496; stroke-dashoffset: 47;"></circle>
-                                </svg>
-                                <div class="result green-color">75%</div>
-                            </div>
-                            <div class="text">
-                                <span>Candidate Fit</span>
-                                <strong class="green-color">Good</strong>
-                            </div>
+                        <div class="candidate-wrapper">
+                            <app-candidate-fit-circle [value]="75"></app-candidate-fit-circle>
                         </div>
-                        <div class="job-fit">
-                            <div class="circle">
-                                <svg class="progress" width="80" height="80">
-                                    <circle class="progress-meter" cx="40" cy="40" r="30" stroke-width="3"></circle>
-                                    <circle class="progress-value red-bg" cx="40" cy="40" r="30" stroke-width="7"
-                                        stroke-dasharray="188.496" stroke-dashoffset="143"></circle>
-                                </svg>
-                                <div class="result red-color">25%</div>
-                            </div>
-                            <div class="text">
-                                <span>Job Fit</span>
-                                <strong class="red-color">Poor</strong>
-                            </div>
+                        <div class="candidate-wrapper">
+                            <app-candidate-fit-circle [value]="25"></app-candidate-fit-circle>
                         </div>
                     </div>
                     <h4>Predictive Job Index</h4>
