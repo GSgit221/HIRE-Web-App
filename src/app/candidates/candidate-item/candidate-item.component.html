@@ -68,33 +68,11 @@
                     of work experience, with 15 years of management experience, including a low-level position.</p>
                     <h3>AI Matching</h3>
                     <div class="matching-candidate">
-                        <div class="candidate-fit">
-                            <div class="circle">
-                                <svg class="progress" width="80" height="80">
-                                    <circle class="progress-meter" cx="40" cy="40" r="30" stroke-width="3"></circle>
-                                    <circle class="progress-value green-color" cx="40" cy="40" r="30" stroke-width="7"
-                                        stroke="#65B7A9" style="stroke-dasharray: 188.496; stroke-dashoffset: 47;"></circle>
-                                </svg>
-                                <div class="result green-color">75%</div>
-                            </div>
-                            <div class="text">
-                                <span>Candidate Fit</span>
-                                <strong class="green-color">Good</strong>
-                            </div>
+                        <div class="candidate-wrapper">
+                            <app-candidate-fit-circle [value]="75"></app-candidate-fit-circle>
                         </div>
-                        <div class="job-fit">
-                            <div class="circle">
-                                <svg class="progress" width="80" height="80">
-                                    <circle class="progress-meter" cx="40" cy="40" r="30" stroke-width="3"></circle>
-                                    <circle class="progress-value red-bg" cx="40" cy="40" r="30" stroke-width="7"
-                                        stroke-dasharray="188.496" stroke-dashoffset="143"></circle>
-                                </svg>
-                                <div class="result red-color">25%</div>
-                            </div>
-                            <div class="text">
-                                <span>Job Fit</span>
-                                <strong class="red-color">Poor</strong>
-                            </div>
+                        <div class="candidate-wrapper">
+                            <app-candidate-fit-circle [value]="25"></app-candidate-fit-circle>
                         </div>
                     </div>
                     <h4>Predictive Job Index</h4>
@@ -147,11 +125,13 @@
                     </div>
                 </div>
                 <div class="content-section" *ngIf="activeSection === 'details'">
-                    <div class="wrap-title">
-                        <h3>Summary</h3>
-                        <button class="hide-btn" [ngClass]="{'active': !summaryContentShow}" (click)="onToggleContent('summary')"></button>
+                    <div class="wrap-block">
+                        <div class="wrap-title">
+                            <h3>Summary</h3>
+                            <button class="hide-btn" appToggleDetails></button>
+                        </div>
+                        <p class="content-text content-summary">{{candidate.summary}}</p>
                     </div>
-                    <p *ngIf="summaryContentShow" class="content-summary">{{candidate.summary}}</p>
                     <div *ngIf="candidate.skills && candidate.skills.length">
                         <h3>Skills</h3>
                         <div class="skills-list">
@@ -160,42 +140,46 @@
                         </div>
                     </div>
                     <div *ngIf="candidate.employment_history && candidate.employment_history.length">
-                        <div class="wrap-title">
-                            <h3>Work Experience</h3>
-                            <button class="hide-btn" [ngClass]="{'active': !experienceContentShow}" (click)="onToggleContent('experience')"></button>
-                        </div>
-                        <div class="experience" *ngIf="experienceContentShow">
-                            <div class="item" *ngFor="let work of candidate.employment_history">
-                                <div class="detail">
-                                    <div class="position">{{work.title}}</div>
-                                    <span>-</span>
-                                    <div class="company">{{work.company}}</div>
-                                    <em class="date">{{work.start_date}} - {{work.end_date}}</em>
-                                </div>
-                                <div class="description">{{work.description}}</div>
+                        <div class="wrap-block">
+                            <div class="wrap-title">
+                                <h3>Work Experience</h3>
+                                <button class="hide-btn" appToggleDetails></button>
                             </div>
-                            <div class="item">
-                                <div class="detail">
-                                    <div class="position">Business Unit Director</div><span>-</span>
-                                    <div class="company">Penquin</div>
-                                    <em class="date">Jan 2003 - Feb 2010</em>
+                            <div class="content-text experience">
+                                <div class="item" *ngFor="let work of candidate.employment_history">
+                                    <div class="detail">
+                                        <div class="position">{{work.title}}</div>
+                                        <span>-</span>
+                                        <div class="company">{{work.company}}</div>
+                                        <em class="date">{{work.start_date}} - {{work.end_date}}</em>
+                                    </div>
+                                    <div class="description">{{work.description}}</div>
                                 </div>
-                                <div class="description">Hella narwhal Cosby sweater McSweeney's, salvia kitsch before they sold out High Life. Umami tattooed sriracha meggings pickled Marfa Blue Bottle High Life next level four loko PBR. Keytar pickled next level keffiyeh drinking vinegar street art. Art party vinyl Austin, retro whatever keytar mixtape. Pickled ethnic farm-to-table distillery ugh chia. Ethical Odd Future narwhal, mlkshk fap asymmetrical next level High Life literally cred blog. Banh mi swag art party, fashion axe you probably haven't heard of them stumptown tousled food truck post-ironic quinoa bicycle rights aesthetic keytar Pitchfork.
+                                <div class="item">
+                                    <div class="detail">
+                                        <div class="position">Business Unit Director</div><span>-</span>
+                                        <div class="company">Penquin</div>
+                                        <em class="date">Jan 2003 - Feb 2010</em>
+                                    </div>
+                                    <div class="description">Hella narwhal Cosby sweater McSweeney's, salvia kitsch before they sold out High Life. Umami tattooed sriracha meggings pickled Marfa Blue Bottle High Life next level four loko PBR. Keytar pickled next level keffiyeh drinking vinegar street art. Art party vinyl Austin, retro whatever keytar mixtape. Pickled ethnic farm-to-table distillery ugh chia. Ethical Odd Future narwhal, mlkshk fap asymmetrical next level High Life literally cred blog. Banh mi swag art party, fashion axe you probably haven't heard of them stumptown tousled food truck post-ironic quinoa bicycle rights aesthetic keytar Pitchfork.
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div *ngIf="candidate.education_history && candidate.education_history.length">
-                        <div class="wrap-title">
-                            <h3>Education</h3>
-                            <button class="hide-btn" [ngClass]="{'active': !educationContentShow}" (click)="onToggleContent('education')"></button>
-                        </div>
-                        <div class="education" *ngIf="educationContentShow">
-                            <div class="item" *ngFor="let edu of candidate.education_history">
-                                <div class="institution">{{edu.school || 'Unknown school'}}</div>
-                                <div class="degree" *ngIf="edu.degree"><strong>{{edu.area_of_study}}</strong> ({{edu.degree}})</div>
-                                <div class="degree" *ngIf="!edu.degree">Unknown Degree</div>
-                                <em class="date" *ngIf="edu.start_date">{{edu.start_date}} - {{edu.end_date}}</em>
+                        <div class="wrap-block">
+                            <div class="wrap-title">
+                                <h3>Education</h3>
+                                <button class="hide-btn" appToggleDetails></button>
+                            </div>
+                            <div class="content-text education">
+                                <div class="item" *ngFor="let edu of candidate.education_history">
+                                    <div class="institution">{{edu.school || 'Unknown school'}}</div>
+                                    <div class="degree" *ngIf="edu.degree"><strong>{{edu.area_of_study}}</strong> ({{edu.degree}})</div>
+                                    <div class="degree" *ngIf="!edu.degree">Unknown Degree</div>
+                                    <em class="date" *ngIf="edu.start_date">{{edu.start_date}} - {{edu.end_date}}</em>
+                                </div>
                             </div>
                         </div>
                     </div>
