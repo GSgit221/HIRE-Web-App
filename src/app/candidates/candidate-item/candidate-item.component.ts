@@ -54,18 +54,6 @@ export class CandidateItemComponent implements OnInit {
         this.activeInteractivity = section;
     }
 
-    // TO-DO: Sasha needs to create Directive instead of this ifs
-    onToggleContent(paragraph: string) {
-        if (paragraph === 'summary') {
-            this.summaryContentShow = !this.summaryContentShow;
-        } else if (paragraph === 'experience') {
-            this.experienceContentShow = !this.experienceContentShow;
-        } else if (paragraph === 'education') {
-            this.educationContentShow = !this.educationContentShow;
-        }
-    }
-
-
     onBackClick() {
         this.router.navigateByUrl(`dashboard/jobs/${this.jobId}`);
     }
