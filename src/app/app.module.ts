@@ -66,6 +66,7 @@ import { UserEffects } from './effects/user/user.effects';
 import { JobEffects } from './effects/job/job.effects';
 import { UploadFileNamePipe } from './pipes/upload-file-name.pipe';
 import { DragEnterDirective } from './directives/drag-enter.directive';
+import { ToggleDetailsDirective } from './directives/toggle-details.directive';
 import { FileTypeComponent } from './shared/file-type/file-type.component';
 import { ProgressCircleComponent } from './shared/progress-circle/progress-circle.component';
 import { CandidateFitCircleComponent } from './shared/candidate-fit-circle/candidate-fit-circle.component';
@@ -101,6 +102,7 @@ export function provideConfig() {
         LoaderComponent,
         DisableControlDirective,
         DragEnterDirective,
+        ToggleDetailsDirective,
         JobItemEditComponent,
         JobItemViewComponent,
         MultiSelectComponent,

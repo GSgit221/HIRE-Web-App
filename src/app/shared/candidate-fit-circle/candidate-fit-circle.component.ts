@@ -15,7 +15,6 @@ export class CandidateFitCircleComponent implements OnInit {
     ngOnInit() {
         this.dasharray = this.radius * 2 * Math.PI;
         this.dashoffset = ((100 - this.value) / 100) * this.dasharray;
-        console.log(this.dashoffset);
         if (this.value > 95) {
             this.dashoffset += 5;
         }
