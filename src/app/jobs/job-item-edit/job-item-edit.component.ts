@@ -41,7 +41,6 @@ export class JobItemEditComponent implements OnInit {
     applicationFieldsOptions: SelectItem[];
     hiringManagersOptions: SelectItem[];
     defaultNameOptions: SelectItem[];
-    jobDescription: string;
 
     activeSection = 'job-details';
     // activeSection = 'hiring-team';
@@ -179,7 +178,8 @@ export class JobItemEditComponent implements OnInit {
             salary_to: [''],
             salary_period: [''],
             hide_salary: [''],
-            description: ['']
+            description: [''],
+            requirements: ['']
 
         });
         this.applicationsForm = this.fb.group({
@@ -224,7 +224,8 @@ export class JobItemEditComponent implements OnInit {
             // ConditionalValidator.validate(() => !this.job.single_salary, Validators.required)
             salary_period: [this.job.salary_period],
             hide_salary: [this.job.hide_salary || false],
-            description: [this.job.description]
+            description: [this.job.description],
+            requirements: [this.job.requirements]
         });
         this.inputAddress = this.job.location;
         this.applicationsForm = this.fb.group({
@@ -309,7 +310,6 @@ export class JobItemEditComponent implements OnInit {
             return;
         }
         // VALID
-        console.log('❌ FORM IS VALID');
         console.log(Object.assign(this.job, form.value));
 
         this.jobService.saveJob(Object.assign(this.job, form.value), this.activeSection, true)

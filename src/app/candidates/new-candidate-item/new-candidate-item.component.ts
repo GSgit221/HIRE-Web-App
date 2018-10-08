@@ -148,30 +148,52 @@ export class NewCandidateItemComponent implements OnInit {
         });
     }
 
+    private readFile(file) {
+        return new Promise((resolve, reject) => {
+            console.log(file);
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                const result: any = reader.result;
+                resolve({
+                    name: file.name,
+                    size: file.size,
+                    mimetype: file.type,
+                    data: result.split(',')[1],
+                });
+            };
+        });
+    }
+
     uploadFile(item) {
-        console.log(item);
-        const data = new FormData();
-        data.append('resume', item.file);
-        item.uploadStarted = true;
-        const uploadProgressInterval = setInterval(() => {
-            item.progress = (item.progress + 1 < 97) ? item.progress + 1 : item.progress;
-        }, 200);
-        this.jobService.createCandidateFromCv(this.jobId, data)
-            .subscribe((response: HttpResponse<any>) => {
-                console.log('📬 Uploaded:', response);
-                const resp: any = response;
-                item.text = resp.candidate.email;
-                item.progress = 100;
-                item.uploadFinished = true;
-                item.success = true;
-                clearInterval(uploadProgressInterval);
-                this.emails.push(resp.candidate.email);
-            }, error => {
-                console.error(error);
-                item.text = error && error.error && error.error.message ? error.error.error.message : 'Error';
-                item.progress = 100;
-                item.uploadFinished = true;
-                clearInterval(uploadProgressInterval);
+        // const data = new FormData();
+        // data.append('resume', item.file);
+        this.readFile(item.file)
+            .then(resumeString => {
+                item.uploadStarted = true;
+                const uploadProgressInterval = setInterval(() => {
+                    item.progress = (item.progress + 1 < 97) ? item.progress + 1 : item.progress;
+                }, 200);
+                this.jobService.createCandidateFromCv(this.jobId, { resume: resumeString})
+                    .subscribe((response: HttpResponse<any>) => {
+                        console.log('📬 Uploaded:', response);
+                        const resp: any = response;
+                        item.text = resp.candidate.email;
+                        item.progress = 100;
+                        item.uploadFinished = true;
+                        item.success = true;
+                        clearInterval(uploadProgressInterval);
+                        this.emails.push(resp.candidate.email);
+                    }, error => {
+                        console.error(error);
+                        item.text = error && error.error && error.error.message ? error.error.error.message : 'Error';
+                        item.progress = 100;
+                        item.uploadFinished = true;
+                        clearInterval(uploadProgressInterval);
+                    });
+            })
+            .catch(error => {
+                console.error('Error reading uploaded file');
             });
     }
 }

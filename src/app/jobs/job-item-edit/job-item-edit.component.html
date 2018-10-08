@@ -218,6 +218,48 @@
                     </div>
                 </div>
             </div>
+            <div class="section-separator mb20 mt20"></div>
+            <div class="form-content-section">
+                <div class="description">
+                    <strong class="title">Job Requirements</strong>
+                    <p>Select from our list of job templates or enter your manually.</p>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <div class="form-block">
+                            <p-editor formControlName="requirements" [style]="{'height':'400px'}">
+                                <p-header>
+                                    <span class="ql-formats">
+                                        <select class="ql-size">
+                                            <option selected></option>
+                                            <option value="huge">Heading</option>
+                                            <option value="large">Subheading</option>
+                                        </select>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-bold" aria-label="Bold"></button>
+                                        <button class="ql-italic" aria-label="Italic"></button>
+                                        <button class="ql-underline" aria-label="Underline"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-list" value="ordered" type="button"></button>
+                                        <button class="ql-list" value="bullet" type="button"></button>
+                                        <select class="ql-align">
+                                            <option selected=""></option>
+                                            <option value="center"></option>
+                                            <option value="right"></option>
+                                            <option value="justify"></option>
+                                        </select>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button aria-label="Remove Styles" class="ql-clean" type="button"></button>
+                                    </span>
+                                </p-header>
+                            </p-editor>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
     <div class="content-section" id="applications" *ngIf="activeSection === 'applications'">
