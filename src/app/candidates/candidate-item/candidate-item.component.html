@@ -66,61 +66,37 @@
                     <p>{{candidate.first_name}} {{candidate.last_name}}’s experience appears to be somewhat concentrated in Business Operations and General Business (mostly
                     Management Activities or Functions), and somewhat concentrated in Marketing (mostly Audience). {{candidate.first_name}} {{candidate.last_name}} has 15 years
                     of work experience, with 15 years of management experience, including a low-level position.</p>
-                    <h3>AI Matching</h3>
-                    <div class="matching-candidate">
-                        <div class="candidate-wrapper">
-                            <app-candidate-fit-circle [value]="75"></app-candidate-fit-circle>
-                        </div>
-                        <div class="candidate-wrapper">
-                            <app-candidate-fit-circle [value]="25"></app-candidate-fit-circle>
-                        </div>
-                    </div>
-                    <h4>Predictive Job Index</h4>
-                    <div class="chart-job-index">
-                        <div class="indicator">
-                            <div class="indicator-icon" [ngStyle]="{'left': '75%'}"></div>
-                        </div>
-                        <div class="chart-values">
-                            <span>temp / contractor</span>
-                            <span>full-time / direct-hire</span>
-                        </div>
-                    </div>
-                    <h3 class="title">Unweighted Scores</h3>
-                    <div class="scores">
-                        <div class="score-item">
-                            <div class="score-name">Skills</div>
-                            <div class="score-chart">
-                                <div class="line green-bg" [ngStyle]="{'width': 75 + '%'}"></div>
+                    <div *ngIf="candidate.matching[jobId]">
+                        <h3>AI Matching</h3>
+                        <div class="matching-candidate">
+                            <div class="candidate-wrapper">
+                                <app-candidate-fit-circle [value]="candidate.matching[jobId].WeightedScore" [title]="'Candidate Fit'"></app-candidate-fit-circle>
                             </div>
-                            <div class="score-result">75%</div>
-                        </div>
-                        <div class="score-item">
-                            <div class="score-name">Languages</div>
-                            <div class="score-chart">
-                                <div class="line orange-bg" [ngStyle]="{'width': 45 + '%'}"></div>
+                            <div class="candidate-wrapper">
+                                <app-candidate-fit-circle [value]="candidate.matching[jobId].ReverseCompatibilityScore" [title]="'Job Fit'"></app-candidate-fit-circle>
                             </div>
-                            <div class="score-result">45%</div>
                         </div>
-                        <div class="score-item">
-                            <div class="score-name">Management</div>
-                            <div class="score-chart">
-                                <div class="line green-bg" [ngStyle]="{'width': 85 + '%'}"></div>
+                        <h4>Predictive Job Index</h4>
+                        <div class="chart-job-index">
+                            <div class="indicator">
+                                <div class="indicator-icon" [ngStyle]="{'left': candidate.matching[jobId].WeightedScore + '%'}"></div>
                             </div>
-                            <div class="score-result">85%</div>
+                            <div class="chart-values">
+                                <span>temp / contractor</span>
+                                <span>full-time / direct-hire</span>
+                            </div>
                         </div>
-                        <div class="score-item">
-                            <div class="score-name">Education</div>
-                            <div class="score-chart">
-                                <div class="line green-bg" [ngStyle]="{'width': 70 + '%'}"></div>
-                            </div>
-                            <div class="score-result">70%</div>
-                        </div>
-                        <div class="score-item">
-                            <div class="score-name">Location</div>
-                            <div class="score-chart">
-                                <div class="line red-bg" [ngStyle]="{'width': 20 + '%'}"></div>
-                            </div>
-                            <div class="score-result">20%</div>
+                        <h3 class="title">Unweighted Scores</h3>
+                        <div class="scores">
+                            <ng-container *ngFor="let item of candidate.matching[jobId].UnweightedCategoryScores">
+                                <div class="score-item" *ngIf="skillsMap[item.Category]">
+                                    <div class="score-name">{{skillsMap[item.Category]}}</div>
+                                    <div class="score-chart">
+                                        <div class="line" [ngStyle]="{'width': item.UnweightedScore + '%'}" [ngClass]="{'green-bg': item.UnweightedScore >= 66, 'orange-bg': item.UnweightedScore >= 33 && item.UnweightedScore < 66, 'red-bg': item.UnweightedScore < 33}"></div>
+                                    </div>
+                                    <div class="score-result">{{item.UnweightedScore}}%</div>
+                                </div>
+                            </ng-container>
                         </div>
                     </div>
                 </div>

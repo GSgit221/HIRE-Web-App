@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
     selector: 'app-candidate-fit-circle',
@@ -6,7 +6,8 @@ import {Component, Input, OnInit} from '@angular/core';
     styleUrls: ['./candidate-fit-circle.component.scss']
 })
 export class CandidateFitCircleComponent implements OnInit {
-    @Input() value;
+    @Input() value: number;
+    @Input() title: string;
     dashoffset;
     dasharray;
     radius = 30;

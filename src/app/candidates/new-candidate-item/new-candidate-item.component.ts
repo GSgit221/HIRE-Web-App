@@ -1,3 +1,4 @@
+import { UtilitiesService } from './../../services/utilities.service';
 import { Job } from './../../models/job';
 import { FormHelperService } from './../../services/form-helper.service';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
@@ -35,7 +36,8 @@ export class NewCandidateItemComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private fb: FormBuilder,
-        private formHelper: FormHelperService
+        private formHelper: FormHelperService,
+        private utilities: UtilitiesService
     ) {
         this.supportedFileTypes = [
             'application/pdf',
@@ -148,27 +150,8 @@ export class NewCandidateItemComponent implements OnInit {
         });
     }
 
-    private readFile(file) {
-        return new Promise((resolve, reject) => {
-            console.log(file);
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                const result: any = reader.result;
-                resolve({
-                    name: file.name,
-                    size: file.size,
-                    mimetype: file.type,
-                    data: result.split(',')[1],
-                });
-            };
-        });
-    }
-
     uploadFile(item) {
-        // const data = new FormData();
-        // data.append('resume', item.file);
-        this.readFile(item.file)
+        this.utilities.readFile(item.file)
             .then(resumeString => {
                 item.uploadStarted = true;
                 const uploadProgressInterval = setInterval(() => {
@@ -193,6 +176,7 @@ export class NewCandidateItemComponent implements OnInit {
                     });
             })
             .catch(error => {
+                console.error(error);
                 console.error('Error reading uploaded file');
             });
     }

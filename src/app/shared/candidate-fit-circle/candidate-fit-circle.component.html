@@ -9,7 +9,7 @@
         <div class="result">{{value}}%</div>
     </div>
     <div class="text">
-        <span>Candidate Fit</span>
-        <strong>Good</strong>
+        <span>{{title}}</span>
+        <strong>{{value >= 50 ? 'Good' : 'Poor'}}</strong>
     </div>
 </div>

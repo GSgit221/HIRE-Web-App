@@ -18,12 +18,17 @@ export class CandidateItemComponent implements OnInit {
     jobId: string;
     job: Job;
     candidateId: string;
+    skillsMap = {
+        'SKILLS': 'Skills',
+        'LANGUAGES': 'Languages',
+        'MANAGEMENT_LEVEL': 'Management',
+        'EDUCATION': 'Education',
+        'LOCATION': 'Location'
+    };
 
     candidate: JobCandidate;
-
     contentLoading = true;
-
-
+    
     constructor(
         private jobService: JobService,
         private route: ActivatedRoute,
