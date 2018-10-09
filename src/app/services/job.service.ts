@@ -141,4 +141,8 @@ export class JobService {
     sendEmailsToCandidates(jobId: string, emails: string[]) {
         return this.http.post(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/candidates/send-emails`, { emails });
     }
+
+    createJobFromCv(formData: object) {
+        return this.http.post(`${environment.api_url}/tenants/${environment.tenant}/jobs/spec`, formData);
+    }
 }

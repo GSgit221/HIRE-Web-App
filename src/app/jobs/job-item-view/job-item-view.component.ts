@@ -28,7 +28,6 @@ export class JobItemViewComponent implements OnInit {
     createCandidateMode = false;
     uploadQueue: any[] = [];
     uploadError: string;
-    supportedFileTypes: string[];
     droppedFiles: File[] = [];
     candidates: any[];
 
@@ -46,14 +45,6 @@ export class JobItemViewComponent implements OnInit {
             this.users = users || [];
             console.log(this.users);
         });
-
-        this.supportedFileTypes = [
-            'application/pdf',
-            'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'application/vnd.oasis.opendocument.text',
-            'text/rtf'
-        ];
     }
     ngOnInit() {
         this.newJobStageForm = this.fb.group({
@@ -116,7 +107,7 @@ export class JobItemViewComponent implements OnInit {
 
 
     getHm(id: string) {
-        return this.users.find((user: User) => user.user_id === id) || null;
+        return this.users.find((user: User) => user.id === id) || null;
     }
 
     onAddHiringManagerClick(event) {

@@ -27,7 +27,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler) {
         const authToken = this.authService.getAuthorizationToken();
-        const whiteList = ['accounts.google.com', 'nekudo'];
+        const whiteList = ['accounts.google.com', 'ipgeolocation'];
         if (whiteList.some(item => req.url.indexOf(item) !== -1)) {
             return next.handle(req);
         }

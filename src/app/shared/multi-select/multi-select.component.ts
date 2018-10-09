@@ -32,7 +32,7 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
         if (items && items.length) {
             this.selectedItems = [];
             items.forEach(item => {
-                if (!this._items.find(_item => _item.user_id === item.user_id)) {
+                if (!this._items.find(_item => _item.id === item.id)) {
                     this._items.push(item);
                 }
             });
@@ -60,7 +60,7 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
     private setSelected() {
         if (this.selectedValue && this.selectedValue.length) {
             this.selectedValue.forEach(sv => {
-                const item = this._items.find(_item => _item.user_id === sv);
+                const item = this._items.find(_item => _item.id === sv);
                 if (item) {
                     item.selected = true;
                     this.selectedItems.push(item);
@@ -98,7 +98,7 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
         this.selectedItems.push(item);
         this.menuIsVisible = false;
 
-        this.selectedValue = this.selectedItems.map(si => si.user_id);
+        this.selectedValue = this.selectedItems.map(si => si.id);
         this.propagateChange(this.selectedValue);
     }
     onAddNewClick() {
@@ -120,7 +120,7 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
                 this.newItemMode = false;
                 this.newUser.next(response);
                 setTimeout(() => {
-                    const newItem = this._items.find(_item => _item.user_id === response.user_id);
+                    const newItem = this._items.find(_item => _item.id === response.id);
                     if (newItem) {
                         newItem.selected = true;
                         this.selectedItems.push(newItem);
@@ -138,11 +138,11 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
     }
 
     onRemoveFromSelected(item) {
-        this.selectedItems = this.selectedItems.filter(si => si.user_id !== item.user_id);
-        const menuItem = this._items.find(mi => mi.user_id === item.user_id);
+        this.selectedItems = this.selectedItems.filter(si => si.id !== item.id);
+        const menuItem = this._items.find(mi => mi.id === item.id);
         menuItem.selected = false;
 
-        this.selectedValue = this.selectedItems.map(si => si.user_id);
+        this.selectedValue = this.selectedItems.map(si => si.id);
         this.propagateChange(this.selectedValue);
     }
 

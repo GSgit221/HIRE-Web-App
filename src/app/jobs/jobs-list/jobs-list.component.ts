@@ -19,6 +19,8 @@ export class JobsListComponent implements OnInit {
     selectedAll = false;
     selectedItems = 0;
     users: User[] = [];
+    uploadJobSpecMode = false;
+    droppedFiles: File[] = [];
 
     constructor(private router: Router, private jobService: JobService) {
         this.jobService.getAll()
@@ -81,7 +83,7 @@ export class JobsListComponent implements OnInit {
     }
 
     getHm(id: string) {
-        return this.users.find((user: User) => user.user_id === id) || null;
+        return this.users.find((user: User) => user.id === id) || null;
     }
 
     onItemsBulkRemove() {
@@ -96,5 +98,23 @@ export class JobsListComponent implements OnInit {
                         this.calculateSelectedItems();
                     });
             });
+    }
+
+
+    onFinishedJobUpload(event) {
+        this.contentLoading = true;
+        this.jobService.getAll()
+            .subscribe((jobs: Job[]) => {
+                this.list = jobs;
+                this.contentLoading = false;
+            });
+        this.uploadJobSpecMode = false;
+    }
+
+    onDropFile(event) {
+        const files = event.target.files || event.dataTransfer.files;
+        console.log('📥 onDropFiles', files);
+        this.droppedFiles = files;
+        this.uploadJobSpecMode = true;
     }
 }

@@ -49,6 +49,6 @@ export class AuthService {
 
 
     getUserData() {
-        return this.http.get(`https://geoip.nekudo.com/api`);
+        return this.http.get(`https://api.ipgeolocation.io/ipgeo?apiKey=${environment.geoip_key}`);
     }
 }

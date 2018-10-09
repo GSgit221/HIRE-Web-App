@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class UtilitiesService {
 
-    constructor() {}
+    constructor() { }
 
     readFile(file) {
         return new Promise((resolve, reject) => {

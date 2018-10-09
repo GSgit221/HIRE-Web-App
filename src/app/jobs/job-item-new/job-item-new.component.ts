@@ -1,31 +1,26 @@
 import { UtilitiesService } from './../../services/utilities.service';
-import { Job } from './../../models/job';
 import { FormHelperService } from './../../services/form-helper.service';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { JobService } from '../../services/job.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { JobService } from './../../services/job.service';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { HttpResponse } from '@angular/common/http';
+import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 
 @Component({
-    selector: 'app-new-candidate-item',
-    templateUrl: './new-candidate-item.component.html',
-    styleUrls: ['./new-candidate-item.component.scss']
+    selector: 'app-job-item-new',
+    templateUrl: './job-item-new.component.html',
+    styleUrls: ['./job-item-new.component.scss']
 })
-export class NewCandidateItemComponent implements OnInit {
-    @Output() finishedCadidatesCreation = new EventEmitter<boolean>();
-    @Input() jobId: string;
+export class JobItemNewComponent implements OnInit {
+    @Output() finishedJobUpload = new EventEmitter<boolean>();
     @Input()
     set droppedFiles(files: File[]) {
         if (files) {
             this.processFiles(files);
         }
     }
-
     contentLoading = false;
-    job: Job;
     form: FormGroup;
-    emails: string[] = [];
     uploadQueue: any[] = [];
     uploadError: string;
     supportedFileTypes: string[];
@@ -48,65 +43,15 @@ export class NewCandidateItemComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.jobId);
         this.form = this.fb.group({
-            send_email: [true],
-            file: [''],
-            emails: this.fb.array([
-                this.fb.control('', [Validators.required, Validators.email])
-            ])
+            file: ['']
         });
-    }
-
-    get emailInputs() {
-        return this.form.get('emails') as FormArray;
-    }
-
-    addEmailInput() {
-        this.emailInputs.push(this.fb.control('', [Validators.required, Validators.email]));
-    }
-
-    onEmailInputKeydown(event, formControl) {
-        if (event.keyCode === 13) {
-            event.preventDefault();
-            console.log(formControl);
-            if (formControl.valid && formControl.value) {
-                formControl.disable();
-                formControl.pendingRequest = true;
-                this.jobService.createCandidateFromEmail(this.jobId, formControl.value)
-                    .subscribe(candidate => {
-                        console.log(candidate);
-                        formControl.requestStatus = 'success';
-                        formControl.pendingRequest = false;
-                        this.addEmailInput();
-
-                        this.emails.push(formControl.value);
-                    }, (response) => {
-                        formControl.requestStatus = 'warning';
-                        if (response && response.error && response.error.error) {
-                            formControl.requestError = response.error.error;
-                            console.error(response.error.error);
-                        }
-                        formControl.pendingRequest = false;
-                        this.addEmailInput();
-                    });
-            }
-        }
     }
 
     onFinishClicked(event) {
         event.preventDefault();
-        if (this.form.value.send_email && this.emails.length) {
-            this.jobService.sendEmailsToCandidates(this.jobId, this.emails)
-                .subscribe(response => console.log(response), error => console.error(error));
-            this.uploadQueue = [];
-            this.emails = [];
-            this.finishedCadidatesCreation.next(true);
-        } else {
-            this.uploadQueue = [];
-            this.emails = [];
-            this.finishedCadidatesCreation.next(true);
-        }
+        this.uploadQueue = [];
+        this.finishedJobUpload.next(true);
     }
 
     processFiles(files) {
@@ -154,18 +99,17 @@ export class NewCandidateItemComponent implements OnInit {
             .then(fileValue => {
                 item.uploadStarted = true;
                 const uploadProgressInterval = setInterval(() => {
-                    item.progress = (item.progress + 1 < 97) ? item.progress + 1 : item.progress;
+                    item.progress = (item.progress + 1 < 97) ? item.progress + 1 : 90;
                 }, 200);
-                this.jobService.createCandidateFromCv(this.jobId, { resume: fileValue})
+                this.jobService.createJobFromCv({ file: fileValue })
                     .subscribe((response: HttpResponse<any>) => {
                         console.log('📬 Uploaded:', response);
                         const resp: any = response;
-                        item.text = resp.candidate.email;
+                        item.text = resp.job.title;
                         item.progress = 100;
                         item.uploadFinished = true;
                         item.success = true;
                         clearInterval(uploadProgressInterval);
-                        this.emails.push(resp.candidate.email);
                     }, error => {
                         console.error(error);
                         item.text = error && error.error && error.error.message ? error.error.error.message : 'Error';
@@ -179,4 +123,5 @@ export class NewCandidateItemComponent implements OnInit {
                 console.error('Error reading uploaded file');
             });
     }
+
 }

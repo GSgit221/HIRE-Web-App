@@ -70,6 +70,7 @@ import { ToggleDetailsDirective } from './directives/toggle-details.directive';
 import { FileTypeComponent } from './shared/file-type/file-type.component';
 import { ProgressCircleComponent } from './shared/progress-circle/progress-circle.component';
 import { CandidateFitCircleComponent } from './shared/candidate-fit-circle/candidate-fit-circle.component';
+import { JobItemNewComponent } from './jobs/job-item-new/job-item-new.component';
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -119,7 +120,8 @@ export function provideConfig() {
         UploadFileNamePipe,
         FileTypeComponent,
         ProgressCircleComponent,
-        CandidateFitCircleComponent
+        CandidateFitCircleComponent,
+        JobItemNewComponent
     ],
     imports: [
         AppRoutingModule,
