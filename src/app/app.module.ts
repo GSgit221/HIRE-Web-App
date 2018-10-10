@@ -72,6 +72,7 @@ import { ProgressCircleComponent } from './shared/progress-circle/progress-circl
 import { CandidateFitCircleComponent } from './shared/candidate-fit-circle/candidate-fit-circle.component';
 import { JobItemNewComponent } from './jobs/job-item-new/job-item-new.component';
 import { TooltipModule } from 'primeng/tooltip';
+import { TakeoverComponent } from './dashboard/sidebar/takeover/takeover.component';
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -122,7 +123,8 @@ export function provideConfig() {
         FileTypeComponent,
         ProgressCircleComponent,
         CandidateFitCircleComponent,
-        JobItemNewComponent
+        JobItemNewComponent,
+        TakeoverComponent
     ],
     imports: [
         AppRoutingModule,

@@ -62,12 +62,15 @@
             <div class="section-separator mb20"></div>
             <div class="candidate-content">
                 <div class="content-section" *ngIf="activeSection === 'overview'">
-                    <h3>Our Summary</h3>
-                    <!-- <p>{{candidate.first_name}} {{candidate.last_name}}’s experience appears to be somewhat concentrated in Business Operations and General Business (mostly
-                    Management Activities or Functions), and somewhat concentrated in Marketing (mostly Audience). {{candidate.first_name}} {{candidate.last_name}} has 15 years
-                    of work experience, with 15 years of management experience, including a low-level position.</p> -->
-                    <p>{{candidate.summary}}</p>
-                    <div *ngIf="candidate.matching[jobId]">
+                    <ng-container *ngIf="candidate.summary">
+                        <h3>Our Summary</h3>
+                        <!-- <p>{{candidate.first_name}} {{candidate.last_name}}’s experience appears to be somewhat concentrated in Business Operations and General Business (mostly
+                                            Management Activities or Functions), and somewhat concentrated in Marketing (mostly Audience). {{candidate.first_name}} {{candidate.last_name}} has 15 years
+                                            of work experience, with 15 years of management experience, including a low-level position.</p> -->
+                        <p>{{candidate.summary}}</p>
+                    </ng-container>
+                    
+                    <div *ngIf="candidate.matching && candidate.matching[jobId]">
                         <h3>AI Matching</h3>
                         <div class="matching-candidate">
                             <div class="candidate-wrapper">
@@ -102,7 +105,7 @@
                     </div>
                 </div>
                 <div class="content-section" *ngIf="activeSection === 'details'">
-                    <div class="wrap-block">
+                    <div class="wrap-block" *ngIf="candidate.summary">
                         <div class="wrap-title">
                             <h3>Summary</h3>
                             <button class="hide-btn" appToggleDetails></button>

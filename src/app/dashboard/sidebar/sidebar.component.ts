@@ -16,10 +16,16 @@ import * as fromUserActions from './../../actions/user/user.actions';
 export class SidebarComponent implements OnInit, OnDestroy {
     userSubscription: Subscription;
     user: User;
+    users: User[];
     settingsOpened = true;
 
 
-    constructor(private userService: UserService, private store: Store<State>) { }
+    constructor(private userService: UserService, private store: Store<State>) {
+        this.userService.getUsers()
+        .subscribe((users: User[]) => {
+            this.users = users;
+        });
+    }
 
     ngOnInit() {
         this.userSubscription = this.store.select('user').subscribe((user: User) => this.user = user);

@@ -6,14 +6,16 @@ import { environment } from '../../environments/environment';
     providedIn: 'root'
 })
 export class UserService {
-
     constructor(private http: HttpClient) { }
-
-    // me() {
-    //     return this.http.get(`${environment.api_url}/me`);
-    // }
-
     create(tenantId, data) {
         return this.http.post(`${environment.api_url}/tenants/${tenantId}/users`, {data});
+    }
+
+    getUsers() {
+        return this.http.get(`${environment.api_url}/tenants/${environment.tenant}/users`);
+    }
+
+    takeover(email) {
+        return this.http.post(`${environment.api_url}/tenants/${environment.tenant}/users/takeover`, {email});
     }
 }

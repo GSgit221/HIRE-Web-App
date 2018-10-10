@@ -4,4 +4,6 @@ export class User {
     last_name: string;
     initials?: string;
     user_id?: string;
+    email?: string;
+    full_str?: string;
 }

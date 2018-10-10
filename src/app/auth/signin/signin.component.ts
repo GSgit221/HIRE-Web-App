@@ -1,3 +1,6 @@
+import { State } from './../../reducers/index';
+import { Store } from '@ngrx/store';
+import * as fromUserActions from './../../actions/user/user.actions';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -22,7 +25,8 @@ export class SigninComponent implements OnInit {
         private socialAuthService: SocialAuthService,
         private authService: AuthService,
         private fb: FormBuilder,
-        private router: Router) {
+        private router: Router,
+        private store: Store<State>) {
         this.signinForm = this.fb.group({
             email: ['', Validators.required],
             password: ['', Validators.required],
@@ -43,6 +47,7 @@ export class SigninComponent implements OnInit {
                         .subscribe(response => {
                             this.msgs = [];
                             this.authService.setSession(response);
+                            this.store.dispatch(new fromUserActions.GetAuthUser());
                             this.router.navigateByUrl('/');
                         }, response => {
                             this.msgs = [];
@@ -53,6 +58,7 @@ export class SigninComponent implements OnInit {
                         .subscribe(response => {
                             this.msgs = [];
                             this.authService.setSession(response);
+                            this.store.dispatch(new fromUserActions.GetAuthUser());
                             this.router.navigateByUrl('/');
                         }, response => {
                             this.msgs = [];
@@ -79,6 +85,7 @@ export class SigninComponent implements OnInit {
                     this.contentLoading = false;
                     this.msgs = [];
                     this.authService.setSession(response);
+                    this.store.dispatch(new fromUserActions.GetAuthUser());
                     this.router.navigateByUrl('/');
                 },
                 response => {
