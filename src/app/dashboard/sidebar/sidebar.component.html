@@ -78,3 +78,11 @@
         </div>
     </div>
 </div>
+<div class="takeover" *ngIf="user && user.role === 'superadmin'">
+    <div class="takeover-holder" pTooltip="Takeover">
+        <span class="takeover-link"><img src="/assets/images/tap.svg" alt="Takeover" width="20" height="20"></span>
+    </div>
+</div>
+<div class="logout-link" pTooltip="Sign out" tooltipPosition="top" routerLink="/signout">
+    <img src="/assets/images/logout.svg" alt="Logout" width="20" height="20">
+</div>
