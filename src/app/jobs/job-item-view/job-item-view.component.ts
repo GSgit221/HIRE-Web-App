@@ -130,4 +130,16 @@ export class JobItemViewComponent implements OnInit {
         this.droppedFiles = files;
         this.createCandidateMode = true;
     }
+
+    onDeleteCandidateClick(event, candidateId) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.contentLoading = true;
+        this.jobService.deleteCandidate(this.job.id, candidateId).subscribe(() => {
+            this.jobService.getCandidates(this.job.id).subscribe((candidates: any[]) => {
+                this.candidates = candidates;
+                this.contentLoading = false;
+            });
+        });
+    }
 }
