@@ -63,7 +63,11 @@
                 </div>
                 <div class="stage-content">
                     <div class="block" (click)="onCandidateClick(candidate.id)" *ngFor="let candidate of candidates">
-                        <div class="compliance-rate red"></div>
+                        <div class="compliance-rate" 
+                            [attr.data-score]="candidate.score"
+                            [ngClass]="{'green': candidate.score >= 66, 'orange': candidate.score >= 33 && candidate.score <
+                                66, 'red' : candidate.score < 33}"
+                        ></div>
                         <div class="ava-column">
                             <div class="ava">
                                 <div class="ava-placeholder">{{candidate | initials}}</div>

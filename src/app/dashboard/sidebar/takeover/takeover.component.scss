@@ -23,11 +23,12 @@
         background: $white;
         padding: 10px;
         border-radius: 5px;
+        margin: 0 0 10px;
     }
 
     .users-list {
         color: $main-blue;
-        max-height: 50px;
+        max-height: 150px;
         overflow: auto;
         .user-item {
             font-size: 12px;

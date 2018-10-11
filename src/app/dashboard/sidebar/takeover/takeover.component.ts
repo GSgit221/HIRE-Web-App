@@ -68,7 +68,6 @@ export class TakeoverComponent implements OnInit {
 
             this.userService.takeover(email)
                 .subscribe(response => {
-                    console.log('Took over:', response);
                     this.authService.setSession(response);
                     this.showList = false;
                     this.router.navigateByUrl('/dashboard/people', { skipLocationChange: true }).then(() => {
@@ -83,8 +82,6 @@ export class TakeoverComponent implements OnInit {
         this.form.patchValue({ search: user.email });
         this._filteredUsers = [];
         this.inputRef.nativeElement.focus();
-        console.log(this.inputRef.nativeElement);
-
     }
 
 }
