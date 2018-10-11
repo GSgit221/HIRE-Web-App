@@ -53,7 +53,7 @@
             <div class="stage-column">
                 <div class="stage-header">
                     <h2 class="title">Applied</h2>
-                    <span class="counter">{{candidates?.length || '0'}}</span>
+                    <span class="counter">{{stageCandidates('applied')?.length || '0'}}</span>
                     <button class="btn settings-btn mla" (click)="onSettigsClick('applied')">
                         <img src="/assets/images/settings-dots.svg" alt="" width="2" height="10">
                     </button>
@@ -61,8 +61,18 @@
                         <img src="/assets/images/plus.svg" alt="" width="13" height="13">
                     </button>
                 </div>
-                <div class="stage-content">
-                    <div class="block" (click)="onCandidateClick(candidate.id)" *ngFor="let candidate of candidates">
+                <div class="stage-content" 
+                    droppable
+                    [dragOverClass]="'drag-target-border'"
+                    (onDrop)="onCandidateDrop($event, 'applied')"
+                >
+                    <div 
+                        class="block"
+                        (click)="onCandidateClick(candidate.id)"
+                        *ngFor="let candidate of stageCandidates('applied')"
+                        draggable
+                        [dragData]="candidate"
+                    >
                         <div class="compliance-rate" 
                             [attr.data-score]="candidate.score"
                             [ngClass]="{'green': candidate.score >= 66, 'orange': candidate.score >= 33 && candidate.score <
@@ -101,40 +111,48 @@
             <div class="stage-column" *ngFor="let stage of stages">
                 <div class="stage-header">
                     <h2 class="title">{{stage.title}}</h2>
-                    <span class="counter">0</span>
+                    <span class="counter">{{stageCandidates(stage.id)?.length || '0'}}</span>
                     <button class="btn settings-btn mla" (click)="onSettigsClick(stage.id)">
                         <img src="/assets/images/settings-dots.svg" alt="" width="2" height="10">
                     </button>
                 </div>
-                <div class="stage-content">
-                    <!-- <div class="block" (click)="onCandidateClick($event)">
-                        <div class="compliance-rate green"></div>
+                <div class="stage-content"
+                    droppable
+                    [dragOverClass]="'drag-target-border'"
+                    (onDrop)="onCandidateDrop($event, stage.id)"
+                >
+                    <div class="block" (click)="onCandidateClick(candidate.id)" *ngFor="let candidate of stageCandidates(stage.id)"
+                        draggable [dragData]="candidate">
+                        <div class="compliance-rate" [attr.data-score]="candidate.score" [ngClass]="{'green': candidate.score >= 66, 'orange': candidate.score >= 33 && candidate.score <
+                                                    66, 'red' : candidate.score < 33}"></div>
                         <div class="ava-column">
                             <div class="ava">
-                                <img src="/assets/images/placeholders/2.png" alt="" width="30" height="30">
+                                <div class="ava-placeholder">{{candidate | initials}}</div>
                             </div>
                         </div>
                         <div class="block-content">
-                            <strong class="title">Joan Murphy</strong>
-                            <span class="position">CEO @ HelloCrowd, Inc</span>
+                            <strong class="title">{{candidate.first_name}} {{candidate.last_name}}</strong>
+                            <span class="position">{{candidate.location}}</span>
                             <div class="stats-actions-block">
                                 <div class="text-with-icon flex-row flex-aic">
                                     <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10">
-                                    <p>13d Ago</p>
+                                    <p>{{candidate.created_at_rel}}</p>
                                 </div>
                                 <div class="text-with-icon flex-row flex-aic ml20">
                                     <img src="/assets/images/update.svg" class="icon" alt="" width="12" height="13">
-                                    <p>2d Ago</p>
+                                    <p>{{candidate.updated_at_rel}}</p>
                                 </div>
                                 <div class="actions mla">
-                                    <span class="icon-btn"><img src="/assets/images/refresh.svg" alt="" width="10"
-                                            height="10"></span>
-                                    <span class="icon-btn ml10"><img src="/assets/images/delete.svg" alt="" width="10"
-                                            height="10"></span>
+                                    <span class="icon-btn">
+                                        <img src="/assets/images/refresh.svg" alt="" width="10" height="10">
+                                    </span>
+                                    <span class="icon-btn ml10" (click)="onDeleteCandidateClick($event, candidate.id)">
+                                        <img src="/assets/images/delete.svg" alt="" width="10" height="10">
+                                    </span>
                                 </div>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
             </div>
             <form [formGroup]="newJobStageForm" class="stage-column">

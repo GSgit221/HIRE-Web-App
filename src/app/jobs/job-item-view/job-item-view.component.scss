@@ -188,6 +188,15 @@
 }
 
 .stage-content {
+    width: 100%;
+    min-height: 101px;
+    position: relative;
+    border: 1px solid transparent;
+
+    &.drag-target-border {
+        border: 1px dashed $grey-border;
+    }
+
     .block {
         display: flex;
         flex-direction: row;
@@ -297,7 +306,6 @@
         }
     }
 }
-
 
 .drop-overlay {
     position: fixed;

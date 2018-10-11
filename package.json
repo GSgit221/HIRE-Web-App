@@ -30,6 +30,7 @@
     "animate.css": "^3.7.0",
     "closest": "0.0.1",
     "core-js": "^2.5.4",
+    "ng-drag-drop": "^5.0.0",
     "ngx-autosize-input": "^2.2.2",
     "ngx-file-drop": "^4.0.6",
     "ngx-google-places-autocomplete": "^2.0.1",

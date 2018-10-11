@@ -1,3 +1,4 @@
+import { JobCandidate } from './../../models/job-candidate';
 import { JobStage } from '../../models/job-stage';
 import { JobService } from '../../services/job.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -29,7 +30,8 @@ export class JobItemViewComponent implements OnInit {
     uploadQueue: any[] = [];
     uploadError: string;
     droppedFiles: File[] = [];
-    candidates: any[];
+    candidates: JobCandidate[];
+    draggedCandidate: JobCandidate;
 
     constructor(
         private router: Router,
@@ -52,7 +54,7 @@ export class JobItemViewComponent implements OnInit {
         });
         this.appliedStage = this.job.stages.find(stage => stage.id === 'applied');
         this.stages = this.job.stages.filter(stage => stage.id !== 'applied');
-        this.jobService.getCandidates(this.job.id).subscribe((candidates: any[]) => {
+        this.jobService.getCandidates(this.job.id).subscribe((candidates: JobCandidate[]) => {
             console.log(candidates);
             this.candidates = candidates;
         });
@@ -61,6 +63,24 @@ export class JobItemViewComponent implements OnInit {
     onJobStatusChange(item) {
         // console.log('status change', item.status);
         this.jobService.updateJob(item.id, { status: item.status }).subscribe(() => console.log('updated'));
+    }
+
+    stageCandidates(stageName: string) {
+        if (this.candidates && this.candidates.length) {
+            const sC: JobCandidate[] = [];
+            this.candidates.forEach(c => {
+                if (c.stage && c.stage[this.job.id]) {
+                    if (c.stage[this.job.id] === stageName) {
+                        sC.push(c);
+                    }
+                } else {
+                    sC.push(c);
+                }
+            });
+            return sC;
+        } else {
+            return [];
+        }
     }
 
     onCandidateClick(candidateId) {
@@ -140,6 +160,16 @@ export class JobItemViewComponent implements OnInit {
                 this.candidates = candidates;
                 this.contentLoading = false;
             });
+        });
+    }
+
+    onCandidateDrop(event, stageId) {
+        console.log('drop', event.dragData, stageId);
+        const candidate = event.dragData;
+        const candidateIndex = this.candidates.findIndex(c => c.id === candidate.id);
+        this.candidates[candidateIndex].stage[this.job.id] = stageId;
+        this.jobService.updateCandidateStage(this.job.id, candidate.id, this.candidates[candidateIndex].stage).subscribe(() => {
+            console.log('Candidate stage was updated to:', stageId);
         });
     }
 }

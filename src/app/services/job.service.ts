@@ -149,4 +149,8 @@ export class JobService {
     createJobFromCv(formData: object) {
         return this.http.post(`${environment.api_url}/tenants/${environment.tenant}/jobs/spec`, formData);
     }
+
+    updateCandidateStage(jobId: string, candidateId: string, stage: any) {
+        return this.http.put(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/candidates/${candidateId}`, {data: {stage}});
+    }
 }

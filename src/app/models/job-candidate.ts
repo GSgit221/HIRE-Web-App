@@ -3,4 +3,5 @@ export class JobCandidate {
     first_name: string;
     last_name: string;
     email: string;
+    stage: any;
 }
