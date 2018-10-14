@@ -44,8 +44,8 @@
                         </li>
                     </ul>
                     <div class="detail-information">
-                        <img src="assets/images/location.svg" height="14px" alt="Location icon" *ngIf="candidate.location">
-                        <p *ngIf="candidate.location">{{candidate.location}}</p>
+                        <img src="assets/images/location.svg" height="14px" alt="Location icon">
+                        <p>{{candidate.location || 'Unknown Location'}}</p>
                     </div>
                 </div>
             </div>
