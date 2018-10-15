@@ -151,7 +151,7 @@
                                 </div>
                             </div>
                             <div class="col col2 flex-6 status-col">
-                                <p-dropdown [options]="statusOptions" [(ngModel)]="item.status" [style]="{'width':'47px'}"  class="status-dd" data-escape-click (onChange)="onJobStatusChange(item)">
+                                <p-dropdown [options]="statusOptions" [(ngModel)]="item.status" [style]="{'width':'47px'}"  class="status-dd" data-escape-click (onChange)="onJobStatusChange(item)" [disabled]="item.insufficient_data">
                                     <ng-template let-item pTemplate="selectedItem">
                                         <span class="status" [ngClass]="item.label.toLowerCase()"></span>
                                     </ng-template>

@@ -26,6 +26,7 @@ export class JobsListComponent implements OnInit {
         this.jobService.getAll()
             .subscribe((jobs: Job[]) => {
                 this.list = jobs;
+                console.log(this.list);
                 this.contentLoading = false;
             });
 
