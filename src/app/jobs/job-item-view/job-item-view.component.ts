@@ -32,6 +32,7 @@ export class JobItemViewComponent implements OnInit {
     droppedFiles: File[] = [];
     candidates: JobCandidate[];
     draggedCandidate: JobCandidate;
+    resumeThreshold = 60;
 
     constructor(
         private router: Router,
@@ -58,6 +59,7 @@ export class JobItemViewComponent implements OnInit {
             console.log(candidates);
             this.candidates = candidates;
         });
+        this.resumeThreshold = this.getJobResumeMatchingThreshold();
     }
 
     onJobStatusChange(item) {
@@ -171,5 +173,14 @@ export class JobItemViewComponent implements OnInit {
         this.jobService.updateCandidateStage(this.job.id, candidate.id, this.candidates[candidateIndex].stage).subscribe(() => {
             console.log('Candidate stage was updated to:', stageId);
         });
+    }
+
+    getJobResumeMatchingThreshold() {
+        let threshold = 60;
+        if (this.job && this.job.stages && this.job.stages.find(s => s.id === 'applied')) {
+            const appliedStage = this.job.stages.find(s => s.id === 'applied');
+            threshold = appliedStage.resume_matching_threshold;
+        }
+        return threshold;
     }
 }

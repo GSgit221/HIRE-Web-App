@@ -25,8 +25,8 @@
                 <span>{{job.location || 'Unknown Location'}}</span>
             </div>
         </div>
-        <div class="vertical-separator"></div>
-        <div class="hiring-managers-block">
+        <!-- <div class="vertical-separator"></div> -->
+        <div class="hiring-managers-block mla">
             <div class="item" *ngFor="let hm of job.hiring_managers">
                 <img *ngIf="getHm(hm) && getHm(hm).icon_url_small" [src]="getHm(hm).icon_url_small" alt="">
                 <span *ngIf="getHm(hm) && !getHm(hm).icon_url_small">{{getHm(hm) | initials }}</span>
@@ -45,7 +45,7 @@
                 </svg>
             </button>
         </div>
-        <button class="btn btn-primary w140 mla add-btn" (click)="onAddCandidateClick()">Add Candidate</button>
+        <!-- <button class="btn btn-primary w140 mla add-btn" (click)="onAddCandidateClick()">Add Candidate</button> -->
     </div>
     <div class="blocks-separator mt10 mb10"></div>
     <div class="stages-section" appDragEnter (dropFile)="onDropFile($event)">
@@ -73,11 +73,13 @@
                         draggable
                         [dragData]="candidate"
                     >
+                        <div class="warning-block"><div class="warning-block-holder"><span>!</span></div></div>
                         <div class="compliance-rate" 
                             [attr.data-score]="candidate.score"
-                            [ngClass]="{'green': candidate.score >= 66, 'orange': candidate.score >= 33 && candidate.score <
-                                66, 'red' : candidate.score < 33}"
+                            [ngClass]="{'green': candidate.score >= resumeThreshold, 'orange': candidate.score >= (resumeThreshold - 15) && candidate.score <
+                                resumeThreshold, 'red' : candidate.score < resumeThreshold - 15}"
                         ></div>
+                        <span class="complience-value">{{candidate.score}}%</span>
                         <div class="ava-column">
                             <div class="ava">
                                 <div class="ava-placeholder">{{candidate | initials}}</div>
@@ -85,7 +87,9 @@
                         </div>
                         <div class="block-content">
                             <strong class="title">{{candidate.first_name}} {{candidate.last_name}}</strong>
-                            <span class="position">{{candidate.location}}</span>
+                            <span class="position" *ngIf="candidate.employment_history">{{candidate.employment_history[0].title}} @
+                                {{candidate.employment_history[0].company}}</span>
+                            <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
                             <div class="stats-actions-block">
                                 <div class="text-with-icon flex-row flex-aic">
                                     <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10">
@@ -123,8 +127,8 @@
                 >
                     <div class="block" (click)="onCandidateClick(candidate.id)" *ngFor="let candidate of stageCandidates(stage.id)"
                         draggable [dragData]="candidate">
-                        <div class="compliance-rate" [attr.data-score]="candidate.score" [ngClass]="{'green': candidate.score >= 66, 'orange': candidate.score >= 33 && candidate.score <
-                                                    66, 'red' : candidate.score < 33}"></div>
+                        <div class="compliance-rate" [attr.data-score]="candidate.score" [ngClass]="{'green': candidate.score >= resumeThreshold, 'orange': candidate.score >= (resumeThreshold - 15) && candidate.score < resumeThreshold, 'red' : candidate.score < resumeThreshold - 15}"></div>
+                        <span class="complience-value">{{candidate.score}}%</span>
                         <div class="ava-column">
                             <div class="ava">
                                 <div class="ava-placeholder">{{candidate | initials}}</div>
@@ -132,7 +136,8 @@
                         </div>
                         <div class="block-content">
                             <strong class="title">{{candidate.first_name}} {{candidate.last_name}}</strong>
-                            <span class="position">{{candidate.location}}</span>
+                            <span class="position" *ngIf="candidate.employment_history">{{candidate.employment_history[0].title}} @ {{candidate.employment_history[0].company}}</span>
+                            <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
                             <div class="stats-actions-block">
                                 <div class="text-with-icon flex-row flex-aic">
                                     <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10">

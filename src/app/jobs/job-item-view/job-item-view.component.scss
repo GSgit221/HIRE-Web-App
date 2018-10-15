@@ -304,6 +304,51 @@
             background: $light-red;
         }
     }
+
+    .complience-value {
+        position: absolute;
+        right: 24px;
+        top: 16px;
+        font-size: 10px;
+        line-height: 1.4;
+        font-weight: bold;
+    }
+
+    .warning-block {
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        overflow: hidden;
+        color: $white;
+        text-align: center;
+        border-radius: 5px 0 0 0;
+
+        .warning-block-holder {
+            width: 20px;
+            height: 20px;
+            position: relative;
+
+            &:before {
+                content: '';
+                width: 50px;
+                height: 50px;
+                background: #F5A623;
+                display: block;
+                transform: rotate(45deg);
+                position: absolute;
+                left: -33px;
+                top: -32px;
+            }
+        }
+
+        span {
+            position: absolute;
+            left: 4px;
+            top: -2px;
+        }
+    }
 }
 
 .drop-overlay {
