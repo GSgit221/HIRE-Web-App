@@ -1,0 +1,33 @@
+<div class="container fixed-width-container">
+    <div class="pages-nav">
+        <button class="back-btn" routerLink="/dashboard/questionnaires">
+            <span class="icon"><img src="assets/images/left.svg" height="16px" alt="Left icon"></span>
+            <span class="text">Questionnaires</span>
+        </button>
+    </div>
+    <div class="title-block">
+        <h1 class="page-title">New Questionaire</h1>
+        <div class="buttons-holder">
+            <button class="btn btn-primary ml20 w140" (click)="onSave($event)">Save</button>
+        </div>
+    </div>
+    <div class="section-separator mb20"></div>
+    <div class="content-section">
+        <form [formGroup]="form">
+            <div class="form-content-section">
+                <div class="description">
+                    <strong class="title">Questionaire Name</strong>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <div class="form-block">
+                            <label class="form-block-label">Questionaire Name</label>
+                            <input type="text" class="form-input" formControlName="title">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<app-loader *ngIf="contentLoading"></app-loader>

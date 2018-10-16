@@ -384,8 +384,8 @@
                                 <label for="" class="form-block-label">Questionnaire</label>
                                 <div class="flex-row">
                                     <p-dropdown [options]="questionnaireOptions" formControlName="questionnaire"
-                                        [style]="{'width':'100%'}" class="flex-1" placeholder="You have not created any questionnaires, click Add"></p-dropdown>
-                                    <button class="btn btn-primary w60 ml20">Add</button>
+                                        [style]="{'width':'100%'}" class="flex-1" placeholder="{{ questionnaireOptions.length ? 'Select questionnaire from the list' : 'You have not created any questionnaires, click Add'}}"></p-dropdown>
+                                    <button class="btn btn-primary w60 ml20" routerLink="/dashboard/questionnaires/new">Add</button>
                                 </div>
                             </div>
                         </div>

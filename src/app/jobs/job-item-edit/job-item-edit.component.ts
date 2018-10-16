@@ -1,3 +1,5 @@
+import { Questionnaire } from './../../models/questionnaire';
+import { QuestionnaireService } from './../../services/questionnaire.service';
 import { FormHelperService } from '../../services/form-helper.service';
 import { User } from '../../models/user';
 import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
@@ -55,6 +57,7 @@ export class JobItemEditComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private jobService: JobService,
+        private questionnaireService: QuestionnaireService,
         private fb: FormBuilder,
         private router: Router,
         private formHelper: FormHelperService
@@ -127,7 +130,12 @@ export class JobItemEditComponent implements OnInit {
             { label: 'Default', value: 'default' }
         ];
 
+
         this.questionnaireOptions = [];
+        this.questionnaireService.getAll()
+            .subscribe((questionnaires: Questionnaire[]) => {
+                questionnaires.forEach(q => this.questionnaireOptions.push({label: q.title, value: q.id}));
+            });
 
         this.applicationFieldsOptions = [
             { label: 'Required', value: 'required' },
@@ -241,7 +249,7 @@ export class JobItemEditComponent implements OnInit {
             application_field_work_history: [this.job.application_field_work_history],
             application_field_education: [this.job.application_field_education],
             application_field_cover_letter: [this.job.application_field_cover_letter],
-            questionnaire: [{ value: this.job.questionnaire, disabled: true }]
+            questionnaire: [{ value: this.job.questionnaire, disabled: false }]
         });
         this.hiringForm = this.fb.group({
             hiring_managers: [this.job.hiring_managers],

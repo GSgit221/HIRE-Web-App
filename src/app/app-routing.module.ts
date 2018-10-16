@@ -1,3 +1,4 @@
+import { QuestionnaireNewComponent } from './settings/questionnaires/questionnaire-new/questionnaire-new.component';
 import { ApplicationsSigninComponent } from './applications/auth/signin/signin.component';
 import { ApplicationsSignupComponent } from './applications/auth/signup/signup.component';
 import { JobApplicationComponent } from './applications/job-application/job-application.component';
@@ -61,6 +62,9 @@ const appRoutes: Routes = [
         }, {
             path: 'questionnaires',
             component: QuestionnairesListComponent
+        }, {
+            path: 'questionnaires/new',
+            component: QuestionnaireNewComponent
         }, {
             path: 'questionnaires/:id/questions',
             component: QuestionsListComponent

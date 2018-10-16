@@ -1,23 +1,21 @@
 <div class="container fixed-width-container mh500">
     <div class="pages-nav">
-        <button class="back-btn">
+        <button class="back-btn" routerLink="/dashboard/questionnaires">
             <span class="icon"><img src="assets/images/left.svg" height="16px" alt="Left icon"></span>
             <span class="text">Questionnaires</span>
         </button>
     </div>
     <div class="title-block">
-        <h1 class="page-title">Graduate Recruit Program</h1>
+        <h1 class="page-title">{{questionnaire?.title}}</h1>
         <div class="buttons-holder">
-            <button class="btn btn-primary w140 mla" routerLink="/dashboard/questionnaires/sa/questions/new">Add New Question</button>
+            <button class="btn btn-primary w140 mla" [routerLink]="'/dashboard/questionnaires/' + questionnaireId + '/questions/new'">Add New Question</button>
         </div>
     </div>
     <div>
         <div class="hc-list">
             <div class="hc-selected-items" *ngIf="selectedItems">
                 <div class="text-block">
-                    <p>
-                        {{selectedItems}} items selected
-                    </p>
+                    <p>{{selectedItems}} items selected</p>
                 </div>
                 <span class="delete-ico" (click)="onItemsBulkRemove()">
                     <svg width="16px" height="20px" viewBox="0 0 8 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -55,16 +53,14 @@
                             </div>
                         </div>
                         <div class="col col2 flex-60">
-                            <p class="hc-content-p">{{item.title}}</p>
+                            <p class="hc-content-p">{{item.question}}</p>
                         </div>
                         <div class="col col3  flex-20">
-                            <p class="hc-content-p">
-                                {{item.type}}
-                            </p>
+                            <p class="hc-content-p">{{item.type | titlecase}} Choice</p>
                         </div>
                         <div class="col col4 flex-15">
-                            <img *ngIf="item.knockout" src="/assets/images/checkmark.svg" alt="Check icon">
-                            <img *ngIf="!item.knockout" src="/assets/images/delete_sign.svg" alt="Delete icon">
+                            <img *ngIf="item.answer_is_knockout1 || item.answer_is_knockout2" src="/assets/images/checkmark.svg" alt="Check icon">
+                            <img *ngIf="!(item.answer_is_knockout1 || item.answer_is_knockout2)" src="/assets/images/delete_sign.svg" alt="Delete icon">
                         </div>
                     </div>
                 </div>

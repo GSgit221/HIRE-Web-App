@@ -1,6 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import { Questionnaire } from './../../../models/questionnaire';
+import { QuestionnaireService } from './../../../services/questionnaire.service';
+import { Component, OnInit } from '@angular/core';
 import * as closest from 'closest';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -9,30 +11,40 @@ import {Router} from '@angular/router';
     styleUrls: ['./questionnaires-list.component.scss']
 })
 export class QuestionnairesListComponent implements OnInit {
-    contentLoading = false;
-    list = [];
+    contentLoading = true;
+    list: Questionnaire[] = [];
     selectedAll = false;
     selectedItems = 0;
-    constructor(private router: Router) {
+    constructor(
+        private router: Router,
+        private questionnaireService: QuestionnaireService
+    ) {
+        this.questionnaireService.getAll()
+            .subscribe((response: Questionnaire[]) => {
+                console.log('Questionnaires', response);
+                this.contentLoading = false;
+                if (response) {
+                    this.list = response;
+                }
+
+            }, error => console.error(error));
     }
 
     ngOnInit() {
-        this.list = [
-            {title: 'Senior System Engineer', id: 1, countQuestions: 4, created: 'May 12, 2018'},
-            {title: 'Senior  Engineer', id: 2, countQuestions: 5, created: 'May 14, 2018'},
-            {title: 'System Engineer', id: 3, countQuestions: 6, created: 'May 18, 2018'}
-        ];
+        // this.list = [
+        //     {title: 'Senior System Engineer', id: 1, countQuestions: 4, created: 'May 12, 2018'},
+        //     {title: 'Senior  Engineer', id: 2, countQuestions: 5, created: 'May 14, 2018'},
+        //     {title: 'System Engineer', id: 3, countQuestions: 6, created: 'May 18, 2018'}
+        // ];
     }
     onItemClick(event, item) {
-        console.log('onItemClick');
         event.preventDefault();
         const target = event.target;
         const escapeDD = closest(event.target, '[data-escape-click]');
         if (escapeDD) {
             console.log('DO NOTHING');
         } else {
-            console.log('REDIRECT');
-            this.router.navigate([`/dashboard/questionnaires/${item.id}/questions/new`]);
+            this.router.navigate([`/dashboard/questionnaires/${item.id}/questions`]);
         }
     }
     onSelectAllChange() {
@@ -55,7 +67,16 @@ export class QuestionnairesListComponent implements OnInit {
     onItemsBulkRemove() {
         this.contentLoading = true;
         const itemsToRemove = this.list.filter(item => item.selected).map(item => item.id);
-        console.log(itemsToRemove);
+        this.questionnaireService.bulkDelete(itemsToRemove)
+            .subscribe(() => {
+                this.questionnaireService.getAll()
+                    .subscribe((response: Questionnaire[]) => {
+                        this.contentLoading = false;
+                        this.list = response;
+                        this.calculateSelectedItems();
+
+                    }, error => console.error(error));
+            });
     }
 
 }

@@ -1,14 +1,16 @@
 <div class="container fixed-width-container">
     <div class="pages-nav">
-        <button class="back-btn">
+        <button class="back-btn" [routerLink]="'/dashboard/questionnaires/' + questionnaireId + '/questions'">
             <span class="icon"><img src="assets/images/left.svg" height="16px" alt="Left icon"></span>
-            <span class="text">Graduate Recruit Program</span>
+            <span class="text">{{questionnaire?.title}}</span>
         </button>
     </div>
     <div class="title-block">
-        <h1 class="page-title">New Question</h1>
+        <h1 class="page-title">
+            <span *ngIf="!initialLoading">{{ question && question.question ? question.question : 'New Question'}}</span>
+        </h1>
         <div class="buttons-holder">
-            <button class="btn btn-icon"><span class="text">Save</span></button>
+            <!-- <button class="btn btn-icon"><span class="text">Save</span></button> -->
             <button class="btn btn-primary ml20 w140" (click)="onSave()">Save and Close</button>
         </div>
     </div>
@@ -52,8 +54,7 @@
                                     <div class="input-block right-option-block">
                                         <label class="form-block-label">Answer <span *ngIf="typeQuestion === 'multiple'">1</span></label>
                                         <div class="input-block">
-                                            <input type="text" class="form-input" formControlName="answer"
-                                                   placeholder="Yes"/>
+                                            <input type="text" class="form-input" formControlName="answer">
                                             <div class="right-option">
                                                 <p-checkbox label="Knockout" formControlName="answer_is_knockout1"
                                                             binary="true"></p-checkbox>
@@ -66,8 +67,7 @@
                                     <div class="input-block right-option-block">
                                         <label class="form-block-label">Answer 2</label>
                                         <div class="input-block">
-                                            <input type="text" class="form-input" formControlName="answer2"
-                                                   placeholder="No"/>
+                                            <input type="text" class="form-input" formControlName="answer2">
                                             <div class="right-option">
                                                 <p-checkbox label="Knockout" formControlName="answer_is_knockout2"
                                                             binary="true"></p-checkbox>
@@ -92,3 +92,4 @@
         </form>
     </div>
 </div>
+<app-loader *ngIf="contentLoading"></app-loader>

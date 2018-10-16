@@ -1,6 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import { Questionnaire } from './../../../models/questionnaire';
+import { QuestionnaireService } from './../../../services/questionnaire.service';
+import { Component, OnInit } from '@angular/core';
 import * as closest from 'closest';
-import {Router} from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Question } from 'src/app/models/question';
 
 @Component({
     selector: 'app-questions-list',
@@ -8,18 +11,39 @@ import {Router} from '@angular/router';
     styleUrls: ['./questions-list.component.scss']
 })
 export class QuestionsListComponent implements OnInit {
-    contentLoading = false;
+    questionnaireId: string;
+    contentLoading = true;
     list = [];
     selectedAll = false;
     selectedItems = 0;
-    constructor(private router: Router) {
+    questionnaire: Questionnaire;
+    questions: Question[] = [];
+
+
+
+    constructor(
+        private questionnaireService: QuestionnaireService,
+        private router: Router,
+        private route: ActivatedRoute
+    ) {
+        this.questionnaireId = this.route.snapshot.paramMap.get('id');
+        this.questionnaireService.getById(this.questionnaireId)
+            .subscribe((questionnaire: Questionnaire) => {
+                this.questionnaire = questionnaire;
+                console.log(this.questionnaire);
+            });
+        this.questionnaireService.getQuestions(this.questionnaireId)
+            .subscribe((questions: Question[]) => {
+                this.list = questions;
+                console.log(this.list);
+                this.contentLoading = false;
+            });
+
     }
 
-    ngOnInit() {
-        this.list = [{title: 'Are you a South African citizen or are you legally allowed to work in South Africa?', id: 1, type: 'Multiple Choice', knockout: true},
-            {title: 'Graduate Recruit Program', id: 2, type: '', knockout: false}
-        ];
-    }
+    ngOnInit() {}
+
+
     onItemClick(event, item) {
         console.log('onItemClick');
         event.preventDefault();
@@ -29,9 +53,11 @@ export class QuestionsListComponent implements OnInit {
             console.log('DO NOTHING');
         } else {
             console.log('REDIRECT');
-            this.router.navigate([`/dashboard/questionnaires/${item.id}/questions/new`]);
+            this.router.navigate([`/dashboard/questionnaires/${this.questionnaireId}/questions/${item.id}`]);
         }
     }
+
+
     onSelectAllChange() {
         if (this.selectedAll) {
             this.list.forEach(item => item.selected = true);
@@ -40,19 +66,36 @@ export class QuestionsListComponent implements OnInit {
         }
         this.calculateSelectedItems();
     }
+
+
     private calculateSelectedItems() {
         this.selectedItems = this.list.filter(item => item.selected).length;
         if (!this.selectedItems) {
             this.selectedAll = false;
         }
     }
+
+
     onItemSeletectedChange() {
         this.calculateSelectedItems();
     }
+
+
     onItemsBulkRemove() {
         this.contentLoading = true;
         const itemsToRemove = this.list.filter(item => item.selected).map(item => item.id);
         console.log(itemsToRemove);
+
+        this.questionnaireService.questionsBulkDelete(this.questionnaireId, itemsToRemove)
+            .subscribe(() => {
+                this.questionnaireService.getQuestions(this.questionnaireId)
+                    .subscribe((questions: Question[]) => {
+                        this.list = questions;
+                        console.log(this.list);
+                        this.contentLoading = false;
+                        this.calculateSelectedItems();
+                    }, error => console.error(error));
+            });
     }
 
 }

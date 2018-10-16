@@ -46,7 +46,7 @@ export class JobItemViewComponent implements OnInit {
 
         this.jobService.getUsers().subscribe((users: User[]) => {
             this.users = users || [];
-            console.log(this.users);
+            // console.log(this.users);
         });
     }
     ngOnInit() {
@@ -56,7 +56,7 @@ export class JobItemViewComponent implements OnInit {
         this.appliedStage = this.job.stages.find(stage => stage.id === 'applied');
         this.stages = this.job.stages.filter(stage => stage.id !== 'applied');
         this.jobService.getCandidates(this.job.id).subscribe((candidates: JobCandidate[]) => {
-            console.log(candidates);
+            // console.log(candidates);
             this.candidates = candidates;
         });
         this.resumeThreshold = this.getJobResumeMatchingThreshold();
@@ -90,7 +90,6 @@ export class JobItemViewComponent implements OnInit {
     }
 
     onSettigsClick(stageId: string) {
-        console.log('Clicked on stage settings:', stageId);
         this.router.navigateByUrl(`dashboard/jobs/${this.job.id}/stages/${stageId}`);
     }
 
@@ -134,13 +133,12 @@ export class JobItemViewComponent implements OnInit {
 
     onAddHiringManagerClick(event) {
         event.preventDefault();
-        console.log('clicked');
         this.router.navigateByUrl(`dashboard/jobs/${this.job.id}?section=hiring-team&editMode=true`);
     }
 
     onFinishedCandidatesCreation(event) {
         this.jobService.getCandidates(this.job.id).subscribe((candidates: any[]) => {
-            console.log(candidates);
+            // console.log(candidates);
             this.candidates = candidates;
         });
         this.createCandidateMode = false;
@@ -148,7 +146,7 @@ export class JobItemViewComponent implements OnInit {
 
     onDropFile(event) {
         const files = event.target.files || event.dataTransfer.files;
-        console.log('📥 onDropFiles', files);
+        // console.log('📥 onDropFiles', files);
         this.droppedFiles = files;
         this.createCandidateMode = true;
     }
@@ -166,7 +164,7 @@ export class JobItemViewComponent implements OnInit {
     }
 
     onCandidateDrop(event, stageId) {
-        console.log('drop', event.dragData, stageId);
+        // console.log('drop', event.dragData, stageId);
         const candidate = event.dragData;
         const candidateIndex = this.candidates.findIndex(c => c.id === candidate.id);
         this.candidates[candidateIndex].stage[this.job.id] = stageId;

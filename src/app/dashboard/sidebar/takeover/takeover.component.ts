@@ -20,7 +20,6 @@ export class TakeoverComponent implements OnInit {
     form: FormGroup;
     @Input()
     set users(users: User[]) {
-        console.log('SET users', users);
         if (users) {
             this._users = users.map((u: User) => {
                 u.full_str = `${u.email} ${u.first_name} ${u.last_name}`;

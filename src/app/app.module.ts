@@ -73,6 +73,7 @@ import { FileTypeComponent } from './shared/file-type/file-type.component';
 import { LoaderComponent } from './shared/loader/loader.component';
 import { MultiSelectComponent } from './shared/multi-select/multi-select.component';
 import { ProgressCircleComponent } from './shared/progress-circle/progress-circle.component';
+import { QuestionnaireNewComponent } from './settings/questionnaires/questionnaire-new/questionnaire-new.component';
 
 
 export function provideConfig() {
@@ -125,7 +126,8 @@ export function provideConfig() {
         ProgressCircleComponent,
         CandidateFitCircleComponent,
         JobItemNewComponent,
-        TakeoverComponent
+        TakeoverComponent,
+        QuestionnaireNewComponent
     ],
     imports: [
         AppRoutingModule,
