@@ -148,6 +148,8 @@ export class CandidateItemComponent implements OnInit {
                         item.success = true;
                         clearInterval(uploadProgressInterval);
                         this.candidate = Object.assign(this.candidate, resp.candidate);
+
+                        this.onChangeSection('details');
                         this.jobService.getCandidate(this.jobId, this.candidateId)
                             .subscribe((candidate: JobCandidate) => {
                                 this.candidate = candidate;
