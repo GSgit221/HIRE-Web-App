@@ -183,39 +183,3 @@ h2 {
     line-height: 1.2;
     font-weight: 400;
 }
-
-.status-circle {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    width: 36px;
-    height: 36px;
-    border: 3px solid transparent;
-    border-radius: 50%;
-    display: none;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    transform: translateY(-50%);
-    z-index: 2;
-
-    img {
-        display: none;
-    }
-
-    &.success {
-        display: flex;
-        border-color: $dark-green;
-        .success-img {
-            display: block;
-        }
-    }
-
-    &.warning {
-        display: flex;
-        border-color: $orange2;
-        .warning-img {
-            display: block;
-        }
-    }
-}

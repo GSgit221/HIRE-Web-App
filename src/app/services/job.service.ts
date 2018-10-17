@@ -138,6 +138,10 @@ export class JobService {
         return this.http.post(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/candidates/cv`, formData);
     }
 
+    updateCandidateWithCv(jobId: string, candidateId: string, formData: object) {
+        return this.http.put(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/candidates/${candidateId}/cv`, formData);
+    }
+
     deleteCandidate(jobId: string, candidateId: string) {
         return this.http.delete(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/candidates/${candidateId}`);
     }

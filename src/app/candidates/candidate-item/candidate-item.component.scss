@@ -1,9 +1,11 @@
 @import "../../../styles/variables.scss";
+
 .wrap-block.hide {
     .content-text {
         display: none;
     }
 }
+
 .candidate-header {
     display: flex;
 
@@ -258,20 +260,23 @@
     justify-content: flex-start;
     margin: 0 0 30px;
     padding: 0 0 0;
+
     .candidate-wrapper {
         flex: 0 0 50%;
         position: relative;
+
         &:last-child {
             padding: 0 0 0 15px;
-        &:after {
-            content: '';
-            position: absolute;
-            width: 2px;
-            height: calc(100% - 12px);
-            background: $grey;
-            top: 50%;
-            left: 0;
-            transform: translate(0, -50%);
+
+            &:after {
+                content: '';
+                position: absolute;
+                width: 2px;
+                height: calc(100% - 12px);
+                background: $grey;
+                top: 50%;
+                left: 0;
+                transform: translate(0, -50%);
             }
         }
     }
@@ -551,5 +556,72 @@
         font-size: 12px;
         font-style: normal;
         color: $grey;
+    }
+}
+
+.upload-block {
+    margin: 0 0 30px;
+
+    .drop-block {
+        width: 100%;
+        border: 2px dotted $grey-border;
+        background: $white;
+        border-radius: 5px;
+        padding: 15px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        transition: all 0.3s ease;
+
+        .icon {
+            margin: 0 20px 0 0;
+        }
+
+        .title {
+            display: block;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &.over {
+            background: $grey-border;
+        }
+    }
+}
+
+.file-block {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+    margin: 0 0 20px;
+
+    app-resume-file-type {
+        width: 30px;
+        height: 30px;
+        position: relative;
+        margin: 0 20px 0 0;
+    }
+
+    .title {
+        display: block;
+    }
+
+    p {
+        font-size: 11px;
+        line-height: 12px;
+        color: $grey;
+        margin: 0;
+    }
+
+    &:hover {
+        cursor: pointer;
     }
 }

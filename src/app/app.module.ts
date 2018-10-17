@@ -1,3 +1,4 @@
+import { ResumeFileTypeComponent } from './shared/resume-file-type/resume-file-type.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -123,6 +124,7 @@ export function provideConfig() {
         NewCandidateItemComponent,
         UploadFileNamePipe,
         FileTypeComponent,
+        ResumeFileTypeComponent,
         ProgressCircleComponent,
         CandidateFitCircleComponent,
         JobItemNewComponent,

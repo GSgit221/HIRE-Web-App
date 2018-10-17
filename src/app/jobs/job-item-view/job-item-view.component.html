@@ -73,7 +73,7 @@
                         draggable
                         [dragData]="candidate"
                     >
-                        <div class="warning-block"><div class="warning-block-holder"><span>!</span></div></div>
+                        <div class="warning-block" *ngIf="!candidate.resume_file"><div class="warning-block-holder"><span>!</span></div></div>
                         <div class="compliance-rate" 
                             [attr.data-score]="candidate.score"
                             [ngClass]="{'green': candidate.score >= resumeThreshold, 'orange': candidate.score >= (resumeThreshold - 15) && candidate.score <
@@ -91,18 +91,18 @@
                                 {{candidate.employment_history[0].company}}</span>
                             <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
                             <div class="stats-actions-block">
-                                <div class="text-with-icon flex-row flex-aic">
+                                <div class="text-with-icon flex-row flex-aic" *ngIf="candidate.created_at_rel">
                                     <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10">
                                     <p>{{candidate.created_at_rel}}</p>
                                 </div>
-                                <div class="text-with-icon flex-row flex-aic ml20">
+                                <div class="text-with-icon flex-row flex-aic ml20" *ngIf="candidate.updated_at_rel">
                                     <img src="/assets/images/update.svg" class="icon" alt="" width="12" height="13">
                                     <p>{{candidate.updated_at_rel}}</p>
                                 </div>
                                 <div class="actions mla">
-                                    <span class="icon-btn">
+                                    <!-- <span class="icon-btn">
                                         <img src="/assets/images/refresh.svg" alt="" width="10" height="10">
-                                    </span>
+                                    </span> -->
                                     <span class="icon-btn ml10" (click)="onDeleteCandidateClick($event, candidate.id)">
                                         <img src="/assets/images/delete.svg" alt="" width="10" height="10">
                                     </span>
@@ -139,18 +139,18 @@
                             <span class="position" *ngIf="candidate.employment_history">{{candidate.employment_history[0].title}} @ {{candidate.employment_history[0].company}}</span>
                             <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
                             <div class="stats-actions-block">
-                                <div class="text-with-icon flex-row flex-aic">
+                                <div class="text-with-icon flex-row flex-aic" *ngIf="candidate.created_at_rel">
                                     <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10">
                                     <p>{{candidate.created_at_rel}}</p>
                                 </div>
-                                <div class="text-with-icon flex-row flex-aic ml20">
+                                <div class="text-with-icon flex-row flex-aic ml20" *ngIf="candidate.updated_at_rel">
                                     <img src="/assets/images/update.svg" class="icon" alt="" width="12" height="13">
                                     <p>{{candidate.updated_at_rel}}</p>
                                 </div>
                                 <div class="actions mla">
-                                    <span class="icon-btn">
-                                        <img src="/assets/images/refresh.svg" alt="" width="10" height="10">
-                                    </span>
+                                    <!-- <span class="icon-btn">
+                                                                    <img src="/assets/images/refresh.svg" alt="" width="10" height="10">
+                                                                </span> -->
                                     <span class="icon-btn ml10" (click)="onDeleteCandidateClick($event, candidate.id)">
                                         <img src="/assets/images/delete.svg" alt="" width="10" height="10">
                                     </span>

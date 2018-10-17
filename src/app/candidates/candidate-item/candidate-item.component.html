@@ -66,6 +66,57 @@
                         <h3>Our Summary</h3>
                         <p>{{candidate.summary}}</p>
                     </ng-container> -->
+                    <div class="no-resume-block" *ngIf="!candidate.resume_file">
+                        <h3>Resume</h3>
+                        <div class="file-block" *ngFor="let uploadItem of uploadQueue">
+                            <app-resume-file-type [type]="uploadItem.file.type"></app-resume-file-type>
+                            <div class="file-block-holder">
+                                <strong class="title">{{uploadItem.text}}</strong>
+                                <p *ngIf="uploadItem.file && uploadItem.file.size">{{(uploadItem.file.size/1000000) | number : '1.2-2'}} MB</p>
+                            </div>
+                            <app-progress-circle class="mla" [progress]="uploadItem.progress" *ngIf="uploadItem.uploadStarted && !uploadItem.uploadFinished"></app-progress-circle>
+                            <div class="status-circle mla" [ngClass]="{'success': uploadItem.uploadFinished && uploadItem.success, 'warning': uploadItem.uploadFinished && !uploadItem.success}">
+                                <img class="success-img" src="/assets/images/check.svg" alt="" width="18" height="14">
+                                <img class="warning-img" src="/assets/images/exclamation-mark.svg" alt="" width="6"
+                                    height="17">
+                            </div>
+                        </div>
+                        <div class="upload-block">
+                            <div class="drop-block" appDragEnter (dropFile)="onDropFile($event)">
+                                <img src="/assets/images/warning.svg" class="icon" width="30" height="26" alt="warning">
+                                <div class="upload-block-holder">
+                                    <strong class="title">No Resume Found.</strong>
+                                    <p *ngIf="candidate.files && candidate.files.length">Either drag the correct document from the list below or <span class="hc-link">click to upload.</span></p>
+                                    <p *ngIf="!candidate.files || !candidate.files.length">Drop the correct document or <span class="hc-link">click to upload.</span></p>
+                                </div>
+                            </div>
+                            <div class="error-message" *ngIf="uploadError">{{uploadError}}</div>
+                        </div>
+                        <div *ngIf="candidate.files && candidate.files.length">
+                            <h3>Other Documents</h3>
+                            <div class="file-block">
+                                <app-resume-file-type [type]="'application/msword'"></app-resume-file-type>
+                                <div class="file-block-holder">
+                                    <strong class="title">CV Greg Kockott 2018</strong>
+                                    <p>3.2MB</p>
+                                </div>
+                            </div>
+                            <div class="file-block">
+                                <app-resume-file-type [type]="'application/msword'"></app-resume-file-type>
+                                <div class="file-block-holder">
+                                    <strong class="title">CV Greg Kockott 2018</strong>
+                                    <p>3.2MB</p>
+                                </div>
+                            </div>
+                            <div class="file-block">
+                                <app-resume-file-type [type]="'application/msword'"></app-resume-file-type>
+                                <div class="file-block-holder">
+                                    <strong class="title">CV Greg Kockott 2018</strong>
+                                    <p>3.2MB</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div *ngIf="candidate.matching && candidate.matching[jobId]">
                         <h3>AI Matching</h3>
                         <div class="matching-candidate">
@@ -73,7 +124,8 @@
                                 <app-candidate-fit-circle [value]="candidate.matching[jobId].WeightedScore" [title]="'Candidate Fit'"></app-candidate-fit-circle>
                             </div>
                             <div class="candidate-wrapper">
-                                <app-candidate-fit-circle [value]="candidate.matching[jobId].ReverseCompatibilityScore" [title]="'Job Fit'"></app-candidate-fit-circle>
+                                <app-candidate-fit-circle [value]="candidate.matching[jobId].ReverseCompatibilityScore"
+                                    [title]="'Job Fit'"></app-candidate-fit-circle>
                             </div>
                         </div>
                         <h4>Predictive Job Index</h4>
@@ -111,8 +163,7 @@
                     <div *ngIf="candidate.skills && candidate.skills.length">
                         <h3>Skills</h3>
                         <div class="skills-list">
-                            <div class="skill-name" *ngFor="let skill of candidate.skills"
-                            [ngClass]="{'green-bg': skill.percent_of_overall > 30, 'orange-bg': skill.percent_of_overall >= 15 && skill.percent_of_overall < 30}">{{skill.title}}</div>
+                            <div class="skill-name" *ngFor="let skill of candidate.skills" [ngClass]="{'green-bg': skill.percent_of_overall > 30, 'orange-bg': skill.percent_of_overall >= 15 && skill.percent_of_overall < 30}">{{skill.title}}</div>
                         </div>
                     </div>
                     <div *ngIf="candidate.employment_history && candidate.employment_history.length">
@@ -127,18 +178,9 @@
                                         <div class="position">{{work.title}}</div>
                                         <span>-</span>
                                         <div class="company">{{work.company}}</div>
-                                        <em class="date">{{work.start_date}} - {{work.end_date}}</em>
+                                        <em class="date">{{work.start_date || 'Unknown'}} - {{work.end_date || 'Unknown'}}</em>
                                     </div>
                                     <div class="description">{{work.description}}</div>
-                                </div>
-                                <div class="item">
-                                    <div class="detail">
-                                        <div class="position">Business Unit Director</div><span>-</span>
-                                        <div class="company">Penquin</div>
-                                        <em class="date">Jan 2003 - Feb 2010</em>
-                                    </div>
-                                    <div class="description">Hella narwhal Cosby sweater McSweeney's, salvia kitsch before they sold out High Life. Umami tattooed sriracha meggings pickled Marfa Blue Bottle High Life next level four loko PBR. Keytar pickled next level keffiyeh drinking vinegar street art. Art party vinyl Austin, retro whatever keytar mixtape. Pickled ethnic farm-to-table distillery ugh chia. Ethical Odd Future narwhal, mlkshk fap asymmetrical next level High Life literally cred blog. Banh mi swag art party, fashion axe you probably haven't heard of them stumptown tousled food truck post-ironic quinoa bicycle rights aesthetic keytar Pitchfork.
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -152,9 +194,10 @@
                             <div class="content-text education">
                                 <div class="item" *ngFor="let edu of candidate.education_history">
                                     <div class="institution">{{edu.school || 'Unknown school'}}</div>
-                                    <div class="degree" *ngIf="edu.degree"><strong>{{edu.area_of_study}}</strong> ({{edu.degree}})</div>
+                                    <div class="degree" *ngIf="edu.degree"><strong>{{edu.area_of_study}}</strong>
+                                        ({{edu.degree}})</div>
                                     <div class="degree" *ngIf="!edu.degree">Unknown Degree</div>
-                                    <em class="date" *ngIf="edu.start_date">{{edu.start_date}} - {{edu.end_date}}</em>
+                                    <em class="date" *ngIf="edu.start_date">{{edu.start_date || 'Unknown'}} - {{edu.end_date|| 'Unknown'}}</em>
                                 </div>
                             </div>
                         </div>
@@ -232,7 +275,8 @@
                                 <div class="timeline-item-content">
                                     <div class="timeline-item-header">
                                         <div class="timeline-item-heading">
-                                            <p><strong>Timothy Barnes </strong> on <strong>{{candidate.first_name}} {{candidate.last_name}}</strong></p>
+                                            <p><strong>Timothy Barnes </strong> on <strong>{{candidate.first_name}}
+                                                    {{candidate.last_name}}</strong></p>
                                         </div>
                                         <em class="date">13m ago</em>
                                     </div>
@@ -250,7 +294,8 @@
                                 <div class="timeline-item-content">
                                     <div class="timeline-item-header">
                                         <div class="timeline-item-heading">
-                                            <p><strong>{{candidate.first_name}} {{candidate.last_name}}</strong> was added to <strong>Graduate Recruit Program</strong> from <strong>Indeed.com</strong></p>
+                                            <p><strong>{{candidate.first_name}} {{candidate.last_name}}</strong> was
+                                                added to <strong>Graduate Recruit Program</strong> from <strong>Indeed.com</strong></p>
                                         </div>
                                         <em class="date">4d ago</em>
                                     </div>
