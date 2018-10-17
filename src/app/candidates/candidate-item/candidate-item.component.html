@@ -82,7 +82,13 @@
                             </div>
                         </div>
                         <div class="upload-block">
-                            <div class="drop-block" appDragEnter (dropFile)="onDropFile($event)">
+                            <div class="drop-block"
+                                appDragEnter
+                                (dropFile)="onDropFile($event)"
+                                droppable
+                                [dragOverClass]="'over'"
+                                (onDrop)="onDropFromFiles($event)"
+                            >
                                 <img src="/assets/images/warning.svg" class="icon" width="30" height="26" alt="warning">
                                 <div class="upload-block-holder">
                                     <strong class="title">No Resume Found.</strong>
@@ -94,26 +100,14 @@
                         </div>
                         <div *ngIf="candidate.files && candidate.files.length">
                             <h3>Other Documents</h3>
-                            <div class="file-block">
-                                <app-resume-file-type [type]="'application/msword'"></app-resume-file-type>
-                                <div class="file-block-holder">
-                                    <strong class="title">CV Greg Kockott 2018</strong>
-                                    <p>3.2MB</p>
-                                </div>
-                            </div>
-                            <div class="file-block">
-                                <app-resume-file-type [type]="'application/msword'"></app-resume-file-type>
-                                <div class="file-block-holder">
-                                    <strong class="title">CV Greg Kockott 2018</strong>
-                                    <p>3.2MB</p>
-                                </div>
-                            </div>
-                            <div class="file-block">
-                                <app-resume-file-type [type]="'application/msword'"></app-resume-file-type>
-                                <div class="file-block-holder">
-                                    <strong class="title">CV Greg Kockott 2018</strong>
-                                    <p>3.2MB</p>
-                                </div>
+                            <div class="file-block" *ngFor="let file of candidate.files" draggable [dragData]="file">
+                                <ng-container *ngIf="file && file.file_name">
+                                    <app-resume-file-type [type]="file.mimetype"></app-resume-file-type>
+                                    <div class="file-block-holder">
+                                        <strong class="title">{{file.file_name}}</strong>
+                                        <p *ngIf="file.size">{{(file.size/1000000) | number : '1.2-2'}} MB</p>
+                                    </div>
+                                </ng-container>
                             </div>
                         </div>
                     </div>

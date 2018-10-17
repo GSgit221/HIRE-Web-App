@@ -100,6 +100,20 @@ export class CandidateItemComponent implements OnInit {
         }
     }
 
+    onDropFromFiles(event: any) {
+        const file = event.dragData;
+        console.log(file);
+        // this.uploadQueue.push({
+        //     file: file,
+        //     uploadStarted: false,
+        //     uploadFinished: false,
+        //     progress: 0,
+        //     success: false,
+        //     text: file.file_name
+        // });
+        // this.processQueue();
+    }
+
     onDropFile(event) {
         const files = event.target.files || event.dataTransfer.files;
         console.log('📥 onDropFile', files);

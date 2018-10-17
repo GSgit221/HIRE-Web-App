@@ -57,7 +57,7 @@ export class DragEnterDirective implements OnInit {
                 && e.dataTransfer
                 && e.dataTransfer.items[0]
                 && e.dataTransfer.items[0].type ? e.dataTransfer.items[0].type : null;
-            console.log(fileType);
+            // console.log(fileType);
             if (fileType && fileType !== 'text/plain') {
                 if (e.stopPropagation) {
                     e.stopPropagation(); // Stops some browsers from redirecting.
