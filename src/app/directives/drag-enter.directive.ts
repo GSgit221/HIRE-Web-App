@@ -34,12 +34,13 @@ export class DragEnterDirective implements OnInit {
         });
 
         el.addEventListener('dragover', (e) => {
-            const fileType = e.dataTransfer
-                && e.dataTransfer.items
-                && e.dataTransfer
-                && e.dataTransfer.items[0]
-                && e.dataTransfer.items[0].type ? e.dataTransfer.items[0].type : null;
-            if (fileType && fileType !== 'text/plain') {
+            // const fileType = e.dataTransfer
+            //     && e.dataTransfer.items
+            //     && e.dataTransfer.items[0]
+            //     && e.dataTransfer.items[0].type ? e.dataTransfer.items[0].type : null;
+
+            const type = e.dataTransfer && e.dataTransfer.types && e.dataTransfer.types[0] ? e.dataTransfer.types[0] : null;
+            if (type === 'Files') {
                 el.classList.add('over');
                 if (e.preventDefault) {
                     e.preventDefault();
