@@ -168,7 +168,7 @@ export class NewCandidateItemComponent implements OnInit {
                         this.emails.push(resp.candidate.email);
                     }, error => {
                         console.error(error);
-                        item.text = error && error.error && error.error.message ? error.error.error.message : 'Error';
+                        item.text = error && error.error && error.error.error ? error.error.error : 'Error';
                         item.progress = 100;
                         item.uploadFinished = true;
                         clearInterval(uploadProgressInterval);
