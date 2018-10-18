@@ -76,7 +76,9 @@ export class JobItemViewComponent implements OnInit {
                         sC.push(c);
                     }
                 } else {
-                    sC.push(c);
+                    if (stageName === 'applied') {
+                        sC.push(c);
+                    }
                 }
             });
             return sC;
