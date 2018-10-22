@@ -49,6 +49,12 @@ export class CandidateItemComponent implements OnInit {
                 console.log(this.candidate);
                 setTimeout(() => this.contentLoading = false, 200);
                 console.log('FROM ROUTE-------------------- JOB:', this.jobId, this.candidateId);
+
+
+
+                if (!this.candidate.resume_file) {
+                    this.activeSection = 'attachments';
+                }
             });
 
         this.supportedFileTypes = [
@@ -66,6 +72,9 @@ export class CandidateItemComponent implements OnInit {
 
     onChangeSection(section: string) {
         this.activeSection = section;
+        if (!this.candidate.resume_file) {
+            this.activeSection = 'attachments';
+        }
     }
 
 
@@ -92,12 +101,12 @@ export class CandidateItemComponent implements OnInit {
                     success: false,
                     text: file.name
                 });
-                this.processQueue();
             } else {
                 this.uploadError = 'Only supported formats are: pdf, doc, docx, rtf, odt';
                 setTimeout(() => this.uploadError = null, 10000);
             }
         }
+        this.processQueue();
     }
 
     onDropFromFiles(event: any) {

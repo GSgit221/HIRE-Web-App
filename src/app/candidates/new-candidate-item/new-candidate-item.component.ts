@@ -123,12 +123,12 @@ export class NewCandidateItemComponent implements OnInit {
                     success: false,
                     text: file.name
                 });
-                this.processQueue();
             } else {
                 this.uploadError = 'Only supported formats are: pdf, doc, docx, rtf, odt';
                 setTimeout(() => this.uploadError = null, 10000);
             }
         }
+        this.processQueue();
     }
 
     onDropFile(event) {

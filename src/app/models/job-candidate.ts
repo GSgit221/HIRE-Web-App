@@ -4,4 +4,5 @@ export class JobCandidate {
     last_name: string;
     email: string;
     stage: any;
+    resume_file?: string;
 }

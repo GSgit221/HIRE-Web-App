@@ -56,7 +56,6 @@ export class JobItemNewComponent implements OnInit {
 
     processFiles(files) {
         for (let i = 0, file; file = files[i]; i++) {
-            console.log(file);
             if (this.validateFileType(file, this.supportedFileTypes)) {
                 // ADD TO THE QUEUE
                 console.log('We need to upload that file 🎈');
@@ -68,12 +67,12 @@ export class JobItemNewComponent implements OnInit {
                     success: false,
                     text: file.name
                 });
-                this.processQueue();
             } else {
                 this.uploadError = 'Only supported formats are: pdf, doc, docx, rtf, odt';
                 setTimeout(() => this.uploadError = null, 10000);
             }
         }
+        this.processQueue();
     }
 
     onDropFile(event) {
@@ -99,8 +98,8 @@ export class JobItemNewComponent implements OnInit {
             .then(fileValue => {
                 item.uploadStarted = true;
                 const uploadProgressInterval = setInterval(() => {
-                    item.progress = (item.progress + 1 < 97) ? item.progress + 1 : 90;
-                }, 200);
+                    item.progress = (item.progress + 1 < 99) ? item.progress + 1 : 90;
+                }, 800);
                 this.jobService.createJobFromCv({ file: fileValue })
                     .subscribe((response: HttpResponse<any>) => {
                         console.log('📬 Uploaded:', response);

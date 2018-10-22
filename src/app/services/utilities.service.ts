@@ -9,7 +9,7 @@ export class UtilitiesService {
 
     readFile(file) {
         return new Promise((resolve, reject) => {
-            console.log(file);
+            // console.log(file);
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = () => {
