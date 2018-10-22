@@ -157,8 +157,4 @@ export class JobService {
     updateCandidateStage(jobId: string, candidateId: string, stage: any) {
         return this.http.put(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/candidates/${candidateId}`, {data: {stage}});
     }
-
-    updateMatching(jobId: string) {
-        return this.http.get(`${environment.api_url}/tenants/${environment.tenant}/jobs/${jobId}/matching`);
-    }
 }
