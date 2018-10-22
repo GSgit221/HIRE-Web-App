@@ -102,12 +102,12 @@
                     </div>
                 </div>
                 <div class="content-section" *ngIf="activeSection === 'details'">
-                    <div class="wrap-block" *ngIf="candidate.summary">
+                    <div class="wrap-block" *ngIf="candidate.executive_summary">
                         <div class="wrap-title">
                             <h3>Summary</h3>
                             <button class="hide-btn" appToggleDetails></button>
                         </div>
-                        <p class="content-text content-summary">{{candidate.summary}}</p>
+                        <p class="content-text content-summary">{{candidate.executive_summary}}</p>
                     </div>
                     <div *ngIf="candidate.skills && candidate.skills.length">
                         <h3>Skills</h3>

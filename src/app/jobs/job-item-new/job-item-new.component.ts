@@ -99,7 +99,7 @@ export class JobItemNewComponent implements OnInit {
                 item.uploadStarted = true;
                 const uploadProgressInterval = setInterval(() => {
                     item.progress = (item.progress + 1 < 99) ? item.progress + 1 : 90;
-                }, 800);
+                }, 400);
                 this.jobService.createJobFromCv({ file: fileValue })
                     .subscribe((response: HttpResponse<any>) => {
                         console.log('📬 Uploaded:', response);
