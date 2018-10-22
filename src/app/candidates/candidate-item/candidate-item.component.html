@@ -62,10 +62,10 @@
             <div class="section-separator mb20"></div>
             <div class="candidate-content">
                 <div class="content-section" *ngIf="activeSection === 'overview'">
-                    <!-- <ng-container *ngIf="candidate.summary">
+                    <ng-container *ngIf="candidate.summary">
                         <h3>Our Summary</h3>
                         <p>{{candidate.summary}}</p>
-                    </ng-container> -->
+                    </ng-container>
                     <div class="no-resume-block" *ngIf="!candidate.resume_file">
                         <h3>Resume</h3>
                         <div class="file-block" *ngFor="let uploadItem of uploadQueue">

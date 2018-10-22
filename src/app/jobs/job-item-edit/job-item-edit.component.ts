@@ -325,10 +325,10 @@ export class JobItemEditComponent implements OnInit {
                 console.log('RESPONSE FROM SAVE CALL:', job);
                 this.contentLoading = false;
 
-                if (this.job.status === 'LIVE') {
-                    this.jobService.updateMatching(this.job.id)
-                        .subscribe(() => console.log(`Job ${this.job.id} matching was updated`));
-                }
+                // if (this.job.status === 'LIVE') {
+                //     this.jobService.updateMatching(this.job.id)
+                //         .subscribe(() => console.log(`Job ${this.job.id} matching was updated`));
+                // }
 
 
                 if (job.created && job.id) {
