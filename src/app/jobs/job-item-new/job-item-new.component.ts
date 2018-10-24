@@ -98,7 +98,7 @@ export class JobItemNewComponent implements OnInit {
             .then(fileValue => {
                 item.uploadStarted = true;
                 const uploadProgressInterval = setInterval(() => {
-                    item.progress = (item.progress + 1 < 99) ? item.progress + 1 : 90;
+                    item.progress = (item.progress + 1 < 100) ? item.progress + 1 : 90;
                 }, 400);
                 this.jobService.createJobFromCv({ file: fileValue })
                     .subscribe((response: HttpResponse<any>) => {

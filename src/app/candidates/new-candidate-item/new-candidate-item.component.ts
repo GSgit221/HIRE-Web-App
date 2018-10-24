@@ -154,8 +154,8 @@ export class NewCandidateItemComponent implements OnInit {
             .then(fileValue => {
                 item.uploadStarted = true;
                 const uploadProgressInterval = setInterval(() => {
-                    item.progress = (item.progress + 1 < 97) ? item.progress + 1 : item.progress;
-                }, 200);
+                    item.progress = (item.progress + 1 < 100) ? item.progress + 1 : item.progress;
+                }, 400);
                 this.jobService.createCandidateFromCv(this.jobId, { resume: fileValue})
                     .subscribe((response: HttpResponse<any>) => {
                         console.log('📬 Uploaded:', response);
