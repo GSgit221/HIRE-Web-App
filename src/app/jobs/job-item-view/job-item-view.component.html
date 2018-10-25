@@ -88,9 +88,9 @@
                             </div>
                         </div>
                         <div class="block-content">
-                            <strong class="title">{{candidate.first_name}} {{candidate.last_name}}</strong>
-                            <span class="position" *ngIf="candidate.employment_history">{{candidate.employment_history[0].title}} @
-                                {{candidate.employment_history[0].company}}</span>
+                            <strong class="title">{{candidate.first_name | titlecase}} {{candidate.last_name | titlecase}}</strong>
+                            <span class="position" *ngIf="candidate.employment_history">{{candidate.employment_history[0].title | titlecase}} @
+                                {{candidate.employment_history[0].company | titlecase}}</span>
                             <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
                             <div class="stats-actions-block">
                                 <div class="text-with-icon flex-row flex-aic" *ngIf="candidate.created_at_rel">
@@ -157,8 +157,8 @@
                             </div>
                         </div>
                         <div class="block-content">
-                            <strong class="title">{{candidate.first_name}} {{candidate.last_name}}</strong>
-                            <span class="position" *ngIf="candidate.employment_history">{{candidate.employment_history[0].title}} @ {{candidate.employment_history[0].company}}</span>
+                            <strong class="title">{{candidate.first_name | titlecase}} {{candidate.last_name | titlecase}}</strong>
+                            <span class="position" *ngIf="candidate.employment_history">{{candidate.employment_history[0].title | titlecase}} @ {{candidate.employment_history[0].company | titlecase}}</span>
                             <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
                             <div class="stats-actions-block">
                                 <div class="text-with-icon flex-row flex-aic" *ngIf="candidate.created_at_rel">

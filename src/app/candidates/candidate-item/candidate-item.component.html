@@ -17,7 +17,7 @@
                     <span>{{candidate | initials}}</span>
                 </div>
                 <div class="information-block">
-                    <div class="name">{{candidate.first_name}} {{candidate.last_name }}</div>
+                    <div class="name">{{candidate.first_name | titlecase}} {{candidate.last_name | titlecase}}</div>
                     <div class="detail-information">
                         <img src="assets/images/email-send.svg" height="13px" alt="Email icon">
                         <p><a href="mailto:greg@hellocrowd.net">{{candidate.email}}</a></p>
@@ -124,9 +124,9 @@
                             <div class="content-text experience">
                                 <div class="item" *ngFor="let work of candidate.employment_history">
                                     <div class="detail">
-                                        <div class="position">{{work.title}}</div>
+                                        <div class="position">{{work.title | titlecase}}</div>
                                         <span>-</span>
-                                        <div class="company">{{work.company}}</div>
+                                        <div class="company">{{work.company | titlecase}}</div>
                                         <em class="date">{{work.start_date || 'Unknown'}} - {{work.end_date || 'Unknown'}}</em>
                                     </div>
                                     <div class="description">{{work.description}}</div>
@@ -294,8 +294,7 @@
                                 <div class="timeline-item-content">
                                     <div class="timeline-item-header">
                                         <div class="timeline-item-heading">
-                                            <p><strong>{{candidate.first_name}} {{candidate.last_name}}</strong> was
-                                                added to <strong>Graduate Recruit Program</strong> from <strong>Indeed.com</strong></p>
+                                            <p><strong>{{candidate.first_name}} {{candidate.last_name}}</strong> was added to <strong>Graduate Recruit Program</strong> from <strong>Indeed.com</strong></p>
                                         </div>
                                         <em class="date">4d ago</em>
                                     </div>
