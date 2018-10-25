@@ -17,6 +17,7 @@ import { HttpResponse } from '@angular/common/http';
 export class JobItemViewComponent implements OnInit {
     @Input() job: Job;
     @Output() setEditMode = new EventEmitter<boolean>();
+    initialLoad = false;
     statusOptions: SelectItem[];
     contentLoading = false;
     newJobStageForm: FormGroup;
@@ -32,7 +33,10 @@ export class JobItemViewComponent implements OnInit {
     droppedFiles: File[] = [];
     candidates: JobCandidate[];
     draggedCandidate: JobCandidate;
+    appliedCandidates: any;
     resumeThreshold = 60;
+    loadAmount = 0;
+    maxLoadAmount = 10;
 
     constructor(
         private router: Router,
@@ -48,6 +52,12 @@ export class JobItemViewComponent implements OnInit {
             this.users = users || [];
             // console.log(this.users);
         });
+
+        this.appliedCandidates = {
+            visible: [],
+            hidden: [],
+            total: 0
+        }
     }
     ngOnInit() {
         this.newJobStageForm = this.fb.group({
@@ -57,7 +67,9 @@ export class JobItemViewComponent implements OnInit {
         this.stages = this.job.stages.filter(stage => stage.id !== 'applied');
         this.jobService.getCandidates(this.job.id).subscribe((candidates: JobCandidate[]) => {
             // console.log(candidates);
+            this.initialLoad = true;
             this.candidates = candidates;
+            this.setAppliedCanidates(this.candidates);
         });
         this.resumeThreshold = this.getJobResumeMatchingThreshold();
     }
@@ -87,6 +99,45 @@ export class JobItemViewComponent implements OnInit {
         }
     }
 
+    setAppliedCanidates(candidates: JobCandidate[]) {
+        const sC: JobCandidate[] = [];
+        candidates.forEach(c => {
+            if (c.stage && c.stage[this.job.id]) {
+                if (c.stage[this.job.id] === 'applied') {
+                    sC.push(c);
+                }
+            } else {
+                sC.push(c);
+            }
+        });
+
+        const applied = {
+            visible: [],
+            hidden: [],
+            total: sC.length
+        };
+        sC.forEach(c => {
+            if (c.score >= (this.resumeThreshold - 15)) {
+                applied.visible.push(c);
+            } else {
+                applied.hidden.push(c);
+            }
+        });
+
+        this.appliedCandidates = applied;
+        this.loadAmount = this.appliedCandidates.hidden.length <= this.maxLoadAmount
+            ? this.appliedCandidates.hidden.length
+            : this.maxLoadAmount;
+    }
+
+    onLoadMore() {
+        const items = this.appliedCandidates.hidden.splice(0, this.loadAmount);
+        this.appliedCandidates.visible = [...this.appliedCandidates.visible, ...items];
+        this.loadAmount = this.appliedCandidates.hidden.length <= this.maxLoadAmount
+            ? this.appliedCandidates.hidden.length
+            : this.maxLoadAmount;
+    }
+
     onCandidateClick(candidateId) {
         this.router.navigateByUrl(`dashboard/jobs/${this.job.id}/candidate/${candidateId}`);
     }
@@ -112,11 +163,9 @@ export class JobItemViewComponent implements OnInit {
 
     onNewJobStageFormSubmit() {
         const formValue = this.newJobStageForm.value;
-        console.log(formValue);
         if (formValue && formValue.title && formValue.title.length) {
             this.stageFormIsSaving = true;
             this.jobService.createStage(this.job.id, formValue).subscribe((stage: JobStage) => {
-                console.log(stage);
                 this.stages.push(stage);
                 this.stageFormIsSaving = false;
                 this.newJobStageForm.reset();
@@ -142,6 +191,7 @@ export class JobItemViewComponent implements OnInit {
         this.jobService.getCandidates(this.job.id).subscribe((candidates: any[]) => {
             // console.log(candidates);
             this.candidates = candidates;
+            this.setAppliedCanidates(this.candidates);
         });
         this.createCandidateMode = false;
     }
@@ -158,10 +208,9 @@ export class JobItemViewComponent implements OnInit {
         event.stopPropagation();
         this.contentLoading = true;
         this.jobService.deleteCandidate(this.job.id, candidateId).subscribe(() => {
-            this.jobService.getCandidates(this.job.id).subscribe((candidates: any[]) => {
-                this.candidates = candidates;
-                this.contentLoading = false;
-            });
+            this.contentLoading = false;
+            const index = this.candidates.findIndex(c => c.id === candidateId);
+            this.candidates.splice(index, 1);
         });
     }
 

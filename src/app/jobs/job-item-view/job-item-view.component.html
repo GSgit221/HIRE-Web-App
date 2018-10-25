@@ -53,7 +53,7 @@
             <div class="stage-column">
                 <div class="stage-header">
                     <h2 class="title">Applied</h2>
-                    <span class="counter">{{stageCandidates('applied')?.length || '0'}}</span>
+                    <span class="counter">{{appliedCandidates.total || '0'}}</span>
                     <button class="btn settings-btn mla" (click)="onSettigsClick('applied')">
                         <img src="/assets/images/settings-dots.svg" alt="" width="2" height="10">
                     </button>
@@ -66,10 +66,12 @@
                     [dragOverClass]="'drag-target-border'"
                     (onDrop)="onCandidateDrop($event, 'applied')"
                 >
+
+                    <!-- CANDIDATE BLOCK -->
                     <div 
                         class="block"
                         (click)="onCandidateClick(candidate.id)"
-                        *ngFor="let candidate of stageCandidates('applied')"
+                        *ngFor="let candidate of appliedCandidates.visible"
                         draggable
                         [dragData]="candidate"
                     >
@@ -108,6 +110,26 @@
                                     </span>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- NO MATCHES -->
+                    <div class="no-matches-block" *ngIf="initialLoad && !appliedCandidates.visible.length">
+                        <img src="/assets/images/warning.svg" class="icon" width="23" height="20" alt="warning">
+                        <p>No matched cadidates exist for this job. Either adjust your matching threshhold or add more candidates</p>
+                    </div>
+                    
+                    
+                    
+                    <!-- LOAD MORE -->
+                    <div class="show-more-block" *ngIf="initialLoad && appliedCandidates.hidden.length && loadAmount">
+                        <div class="show-more-separator tac">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <div class="tac">
+                            <span class="load-more" (click)="onLoadMore()">Show more ({{loadAmount}})</span>
                         </div>
                     </div>
                 </div>

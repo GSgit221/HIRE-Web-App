@@ -3,17 +3,19 @@
 .application-body {
     background: $white;
     height: 100%;
+
     .container {
         max-width: 900px;
     }
 }
+
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 33px 0 33px;
-
 }
+
 .sign-in {
     cursor: pointer;
     border: none;
@@ -27,19 +29,23 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
+
     img {
         margin: 0 0 0 10px;
     }
 }
+
 .navigation-holder {
     background: $cyan-blue;
     padding: 5px 0 5px;
 }
+
 .step-navigation {
     list-style: none;
     display: flex;
     justify-content: center;
     padding: 0;
+
     li {
         margin: 0 36px 0;
         color: $middle-grey;
@@ -47,19 +53,23 @@ header {
         font-size: 12px;
         display: flex;
         align-items: center;
+
         &.active {
             path {
                 fill: #C8E6C9;
             }
+
             polygon {
                 fill: #4CAF50;
             }
         }
     }
+
     svg {
         margin: 0 5px 0 0;
     }
 }
+
 .btn-blue {
     background: $bright-blue;
     color: $white;
@@ -67,26 +77,30 @@ header {
     align-items: center;
     font-weight: bold;
     padding-right: 10px;
+
     img {
         margin: 0 12px 0 0;
     }
 }
+
 .start-placeholder-block {
     width: 620px;
     margin: 0 auto 27px;
     display: flex;
     flex-direction: row;
-    box-shadow: 0 0 20px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+
     .text-block {
         flex: 1;
         padding: 90px 5px 0 17px;
         color: $main-blue;
+
         p {
             font-size: 15px;
             margin: 0 0 17px;
         }
-
     }
+
     .upload-block {
         width: 424px;
         height: 300px;
@@ -94,6 +108,7 @@ header {
         background-size: auto auto;
         padding: 60px 100px 40px 60px;
     }
+
     .upload-block-holder {
         width: 190px;
         text-align: center;
@@ -102,19 +117,23 @@ header {
         font-size: 12px;
         cursor: pointer;
     }
+
     .icon-holder {
         text-align: center;
         font-size: 0;
         margin: 0 0 8px;
     }
+
     .title-text {
         display: block;
         color: $grey;
     }
 }
+
 .position-block {
     text-align: center;
     padding: 30px 0 30px;
+
     h2 {
         font-size: 30px;
         font-weight: bold;
@@ -123,13 +142,14 @@ header {
         letter-spacing: -1px;
         margin: 0 0 7px;
     }
+
     .note {
-        color: #637381;
+        color: $grey;
         font-size: 12px;
         line-height: 14px;
         letter-spacing: -0.4px;
-
     }
+
     .dot {
         width: 6px;
         height: 6px;
@@ -139,8 +159,10 @@ header {
         margin: 0 3px;
     }
 }
+
 .manually-block {
     text-align: center;
+
     button {
         border: none;
         background: transparent;
@@ -151,34 +173,41 @@ header {
         margin: 0 auto;
     }
 }
+
 .form-candidate-box {
     width: 620px;
     margin: 0 auto;
     padding: 20px 22px;
-    box-shadow: 0 0 20px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+
     h3 {
         font-size: 13px;
         margin: 0 0 20px;
         text-transform: uppercase;
     }
+
     .form-block-columns {
         display: flex;
         flex-direction: row;
     }
+
     .form-block-col {
         flex: 1;
+
         &.focus {
             label {
                 color: #72BF44;
             }
         }
     }
+
     .form-block-col-separator {
         height: 1px;
         width: 20px;
         min-width: 20px;
         max-width: 20px;
     }
+
     .input-field {
         background: #fff;
         width: 100%;
@@ -193,10 +222,12 @@ header {
         box-shadow: none;
         outline: none;
         transition: $transition;
+
         &:focus {
             border-bottom: 1px solid green;
         }
     }
+
     .form-block-label {
         display: flex;
         justify-content: space-between;
@@ -204,6 +235,7 @@ header {
         color: $dark-grayish-blue;
         font-weight: bold;
     }
+
     .required-dot {
         width: 6px;
         height: 6px;
