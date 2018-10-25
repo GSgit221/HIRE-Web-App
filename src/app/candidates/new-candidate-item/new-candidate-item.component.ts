@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { JobService } from '../../services/job.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { HttpResponse } from '@angular/common/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-new-candidate-item',
@@ -151,24 +151,40 @@ export class NewCandidateItemComponent implements OnInit {
 
     uploadFile(item) {
         this.utilities.readFile(item.file)
-            .then(fileValue => {
+            .then((fileValue: any) => {
                 item.uploadStarted = true;
+                item.uploadFinished = false;
+                item.progress = 0;
+
                 const uploadProgressInterval = setInterval(() => {
                     item.progress = (item.progress + 1 < 100) ? item.progress + 1 : item.progress;
                 }, 400);
-                this.jobService.createCandidateFromCv(this.jobId, { resume: fileValue})
+                const formData: { resume: any, email?: string } = {
+                    resume: fileValue
+                };
+                if (item.email) {
+                    formData.email = item.email;
+                }
+                this.jobService.createCandidateFromCv(this.jobId, formData)
                     .subscribe((response: HttpResponse<any>) => {
                         console.log('📬 Uploaded:', response);
                         const resp: any = response;
                         item.text = resp.candidate.email;
+                        item.missingEmail = false;
                         item.progress = 100;
                         item.uploadFinished = true;
                         item.success = true;
                         clearInterval(uploadProgressInterval);
                         this.emails.push(resp.candidate.email);
-                    }, error => {
-                        console.error(error);
-                        item.text = error && error.error && error.error.error ? error.error.error : 'Error';
+                    }, (response: HttpErrorResponse) => {
+                        console.error(response);
+                        item.text = response && response.error && response.error.error ? response.error.error : 'Error';
+                        if (item.text === 'Email address not found in resume. Please enter a valid email address') {
+                            item.missingEmail = true;
+                            item.email = '';
+                        } else {
+                            item.missingEmail = false;
+                        }
                         item.progress = 100;
                         item.uploadFinished = true;
                         clearInterval(uploadProgressInterval);
@@ -178,5 +194,13 @@ export class NewCandidateItemComponent implements OnInit {
                 console.error(error);
                 console.error('Error reading uploaded file');
             });
+    }
+
+    onMissingEmailSumbit(event, item) {
+        const email = item.email;
+        if (this.formHelper.validateEmail(email)) {
+
+            this.uploadFile(item);
+        }
     }
 }
