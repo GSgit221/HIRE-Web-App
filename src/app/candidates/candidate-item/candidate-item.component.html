@@ -13,39 +13,49 @@
         <div *ngIf="candidate">
             <div class="candidate-header">
                 <div class="img-block">
-                    <!-- <img src="assets/images/placeholders/1.png" alt=""> -->
-                    <span>{{candidate | initials}}</span>
+                    <img [src]="candidate.profile_image" alt="profile image" *ngIf="candidate.profile_image">
+                    <span *ngIf="!candidate.profile_image">{{candidate | initials}}</span>
                 </div>
                 <div class="information-block">
                     <div class="name">{{candidate.first_name | titlecase}} {{candidate.last_name | titlecase}}</div>
-                    <div class="detail-information">
-                        <img src="assets/images/email-send.svg" height="13px" alt="Email icon">
-                        <p><a href="mailto:greg@hellocrowd.net">{{candidate.email}}</a></p>
+                    <div class="information-block-row">
+                        <div class="detail-information">
+                            <img src="assets/images/email-send.svg" height="13px" alt="Email icon">
+                            <p><a href="mailto:greg@hellocrowd.net">{{candidate.email}}</a></p>
+                        </div>
+                        <div class="detail-information">
+                            <img src="assets/images/phone.svg" height="13px" alt="Phone icon">
+                            <p class="text">{{ candidate.phone || 'Add a phone number'}}</p>
+                        </div>
+                        <ul class="social-links">
+                            <li *ngIf="candidate.facebook_url">
+                                <a href="{{candidate.facebook_url}}"><img src="assets/images/facebook.svg" alt="Facebook icon"></a>
+                            </li>
+                            <li *ngIf="candidate.instagram_url">
+                                <a href="{{candidate.instagram_url}}"><img src="assets/images/instagram_new.svg" alt="Instagram icon"></a>
+                            </li>
+                            <li *ngIf="candidate.github_url">
+                                <a href="{{candidate.github_url}}"><img src="assets/images/github.svg" alt="Github icon"></a>
+                            </li>
+                            <li *ngIf="candidate.linkedin_url">
+                                <a href="{{candidate.linkedin_url}}"><img src="assets/images/linkedin.svg" alt="Linkedin icon"></a>
+                            </li>
+                            <li *ngIf="candidate.twitter_url">
+                                <a href="{{candidate.twitter_url}}"><img src="assets/images/twitter.svg" alt="Twitter icon"></a>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="detail-information">
-                        <img src="assets/images/phone.svg" height="13px" alt="Phone icon">
-                        <p class="text">{{ candidate.phone || 'Add a phone number'}}</p>
+                    <div class="information-block-row">
+                        <div class="detail-information">
+                            <img src="assets/images/location.svg" height="14px" alt="Location icon">
+                            <p>{{candidate.location || 'Unknown Location'}}</p>
+                        </div>
                     </div>
-                    <ul class="social-links">
-                        <li *ngIf="candidate.facebook_url">
-                            <a href="{{candidate.facebook_url}}"><img src="assets/images/facebook.svg" alt="Facebook icon"></a>
-                        </li>
-                        <li *ngIf="candidate.instagram_url">
-                            <a href="{{candidate.instagram_url}}"><img src="assets/images/instagram_new.svg" alt="Instagram icon"></a>
-                        </li>
-                        <li *ngIf="candidate.github_url">
-                            <a href="{{candidate.github_url}}"><img src="assets/images/github.svg" alt="Github icon"></a>
-                        </li>
-                        <li *ngIf="candidate.linkedin_url">
-                            <a href="{{candidate.linkedin_url}}"><img src="assets/images/linkedin.svg" alt="Linkedin icon"></a>
-                        </li>
-                        <li *ngIf="candidate.twitter_url">
-                            <a href="{{candidate.twitter_url}}"><img src="assets/images/twitter.svg" alt="Twitter icon"></a>
-                        </li>
-                    </ul>
-                    <div class="detail-information">
-                        <img src="assets/images/location.svg" height="14px" alt="Location icon">
-                        <p>{{candidate.location || 'Unknown Location'}}</p>
+                    <div class="information-block-row">
+                        <div class="detail-information" *ngIf="candidate.website_url">
+                            <img src="assets/images/web.svg" height="13px" width="13px" alt="web icon">
+                            <p class="text"><a href="{{ candidate.website_url}}">{{ candidate.website_url}}</a></p>
+                        </div>
                     </div>
                 </div>
             </div>

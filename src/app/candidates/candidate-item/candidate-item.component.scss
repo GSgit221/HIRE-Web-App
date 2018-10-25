@@ -32,14 +32,18 @@
     }
 
     .information-block {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
         color: $grey;
         font-size: 13px;
 
         p {
             margin: 0;
+        }
+
+        .information-block-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            margin: 0 0 4px;
         }
     }
 

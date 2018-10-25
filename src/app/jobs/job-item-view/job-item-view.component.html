@@ -84,7 +84,8 @@
                         <span class="complience-value">{{candidate.score}}%</span>
                         <div class="ava-column">
                             <div class="ava">
-                                <div class="ava-placeholder">{{candidate | initials}}</div>
+                                <img [src]="candidate.profile_image" alt="profile image" *ngIf="candidate.profile_image">
+                                <div class="ava-placeholder" *ngIf="!candidate.profile_image">{{candidate | initials}}</div>
                             </div>
                         </div>
                         <div class="block-content">
@@ -153,7 +154,8 @@
                         <span class="complience-value">{{candidate.score}}%</span>
                         <div class="ava-column">
                             <div class="ava">
-                                <div class="ava-placeholder">{{candidate | initials}}</div>
+                                <img [src]="candidate.profile_image" alt="profile image" *ngIf="candidate.profile_image">
+                                <div class="ava-placeholder" *ngIf="!candidate.profile_image">{{candidate | initials}}</div>
                             </div>
                         </div>
                         <div class="block-content">
