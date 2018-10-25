@@ -156,13 +156,25 @@ export class CandidateItemComponent implements OnInit {
                         item.uploadFinished = true;
                         item.success = true;
                         clearInterval(uploadProgressInterval);
-                        this.candidate = Object.assign(this.candidate, resp.candidate);
 
+
+                        setTimeout(() => {
+                            item.fadeout = true;
+                        }, 2000);
+
+                        // Remove from upload queue
+                        setTimeout(() => {
+                            const itemIndex = this.uploadQueue.findIndex(ui => ui.id === item.id);
+                            if (itemIndex !== -1) {
+                                this.uploadQueue.splice(itemIndex, 1);
+                            }
+                        }, 3000);
+                        this.candidate = Object.assign(this.candidate, resp.candidate);
                         this.onChangeSection('details');
-                        this.jobService.getCandidate(this.jobId, this.candidateId)
-                            .subscribe((candidate: JobCandidate) => {
-                                this.candidate = candidate;
-                            });
+                        // this.jobService.getCandidate(this.jobId, this.candidateId)
+                        //     .subscribe((candidate: JobCandidate) => {
+                        //         this.candidate = candidate;
+                        //     });
                         // this.router.navigateByUrl(`dashboard/jobs/${this.jobId}`);
                     }, error => {
                         console.error(error);

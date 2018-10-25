@@ -109,6 +109,17 @@ export class JobItemNewComponent implements OnInit {
                         item.uploadFinished = true;
                         item.success = true;
                         clearInterval(uploadProgressInterval);
+                        setTimeout(() => {
+                            item.fadeout = true;
+                        }, 2000);
+
+                        // Remove from upload queue
+                        setTimeout(() => {
+                            const itemIndex = this.uploadQueue.findIndex(ui => ui.id === item.id);
+                            if (itemIndex !== -1) {
+                                this.uploadQueue.splice(itemIndex, 1);
+                            }
+                        }, 3000);
                     }, error => {
                         console.error(error);
                         item.text = error && error.error && error.error.message ? error.error.error.message : 'Error';

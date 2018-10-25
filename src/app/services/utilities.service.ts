@@ -23,4 +23,20 @@ export class UtilitiesService {
             };
         });
     }
+
+    generateUID(length = 5) {
+        let pool1: any = 'ABCDEFGHIJKLMNOPQRSTUVQWXYZ';
+        let pool2: any = '123456789ABCDEFGHIJKLMNOPQRSTUVQWXYZ';
+        let shuffled = '';
+        let charIndex = 0;
+        pool1 = pool1.split('');
+        pool2 = pool2.split('');
+        const firstLetterIndex = Math.floor(pool1.length * Math.random());
+        while (pool2.length > 0) {
+            charIndex = Math.floor(pool2.length * Math.random());
+            shuffled += pool2[charIndex];
+            pool2.splice(charIndex, 1);
+        }
+        return pool1[firstLetterIndex] + shuffled.substring(0, length - 1);
+    }
 }

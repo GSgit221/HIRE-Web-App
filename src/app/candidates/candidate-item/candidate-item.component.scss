@@ -602,7 +602,7 @@
     align-items: center;
     position: relative;
     transition: all 0.2s ease;
-    margin: 0 0 20px;
+    transform: translateY(0);
 
     app-resume-file-type {
         width: 30px;
@@ -624,5 +624,22 @@
 
     &:hover {
         cursor: pointer;
+    }
+}
+
+.file-block-wrapper {
+    padding-bottom: 20px;
+    width: 100%;
+    transition: all 0.8s linear;
+
+    &.fadeout {
+        opacity: 0;
+        height: 0;
+        padding-bottom: 0;
+        overflow: hidden;
+
+        .file-block {
+            transform: translateY(-100%);
+        }
     }
 }

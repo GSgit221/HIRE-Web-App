@@ -116,6 +116,7 @@ export class NewCandidateItemComponent implements OnInit {
                 // ADD TO THE QUEUE
                 console.log('We need to upload that file 🎈');
                 this.uploadQueue.push({
+                    id: this.utilities.generateUID(10),
                     file: file,
                     uploadStarted: false,
                     uploadFinished: false,
@@ -176,6 +177,19 @@ export class NewCandidateItemComponent implements OnInit {
                         item.success = true;
                         clearInterval(uploadProgressInterval);
                         this.emails.push(resp.candidate.email);
+
+                        setTimeout(() => {
+                            item.fadeout = true;
+                        }, 2000);
+
+                        // Remove from upload queue
+                        setTimeout(() => {
+                            const itemIndex = this.uploadQueue.findIndex(ui => ui.id === item.id);
+                            if (itemIndex !== -1) {
+                                this.uploadQueue.splice(itemIndex, 1);
+                            }
+                        }, 3000);
+
                     }, (response: HttpErrorResponse) => {
                         console.error(response);
                         item.text = response && response.error && response.error.error ? response.error.error : 'Error';
