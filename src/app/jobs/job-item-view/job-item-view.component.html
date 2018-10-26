@@ -123,14 +123,14 @@
                     
                     
                     <!-- LOAD MORE -->
-                    <div class="show-more-block" *ngIf="initialLoad && appliedCandidates.hidden.length && loadAmount">
+                    <div class="show-more-block" *ngIf="initialLoad && appliedCandidates.hidden.length">
                         <div class="show-more-separator tac">
                             <span></span>
                             <span></span>
                             <span></span>
                         </div>
                         <div class="tac">
-                            <span class="load-more" (click)="onLoadMore()">Show more ({{loadAmount}})</span>
+                            <span class="load-more" (click)="onLoadMore()">Show more ({{appliedCandidates.hidden.length}})</span>
                         </div>
                     </div>
                 </div>

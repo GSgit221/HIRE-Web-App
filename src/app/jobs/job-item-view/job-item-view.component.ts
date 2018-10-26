@@ -35,8 +35,6 @@ export class JobItemViewComponent implements OnInit {
     draggedCandidate: JobCandidate;
     appliedCandidates: any;
     resumeThreshold = 60;
-    loadAmount = 0;
-    maxLoadAmount = 10;
 
     constructor(
         private router: Router,
@@ -125,17 +123,11 @@ export class JobItemViewComponent implements OnInit {
         });
 
         this.appliedCandidates = applied;
-        this.loadAmount = this.appliedCandidates.hidden.length <= this.maxLoadAmount
-            ? this.appliedCandidates.hidden.length
-            : this.maxLoadAmount;
     }
 
     onLoadMore() {
-        const items = this.appliedCandidates.hidden.splice(0, this.loadAmount);
+        const items = this.appliedCandidates.hidden.splice(0, this.appliedCandidates.hidden.length);
         this.appliedCandidates.visible = [...this.appliedCandidates.visible, ...items];
-        this.loadAmount = this.appliedCandidates.hidden.length <= this.maxLoadAmount
-            ? this.appliedCandidates.hidden.length
-            : this.maxLoadAmount;
     }
 
     onCandidateClick(candidateId) {
