@@ -203,6 +203,11 @@ export class JobItemViewComponent implements OnInit {
             this.contentLoading = false;
             const index = this.candidates.findIndex(c => c.id === candidateId);
             this.candidates.splice(index, 1);
+
+            const visibleIndex = this.appliedCandidates.visible.findIndex(c => c.id === candidateId);
+            this.appliedCandidates.visible.splice(visibleIndex, 1);
+
+            this.appliedCandidates.total = this.appliedCandidates.visible.length + this.appliedCandidates.hidden.length;
         });
     }
 
