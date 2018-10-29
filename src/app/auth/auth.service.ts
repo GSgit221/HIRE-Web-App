@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
     providedIn: 'root'
 })
 export class AuthService {
-
+    defaultTenantId = 'dimensiondata';
     constructor(private http: HttpClient) { }
 
 
@@ -33,10 +33,12 @@ export class AuthService {
 
     setSession(authResult) {
         localStorage.setItem('access_token', authResult.access_token);
+        localStorage.setItem('tenant_id', authResult.tenant_id || this.defaultTenantId);
     }
 
     logout() {
         localStorage.removeItem('access_token');
+        localStorage.removeItem('tenant_id');
     }
 
     isLoggedIn() {
@@ -47,6 +49,9 @@ export class AuthService {
         return localStorage.getItem('access_token');
     }
 
+    getTenantId() {
+        return localStorage.getItem('tenant_id') || this.defaultTenantId;
+    }
 
     getUserData() {
         return this.http.get(`https://api.ipgeolocation.io/ipgeo?apiKey=${environment.geoip_key}`);

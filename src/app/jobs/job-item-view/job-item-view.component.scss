@@ -193,8 +193,21 @@
     position: relative;
     border: 1px solid transparent;
 
-    &.drag-target-border {
+    .drop-holder {
+        height: 108px;
         border: 1px dashed $grey-border;
+        border-radius: 5px;
+        width: 100%;
+        overflow: hidden;
+        opacity: 0;
+    }
+
+    &.drag-target-border {
+        // border: 1px dashed $grey-border;
+
+        .drop-holder {
+            opacity: 1;
+        }
     }
 
     .block {

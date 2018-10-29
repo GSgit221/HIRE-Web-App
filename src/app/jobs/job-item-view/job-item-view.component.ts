@@ -55,7 +55,7 @@ export class JobItemViewComponent implements OnInit {
             visible: [],
             hidden: [],
             total: 0
-        }
+        };
     }
     ngOnInit() {
         this.newJobStageForm = this.fb.group({
@@ -216,9 +216,11 @@ export class JobItemViewComponent implements OnInit {
         const candidate = event.dragData;
         const candidateIndex = this.candidates.findIndex(c => c.id === candidate.id);
         this.candidates[candidateIndex].stage[this.job.id] = stageId;
-        this.jobService.updateCandidateStage(this.job.id, candidate.id, this.candidates[candidateIndex].stage).subscribe(() => {
-            console.log('Candidate stage was updated to:', stageId);
-        });
+        this.jobService.updateCandidateStage(this.job.id, candidate.id, this.candidates[candidateIndex].stage)
+            .subscribe(() => {
+                console.log('Candidate stage was updated to:', stageId);
+            });
+        this.setAppliedCanidates(this.candidates);
     }
 
     getJobResumeMatchingThreshold() {

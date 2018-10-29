@@ -114,7 +114,7 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
             return;
         }
         this.contentLoading = true;
-        this.userService.create(environment.tenant, form.value)
+        this.userService.create(form.value)
             .subscribe((response: User) => {
                 this.contentLoading = false;
                 this.newItemMode = false;
