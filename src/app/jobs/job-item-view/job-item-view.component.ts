@@ -62,7 +62,7 @@ export class JobItemViewComponent implements OnInit {
             title: ['']
         });
         this.appliedStage = this.job.stages.find(stage => stage.id === 'applied');
-        this.stages = this.job.stages.filter(stage => stage.id !== 'applied');
+        this.stages = this.job.stages.filter(stage => stage.id !== 'applied').sort((a, b) => a.order - b.order);
         this.jobService.getCandidates(this.job.id).subscribe((candidates: JobCandidate[]) => {
             // console.log(candidates);
             this.initialLoad = true;

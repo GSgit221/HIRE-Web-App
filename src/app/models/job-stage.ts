@@ -6,4 +6,5 @@ export class JobStage {
     integration: string;
     acceptance_criteria: number;
     automatically_progress_meeting_criteria: boolean;
+    order?: number;
 }
