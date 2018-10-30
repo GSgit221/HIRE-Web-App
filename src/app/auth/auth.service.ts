@@ -12,23 +12,23 @@ export class AuthService {
 
 
     signInWithGoogle(token, user_data = {}) {
-        return this.http.post(`${environment.api_url}/auth/oauth/google`, { token, user_data });
+        return this.http.post(`${environment.api_url}/auth/oauth/google`, { token, user_data, source: 'jobs-portal' });
     }
 
     signin(email, password, remember) {
-        return this.http.post(`${environment.api_url}/auth/signin`, { email, password, remember });
+        return this.http.post(`${environment.api_url}/auth/signin`, { email, password, remember, source: 'jobs-portal' });
     }
 
     signup(name, email, password, agreed, user_data = {}) {
-        return this.http.post(`${environment.api_url}/auth/signup`, { name, email, password, agreed, user_data});
+        return this.http.post(`${environment.api_url}/auth/signup`, { name, email, password, agreed, user_data, source: 'jobs-portal'});
     }
 
     resetPassword(email) {
-        return this.http.post(`${environment.api_url}/auth/reset-password`, { email });
+        return this.http.post(`${environment.api_url}/auth/reset-password`, { email, source: 'jobs-portal' });
     }
 
     setPassword(password, password_reset_token) {
-        return this.http.post(`${environment.api_url}/auth/set-password`, { password, password_reset_token });
+        return this.http.post(`${environment.api_url}/auth/set-password`, { password, password_reset_token, source: 'jobs-portal' });
     }
 
     setSession(authResult) {
