@@ -79,7 +79,6 @@ import { TenatsSignupComponent } from './tenants-auth/tenats-signup/tenats-signu
 import { TenatsSigninComponent } from './tenants-auth/tenats-signin/tenats-signin.component';
 import { TenatsResetPasswordComponent } from './tenants-auth/tenats-reset-password/tenats-reset-password.component';
 
-
 export function provideConfig() {
     return new AuthServiceConfig([
         {
@@ -135,7 +134,7 @@ export function provideConfig() {
         QuestionnaireNewComponent,
         TenatsSignupComponent,
         TenatsSigninComponent,
-        TenatsResetPasswordComponent
+        TenatsResetPasswordComponent,
     ],
     imports: [
         AppRoutingModule,

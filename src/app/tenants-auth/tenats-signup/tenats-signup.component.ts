@@ -13,7 +13,7 @@ export class TenatsSignupComponent implements OnInit {
     companyData: FormGroup;
     regionsTypeOptions: SelectItem[];
     numbersEmployeesTypeOptions: SelectItem[];
-    step = 'first';
+    step = 'third';
 
     constructor(private fb: FormBuilder) {
         this.nameForm = this.fb.group({
@@ -32,14 +32,12 @@ export class TenatsSignupComponent implements OnInit {
             numbersEmployees: ['', Validators.required]
         });
         this.numbersEmployeesTypeOptions = [
-            {label: '1', value: 1},
-            {label: '2', value: 2},
-            {label: '3', value: 3},
-            {label: '4', value: 4},
-            {label: '5', value: 5},
-            {label: '6', value: 6},
-            {label: '7', value: 7},
-            {label: '8', value: 8}
+            {label: '1-10', value: 1},
+            {label: '10-50', value: 2},
+            {label: '50-100', value: 3},
+            {label: '100-500', value: 4},
+            {label: '500-1000', value: 5},
+            {label: 'more 1000', value: 6}
         ];
         this.regionsTypeOptions = [
             {label: 'Afghanistan', value: 'AF'},
@@ -95,7 +93,7 @@ export class TenatsSignupComponent implements OnInit {
             {label: 'Congo, The Democratic Republic of the', value: 'CD'},
             {label: 'Cook Islands', value: 'CK'},
             {label: 'Costa Rica', value: 'CR'},
-            {label: 'Cote D\Ivoire', value: 'CI'},
+            {label: 'Cote D\'Ivoire', value: 'CI'},
             {label: 'Croatia', value: 'HR'},
             {label: 'Cuba', value: 'CU'},
             {label: 'Cyprus', value: 'CY'},
@@ -157,11 +155,11 @@ export class TenatsSignupComponent implements OnInit {
             {label: 'Kazakhstan', value: 'KZ'},
             {label: 'Kenya', value: 'KE'},
             {label: 'Kiribati', value: 'KI'},
-            {label: 'Korea, Democratic People\S Republic of', value: 'KP'},
+            {label: 'Korea, Democratic People\'S Republic of', value: 'KP'},
             {label: 'Korea, Republic of', value: 'KR'},
             {label: 'Kuwait', value: 'KW'},
             {label: 'Kyrgyzstan', value: 'KG'},
-            {label: 'Lao People\S Democratic Republic', value: 'LA'},
+            { label: 'Lao People\'S Democratic Republic', value: 'LA'},
             {label: 'Latvia', value: 'LV'},
             {label: 'Lebanon', value: 'LB'},
             {label: 'Lesotho', value: 'LS'},
