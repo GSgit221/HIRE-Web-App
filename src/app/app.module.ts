@@ -75,6 +75,9 @@ import { LoaderComponent } from './shared/loader/loader.component';
 import { MultiSelectComponent } from './shared/multi-select/multi-select.component';
 import { ProgressCircleComponent } from './shared/progress-circle/progress-circle.component';
 import { QuestionnaireNewComponent } from './settings/questionnaires/questionnaire-new/questionnaire-new.component';
+import { TenatsSignupComponent } from './tenants-auth/tenats-signup/tenats-signup.component';
+import { TenatsSigninComponent } from './tenants-auth/tenats-signin/tenats-signin.component';
+import { TenatsResetPasswordComponent } from './tenants-auth/tenats-reset-password/tenats-reset-password.component';
 
 
 export function provideConfig() {
@@ -129,7 +132,10 @@ export function provideConfig() {
         CandidateFitCircleComponent,
         JobItemNewComponent,
         TakeoverComponent,
-        QuestionnaireNewComponent
+        QuestionnaireNewComponent,
+        TenatsSignupComponent,
+        TenatsSigninComponent,
+        TenatsResetPasswordComponent
     ],
     imports: [
         AppRoutingModule,

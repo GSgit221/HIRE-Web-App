@@ -32,26 +32,33 @@
                             </div>
                             <div class="section-content">
                                 <div class="hc-form-row">
-                                    <input name="name" formControlName="name" class="form-input" type="text" placeholder="Full Name">
+                                    <input name="name" formControlName="name" class="form-input" type="text"
+                                        placeholder="Full Name">
                                     <!-- <div class="error-message" *ngIf="!signupForm.get('name').valid && signupForm.get('name').touched">Name is required</div> -->
                                 </div>
                                 <div class="hc-form-row">
-                                    <input name="email" formControlName="email" class="form-input" type="email" placeholder="Email address">
+                                    <input name="email" formControlName="email" class="form-input" type="email"
+                                        placeholder="Email address">
                                     <!-- <div class="error-message" *ngIf="!signupForm.get('email').valid && signupForm.get('email').touched">Error</div> -->
                                 </div>
                                 <div class="hc-form-row password-row">
-                                    <input name="password" formControlName="password" type="password" class="form-input" placeholder="Password">
+                                    <input name="password" formControlName="password" type="password" class="form-input"
+                                        placeholder="Password">
                                     <!-- <div class="error-message" *ngIf="!signupForm.get('password').valid && signupForm.get('password').touched">Password is required</div> -->
                                 </div>
                                 <div>
                                     <div class="checkbox-holder">
                                         <p-checkbox name="agreed" formControlName="agreed" value="false" inputId="agreed"></p-checkbox>
-                                        <label for="agreed">I agree to HelloCrowd’s <a href="https://hellocrowd.net/#terms-of-service">Terms of Services</a> and <a href="https://hellocrowd.net/#privacy-policy">Privacy Policy</a></label>
+                                        <label for="agreed">I agree to HelloCrowd’s <a href="https://hellocrowd.net/#terms-of-service">Terms
+                                                of Services</a> and <a href="https://hellocrowd.net/#privacy-policy">Privacy
+                                                Policy</a></label>
                                     </div>
-                                    <div class="error-message" *ngIf="!signupForm.get('agreed').valid && signupForm.get('agreed').touched">You need to agree to HelloCrowd's Terms of Services and Privacy Policy</div>
+                                    <div class="error-message" *ngIf="!signupForm.get('agreed').valid && signupForm.get('agreed').touched">You
+                                        need to agree to HelloCrowd's Terms of Services and Privacy Policy</div>
                                 </div>
                                 <div class="flex-row form-bottom">
-                                    <button class="btn btn-primary mla" (click)="onSignUp($event)" type="submit">Sign Up</button>
+                                    <button class="btn btn-primary mla" (click)="onSignUp($event)" type="submit">Sign
+                                        Up</button>
                                 </div>
                             </div>
                         </form>

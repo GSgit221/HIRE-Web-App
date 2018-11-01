@@ -24,6 +24,9 @@ import { EmailTemplatesComponent } from './settings/email-templates/email-templa
 import { IntegrationsComponent } from './settings/integrations/integrations.component';
 import { ScorecardsComponent } from './settings/scorecards/scorecards.component';
 import { QuestionsListComponent } from './settings/questionnaires/questions-list/questions-list.component';
+import { TenatsSignupComponent } from './tenants-auth/tenats-signup/tenats-signup.component';
+import { TenatsSigninComponent } from './tenants-auth/tenats-signin/tenats-signin.component';
+import { TenatsResetPasswordComponent } from './tenants-auth/tenats-reset-password/tenats-reset-password.component';
 
 const appRoutes: Routes = [
     { path: 'signin', component: SigninComponent },
@@ -31,6 +34,9 @@ const appRoutes: Routes = [
     { path: 'signout', component: SignoutComponent },
     { path: 'reset-password', component: ResetPasswordComponent },
     { path: 'set-password', component: SetPasswordComponent },
+    { path: 'tenats-signup', component: TenatsSignupComponent },
+    { path: 'tenats-signin', component: TenatsSigninComponent },
+    { path: 'tenats-reset-password', component: TenatsResetPasswordComponent },
     {
         path: '',
         pathMatch: 'full',
