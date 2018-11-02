@@ -532,3 +532,22 @@
         margin: 0 0 0 8px;
     }
 }
+@media screen and (min-width: 320px) and (max-width: 992px) {
+    .auth-page.tenats-auth {
+        .left-block {
+            padding: 75px 20px 0 20px;
+            flex: 0 0 100%;
+            width: 100%;
+        }
+        .main-block {
+            padding: 42px 20px 0 20px;
+            flex: 0 0 100%;
+        }
+        .auth-container {
+            background-image: linear-gradient(to bottom, #192A4D 50%, #f1f5f9 50%);
+        }
+        .auth-container-frame {
+            flex-direction: column;
+        }
+    }
+}

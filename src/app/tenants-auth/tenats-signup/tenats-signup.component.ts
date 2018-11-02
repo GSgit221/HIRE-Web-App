@@ -13,7 +13,7 @@ export class TenatsSignupComponent implements OnInit {
     companyData: FormGroup;
     regionsTypeOptions: SelectItem[];
     numbersEmployeesTypeOptions: SelectItem[];
-    step = 'third';
+    step = 'first';
 
     constructor(private fb: FormBuilder) {
         this.nameForm = this.fb.group({

@@ -56,6 +56,7 @@ export class JobService {
                 status: 'BUILD',
                 step_completed: 0
             };
+            
             return of(newJob);
         } else {
             return this.http.get(`${environment.api_url}/tenants/${this.authService.getTenantId()}/jobs/${id}`);
@@ -97,6 +98,9 @@ export class JobService {
 
     getUsers() {
         return this.http.get(`${environment.api_url}/tenants/${this.authService.getTenantId()}/users`);
+    }
+    getAllCandidates() {
+        return this.http.get(`${environment.api_url}/tenants/${this.authService.getTenantId()}/candidates`);
     }
 
     getStages(jobId: string) {
