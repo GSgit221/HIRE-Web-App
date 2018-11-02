@@ -15,6 +15,7 @@ import { Message } from 'primeng/components/common/api';
 export class SignupComponent implements OnInit {
     signupForm: FormGroup;
     msgs: Message[] = [];
+    googleSigninLink = '';
 
     constructor(
         private socialAuthService: SocialAuthService,
@@ -30,32 +31,34 @@ export class SignupComponent implements OnInit {
             password: ['', Validators.required],
             agreed: ['', Validators.required]
         });
+
+        this.googleSigninLink = this.authService.getGoogleSigninLink();
     }
 
     ngOnInit() {
     }
 
-    onSignUpWithGoogle() {
-        this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
-            .then(userData => {
-                this.authService.getUserData()
-                    .then(user_data => {
-                        this.authService.signInWithGoogle(userData.idToken, user_data)
-                            .subscribe(response => {
-                                this.msgs = [];
-                                this.authService.setSession(response);
-                                this.router.navigateByUrl('/');
-                            }, response => {
-                                this.msgs = [];
-                                this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
-                            });
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
-            })
-            .catch(error => console.error(error));
-    }
+    // onSignUpWithGoogle(idToken, tenant) {
+    //     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
+    //         .then(userData => {
+    //             this.authService.getUserData()
+    //                 .then(user_data => {
+    //                     this.authService.signInWithGoogle(userData.idToken, user_data, tenant)
+    //                         .subscribe(response => {
+    //                             this.msgs = [];
+    //                             this.authService.setSession(response);
+    //                             this.router.navigateByUrl('/');
+    //                         }, response => {
+    //                             this.msgs = [];
+    //                             this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
+    //                         });
+    //                 })
+    //                 .catch(error => {
+    //                     console.error(error);
+    //                 });
+    //         })
+    //         .catch(error => console.error(error));
+    // }
 
 
     onSignUp(event) {

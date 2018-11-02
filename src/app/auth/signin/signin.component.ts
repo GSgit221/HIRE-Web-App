@@ -34,7 +34,7 @@ export class SigninComponent implements OnInit {
             password: ['', Validators.required],
             remember: ['']
         });
-        this.setGoogleSigninLink();
+        this.googleSigninLink = this.authService.getGoogleSigninLink();
     }
 
     ngOnInit() {
@@ -94,10 +94,5 @@ export class SigninComponent implements OnInit {
                     this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
                 }
             );
-    }
-
-
-    setGoogleSigninLink() {
-        this.googleSigninLink = this.authService.getGoogleSigninLink();
     }
 }
