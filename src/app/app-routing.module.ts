@@ -24,6 +24,7 @@ import { EmailTemplatesComponent } from './settings/email-templates/email-templa
 import { IntegrationsComponent } from './settings/integrations/integrations.component';
 import { ScorecardsComponent } from './settings/scorecards/scorecards.component';
 import { QuestionsListComponent } from './settings/questionnaires/questions-list/questions-list.component';
+import { UsersComponent } from './settings/users/users.component';
 
 const appRoutes: Routes = [
     { path: 'signin', component: SigninComponent },
@@ -80,6 +81,9 @@ const appRoutes: Routes = [
         }, {
             path: 'integrations',
             component: IntegrationsComponent
+        }, {
+            path: 'users',
+            component: UsersComponent
         }]
     }, {
         path: 'applications/jobs/:jobId',
