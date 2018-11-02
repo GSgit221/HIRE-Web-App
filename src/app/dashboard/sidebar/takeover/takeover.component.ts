@@ -7,6 +7,7 @@ import { UserService } from './../../../services/user.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { User } from './../../../models/user';
 import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
+import { UtilitiesService } from 'src/app/services/utilities.service';
 
 @Component({
     selector: 'app-takeover',
@@ -39,7 +40,9 @@ export class TakeoverComponent implements OnInit {
         private userService: UserService,
         private authService: AuthService,
         private router: Router,
-        private store: Store<State>) {
+        private store: Store<State>,
+        private utilities: UtilitiesService
+    ) {
     }
 
     ngOnInit() {

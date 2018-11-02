@@ -1,4 +1,3 @@
-import { ResumeFileTypeComponent } from './shared/resume-file-type/resume-file-type.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -10,11 +9,12 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AuthServiceConfig, GoogleLoginProvider, SocialLoginModule } from 'angularx-social-login';
+import { NgDragDropModule } from 'ng-drag-drop';
 import { AutoSizeInputModule } from 'ngx-autosize-input';
+import { CookieService } from 'ngx-cookie-service';
 import { FileDropModule } from 'ngx-file-drop';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 import { CheckboxModule } from 'primeng/checkbox';
-import { NgDragDropModule } from 'ng-drag-drop';
 import { DropdownModule } from 'primeng/dropdown';
 import { EditorModule } from 'primeng/editor';
 import { MessageModule } from 'primeng/message';
@@ -66,6 +66,7 @@ import { UserResolver } from './resolvers/user.resolver';
 import { EmailTemplatesComponent } from './settings/email-templates/email-templates.component';
 import { IntegrationsComponent } from './settings/integrations/integrations.component';
 import { QuestionItemComponent } from './settings/questionnaires/question-item/question-item.component';
+import { QuestionnaireNewComponent } from './settings/questionnaires/questionnaire-new/questionnaire-new.component';
 import { QuestionnairesListComponent } from './settings/questionnaires/questionnaires-list/questionnaires-list.component';
 import { QuestionsListComponent } from './settings/questionnaires/questions-list/questions-list.component';
 import { ScorecardsComponent } from './settings/scorecards/scorecards.component';
@@ -74,7 +75,7 @@ import { FileTypeComponent } from './shared/file-type/file-type.component';
 import { LoaderComponent } from './shared/loader/loader.component';
 import { MultiSelectComponent } from './shared/multi-select/multi-select.component';
 import { ProgressCircleComponent } from './shared/progress-circle/progress-circle.component';
-import { QuestionnaireNewComponent } from './settings/questionnaires/questionnaire-new/questionnaire-new.component';
+import { ResumeFileTypeComponent } from './shared/resume-file-type/resume-file-type.component';
 
 
 export function provideConfig() {
@@ -168,7 +169,8 @@ export function provideConfig() {
         AuthService,
         httpInterceptorProviders,
         AuthGuard,
-        UserResolver
+        UserResolver,
+        CookieService
     ],
     bootstrap: [AppComponent]
 })
