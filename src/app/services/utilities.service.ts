@@ -42,7 +42,12 @@ export class UtilitiesService {
 
     getTenant() {
         const url = window.location.hostname.split('.hire');
-        return (url[0] && url[0].indexOf('.') === -1) ? url[0] : 'undefined';
+        let tenant = (url[0] && url[0].indexOf('.') === -1) ? url[0] : 'undefined';
+        // TEMPORARY
+        if (tenant === 'dev' || tenant === 'undefined') {
+            tenant = 'dimensiondata';
+        }
+        return tenant;
     }
 
     isLocalDevelopment() {
