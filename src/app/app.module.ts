@@ -12,7 +12,6 @@ import { AuthServiceConfig, GoogleLoginProvider, SocialLoginModule } from 'angul
 import { NgDragDropModule } from 'ng-drag-drop';
 import { AutoSizeInputModule } from 'ngx-autosize-input';
 import { CookieService } from 'ngx-cookie-service';
-import { FileDropModule } from 'ngx-file-drop';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
@@ -164,7 +163,6 @@ export function provideConfig() {
         ReactiveFormsModule,
         GooglePlaceModule,
         AutoSizeInputModule,
-        FileDropModule,
         StoreModule.forRoot(reducers, { metaReducers }),
         !environment.production ? StoreDevtoolsModule.instrument() : [],
         EffectsModule.forRoot([AppEffects, UserEffects, JobEffects])
