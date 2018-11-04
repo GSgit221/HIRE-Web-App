@@ -48,7 +48,7 @@
             
         </div>
     </button>
-    <div class="sum-candidate">4,690 Candidates</div>   
+    <div class="sum-candidate">{{ lengthCandidates }} Candidates</div>   
 </div>
 <div class="list-people" #scrollMe>
     <div>
@@ -89,13 +89,18 @@
                 <div class="hc-blocker"></div>
                 <div class="hc-list-row">
                     <div class="hc-list-row-content"
-                         *ngFor="let candidate of filterCandidates" (click)="onItemClick($event, item)">
+                         *ngFor="let candidate of candidates" (click)="onItemClick($event, item)">
                         <div class="col col1 flex-5 ">
                             <div class="hc-checkbox" data-escape-click>
                                 <p-checkbox binary="true"  (onChange)="onItemSeletectedChange()"></p-checkbox>
                             </div>
                         </div>
+                        
                         <div class="col col2 flex-5">
+                            <div class="img-block" *ngIf="candidate.profile_image">
+                                <img [src]="candidate.profile_image" width="30" height="30" [alt]="candidate.first_name">
+                            </div>
+                            
                         </div>
                         <div class="col col3 flex-20">
                             <p class="hc-content-p">{{ candidate.first_name }}</p>

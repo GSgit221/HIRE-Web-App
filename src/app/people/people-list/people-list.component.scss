@@ -96,7 +96,13 @@
         
     }
 }
-
+.nr-list-content {
+    .img-block {
+        border-radius: 50%;
+        overflow: hidden;
+        display: inline-flex;
+    }
+}
 
 //.nr-list-content {
 //    height: 1200px;
