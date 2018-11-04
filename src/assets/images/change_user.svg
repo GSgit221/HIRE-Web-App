@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="12px" viewBox="0 0 14 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>icons8-change_user</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Job-View" transform="translate(-818.000000, -182.000000)" fill="#637381" fill-rule="nonzero">
+            <g id="icons8-change_user" transform="translate(818.000000, 182.000000)">
+                <path d="M8,0 C4.691406,0 2,2.691406 2,6 L0,6 L2.5,9 L5,6 L3,6 C3,3.230469 5.230469,1 8,1 C10.769531,1 13,3.230469 13,6 C13,8.769531 10.769531,11 8,11 C6.890625,11 5.871094,10.640625 5.046875,10.03125 L4.453125,10.839844 C5.449219,11.570313 6.675781,12 8,12 C11.308594,12 14,9.308594 14,6 C14,2.691406 11.308594,0 8,0 Z M8,3 C6.902344,3 6,3.902344 6,5 C6,5.535156 6.21875,6.023438 6.5625,6.382813 C5.636719,6.894531 5,7.871094 5,9 L6,9 C6,7.890625 6.890625,7 8,7 C9.109375,7 10,7.890625 10,9 L11,9 C11,7.871094 10.363281,6.894531 9.4375,6.382813 C9.78125,6.023438 10,5.535156 10,5 C10,3.902344 9.097656,3 8,3 Z M8,4 C8.558594,4 9,4.441406 9,5 C9,5.558594 8.558594,6 8,6 C7.441406,6 7,5.558594 7,5 C7,4.441406 7.441406,4 8,4 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

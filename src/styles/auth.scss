@@ -329,6 +329,152 @@
             }
         }
     }
+    &.tenats-auth {
+        .auth-wrapper {
+            width: 100%;
+        }
+        .auth-container {
+            width: 100%;
+            background: #fff;
+            margin: 0 auto;
+            background-image: linear-gradient(to right, #192A4D 50%, $main-background 50%);
+        }
+        .auth-container-frame {
+            max-width: 1280px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: 100vh;
+        }
+        .left-block {
+            flex: 0 0 50%;
+            background: #192A4D;
+            padding: 192px 86px 0 126px;
+            position: relative;
+            text-align: left;
+            h2 {
+                font-size: 33px;
+                font-weight: 700;
+                margin: 0 0 24px;
+            }
+        }
+        .main-block {
+            flex: 0 0 50%;
+            padding: 181px 53px 30px 48px;
+            position: relative;
+            background: #f1f5f9;
+            .signup-link {
+                display: flex;
+                justify-content: center;
+                margin: 0 0 32px;
+                font-size: 15px;
+                p {
+                    margin: 0;
+                }
+                a {
+                    padding: 0 0 0 3px;
+                }
+            }
+        }
+        .forgot {
+            color: #FF2D55;
+            outline: none;
+            font-size: 13px;
+            margin: 0 0 0 24px;
+            &:hover {
+                cursor: pointer;
+                color: darken($pink, 5%);
+                text-decoration: underline;
+            }
+        }
+        .logo-holder {
+            justify-content: flex-start;
+            margin: 0 0 26px;
+        }
+        .signin-btn {
+            height: 51px;
+            padding: 1px;
+            background: $dark-blue-btn;
+            border-radius: 4px;
+            &:hover {
+                cursor: pointer;
+                background: darken($dark-blue-btn, 10%);
+            }
+
+            &:active {
+                background: lighten($dark-blue-btn, 10%);
+            }
+            .abcRioButtonIcon {
+                width: 37px;
+                height: 37px;
+                border-radius: 3px;
+                margin: 1px 0 0 6px;
+            }
+        }
+        .form-input {
+            background-color: #fff !important;
+            border-radius: 5px;
+            height: 51px;
+            box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+            padding: 9px 2px 9px 23px;
+            border: 2px solid transparent;
+            font-size: 15px;
+            &:focus {
+                border: 2px solid $pink;
+            }
+        }
+        .btn.btn-primary {
+            min-width: 141px;
+            height: 51px;
+            font-size: 15px;
+            border: none;
+            &:disabled {
+                background: #D7DBDF;
+            }
+        }
+        .hc-form-row {
+            min-height: 35px;
+            margin: 0 0 20px;
+        }
+        .separator {
+            margin: 26px 0 20px;
+            color: #A5A6A6;
+            font-size: 12px;
+            &:before {
+                background: $grey;
+            }
+            .separator-text {
+                background: $main-background;
+                color: $grey;
+                font-size: 15px;
+            }
+        }
+        .ui-dropdown-label {
+            border-radius: 5px;
+            height: 51px;
+            box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+            padding: 9px 2px 9px 23px !important;
+            border: 2px solid transparent;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            color: #637381;
+        }
+        p-dropdown .ui-dropdown-item {
+            padding: 9px 9px 9px 25px;
+        }
+        input::-webkit-input-placeholder {
+            font-size: 15px;
+        }
+        input::-moz-placeholder {
+            font-size: 15px;
+        }
+        input:-ms-input-placeholder { 
+            font-size: 15px;
+        }
+        input:-moz-placeholder {
+            font-size: 15px;
+        }
+    }
 }
 
 .auth-signup {
@@ -367,6 +513,41 @@
             cursor: pointer;
             color: darken($pink, 5%);
             text-decoration: underline;
+        }
+    }
+}
+.quote-block {
+    font-size: 15px;
+    padding: 41px 0 0;
+    margin: 0 0 10px;
+    p {
+        margin: 0 0 20px;
+        line-height: 28px;
+    }
+    .quote-author {
+        display: flex;
+    }
+    .text {
+        line-height: 28px;
+        margin: 0 0 0 8px;
+    }
+}
+@media screen and (min-width: 320px) and (max-width: 992px) {
+    .auth-page.tenats-auth {
+        .left-block {
+            padding: 75px 20px 0 20px;
+            flex: 0 0 100%;
+            width: 100%;
+        }
+        .main-block {
+            padding: 42px 20px 0 20px;
+            flex: 0 0 100%;
+        }
+        .auth-container {
+            background-image: linear-gradient(to bottom, #192A4D 50%, #f1f5f9 50%);
+        }
+        .auth-container-frame {
+            flex-direction: column;
         }
     }
 }
