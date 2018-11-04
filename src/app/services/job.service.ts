@@ -109,7 +109,7 @@ export class JobService {
         return this.http.get(`${this.baseURL}/users`);
     }
     getAllCandidates() {
-        return this.http.get(`${environment.api_url}/tenants/${this.authService.getTenantId()}/candidates`);
+        return this.http.get(`${environment.apiUrl}/tenants/${this.tenantId}/candidates`);
     }
 
     getStages(jobId: string) {
