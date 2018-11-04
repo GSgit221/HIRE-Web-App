@@ -39,4 +39,14 @@ export class UtilitiesService {
         }
         return pool1[firstLetterIndex] + shuffled.substring(0, length - 1);
     }
+
+    getTenant() {
+        const url = window.location.hostname.split('.hire');
+        return (url[0] && url[0].indexOf('.') === -1) ? url[0] : 'undefined';
+    }
+
+    isLocalDevelopment() {
+        const url = window.location.hostname;
+        return (url.indexOf('hire.local') !== -1);
+    }
 }

@@ -13,11 +13,11 @@ export class UserEffects {
     getUser = this.actions$
         .ofType(fromUser.UserActionTypes.GetAuthUser)
         .pipe(
-            switchMap(() => this.http.get(`${environment.api_url}/me`)),
+            switchMap(() => this.http.get(`${environment.apiUrl}/me`)),
             mergeMap((user: User) => [{
-                    type: fromUser.UserActionTypes.SetAuthUser,
-                    payload: user
-                }])
+                type: fromUser.UserActionTypes.SetAuthUser,
+                payload: user
+            }])
         );
 
     constructor(private actions$: Actions, private http: HttpClient) {

@@ -10,6 +10,6 @@ export class UserResolver implements Resolve<Observable<any>> {
     constructor(private http: HttpClient) { }
 
     resolve() {
-        return this.http.get(`${environment.api_url}/me`);
+        return this.http.get(`${environment.apiUrl}/me`);
     }
 }

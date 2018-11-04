@@ -1,3 +1,4 @@
+import { UtilitiesService } from './../../services/utilities.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -21,7 +22,8 @@ export class SetPasswordComponent implements OnInit {
         private authService: AuthService,
         private fb: FormBuilder,
         private router: Router,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private utilities: UtilitiesService
     ) {
         this.setPasswordForm = this.fb.group({
             password: ['', Validators.required],

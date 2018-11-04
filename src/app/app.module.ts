@@ -1,4 +1,3 @@
-import { ResumeFileTypeComponent } from './shared/resume-file-type/resume-file-type.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -10,11 +9,12 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AuthServiceConfig, GoogleLoginProvider, SocialLoginModule } from 'angularx-social-login';
+import { NgDragDropModule } from 'ng-drag-drop';
 import { AutoSizeInputModule } from 'ngx-autosize-input';
+import { CookieService } from 'ngx-cookie-service';
 import { FileDropModule } from 'ngx-file-drop';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 import { CheckboxModule } from 'primeng/checkbox';
-import { NgDragDropModule } from 'ng-drag-drop';
 import { DropdownModule } from 'primeng/dropdown';
 import { EditorModule } from 'primeng/editor';
 import { MessageModule } from 'primeng/message';
@@ -66,6 +66,7 @@ import { UserResolver } from './resolvers/user.resolver';
 import { EmailTemplatesComponent } from './settings/email-templates/email-templates.component';
 import { IntegrationsComponent } from './settings/integrations/integrations.component';
 import { QuestionItemComponent } from './settings/questionnaires/question-item/question-item.component';
+import { QuestionnaireNewComponent } from './settings/questionnaires/questionnaire-new/questionnaire-new.component';
 import { QuestionnairesListComponent } from './settings/questionnaires/questionnaires-list/questionnaires-list.component';
 import { QuestionsListComponent } from './settings/questionnaires/questions-list/questions-list.component';
 import { ScorecardsComponent } from './settings/scorecards/scorecards.component';
@@ -78,6 +79,9 @@ import { QuestionnaireNewComponent } from './settings/questionnaires/questionnai
 import { TenatsSignupComponent } from './tenants-auth/tenats-signup/tenats-signup.component';
 import { TenatsSigninComponent } from './tenants-auth/tenats-signin/tenats-signin.component';
 import { TenatsResetPasswordComponent } from './tenants-auth/tenats-reset-password/tenats-reset-password.component';
+import { ResumeFileTypeComponent } from './shared/resume-file-type/resume-file-type.component';
+import { UsersComponent } from './settings/users/users.component';
+
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -135,6 +139,7 @@ export function provideConfig() {
         TenatsSignupComponent,
         TenatsSigninComponent,
         TenatsResetPasswordComponent,
+        UsersComponent
     ],
     imports: [
         AppRoutingModule,
@@ -173,7 +178,8 @@ export function provideConfig() {
         AuthService,
         httpInterceptorProviders,
         AuthGuard,
-        UserResolver
+        UserResolver,
+        CookieService
     ],
     bootstrap: [AppComponent]
 })

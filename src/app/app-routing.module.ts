@@ -27,6 +27,7 @@ import { QuestionsListComponent } from './settings/questionnaires/questions-list
 import { TenatsSignupComponent } from './tenants-auth/tenats-signup/tenats-signup.component';
 import { TenatsSigninComponent } from './tenants-auth/tenats-signin/tenats-signin.component';
 import { TenatsResetPasswordComponent } from './tenants-auth/tenats-reset-password/tenats-reset-password.component';
+import { UsersComponent } from './settings/users/users.component';
 
 const appRoutes: Routes = [
     { path: 'signin', component: SigninComponent },
@@ -86,6 +87,9 @@ const appRoutes: Routes = [
         }, {
             path: 'integrations',
             component: IntegrationsComponent
+        }, {
+            path: 'users',
+            component: UsersComponent
         }]
     }, {
         path: 'applications/jobs/:jobId',
