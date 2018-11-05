@@ -48,7 +48,7 @@
             
         </div>
     </button>
-    <div class="sum-candidate">4,690 Candidates</div>   
+    <div class="sum-candidate">{{ lengthCandidates }} Candidates</div>   
 </div>
 <div class="list-people" #scrollMe>
     <div>
@@ -81,21 +81,26 @@
                 <div class="col col2 flex-5"></div>
                 <div class="col col3 flex-20">Name <img src="/assets/images/generic_sorting_2.svg" alt="Generic_sorting icon"></div>
                 <div class="col col4 flex-20">Location</div>
-                <div class="col col5 flex-10"><img src="/assets/images/clock.svg" alt="Clock icon"></div>
-                <div class="col col6 flex-10"><img src="/assets/images/change_user.svg" alt="Change_user iocon"></div>
+                <div class="col col5 flex-10 flex-center"><img src="/assets/images/clock.svg" alt="Clock icon"></div>
+                <div class="col col6 flex-10 flex-center"><img src="/assets/images/change_user.svg" alt="Change_user iocon"></div>
                 <div class="col col7 flex-10">Status</div>
             </div>
             <div class="nr-list-content">
                 <div class="hc-blocker"></div>
                 <div class="hc-list-row">
                     <div class="hc-list-row-content"
-                         *ngFor="let candidate of filterCandidates" (click)="onItemClick($event, item)">
+                         *ngFor="let candidate of candidates" (click)="onItemClick($event, item)">
                         <div class="col col1 flex-5 ">
                             <div class="hc-checkbox" data-escape-click>
                                 <p-checkbox binary="true"  (onChange)="onItemSeletectedChange()"></p-checkbox>
                             </div>
                         </div>
+                        
                         <div class="col col2 flex-5">
+                            <div class="img-block" *ngIf="candidate.profile_image">
+                                <img [src]="candidate.profile_image" width="30" height="30" [alt]="candidate.first_name">
+                            </div>
+                            
                         </div>
                         <div class="col col3 flex-20">
                             <p class="hc-content-p">{{ candidate.first_name }}</p>
@@ -103,9 +108,9 @@
                         <div class="col col4  flex-20">
                             <p class="hc-content-p">{{ candidate.location }}</p>
                         </div>
-                        <div class="col col5 flex-10">{{ candidate.created_at_rel }}</div>
-                        <div class="col col5 flex-10">{{ candidate.updated_at_rel }}</div>
-                        <div class="col col5 flex-10">Active</div>
+                        <div class="col col5 flex-10 flex-center">{{ candidate.created_at_rel }}</div>
+                        <div class="col col6 flex-10 flex-center">{{ candidate.updated_at_rel }}</div>
+                        <div class="col col7 flex-10">Active</div>
                     </div>
                 </div>
             </div>

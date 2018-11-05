@@ -8,8 +8,10 @@ import {JobService} from '../../services/job.service';
 })
 export class PeopleListComponent implements OnInit, AfterViewInit {
     candidates;
+    lengthCandidates;
     filterCandidates;
     contentLoading = false;
+
     list;
     showFilter = false;
     @ViewChild('scrollMe') myScrollContainer: ElementRef;
@@ -23,8 +25,10 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
+        this.contentLoading = true;
         this.jobService.getAllCandidates().subscribe((candidates) => {
             this.candidates = candidates || [];
+            this.lengthCandidates = this.formatWithComa(this.candidates.length);
             this.filterCandidates = this.candidates.slice(0, 20);
             this.contentLoading = false;
             console.log(candidates, this.filterCandidates);
@@ -37,7 +41,14 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
     onShowFilter() {
         this.showFilter = !this.showFilter;
     }
-
+    formatWithComa(num) {
+        return ('' + num).replace(
+            /(\d)(?=(?:\d{3})+(?:\.|$))|(\.\d\d?)\d*$/g,
+            function (m, s1, s2) {
+                return s2 || (s1 + ',');
+            }
+        );
+    }
     scrollToBottom(): void {
         console.log('scroll to bottom');
         try {
