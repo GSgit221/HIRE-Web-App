@@ -96,8 +96,20 @@
         
     }
 }
-
-
+.nr-list-content {
+    .img-block {
+        border-radius: 50%;
+        overflow: hidden;
+        display: inline-flex;
+    }
+}
+.flex-center {
+    justify-content: center;
+    text-align: center;
+}
+.col7 {
+    padding: 0 0 0 30px;
+}
 //.nr-list-content {
 //    height: 1200px;
 //}
