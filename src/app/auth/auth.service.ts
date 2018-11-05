@@ -26,7 +26,9 @@ export class AuthService {
             : encodeURI(environment.appUrl.replace('subdomain', 'dev'));
         const accessType = 'online';
         const nonce = 'hire-by-hellocrowd-' + this.utilities.generateUID(5);
-        const state = this.utilities.getTenant();
+        // const state = this.utilities.getTenant();
+        // TEMPORARY
+        const state = 'dev';
         return `${base}?client_id=${clientId}&response_type=${responseType}&scope=${scope}&redirect_uri=${redirectUri}&access_type=${accessType}&nonce=${nonce}&state=${state}`;
     }
 
