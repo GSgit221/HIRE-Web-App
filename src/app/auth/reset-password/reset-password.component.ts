@@ -1,8 +1,9 @@
+import { FormHelperService } from '../../services/form-helper.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
-import { AuthService } from './../auth.service';
+import { AuthService } from '../auth.service';
 
 @Component({
     selector: 'app-reset-password',
@@ -17,7 +18,8 @@ export class ResetPasswordComponent implements OnInit {
     constructor(
         private authService: AuthService,
         private fb: FormBuilder,
-        private router: Router
+        private router: Router,
+        private formHelper: FormHelperService
     ) {
         this.resetForm = this.fb.group({
             email: ['', Validators.required]
@@ -30,7 +32,7 @@ export class ResetPasswordComponent implements OnInit {
     onReset(event) {
         event.preventDefault();
         if (!this.resetForm.valid) {
-            this.markFormGroupTouched(this.resetForm);
+            this.formHelper.markFormGroupTouched(this.resetForm);
             return;
         }
         this.authService.resetPassword(this.resetForm.value.email)
@@ -46,15 +48,4 @@ export class ResetPasswordComponent implements OnInit {
                 }
             );
     }
-
-    private markFormGroupTouched(formGroup: FormGroup) {
-        (<any>Object).values(formGroup.controls).forEach(control => {
-            control.markAsTouched();
-            if (control.controls) {
-                control.controls.forEach(c => this.markFormGroupTouched(c));
-            }
-        });
-    }
-
-
 }

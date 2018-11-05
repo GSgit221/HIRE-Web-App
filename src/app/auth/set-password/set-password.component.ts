@@ -1,11 +1,11 @@
-import { UtilitiesService } from './../../services/utilities.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { AuthService as SocialAuthService, GoogleLoginProvider } from 'angularx-social-login';
-import { AuthService } from './../auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
+
+import { FormHelperService } from './../../services/form-helper.service';
 import { PasswordValidation } from './../../validators/password.validator';
+import { AuthService } from './../auth.service';
 
 @Component({
     selector: 'app-set-password',
@@ -18,20 +18,19 @@ export class SetPasswordComponent implements OnInit {
     msgs: Message[] = [];
 
     constructor(
-        private socialAuthService: SocialAuthService,
         private authService: AuthService,
         private fb: FormBuilder,
         private router: Router,
         private route: ActivatedRoute,
-        private utilities: UtilitiesService
+        private formHelper: FormHelperService
     ) {
         this.setPasswordForm = this.fb.group({
             password: ['', Validators.required],
             confirm_password: ['', Validators.required],
-            agreed: ['', Validators.required]
+            agreed: [false, Validators.requiredTrue]
         }, {
-            validator: PasswordValidation.MatchPassword
-        });
+                validator: PasswordValidation.MatchPassword
+            });
     }
 
     ngOnInit() {
@@ -42,7 +41,7 @@ export class SetPasswordComponent implements OnInit {
     onSubmit(event) {
         event.preventDefault();
         if (!this.setPasswordForm.valid) {
-            this.markFormGroupTouched(this.setPasswordForm);
+            this.formHelper.markFormGroupTouched(this.setPasswordForm);
             return;
         }
         const val = this.setPasswordForm.value;
@@ -59,16 +58,4 @@ export class SetPasswordComponent implements OnInit {
                 }
             );
     }
-
-
-    private markFormGroupTouched(formGroup: FormGroup) {
-        (<any>Object).values(formGroup.controls).forEach(control => {
-            control.markAsTouched();
-
-            if (control.controls) {
-                control.controls.forEach(c => this.markFormGroupTouched(c));
-            }
-        });
-    }
-
 }

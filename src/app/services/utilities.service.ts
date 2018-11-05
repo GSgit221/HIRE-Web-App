@@ -1,11 +1,14 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UtilitiesService {
 
-    constructor() { }
+    constructor(private http: HttpClient) { }
 
     readFile(file) {
         return new Promise((resolve, reject) => {
@@ -53,5 +56,9 @@ export class UtilitiesService {
     isLocalDevelopment() {
         const url = window.location.hostname;
         return (url.indexOf('hire.local') !== -1);
+    }
+
+    getCountries() {
+        return this.http.get(`${environment.apiUrl}/countries`);
     }
 }

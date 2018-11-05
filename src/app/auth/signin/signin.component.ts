@@ -6,10 +6,10 @@ import { Store } from '@ngrx/store';
 import { Message } from 'primeng/components/common/api';
 
 import { environment } from '../../../environments/environment';
-import * as fromUserActions from './../../actions/user/user.actions';
-import { State } from './../../reducers';
-import { FormHelperService } from './../../services/form-helper.service';
-import { AuthService } from './../auth.service';
+import * as fromUserActions from '../../actions/user/user.actions';
+import { AuthService } from '../auth.service';
+import { State } from '../../reducers';
+import { FormHelperService } from '../../services/form-helper.service';
 
 @Component({
     selector: 'app-signin',
@@ -22,17 +22,18 @@ export class SigninComponent implements OnInit {
     contentLoading = false;
     googleSigninLink = '';
 
+
     constructor(
         private location: Location,
         private authService: AuthService,
         private fb: FormBuilder,
         private router: Router,
         private store: Store<State>,
-        private formHelper: FormHelperService) {
+        private formHelper: FormHelperService
+    ) {
         this.signinForm = this.fb.group({
-            email: ['', Validators.required],
-            password: ['', Validators.required],
-            remember: ['']
+            email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
+            password: ['', Validators.required]
         });
         this.googleSigninLink = this.authService.getGoogleSigninLink();
     }
@@ -78,8 +79,7 @@ export class SigninComponent implements OnInit {
         }
         this.contentLoading = true;
         const val = this.signinForm.value;
-        const remember = (val.remember && val.remember.length) ? true : false;
-        this.authService.signin(val.email, val.password, remember)
+        this.authService.signin(val.email, val.password)
             .subscribe(
                 response => {
                     this.contentLoading = false;

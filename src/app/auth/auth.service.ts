@@ -35,12 +35,12 @@ export class AuthService {
         return this.http.post(`${environment.apiUrl}/auth/oauth/google`, { token, user_data, source: 'jobs', tenant });
     }
 
-    signin(email, password, remember) {
-        return this.http.post(`${environment.apiUrl}/auth/signin`, { email, password, remember, source: 'jobs', tenant: this.utilities.getTenant() });
+    signin(email, password) {
+        return this.http.post(`${environment.apiUrl}/auth/signin`, { email, password, source: 'jobs', tenant: this.utilities.getTenant() });
     }
 
-    signup(name, email, password, agreed, user_data = {}) {
-        return this.http.post(`${environment.apiUrl}/auth/signup`, { name, email, password, agreed, user_data, source: 'jobs', tenant: this.utilities.getTenant() });
+    signup(data) {
+        return this.http.post(`${environment.apiUrl}/auth/signup`, { ...data, source: 'jobs', tenant: this.utilities.getTenant() });
     }
 
     resetPassword(email) {
@@ -49,6 +49,10 @@ export class AuthService {
 
     setPassword(password, password_reset_token) {
         return this.http.post(`${environment.apiUrl}/auth/set-password`, { password, password_reset_token, source: 'jobs', tenant: this.utilities.getTenant() });
+    }
+
+    checkUserExists(email) {
+        return this.http.post(`${environment.apiUrl}/auth/check-user`, { email });
     }
 
     setSession(authResult, tenant = null) {

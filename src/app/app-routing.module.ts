@@ -24,9 +24,6 @@ import { EmailTemplatesComponent } from './settings/email-templates/email-templa
 import { IntegrationsComponent } from './settings/integrations/integrations.component';
 import { ScorecardsComponent } from './settings/scorecards/scorecards.component';
 import { QuestionsListComponent } from './settings/questionnaires/questions-list/questions-list.component';
-import { TenatsSignupComponent } from './tenants-auth/tenats-signup/tenats-signup.component';
-import { TenatsSigninComponent } from './tenants-auth/tenats-signin/tenats-signin.component';
-import { TenatsResetPasswordComponent } from './tenants-auth/tenats-reset-password/tenats-reset-password.component';
 import { UsersComponent } from './settings/users/users.component';
 
 const appRoutes: Routes = [
@@ -35,9 +32,6 @@ const appRoutes: Routes = [
     { path: 'signout', component: SignoutComponent },
     { path: 'reset-password', component: ResetPasswordComponent },
     { path: 'set-password', component: SetPasswordComponent },
-    { path: 'tenants-signup', component: TenatsSignupComponent },
-    { path: 'tenants-signin', component: TenatsSigninComponent },
-    { path: 'tenants-reset-password', component: TenatsResetPasswordComponent },
     {
         path: '',
         pathMatch: 'full',
@@ -91,15 +85,6 @@ const appRoutes: Routes = [
             path: 'users',
             component: UsersComponent
         }]
-    }, {
-        path: 'applications/jobs/:jobId',
-        component: JobApplicationComponent
-    }, {
-        path: 'applications/signin',
-        component: ApplicationsSigninComponent
-    }, {
-        path: 'applications/signup',
-        component: ApplicationsSignupComponent
     },
     { path: 'not-found', component: PageNotFoundComponent },
     { path: '**', redirectTo: 'not-found' }
