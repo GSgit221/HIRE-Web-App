@@ -1,6 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnChanges} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {SelectItem} from 'primeng/api';
+import {JobService} from '../../services/job.service';
+import {UtilitiesService} from '../../services/utilities.service';
+import {AuthService} from '../../auth/auth.service';
+
 
 @Component({
     selector: 'app-tenats-signup',
@@ -11,35 +15,45 @@ export class TenatsSignupComponent implements OnInit {
     nameForm: FormGroup;
     companyWebsite: FormGroup;
     companyData: FormGroup;
-    regionsTypeOptions: SelectItem[];
-    numbersEmployeesTypeOptions: SelectItem[];
+    countryTypeOptions: SelectItem[];
+    employeesTypeOptions: SelectItem[];
     step = 'first';
+    reg = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
+    regCompany = '[a-zA-Z0-9 ]+';
+    contentLoading = false;
+    selectedCountry;
+    
 
-    constructor(private fb: FormBuilder) {
+    constructor(private fb: FormBuilder, private jobService: JobService, private utilities: UtilitiesService, private authService: AuthService ) {
         this.nameForm = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(2), Validators.pattern('^[a-zA-Z]{2,}(?: [a-zA-Z]{2,})$')]],
             email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
-            password: ['', Validators.required],
+            password: ['', [Validators.required, Validators.minLength(8)]],
         });
+        
         this.companyWebsite = this.fb.group({
-            name: ['', Validators.required]
+            url: ['', [Validators.required, Validators.pattern(this.reg)]]
         });
         this.companyData = this.fb.group({
-            email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
-            name: ['', Validators.required],
+            company_website_url: ['', [Validators.required, Validators.pattern(this.reg)]],
+            company_name: ['', [Validators.required, Validators.pattern(this.regCompany)]],
             agreed: ['', Validators.required],
-            regionCompany: ['', Validators.required],
-            numbersEmployees: ['', Validators.required]
+            country_code: ['', Validators.required],
+            employees: ['', Validators.required],
+            country_name: ['']
         });
-        this.numbersEmployeesTypeOptions = [
-            {label: '1-10', value: 1},
-            {label: '10-50', value: 2},
-            {label: '50-100', value: 3},
-            {label: '100-500', value: 4},
-            {label: '500-1000', value: 5},
-            {label: 'more 1000', value: 6}
+        this.employeesTypeOptions = [
+            {label: '1-10', value: '1-10'},
+            {label: '11-50', value: '11-50'},
+            {label: '51-250', value: '51-250'},
+            {label: '251 - 1K', value: '251 - 1K'},
+            {label: '1K - 5K', value: '1K - 5K'},
+            {label: '5K - 10K', value: '5K - 10K' },
+            {label: '10K-50K', value: '10K-50K'},
+            {label: '50K - 100K', value: '50K - 100K' },
+            {label: '100K +', value: '100K +' }
         ];
-        this.regionsTypeOptions = [
+        this.countryTypeOptions = [
             {label: 'Afghanistan', value: 'AF'},
             {label: 'land Islands', value: 'AX'},
             {label: 'Albania', value: 'AL'},
@@ -288,6 +302,13 @@ export class TenatsSignupComponent implements OnInit {
     }
 
     ngOnInit() {
+    
+    }
+    onChangeCountry(event) {
+        let countryLabel = this.countryTypeOptions.find(country => country.value === event.value);
+        this.companyData.patchValue({
+            country_name: countryLabel.label
+        });
     }
 
     onSecondStep() {
@@ -295,10 +316,31 @@ export class TenatsSignupComponent implements OnInit {
     }
 
     onThirdStep() {
+        this.contentLoading = true;
         this.step = 'third';
+        
+        this.jobService.getDataCompany(this.companyWebsite.value.url).subscribe((data: any) => {
+            console.log(data);
+            this.contentLoading = false;
+            this.companyData = this.fb.group({
+                company_website_url: [data.domain, [Validators.required, Validators.pattern(this.reg)]],
+                company_name: [data.name, [Validators.required, Validators.pattern(this.regCompany)]],
+                country_code: [data.geo.countryCode, Validators.required],
+                employees: [data.metrics.employeesRange, Validators.required],
+                agreed: ['', Validators.required],
+                country_name: [data.geo.country]
+            });
+
+        });
     }
     onSignUpWithGoogle() {
-        
+
+    }
+    onFinishRegistration() {
+        this.authService.getUserData().then((user_data) => {
+            const fullForm = Object.assign({ source: 'jobs', tenant: this.utilities.getTenant(), geo_data: user_data }, this.companyData.value, this.nameForm.value)
+            console.log(fullForm);
+        });
     }
 
 }

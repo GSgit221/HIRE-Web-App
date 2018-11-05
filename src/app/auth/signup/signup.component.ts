@@ -71,6 +71,7 @@ export class SignupComponent implements OnInit {
         const agreed = (val.agreed && val.agreed.length) ? true : false;
         this.authService.getUserData()
             .then(user_data => {
+                console.log(user_data);
                 this.authService.signup(val.name, val.email, val.password, agreed, user_data)
                     .subscribe(
                         response => {

@@ -109,7 +109,10 @@ export class JobService {
         return this.http.get(`${this.baseURL}/users`);
     }
     getAllCandidates() {
-        return this.http.get(`${environment.apiUrl}/tenants/${this.tenantId}/candidates`);
+        return this.http.get(`${this.apiURL}/tenants/${this.tenantId}/candidates`);
+    }
+    getDataCompany(url) {
+        return this.http.post(`${this.apiURL}/company`, { url : url });
     }
 
     getStages(jobId: string) {

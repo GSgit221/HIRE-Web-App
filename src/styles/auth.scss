@@ -340,7 +340,7 @@
             background-image: linear-gradient(to right, #192A4D 50%, $main-background 50%);
         }
         .auth-container-frame {
-            max-width: 1280px;
+            // max-width: 1280px;
             margin: 0 auto;
             width: 100%;
             min-height: 100vh;
@@ -348,9 +348,14 @@
         .left-block {
             flex: 0 0 50%;
             background: #192A4D;
-            padding: 192px 86px 0 126px;
+            padding: 192px 10px 0 10px;
             position: relative;
             text-align: left;
+            .inner-block {
+                max-width: 388px;
+                margin: 0 auto;
+                width: 100%;
+            }
             h2 {
                 font-size: 33px;
                 font-weight: 700;
@@ -359,9 +364,15 @@
         }
         .main-block {
             flex: 0 0 50%;
-            padding: 181px 53px 30px 48px;
+            padding: 181px 10px 30px 10px;
             position: relative;
             background: #f1f5f9;
+            .inner-block {
+                margin: 0 auto;
+                max-width: 560px;
+                width: 100%;
+            }
+            
             .signup-link {
                 display: flex;
                 justify-content: center;
@@ -459,7 +470,7 @@
             align-items: center;
             color: #637381;
         }
-        p-dropdown.ng-dirty .ui-dropdown-label {
+        p-dropdown.ng-valid .ui-dropdown-label {
             color: #000000;
         }
         p-dropdown .ui-dropdown-item {

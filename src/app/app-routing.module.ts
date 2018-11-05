@@ -35,9 +35,9 @@ const appRoutes: Routes = [
     { path: 'signout', component: SignoutComponent },
     { path: 'reset-password', component: ResetPasswordComponent },
     { path: 'set-password', component: SetPasswordComponent },
-    { path: 'tenats-signup', component: TenatsSignupComponent },
-    { path: 'tenats-signin', component: TenatsSigninComponent },
-    { path: 'tenats-reset-password', component: TenatsResetPasswordComponent },
+    { path: 'tenants-signup', component: TenatsSignupComponent },
+    { path: 'tenants-signin', component: TenatsSigninComponent },
+    { path: 'tenants-reset-password', component: TenatsResetPasswordComponent },
     {
         path: '',
         pathMatch: 'full',
