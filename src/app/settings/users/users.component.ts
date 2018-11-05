@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../../models/user';
 import { SelectItem } from 'primeng/api';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-users',
@@ -21,7 +21,7 @@ export class UsersComponent implements OnInit {
     activeSection = 'users';
     sections = ['users', 'pending-invitation'];
 
-    constructor(private fb: FormBuilder, ) {
+    constructor(private fb: FormBuilder,) {
     }
 
     ngOnInit() {
@@ -54,10 +54,21 @@ export class UsersComponent implements OnInit {
             { label: 'User', value: 'user' }
         ];
         this.usersDetailForm = this.fb.group({
-            name: [''],
-            email: [''],
+            name: ['', [Validators.required, Validators.minLength(2)]],
+            email: ['' , [Validators.required, Validators.email]],
             accountType: [''],
         });
+        this.userList.forEach(userList => {
+            userList.isVisible = false;
+        });
+    }
+
+    onMouseOver(index) {
+        this.userList[index].isVisible = true;
+    }
+
+    onMouseOut(index) {
+        this.userList[index].isVisible = false;
     }
 
     onChangeSection(section: string) {
