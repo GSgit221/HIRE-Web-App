@@ -284,7 +284,7 @@ export class TenatsSignupComponent implements OnInit {
             {label: 'Yemen', value: 'YE'},
             {label: 'Zambia', value: 'ZM'},
             {label: 'Zimbabwe', value: 'ZW'}
-        ]
+        ];
     }
 
     ngOnInit() {
@@ -296,6 +296,9 @@ export class TenatsSignupComponent implements OnInit {
 
     onThirdStep() {
         this.step = 'third';
+    }
+    onSignUpWithGoogle() {
+        
     }
 
 }

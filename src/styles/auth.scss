@@ -459,6 +459,9 @@
             align-items: center;
             color: #637381;
         }
+        p-dropdown.ng-dirty .ui-dropdown-label {
+            color: #000000;
+        }
         p-dropdown .ui-dropdown-item {
             padding: 9px 9px 9px 25px;
         }

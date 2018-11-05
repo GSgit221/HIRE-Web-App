@@ -18,15 +18,15 @@ export class TenatsSigninComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-
     }
 
     ngAfterViewInit() {
     }
 
     onSignIn(event: Event) {
-        console.log(this.signinForm.valid);
-        console.log(this.signinForm.value);
+    }
+    onSignInWithGoogle() {
+
     }
 
 }
