@@ -23,7 +23,7 @@ export class AuthService {
         const responseType = 'id_token+token';
         const redirectUri = this.utilities.isLocalDevelopment()
             ? encodeURI(environment.googleSigninRedirectUri)
-            : encodeURI(environment.appUrl.replace('subdomain', 'oauth'));
+            : encodeURI(environment.appUrl.replace('subdomain', 'dev'));
         const accessType = 'online';
         const nonce = 'hire-by-hellocrowd-' + this.utilities.generateUID(5);
         const state = this.utilities.getTenant();
