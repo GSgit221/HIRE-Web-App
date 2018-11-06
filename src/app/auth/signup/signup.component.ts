@@ -1,11 +1,12 @@
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
-import { Component, OnInit, OnChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { JobService } from '../../services/job.service';
 import { UtilitiesService } from '../../services/utilities.service';
 import { AuthService } from '../auth.service';
+
 
 
 @Component({
@@ -62,12 +63,25 @@ export class SignupComponent implements OnInit {
     }
 
     ngOnInit() {
+        // this.credentialsForm.valueChanges.subscribe((a) => {
+        //     console.log(a.email);
+        //     // a.email.toUpperCase();
+        //     this.credentialsForm.setValue({
+        //         email: a.email.toUpperCase()
+        //     });
+        // });
 
+    }
+    onKeyupEmail(event) {
+        // event.target.value.toUpperCase();
+        event.target.value = event.target.value.toLowerCase();
+        console.log(event.target.value);
     }
 
     initForms() {
         this.credentialsForm = this.fb.group({
-            name: ['', [Validators.required, Validators.minLength(2), Validators.pattern('^[a-zA-Z]{2,}(?: [a-zA-Z]{2,})$')]],
+            name: ['', [Validators.required, Validators.minLength(2),
+                Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]],
             email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
             password: ['', [Validators.required, Validators.minLength(8)]],
         });
@@ -97,14 +111,35 @@ export class SignupComponent implements OnInit {
         this.msgs = [];
         this.authService.checkUserExists(this.credentialsForm.get('email').value)
             .subscribe((response: any) => {
-                this.contentLoading = false;
                 if (response.user_exists) {
+                    this.contentLoading = false;
                     this.msgs.push({ severity: 'error', detail: 'User with this email is already registered. Please sign in.' });
                     return false;
                 }
-                this.msgs = [];
-                this.step = 'second';
+                this.authService.getCompanyByEmail(this.credentialsForm.get('email').value).subscribe((data: any) => {
+                    this.contentLoading = false;
+                    if (data) {
+                        this.step = 'third';
+                        let employees = data.metrics.employeesRange;
+                        if (employees) {
+                            employees = employees.replace(/ /g, '');
+                        }
+                        this.companyForm = this.fb.group({
+                            company_website_url: [data.domain, [Validators.required, Validators.pattern(this.websiteReg)]],
+                            company_name: [data.name, [Validators.required, Validators.pattern(this.companyNameReg)]],
+                            country_code: [data.geo.countryCode, Validators.required],
+                            employees: [employees, Validators.required],
+                            agreed: [false, Validators.requiredTrue],
+                            country_name: [data.geo.country]
+                        });
+                        return false;
+                    } else {
+                        this.msgs = [];
+                        this.step = 'second';
+                    }
+                });
             });
+
     }
 
 
