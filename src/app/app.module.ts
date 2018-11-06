@@ -76,7 +76,10 @@ import { MultiSelectComponent } from './shared/multi-select/multi-select.compone
 import { ProgressCircleComponent } from './shared/progress-circle/progress-circle.component';
 import { ResumeFileTypeComponent } from './shared/resume-file-type/resume-file-type.component';
 import { UsersComponent } from './settings/users/users.component';
-
+import { BillingPlanComponent } from './settings/billing/billing-plan/billing-plan.component';
+import { BillingComponent } from './settings/billing/billing.component';
+import { BillingDetailsComponent } from './settings/billing/billing-details/billing-details.component';
+import { BillingHistoryComponent } from './settings/billing/billing-history/billing-history.component';
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -131,7 +134,11 @@ export function provideConfig() {
         JobItemNewComponent,
         TakeoverComponent,
         QuestionnaireNewComponent,
-        UsersComponent
+        UsersComponent,
+        BillingPlanComponent,
+        BillingComponent,
+        BillingDetailsComponent,
+        BillingHistoryComponent
     ],
     imports: [
         AppRoutingModule,

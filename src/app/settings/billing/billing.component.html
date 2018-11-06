@@ -1,0 +1,30 @@
+<div class="container fixed-width-container">
+    <div class="title-block">
+        <h1 class="page-title"> Billing </h1>
+        <div class="sections-nav">
+            <div class="section-nav-link"
+                 (click)="onChangeSection('billing-plan')"
+                 [ngClass]="{'active': activeSection === 'billing-plan'}">Plan
+            </div>
+            <div class="section-nav-link"
+                 (click)="onChangeSection('billing-details')"
+                 [ngClass]="{'active': activeSection === 'billing-details'}">Billing Details
+            </div>
+            <div class="section-nav-link"
+                 (click)="onChangeSection('billing-history')"
+                 [ngClass]="{'active': activeSection === 'billing-history'}">Billing History
+            </div>
+        </div>
+    </div>
+    <div class="section-separator mb20"></div>
+    <div class="content-section" id="billing-plan" *ngIf="activeSection === 'billing-plan'">
+        <app-billing-plan></app-billing-plan>
+    </div>
+    <div class="content-section" id="billing-details" *ngIf="activeSection === 'billing-details'">
+        <app-billing-details></app-billing-details>
+    </div>
+    <div class="content-section" id="billing-history" *ngIf="activeSection === 'billing-history'">
+        <app-billing-history></app-billing-history>
+    </div>
+</div>
+<app-loader *ngIf="contentLoading"></app-loader>
