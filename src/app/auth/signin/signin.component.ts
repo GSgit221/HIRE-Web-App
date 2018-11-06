@@ -1,3 +1,4 @@
+import { UtilitiesService } from './../../services/utilities.service';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -29,8 +30,16 @@ export class SigninComponent implements OnInit {
         private fb: FormBuilder,
         private router: Router,
         private store: Store<State>,
-        private formHelper: FormHelperService
+        private formHelper: FormHelperService,
+        private utilities: UtilitiesService
     ) {
+        // Check if app
+        const tenant = this.utilities.getTenant();
+        console.log(tenant);
+        if (tenant === 'app') {
+            this.router.navigateByUrl('/signup');
+        }
+
         this.signinForm = this.fb.group({
             email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
             password: ['', Validators.required]

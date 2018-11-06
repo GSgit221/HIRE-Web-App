@@ -34,6 +34,12 @@ export class SignupComponent implements OnInit {
         private authService: AuthService,
         private router: Router
     ) {
+        // Check if app
+        const tenant = this.utilities.getTenant();
+        console.log(tenant);
+
+
+
         // Google link
         this.googleSigninLink = this.authService.getGoogleSigninLink();
         // OPTIONS
