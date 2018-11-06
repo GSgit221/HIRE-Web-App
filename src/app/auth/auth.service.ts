@@ -86,4 +86,7 @@ export class AuthService {
                 });
         });
     }
+    getCompanyByEmail(email) {
+        return this.http.post(`${environment.apiUrl}/email`, {email})
+    }
 }

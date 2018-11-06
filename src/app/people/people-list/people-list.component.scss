@@ -101,6 +101,24 @@
         border-radius: 50%;
         overflow: hidden;
         display: inline-flex;
+        position: absolute;
+        left: -6px;
+        top: 50%;
+        transform: translate(0%,-50%);
+        transition: all 0.25s;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #D7DBDF;
+    }
+    .col1 {
+        position: relative;
+    }
+}
+.hc-list-row-content:hover {
+    .img-block {
+        opacity: 0;
+        z-index: -1;
     }
 }
 .flex-center {
