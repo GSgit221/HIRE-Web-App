@@ -1,7 +1,4 @@
 import { QuestionnaireNewComponent } from './settings/questionnaires/questionnaire-new/questionnaire-new.component';
-import { ApplicationsSigninComponent } from './applications/auth/signin/signin.component';
-import { ApplicationsSignupComponent } from './applications/auth/signup/signup.component';
-import { JobApplicationComponent } from './applications/job-application/job-application.component';
 import { QuestionItemComponent } from './settings/questionnaires/question-item/question-item.component';
 import { QuestionnairesListComponent } from './settings/questionnaires/questionnaires-list/questionnaires-list.component';
 import { StageSettingsComponent } from './jobs/stages/stage-settings/stage-settings.component';
@@ -25,6 +22,7 @@ import { IntegrationsComponent } from './settings/integrations/integrations.comp
 import { ScorecardsComponent } from './settings/scorecards/scorecards.component';
 import { QuestionsListComponent } from './settings/questionnaires/questions-list/questions-list.component';
 import { UsersComponent } from './settings/users/users.component';
+import { BillingComponent } from './settings/billing/billing.component';
 
 const appRoutes: Routes = [
     { path: 'signin', component: SigninComponent },
@@ -84,6 +82,9 @@ const appRoutes: Routes = [
         }, {
             path: 'users',
             component: UsersComponent
+        }, {
+            path: 'billing',
+            component: BillingComponent
         }]
     },
     { path: 'not-found', component: PageNotFoundComponent },

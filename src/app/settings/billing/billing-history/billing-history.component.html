@@ -1,0 +1,43 @@
+<div class="hc-list">
+  <div class="hc-selected-items" *ngIf="selectedItems">
+    <div class="text-block">
+      <p>
+        {{selectedItems}} items selected
+      </p>
+    </div>
+  </div>
+  <div class="hc-list-header">
+    <div class="col col1 flex-5 hc-checkbox-col">
+      <div class="hc-checkbox">
+        <p-checkbox binary="true" [(ngModel)]="selectedAll"
+                    (onChange)="onSelectAllChange()"></p-checkbox>
+      </div>
+    </div>
+    <div class="col col2 flex-25">Invoice Name</div>
+    <div class="col col3 flex-25">Date</div>
+    <div class="col col4 flex-40">Ammount</div>
+  </div>
+  <div class="nr-list-content">
+    <div class="hc-blocker"></div>
+    <div class="hc-list-row" *ngFor="let invoice of invoiceList; let i = index">
+      <div class="hc-list-row-content">
+        <div class="col col1 flex-5 ">
+          <div class="hc-checkbox" data-escape-click>
+            <p-checkbox binary="true" [(ngModel)]="invoice.selected"
+                        (onChange)="onItemSeletectedChange()"></p-checkbox>
+          </div>
+        </div>
+        <div class="col col2 flex-25">
+          <p class="hc-content-p">{{invoice.invoiceName}}</p>
+        </div>
+        <div class="col col3  flex-25">
+          <p class="hc-content-p">{{invoice.date}}</p>
+        </div>
+        <div class="col col4 flex-40">{{ invoice.ammount }}</div>
+        <div class="col col5 flex-5">
+          <img src="/assets/images/download.svg" alt="Email icon" pTooltip="Download Invoice">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
