@@ -470,7 +470,10 @@
             }
 
             &.ng-touched.ng-invalid {
-                border: 2px solid $pink;
+                border: 2px solid $red;
+                ~ label {
+                    color: $red;
+                }
             }
         }
 
@@ -488,6 +491,18 @@
         .hc-form-row {
             min-height: 35px;
             margin: 0 0 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            .label-input {
+                order: -1;
+                margin: 0 0 14px;
+                font-size: 13px;
+                font-weight: bold;
+            }
+            p-dropdown {
+                width: 100%;
+            }
         }
 
         .separator {
@@ -503,6 +518,7 @@
                 background: $main-background;
                 color: $grey;
                 font-size: 15px;
+                font-weight: normal;
             }
         }
 

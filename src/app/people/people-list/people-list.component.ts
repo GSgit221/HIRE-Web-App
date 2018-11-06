@@ -1,5 +1,5 @@
-import {Component, OnInit, HostListener, ElementRef, ViewChild, AfterViewInit} from '@angular/core';
-import {JobService} from '../../services/job.service';
+import { Component, OnInit, HostListener, AfterViewInit } from '@angular/core';
+import { JobService } from '../../services/job.service';
 
 @Component({
     selector: 'app-people-list',
@@ -9,12 +9,15 @@ import {JobService} from '../../services/job.service';
 export class PeopleListComponent implements OnInit, AfterViewInit {
     candidates;
     lengthCandidates;
-    filterCandidates;
+    filterCandidates = [];
     contentLoading = false;
+    lastCandidate = {
+        first_name: '',
+        last_name: ''
+    };
 
     list;
     showFilter = false;
-    @ViewChild('scrollMe') myScrollContainer: ElementRef;
 
     @HostListener('window:scroll', ['$event'])
     onScroll(event) {
@@ -26,14 +29,26 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.contentLoading = true;
-        this.jobService.getAllCandidates().subscribe((candidates) => {
-            this.candidates = candidates || [];
-            this.lengthCandidates = this.formatWithComa(this.candidates.length);
-            this.filterCandidates = this.candidates.slice(0, 20);
-            this.contentLoading = false;
-            console.log(candidates, this.filterCandidates);
+        this.jobService.getCandidatesChunk('first', 80).subscribe((candidates) => {
+            this.candidates = candidates || [];	            this.candidates = candidates || [];
+            this.lengthCandidates = this.formatWithComa(this.candidates.length);	            this.lengthCandidates = this.formatWithComa(this.candidates.length);
+            this.filterCandidates = this.candidates.slice(0, 20);	            this.filterCandidates = this.candidates;
+            this.contentLoading = false;	            this.contentLoading = false;
+            this.lastCandidate = this.candidates[this.candidates.length - 1].first_name;
         });
     }
+    download() {
+        this.jobService.getCandidatesChunk(this.lastCandidate, 80).subscribe((candidates: any) => {
+            candidates.forEach((item) => {
+                this.candidates.push(item);
+            });
+            this.lastCandidate = {
+                first_name: this.candidates[this.candidates.length - 1].first_name,
+                last_name: this.candidates[this.candidates.length - 1].last_name
+            };
+        });
+    }
+
 
     ngAfterViewInit() {
     }
@@ -49,12 +64,12 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
             }
         );
     }
-    scrollToBottom(): void {
-        console.log('scroll to bottom');
-        try {
-            this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-        } catch (err) {
-        }
-    }
+    // scrollToBottom(): void {
+    //     console.log('scroll to bottom');
+    //     try {
+    //         this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+    //     } catch (err) {
+    //     }
+    // }
 
 }
