@@ -1,5 +1,5 @@
-import {Component, OnInit, HostListener, ElementRef, ViewChild, AfterViewInit} from '@angular/core';
-import {JobService} from '../../services/job.service';
+import { Component, OnInit, HostListener, AfterViewInit } from '@angular/core';
+import { JobService } from '../../services/job.service';
 
 @Component({
     selector: 'app-people-list',
@@ -18,7 +18,6 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
 
     list;
     showFilter = false;
-    @ViewChild('scrollMe') myScrollContainer: ElementRef;
 
     @HostListener('window:scroll', ['$event'])
     onScroll(event) {
@@ -35,13 +34,11 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
             this.lengthCandidates = this.formatWithComa(this.candidates.length);	            this.lengthCandidates = this.formatWithComa(this.candidates.length);
             this.filterCandidates = this.candidates.slice(0, 20);	            this.filterCandidates = this.candidates;
             this.contentLoading = false;	            this.contentLoading = false;
-            console.log(candidates, this.filterCandidates);	            this.lastCandidate = this.candidates[this.candidates.length - 1].first_name;
-            console.log(candidates, this.lastCandidate);
+            this.lastCandidate = this.candidates[this.candidates.length - 1].first_name;
         });
     }
     download() {
         this.jobService.getCandidatesChunk(this.lastCandidate, 80).subscribe((candidates: any) => {
-            console.log(this.candidates, this.lastCandidate);
             candidates.forEach((item) => {
                 this.candidates.push(item);
             });
@@ -49,7 +46,6 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
                 first_name: this.candidates[this.candidates.length - 1].first_name,
                 last_name: this.candidates[this.candidates.length - 1].last_name
             };
-            console.log(candidates, this.candidates, this.lastCandidate);
         });
     }
 
@@ -68,12 +64,12 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
             }
         );
     }
-    scrollToBottom(): void {
-        console.log('scroll to bottom');
-        try {
-            this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-        } catch (err) {
-        }
-    }
+    // scrollToBottom(): void {
+    //     console.log('scroll to bottom');
+    //     try {
+    //         this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+    //     } catch (err) {
+    //     }
+    // }
 
 }

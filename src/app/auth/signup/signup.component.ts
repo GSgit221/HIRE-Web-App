@@ -73,9 +73,7 @@ export class SignupComponent implements OnInit {
 
     }
     onKeyupEmail(event) {
-        // event.target.value.toUpperCase();
         event.target.value = event.target.value.toLowerCase();
-        console.log(event.target.value);
     }
 
     initForms() {
@@ -148,7 +146,6 @@ export class SignupComponent implements OnInit {
         this.step = 'third';
 
         this.jobService.getDataCompany(this.websiteForm.value.url).subscribe((data: any) => {
-            console.log(data);
             this.contentLoading = false;
             let employees = data.metrics.employeesRange;
             if (employees) {
