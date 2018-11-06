@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { JobService } from '../../services/job.service';
 
 @Component({
@@ -19,11 +19,6 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
     list;
     showFilter = false;
 
-    @HostListener('window:scroll', ['$event'])
-    onScroll(event) {
-        // console.log(event);
-    }
-
     constructor(private jobService: JobService) {
     }
 
@@ -31,10 +26,13 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
         this.contentLoading = true;
         this.jobService.getCandidatesChunk('first', 80).subscribe((candidates) => {
             this.candidates = candidates || [];	            this.candidates = candidates || [];
-            this.lengthCandidates = this.formatWithComa(this.candidates.length);	            this.lengthCandidates = this.formatWithComa(this.candidates.length);
-            this.filterCandidates = this.candidates.slice(0, 20);	            this.filterCandidates = this.candidates;
+            this.lengthCandidates = this.formatWithComa(this.candidates.length);
+            this.lengthCandidates = this.formatWithComa(this.candidates.length);
+            this.filterCandidates = this.candidates.slice(0, 20);
+            this.filterCandidates = this.candidates;
             this.contentLoading = false;	            this.contentLoading = false;
             this.lastCandidate = this.candidates[this.candidates.length - 1].first_name;
+            // console.log(this.candidates);
         });
     }
     download() {
@@ -46,7 +44,12 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
                 first_name: this.candidates[this.candidates.length - 1].first_name,
                 last_name: this.candidates[this.candidates.length - 1].last_name
             };
+            // console.log(this.candidates);
         });
+    }
+    onScroll() {
+        // console.log('scrolled!!');
+        this.download();
     }
 
 

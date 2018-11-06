@@ -85,12 +85,12 @@
                                     </div>
                                     <div class="hc-form-row">
                                         <p-dropdown [options]="countryTypeOptions" formControlName="country_code"
-                                            [style]="{'width':'100%'}" (onChange)="onChangeCountry($event)"></p-dropdown>
+                                            [style]="{'width':'100%'}" (onChange)="onChangeCountry($event)" placeholder="Please select country"></p-dropdown>
                                         <label class="label-input">Country</label>
                                     </div>
                                     <div class="hc-form-row">
                                         <p-dropdown [options]="employeesTypeOptions" formControlName="employees"
-                                            [style]="{'width':'100%'}"></p-dropdown>
+                                            [style]="{'width':'100%'}" placeholder="Number of employees"></p-dropdown>
                                         <label class="label-input">Number of Employees</label>
                                     </div>
                                     <div class="flex-row form-bottom">
