@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { SelectItem } from 'primeng/api';
 import { Message } from 'primeng/components/common/api';
 
@@ -12,22 +12,23 @@ import { AuthService } from '../auth.service';
 
 
 @Component({
-    selector: 'app-signup',
-    templateUrl: './signup.component.html',
-    styleUrls: ['./signup.component.scss']
+    selector: 'app-complete-signup',
+    templateUrl: './complete-signup.component.html',
+    styleUrls: ['./complete-signup.component.scss']
 })
-export class SignupComponent implements OnInit {
-    credentialsForm: FormGroup;
+export class CompleteSignupComponent implements OnInit {
     websiteForm: FormGroup;
     companyForm: FormGroup;
     countryTypeOptions: SelectItem[] = [];
     employeesTypeOptions: SelectItem[] = [];
-    step = 'first';
     websiteReg = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
     companyNameReg = '[a-zA-Z0-9 ]+';
-    contentLoading = false;
+    contentLoading = true;
+    step = '';
     googleSigninLink = '';
     msgs: Message[] = [];
+    token = '';
+    tenant = '';
 
 
     constructor(
@@ -35,16 +36,16 @@ export class SignupComponent implements OnInit {
         private jobService: JobService,
         private utilities: UtilitiesService,
         private authService: AuthService,
-        private router: Router
+        private router: Router,
+        private route: ActivatedRoute
     ) {
         // Check if app
-        const tenant = this.utilities.getTenant();
-        console.log(tenant);
+        // const tenant = this.utilities.getTenant();
+        // console.log(tenant);
+        this.token = this.route.snapshot.queryParamMap.get('token');
+        this.tenant = this.route.snapshot.queryParamMap.get('tenantId');
+        this.onSignUpWithGoogle(this.token, this.tenant);
 
-
-
-        // Google link
-        this.googleSigninLink = this.authService.getGoogleSignupLink();
         // OPTIONS
         this.utilities.getCountries()
             .subscribe((countries: { name: string, code: string }[]) => {
@@ -71,33 +72,48 @@ export class SignupComponent implements OnInit {
     }
 
     ngOnInit() {
-        // this.credentialsForm.valueChanges.subscribe((a) => {
-        //     console.log(a.email);
-        //     // a.email.toUpperCase();
-        //     this.credentialsForm.setValue({
-        //         email: a.email.toUpperCase()
-        //     });
-        // });
-
     }
+
+    onSignUpWithGoogle(idToken, tenant) {
+        this.contentLoading = true;
+        this.authService.getUserData()
+            .then(userData => {
+                this.authService.signUpWithGoogle(idToken, userData, tenant)
+                    .subscribe(response => {
+                        this.contentLoading = false;
+                        console.log(response);
+                        // this.msgs = [];
+                        // this.authService.setSession(response, tenant);
+                        // const url = environment.appUrl.replace('subdomain', tenant);
+                        // console.log('REDIRECTING:', url);
+                        // window.location.href = url;
+                    }, response => {
+                        this.contentLoading = false;
+                        if (response.error.error === 'Company data not found') {
+                            this.step = 'second';
+                        } else {
+                            console.log(response);
+                            this.msgs = [];
+                            this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
+                        }
+                    });
+            })
+            .catch(error => console.log(error));
+    }
+
+
     onKeyupEmail(event) {
         event.target.value = event.target.value.toLowerCase();
     }
 
     initForms() {
-        this.credentialsForm = this.fb.group({
-            name: ['', [Validators.required, Validators.minLength(2),
-            Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]],
-            email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
-            password: ['', [Validators.required, Validators.minLength(8)]],
-        });
 
         this.websiteForm = this.fb.group({
             url: ['', [Validators.required, Validators.pattern(this.websiteReg)]]
         });
         this.companyForm = this.fb.group({
             company_website_url: ['', [Validators.required, Validators.pattern(this.websiteReg)]],
-            company_name: ['', [Validators.required, Validators.pattern(this.companyNameReg)]],
+            company_name: ['', [Validators.required]],
             agreed: [false, Validators.requiredTrue],
             country_code: ['', Validators.required],
             employees: ['', Validators.required],
@@ -110,42 +126,6 @@ export class SignupComponent implements OnInit {
         this.companyForm.patchValue({
             country_name: countryLabel.label
         });
-    }
-
-    onFinishFirstStep() {
-        this.contentLoading = true;
-        this.msgs = [];
-        this.authService.checkUserExists(this.credentialsForm.get('email').value)
-            .subscribe((response: any) => {
-                if (response.user_exists) {
-                    this.contentLoading = false;
-                    this.msgs.push({ severity: 'error', detail: 'User with this email is already registered. Please sign in.' });
-                    return false;
-                }
-                this.authService.getCompanyByEmail(this.credentialsForm.get('email').value).subscribe((data: any) => {
-                    this.contentLoading = false;
-                    if (data) {
-                        this.step = 'third';
-                        let employees = data.metrics.employeesRange;
-                        if (employees) {
-                            employees = employees.replace(/ /g, '');
-                        }
-                        this.companyForm = this.fb.group({
-                            company_website_url: [data.domain, [Validators.required, Validators.pattern(this.websiteReg)]],
-                            company_name: [data.name, [Validators.required, Validators.pattern(this.companyNameReg)]],
-                            country_code: [data.geo.countryCode, Validators.required],
-                            employees: [employees, Validators.required],
-                            agreed: [false, Validators.requiredTrue],
-                            country_name: [data.geo.country]
-                        });
-                        return false;
-                    } else {
-                        this.msgs = [];
-                        this.step = 'second';
-                    }
-                });
-            });
-
     }
 
 
@@ -161,7 +141,7 @@ export class SignupComponent implements OnInit {
             }
             this.companyForm = this.fb.group({
                 company_website_url: [data.domain, [Validators.required, Validators.pattern(this.websiteReg)]],
-                company_name: [data.name, [Validators.required, Validators.pattern(this.companyNameReg)]],
+                company_name: [data.name, [Validators.required]],
                 country_code: [data.geo.countryCode, Validators.required],
                 employees: [employees, Validators.required],
                 agreed: [false, Validators.requiredTrue],
@@ -173,11 +153,11 @@ export class SignupComponent implements OnInit {
 
     onFinishThirdStep() {
         this.contentLoading = true;
-        const data = Object.assign({}, this.companyForm.value, this.credentialsForm.value);
+        const data = Object.assign({}, this.companyForm.value);
         this.authService.getUserData()
             .then(geo_data => {
                 data.geo_data = geo_data;
-                this.authService.signup(data)
+                this.authService.completeSignUpWithGoogle(this.token, data, this.tenant)
                     .subscribe(
                         (response: any) => {
                             this.contentLoading = false;

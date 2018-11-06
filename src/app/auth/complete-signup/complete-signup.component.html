@@ -17,45 +17,7 @@
                     <div class="main-block">
                         <app-loader *ngIf="contentLoading"></app-loader>
                         <div class="inner-block">
-                            <ng-container *ngIf="step === 'first'">
-                                <a class="signin-btn" [href]="googleSigninLink">
-                                    <span class="abcRioButtonIcon" style="padding:6px">
-                                        <span style="width:18px;height:18px;" class="abcRioButtonSvgImageWithFallback abcRioButtonIconImage abcRioButtonIconImage18">
-                                            <img src="/assets/images/google.svg" alt="Google icon" width="18" height="18">
-                                        </span>
-                                    </span>
-                                    <span class="text">Sign up with Google</span>
-                                </a>
-                                <div class="separator">
-                                    <span class="separator-text">OR</span>
-                                </div>
-                                <form [formGroup]="credentialsForm" autocomplete="off">
-                                    <p-messages [(value)]="msgs"></p-messages>
-                                    <div class="section-content">
-                                        <div class="hc-form-row">
-                                            <input name="name" id="name" formControlName="name" class="form-input" type="text">
-                                            <label for="name" class="label-input">Full Name</label>
-                                        </div>
-                                        <div class="hc-form-row">
-                                            <input autocomplete="off" formControlName="email" id="email" class="form-input"
-                                                type="email" (keyup)="onKeyupEmail($event)">
-                                            <label for="email" class="label-input">Email Address</label>
-                                        </div>
-                                        <div class="hc-form-row password-row">
-                                            <input autocomplete="off" formControlName="password" type="password" class="form-input"
-                                                (keydown.enter)="onFinishFirstStep();false">
-                                            <label class="label-input">Password</label>
-
-                                        </div>
-                                        <div class="flex-row form-bottom">
-                                            <p class="attention">* We will never share your details with anyone</p>
-                                            <button class="btn btn-primary mla" [disabled]="!credentialsForm.valid"
-                                                (click)="onFinishFirstStep()" type="button">Next
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </ng-container>
+                            <p-messages [(value)]="msgs"></p-messages>
                             <ng-container *ngIf="step === 'second'">
                                 <form [formGroup]="websiteForm">
                                     <p-messages [(value)]="msgs"></p-messages>
@@ -72,7 +34,6 @@
                                 </form>
                             </ng-container>
                             <ng-container *ngIf="step === 'third'">
-                                <p-messages [(value)]="msgs"></p-messages>
                                 <form [formGroup]="companyForm">
                                     <div class="hc-form-row">
                                         <input formControlName="company_website_url" class="form-input" type="text" id="company_website_url">
