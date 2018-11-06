@@ -145,22 +145,26 @@ export class SignupComponent implements OnInit {
         this.contentLoading = true;
         this.step = 'third';
 
-        this.jobService.getDataCompany(this.websiteForm.value.url).subscribe((data: any) => {
-            this.contentLoading = false;
-            let employees = data.metrics.employeesRange;
-            if (employees) {
-                employees = employees.replace(/ /g, '');
-            }
-            this.companyForm = this.fb.group({
-                company_website_url: [data.domain, [Validators.required, Validators.pattern(this.websiteReg)]],
-                company_name: [data.name, [Validators.required, Validators.pattern(this.companyNameReg)]],
-                country_code: [data.geo.countryCode, Validators.required],
-                employees: [employees, Validators.required],
-                agreed: [false, Validators.requiredTrue],
-                country_name: [data.geo.country]
+        this.jobService.getDataCompany(this.websiteForm.value.url).subscribe(
+            (data: any) => {
+                this.contentLoading = false;
+                let employees = data.metrics.employeesRange;
+                if (employees) {
+                    employees = employees.replace(/ /g, '');
+                }
+                this.companyForm = this.fb.group({
+                        company_website_url: [data.domain, [Validators.required, Validators.pattern(this.websiteReg)]],
+                        company_name: [data.name, [Validators.required, Validators.pattern(this.companyNameReg)]],
+                        country_code: [data.geo.countryCode, Validators.required],
+                        employees: [employees, Validators.required],
+                        agreed: [false, Validators.requiredTrue],
+                        country_name: [data.geo.country]
+                    });
+            },
+            error => {
+                this.contentLoading = false;
+                console.error('error company not found');
             });
-
-        });
     }
 
     onFinishThirdStep() {
