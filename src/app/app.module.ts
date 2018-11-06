@@ -76,6 +76,7 @@ import { MultiSelectComponent } from './shared/multi-select/multi-select.compone
 import { ProgressCircleComponent } from './shared/progress-circle/progress-circle.component';
 import { ResumeFileTypeComponent } from './shared/resume-file-type/resume-file-type.component';
 import { UsersComponent } from './settings/users/users.component';
+import {InfiniteScrollModule} from "ngx-infinite-scroll";
 
 
 export function provideConfig() {
@@ -159,7 +160,8 @@ export function provideConfig() {
         AutoSizeInputModule,
         StoreModule.forRoot(reducers, { metaReducers }),
         !environment.production ? StoreDevtoolsModule.instrument() : [],
-        EffectsModule.forRoot([AppEffects, UserEffects, JobEffects])
+        EffectsModule.forRoot([AppEffects, UserEffects, JobEffects]),
+        InfiniteScrollModule
     ],
     providers: [
         {

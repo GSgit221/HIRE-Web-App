@@ -87,7 +87,10 @@
                     <div class="col col6 flex-8 flex-center"><img src="/assets/images/change_user.svg" alt="Change_user iocon"></div>
                     <div class="col col7 flex-8">Status</div>
                 </div>
-                <div class="nr-list-content">
+                <div class="nr-list-content" infiniteScroll
+                     [infiniteScrollDistance]="0.2"
+                     [infiniteScrollThrottle]="10"
+                     (scrolled)="onScroll()">
                     <div class="hc-blocker"></div>
                     <div class="hc-list-row" *ngFor="let candidate of candidates; let ind = index;" (click)="onItemClick($event, item)">
                         <div class="hc-list-row-content">
@@ -114,7 +117,6 @@
                         </div>
                     </div>
                 </div>
-                <button (click)="download()">download more</button>
             </div>
         </div>
         <app-loader *ngIf="contentLoading"></app-loader>
