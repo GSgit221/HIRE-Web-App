@@ -67,12 +67,4 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
             }
         );
     }
-    // scrollToBottom(): void {
-    //     console.log('scroll to bottom');
-    //     try {
-    //         this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-    //     } catch (err) {
-    //     }
-    // }
-
 }

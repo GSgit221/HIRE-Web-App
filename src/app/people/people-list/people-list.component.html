@@ -109,7 +109,7 @@
                                 <p class="hc-content-p">{{ candidate.location }}</p>
                             </div>
                             <div class="col col4  flex-20">
-                                <p class="hc-content-p">{{ candidate.position }}</p>
+                                <p class="hc-content-p">{{ candidate.position | titlecase }}</p>
                             </div>
                             <div class="col col5 flex-8 flex-center">{{ candidate.created_at_rel }}</div>
                             <div class="col col6 flex-8 flex-center">{{ candidate.updated_at_rel }}</div>

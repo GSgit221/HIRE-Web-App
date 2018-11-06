@@ -76,7 +76,7 @@ import { MultiSelectComponent } from './shared/multi-select/multi-select.compone
 import { ProgressCircleComponent } from './shared/progress-circle/progress-circle.component';
 import { ResumeFileTypeComponent } from './shared/resume-file-type/resume-file-type.component';
 import { UsersComponent } from './settings/users/users.component';
-import { InfiniteScrollModule } from "ngx-infinite-scroll";
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { BillingPlanComponent } from './settings/billing/billing-plan/billing-plan.component';
 import { BillingComponent } from './settings/billing/billing.component';
 import { BillingDetailsComponent } from './settings/billing/billing-details/billing-details.component';
