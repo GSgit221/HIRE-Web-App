@@ -114,7 +114,7 @@
     .col1 {
         position: relative;
     }
-    .col4 p {
+    .col2 p, .col3 p, .col4 p {
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -135,4 +135,7 @@
 }
 //.nr-list-content {
 //    height: 1200px;
+//}
+//.hc-list-row:nth-child(80n) {
+//    border-bottom: 5px solid red;
 //}
