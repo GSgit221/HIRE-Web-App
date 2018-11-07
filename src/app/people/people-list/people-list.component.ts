@@ -43,16 +43,16 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
             if (candidates.length === 0) {
                 this.finishDownLoadCandidates = true;
             }
-            setTimeout(() => {
-                candidates.forEach((item) => {
-                    this.candidates.push(item);
-                });
-                this.lastCandidate = {
-                    first_name: this.candidates[this.candidates.length - 1].first_name,
-                    last_name: this.candidates[this.candidates.length - 1].last_name
-                };
+            
+            candidates.forEach((item) => {
+                this.candidates.push(item);
+            });
+            this.lastCandidate = {
+                first_name: this.candidates[this.candidates.length - 1].first_name,
+                last_name: this.candidates[this.candidates.length - 1].last_name
+            };
 
-            }, 0);
+            
             // console.log(this.lastCandidate.first_name);
         });
     }

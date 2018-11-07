@@ -66,10 +66,6 @@ import { UploadFileNamePipe } from './pipes/upload-file-name.pipe';
 import { GetFitstLetterPipe } from './pipes/get-fitst-letter.pipe';
 import { metaReducers, reducers } from './reducers';
 import { UserResolver } from './resolvers/user.resolver';
-import { BillingDetailsComponent } from './settings/billing/billing-details/billing-details.component';
-import { BillingHistoryComponent } from './settings/billing/billing-history/billing-history.component';
-import { BillingPlanComponent } from './settings/billing/billing-plan/billing-plan.component';
-import { BillingComponent } from './settings/billing/billing.component';
 import { EmailTemplatesComponent } from './settings/email-templates/email-templates.component';
 import { IntegrationsComponent } from './settings/integrations/integrations.component';
 import { QuestionItemComponent } from './settings/questionnaires/question-item/question-item.component';
@@ -77,7 +73,6 @@ import { QuestionnaireNewComponent } from './settings/questionnaires/questionnai
 import { QuestionnairesListComponent } from './settings/questionnaires/questionnaires-list/questionnaires-list.component';
 import { QuestionsListComponent } from './settings/questionnaires/questions-list/questions-list.component';
 import { ScorecardsComponent } from './settings/scorecards/scorecards.component';
-import { UsersComponent } from './settings/users/users.component';
 import { CandidateFitCircleComponent } from './shared/candidate-fit-circle/candidate-fit-circle.component';
 import { FileTypeComponent } from './shared/file-type/file-type.component';
 import { LoaderComponent } from './shared/loader/loader.component';
@@ -85,7 +80,6 @@ import { MultiSelectComponent } from './shared/multi-select/multi-select.compone
 import { ProgressCircleComponent } from './shared/progress-circle/progress-circle.component';
 import { ResumeFileTypeComponent } from './shared/resume-file-type/resume-file-type.component';
 import { UsersComponent } from './settings/users/users.component';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { BillingPlanComponent } from './settings/billing/billing-plan/billing-plan.component';
 import { BillingComponent } from './settings/billing/billing.component';
 import { BillingDetailsComponent } from './settings/billing/billing-details/billing-details.component';
