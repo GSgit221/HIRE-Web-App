@@ -43,15 +43,12 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
         });
     }
     download() {
-
         this.jobService.getCandidatesChunk(this.lastCandidate.first_name, 100).subscribe((candidates: any) => {
             // console.log('ssss', candidates.length, this.lastCandidate.first_name);
             if (candidates.length === 0) {
                 this.finishDownLoadCandidates = true;
             }
-            
-            candidates.forEach((item, index) => {
-                
+            candidates.forEach((item) => {
                 if (this.selectedAll) {
                     item.checked = true;
                 }
@@ -61,14 +58,13 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
                 first_name: this.candidates[this.candidates.length - 1].first_name,
                 last_name: this.candidates[this.candidates.length - 1].last_name
             };
-
-            
             // console.log(this.candidates);
         });
     }
     onScroll() {
-        // console.log('scrolled!!');
-        this.download();
+        setTimeout(() => {
+            this.download();
+        }, 1000);
     }
 
 

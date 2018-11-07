@@ -95,7 +95,7 @@
                         <div class="hc-list-row-content">
                             <div class="col col1 flex-6 ">
                                 <div class="hc-checkbox" data-escape-click>
-                                    <p-checkbox binary="true" name="group" [inputId]="candidate.first_name"
+                                    <p-checkbox binary="true" name="group" [inputId]="'candidate-'+ind"
                                     [value]="candidate.first_name" [(ngModel)]="candidate.checked" (onChange)="onItemSeletectedChange($event, ind)"></p-checkbox>
                                 </div>
                                 <div class="img-block" *ngIf="!candidate.checked">
