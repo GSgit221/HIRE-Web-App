@@ -37,10 +37,11 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
             };
             // console.log(this.candidates, this.lastCandidate.first_name);
             // console.log(this.lastCandidate.first_name);
+            this.jobService.getCandidatesAmount().subscribe((amount: number) => {
+                this.amountCandidates = amount;
+            });
         });
-        this.jobService.getCandidatesAmount().subscribe((amount: number) => {
-            this.amountCandidates = amount;
-        });
+        
     }
     download() {
 
