@@ -41,7 +41,6 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
                 this.amountCandidates = amount;
             });
         });
-        
     }
     download() {
 
