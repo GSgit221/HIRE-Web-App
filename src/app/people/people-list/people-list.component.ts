@@ -35,7 +35,7 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
                 first_name: this.candidates[this.candidates.length - 1].first_name,
                 last_name: this.candidates[this.candidates.length - 1].last_name
             };
-            // console.log(this.candidates, this.lastCandidate.first_name);
+            console.log(this.candidates, this.lastCandidate.first_name);
             // console.log(this.lastCandidate.first_name);
             this.jobService.getCandidatesAmount().subscribe((amount: number) => {
                 this.amountCandidates = amount;
@@ -68,7 +68,9 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
     }
     onScroll() {
         // console.log('scrolled!!');
-        this.download();
+        setTimeout(() => {
+            this.download();
+        }, 1000);
     }
 
 
