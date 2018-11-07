@@ -60,6 +60,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { PeopleListComponent } from './people/people-list/people-list.component';
 import { InitialsPipe } from './pipes/initials.pipe';
 import { UploadFileNamePipe } from './pipes/upload-file-name.pipe';
+import { GetFitstLetterPipe } from './pipes/get-fitst-letter.pipe';
 import { metaReducers, reducers } from './reducers';
 import { UserResolver } from './resolvers/user.resolver';
 import { EmailTemplatesComponent } from './settings/email-templates/email-templates.component';
@@ -128,6 +129,7 @@ export function provideConfig() {
         InitialsPipe,
         NewCandidateItemComponent,
         UploadFileNamePipe,
+        GetFitstLetterPipe,
         FileTypeComponent,
         ResumeFileTypeComponent,
         ProgressCircleComponent,

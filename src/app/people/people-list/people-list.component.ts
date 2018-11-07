@@ -18,17 +18,15 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
 
     list;
     showFilter = false;
+    finishDownLoadCandidates = false;
 
     constructor(private jobService: JobService) {
     }
-
     ngOnInit() {
         this.contentLoading = true;
         this.jobService.getCandidatesChunk('first', 100).subscribe((candidates) => {
-            this.candidates = candidates || [];	            this.candidates = candidates || [];
+            this.candidates = candidates || [];
             this.lengthCandidates = this.formatWithComa(this.candidates.length);
-            this.lengthCandidates = this.formatWithComa(this.candidates.length);
-            this.filterCandidates = this.candidates.slice(0, 20);
             this.filterCandidates = this.candidates;
             this.contentLoading = false;
             this.lastCandidate = {
@@ -41,14 +39,20 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
     }
     download() {
         this.jobService.getCandidatesChunk(this.lastCandidate.first_name, 100).subscribe((candidates: any) => {
-            candidates.forEach((item) => {
-                this.candidates.push(item);
-            });
-            this.lastCandidate = {
-                first_name: this.candidates[this.candidates.length - 1].first_name,
-                last_name: this.candidates[this.candidates.length - 1].last_name
-            };
-            // console.log(this.candidates);
+            // console.log('ssss', candidates.length, candidates);
+            if (candidates.length === 0) {
+                this.finishDownLoadCandidates = true;
+            }
+            setTimeout(() => {
+                candidates.forEach((item) => {
+                    this.candidates.push(item);
+                });
+                this.lastCandidate = {
+                    first_name: this.candidates[this.candidates.length - 1].first_name,
+                    last_name: this.candidates[this.candidates.length - 1].last_name
+                };
+
+            }, 0);
             // console.log(this.lastCandidate.first_name);
         });
     }
@@ -71,5 +75,17 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
                 return s2 || (s1 + ',');
             }
         );
+    }
+    onItemsBulkRemove() {
+
+    }
+    onItemClick(event, item) {
+
+    }
+    onItemSeletectedChange() {
+
+    }
+    onSelectAllChange() {
+
     }
 }
