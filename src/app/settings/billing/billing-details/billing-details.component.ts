@@ -29,7 +29,7 @@ export class BillingDetailsComponent implements OnInit {
             country: ['']
         });
         this.creditCardDetailsForm = this.fb.group({
-            name: ['Mr Greg Knockott', Validators.required],
+            name: ['Mr Greg Kockott', Validators.required],
             cardNumber: ['', [Validators.required]],
             expiryDate: ['', Validators.required],
             cvvNumber: ['', [Validators.required]],
