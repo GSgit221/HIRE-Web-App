@@ -1,8 +1,10 @@
-import { Router } from '@angular/router';
-import { Message } from 'primeng/components/common/api';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
+import { Message } from 'primeng/components/common/api';
+
+import { environment } from '../../../environments/environment';
 import { JobService } from '../../services/job.service';
 import { UtilitiesService } from '../../services/utilities.service';
 import { AuthService } from '../auth.service';
@@ -35,8 +37,14 @@ export class SignupComponent implements OnInit {
         private authService: AuthService,
         private router: Router
     ) {
+        // Check if app
+        const tenant = this.utilities.getTenant();
+        console.log(tenant);
+
+
+
         // Google link
-        this.googleSigninLink = this.authService.getGoogleSigninLink();
+        this.googleSigninLink = this.authService.getGoogleSignupLink();
         // OPTIONS
         this.utilities.getCountries()
             .subscribe((countries: { name: string, code: string }[]) => {
@@ -79,7 +87,7 @@ export class SignupComponent implements OnInit {
     initForms() {
         this.credentialsForm = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(2),
-                Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]],
+            Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]],
             email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
             password: ['', [Validators.required, Validators.minLength(8)]],
         });
@@ -168,18 +176,23 @@ export class SignupComponent implements OnInit {
     }
 
     onFinishThirdStep() {
+        this.contentLoading = true;
         const data = Object.assign({}, this.companyForm.value, this.credentialsForm.value);
         this.authService.getUserData()
             .then(geo_data => {
                 data.geo_data = geo_data;
                 this.authService.signup(data)
                     .subscribe(
-                        response => {
+                        (response: any) => {
+                            this.contentLoading = false;
                             this.msgs = [];
-                            this.authService.setSession(response);
-                            this.router.navigateByUrl('/');
+                            this.authService.setSession(response, response.tenant_id);
+                            const url = environment.appUrl.replace('subdomain', response.tenant_id);
+                            console.log('REDIRECTING:', url);
+                            window.location.href = url;
                         },
                         response => {
+                            this.contentLoading = false;
                             this.msgs = [];
                             this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
                         }

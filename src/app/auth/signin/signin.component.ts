@@ -1,3 +1,4 @@
+import { UtilitiesService } from './../../services/utilities.service';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -29,7 +30,8 @@ export class SigninComponent implements OnInit {
         private fb: FormBuilder,
         private router: Router,
         private store: Store<State>,
-        private formHelper: FormHelperService
+        private formHelper: FormHelperService,
+        private utilities: UtilitiesService
     ) {
         this.signinForm = this.fb.group({
             email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
@@ -43,10 +45,31 @@ export class SigninComponent implements OnInit {
         const idTokenPart = urlParts.find(p => p.indexOf('id_token=') !== -1);
         const statePart = urlParts.find(p => p.indexOf('state=') !== -1);
         if (idTokenPart && statePart) {
-            const idToken = idTokenPart.replace('id_token=', '');
-            const tenant = statePart.replace('state=', '');
+            const token = idTokenPart.replace('id_token=', '');
+            const state = statePart.replace('state=', '');
+            const stateParts = state.split('-');
+            const type = stateParts[0];
+            const tenantId = stateParts[1];
+            console.log(tenantId, type);
+            console.log(token);
+            console.log('redirect');
+            if (type === 'signin') {
+                this.onSignInWithGoogle(token, tenantId);
+            }
+            if (type === 'signup') {
+                this.router.navigateByUrl(
+                    this.router.createUrlTree(
+                        ['complete-signup'], { queryParams: { tenantId, token } }
+                    )
+                );
+            }
+        } else {
+            // Check if app
+            const tenant = this.utilities.getTenant();
             console.log(tenant);
-            this.onSignInWithGoogle(idToken, tenant);
+            if (tenant === 'app') {
+                this.router.navigateByUrl('/signup');
+            }
         }
     }
 

@@ -26,13 +26,35 @@ export class AuthService {
             : encodeURI(environment.appUrl.replace('subdomain', 'oauth'));
         const accessType = 'online';
         const nonce = 'hire-by-hellocrowd-' + this.utilities.generateUID(5);
-        const state = this.utilities.getTenant();
+        const state = 'signin-' + this.utilities.getTenant();
+        return `${base}?client_id=${clientId}&response_type=${responseType}&scope=${scope}&redirect_uri=${redirectUri}&access_type=${accessType}&nonce=${nonce}&state=${state}`;
+    }
+
+    getGoogleSignupLink() {
+        const base = 'https://accounts.google.com/o/oauth2/auth';
+        const clientId = environment.googleClientId;
+        const scope = 'openid+profile+email';
+        const responseType = 'id_token+token';
+        const redirectUri = this.utilities.isLocalDevelopment()
+            ? encodeURI(environment.googleSigninRedirectUri)
+            : encodeURI(environment.appUrl.replace('subdomain', 'app'));
+        const accessType = 'online';
+        const nonce = 'hire-by-hellocrowd-' + this.utilities.generateUID(5);
+        const state = 'signup-' + this.utilities.getTenant();
         return `${base}?client_id=${clientId}&response_type=${responseType}&scope=${scope}&redirect_uri=${redirectUri}&access_type=${accessType}&nonce=${nonce}&state=${state}`;
     }
 
 
-    signInWithGoogle(token, user_data = {}, tenant) {
-        return this.http.post(`${environment.apiUrl}/auth/oauth/google`, { token, user_data, source: 'jobs', tenant });
+    signInWithGoogle(token, geo_data = {}, tenant) {
+        return this.http.post(`${environment.apiUrl}/auth/oauth/google`, { token, geo_data, source: 'jobs', tenant });
+    }
+
+    signUpWithGoogle(token, geo_data = {}, tenant) {
+        return this.http.post(`${environment.apiUrl}/auth/signup-google`, { token, geo_data, source: 'jobs', tenant });
+    }
+
+    completeSignUpWithGoogle(token, data, tenant) {
+        return this.http.post(`${environment.apiUrl}/auth/complete-signup-google`, { ...data, token, source: 'jobs', tenant });
     }
 
     signin(email, password) {
@@ -87,6 +109,6 @@ export class AuthService {
         });
     }
     getCompanyByEmail(email) {
-        return this.http.post(`${environment.apiUrl}/email`, {email})
+        return this.http.post(`${environment.apiUrl}/email`, { email });
     }
 }
