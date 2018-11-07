@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { SelectItem } from "primeng/api";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { SelectItem } from 'primeng/api';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-billing-details',
-  templateUrl: './billing-details.component.html',
-  styleUrls: ['./billing-details.component.scss']
+    selector: 'app-billing-details',
+    templateUrl: './billing-details.component.html',
+    styleUrls: ['./billing-details.component.scss']
 })
 export class BillingDetailsComponent implements OnInit {
 
@@ -16,7 +16,7 @@ export class BillingDetailsComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.billingDetailsForm = this.fb.group({
@@ -30,16 +30,16 @@ export class BillingDetailsComponent implements OnInit {
         });
         this.creditCardDetailsForm = this.fb.group({
             name: ['Mr Greg Knockott', Validators.required],
-            cardNumber: ['', [ Validators.required, Validators.maxLength(16)]],
-            expiryDate: ['', Validators.required ],
-            cvvNumber: ['',  [Validators.required, Validators.maxLength(3)]],
+            cardNumber: ['', [Validators.required]],
+            expiryDate: ['', Validators.required],
+            cvvNumber: ['', [Validators.required]],
 
         });
         this.countryOptions = [
             { label: 'South Africa', value: '1' },
             { label: 'USA', value: '2' },
             { label: 'India', value: '3' }
-        ]
+        ];
     }
     onkeypress(e) {
         if (!((e.keyCode >= 48 && e.keyCode <= 57))) {

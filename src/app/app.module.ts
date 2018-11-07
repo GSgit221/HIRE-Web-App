@@ -8,11 +8,13 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { CreditCardDirectivesModule } from 'angular-cc-library';
 import { AuthServiceConfig, GoogleLoginProvider, SocialLoginModule } from 'angularx-social-login';
 import { NgDragDropModule } from 'ng-drag-drop';
 import { AutoSizeInputModule } from 'ngx-autosize-input';
 import { CookieService } from 'ngx-cookie-service';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
 import { EditorModule } from 'primeng/editor';
@@ -33,6 +35,7 @@ import { ApplicationsSigninComponent } from './applications/auth/signin/signin.c
 import { ApplicationsSignupComponent } from './applications/auth/signup/signup.component';
 import { JobApplicationComponent } from './applications/job-application/job-application.component';
 import { AuthService } from './auth/auth.service';
+import { CompleteSignupComponent } from './auth/complete-signup/complete-signup.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 import { SetPasswordComponent } from './auth/set-password/set-password.component';
 import { SigninComponent } from './auth/signin/signin.component';
@@ -62,6 +65,10 @@ import { InitialsPipe } from './pipes/initials.pipe';
 import { UploadFileNamePipe } from './pipes/upload-file-name.pipe';
 import { metaReducers, reducers } from './reducers';
 import { UserResolver } from './resolvers/user.resolver';
+import { BillingDetailsComponent } from './settings/billing/billing-details/billing-details.component';
+import { BillingHistoryComponent } from './settings/billing/billing-history/billing-history.component';
+import { BillingPlanComponent } from './settings/billing/billing-plan/billing-plan.component';
+import { BillingComponent } from './settings/billing/billing.component';
 import { EmailTemplatesComponent } from './settings/email-templates/email-templates.component';
 import { IntegrationsComponent } from './settings/integrations/integrations.component';
 import { QuestionItemComponent } from './settings/questionnaires/question-item/question-item.component';
@@ -69,6 +76,7 @@ import { QuestionnaireNewComponent } from './settings/questionnaires/questionnai
 import { QuestionnairesListComponent } from './settings/questionnaires/questionnaires-list/questionnaires-list.component';
 import { QuestionsListComponent } from './settings/questionnaires/questions-list/questions-list.component';
 import { ScorecardsComponent } from './settings/scorecards/scorecards.component';
+import { UsersComponent } from './settings/users/users.component';
 import { CandidateFitCircleComponent } from './shared/candidate-fit-circle/candidate-fit-circle.component';
 import { FileTypeComponent } from './shared/file-type/file-type.component';
 import { LoaderComponent } from './shared/loader/loader.component';
@@ -139,7 +147,8 @@ export function provideConfig() {
         BillingPlanComponent,
         BillingComponent,
         BillingDetailsComponent,
-        BillingHistoryComponent
+        BillingHistoryComponent,
+        CompleteSignupComponent
     ],
     imports: [
         AppRoutingModule,
@@ -168,7 +177,8 @@ export function provideConfig() {
         StoreModule.forRoot(reducers, { metaReducers }),
         !environment.production ? StoreDevtoolsModule.instrument() : [],
         EffectsModule.forRoot([AppEffects, UserEffects, JobEffects]),
-        InfiniteScrollModule
+        InfiniteScrollModule,
+        CreditCardDirectivesModule
     ],
     providers: [
         {

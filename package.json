@@ -27,6 +27,7 @@
     "@ngrx/entity": "^6.1.0",
     "@ngrx/store": "^6.1.0",
     "@ngrx/store-devtools": "^6.1.0",
+    "angular-cc-library": "^1.2.4",
     "angularx-social-login": "^1.2.3",
     "animate.css": "^3.7.0",
     "closest": "0.0.1",

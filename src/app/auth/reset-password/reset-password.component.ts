@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { AuthService } from '../auth.service';
+import { UtilitiesService } from 'src/app/services/utilities.service';
 
 @Component({
     selector: 'app-reset-password',
@@ -19,8 +20,16 @@ export class ResetPasswordComponent implements OnInit {
         private authService: AuthService,
         private fb: FormBuilder,
         private router: Router,
-        private formHelper: FormHelperService
+        private formHelper: FormHelperService,
+        private utilities: UtilitiesService
     ) {
+        // Check if app
+        const tenant = this.utilities.getTenant();
+        console.log(tenant);
+        if (tenant === 'app') {
+            this.router.navigateByUrl('/signup');
+        }
+
         this.resetForm = this.fb.group({
             email: ['', Validators.required]
         });

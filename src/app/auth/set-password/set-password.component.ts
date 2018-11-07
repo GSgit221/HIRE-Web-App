@@ -1,3 +1,4 @@
+import { UtilitiesService } from 'src/app/services/utilities.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -22,8 +23,17 @@ export class SetPasswordComponent implements OnInit {
         private fb: FormBuilder,
         private router: Router,
         private route: ActivatedRoute,
-        private formHelper: FormHelperService
+        private formHelper: FormHelperService,
+        private utilities: UtilitiesService
     ) {
+        // Check if app
+        const tenant = this.utilities.getTenant();
+        console.log(tenant);
+        if (tenant === 'app') {
+            this.router.navigateByUrl('/signup');
+        }
+
+
         this.setPasswordForm = this.fb.group({
             password: ['', Validators.required],
             confirm_password: ['', Validators.required],
