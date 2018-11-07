@@ -24,19 +24,23 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.contentLoading = true;
-        this.jobService.getCandidatesChunk('first', 80).subscribe((candidates) => {
+        this.jobService.getCandidatesChunk('first', 100).subscribe((candidates) => {
             this.candidates = candidates || [];	            this.candidates = candidates || [];
             this.lengthCandidates = this.formatWithComa(this.candidates.length);
             this.lengthCandidates = this.formatWithComa(this.candidates.length);
             this.filterCandidates = this.candidates.slice(0, 20);
             this.filterCandidates = this.candidates;
-            this.contentLoading = false;	            this.contentLoading = false;
-            this.lastCandidate = this.candidates[this.candidates.length - 1].first_name;
+            this.contentLoading = false;
+            this.lastCandidate = {
+                first_name: this.candidates[this.candidates.length - 1].first_name,
+                last_name: this.candidates[this.candidates.length - 1].last_name
+            };
             // console.log(this.candidates);
+            // console.log(this.lastCandidate.first_name);
         });
     }
     download() {
-        this.jobService.getCandidatesChunk(this.lastCandidate, 80).subscribe((candidates: any) => {
+        this.jobService.getCandidatesChunk(this.lastCandidate.first_name, 100).subscribe((candidates: any) => {
             candidates.forEach((item) => {
                 this.candidates.push(item);
             });
@@ -45,6 +49,7 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
                 last_name: this.candidates[this.candidates.length - 1].last_name
             };
             // console.log(this.candidates);
+            // console.log(this.lastCandidate.first_name);
         });
     }
     onScroll() {
