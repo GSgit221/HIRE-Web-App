@@ -96,7 +96,14 @@
         
     }
 }
+.svg-loader{
+    width: 100px;
+    height: 100px;
+    display: block;
+    margin: 10px auto;
+}
 .nr-list-content {
+    
     .img-block {
         border-radius: 50%;
         overflow: hidden;
@@ -110,6 +117,12 @@
         height: 30px;
         border-radius: 50%;
         background: #D7DBDF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        letter-spacing: -1px;
+        font-size: 12px;
+        text-transform: uppercase;
     }
     .col1 {
         position: relative;
@@ -136,6 +149,6 @@
 //.nr-list-content {
 //    height: 1200px;
 //}
-//.hc-list-row:nth-child(80n) {
+// .hc-list-row:nth-child(100n) {
 //    border-bottom: 5px solid red;
-//}
+// }
