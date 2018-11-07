@@ -19,6 +19,7 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
     list;
     showFilter = false;
     finishDownLoadCandidates = false;
+    selectedAll = false;
 
     constructor(private jobService: JobService) {
     }
@@ -82,10 +83,21 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
     onItemClick(event, item) {
 
     }
-    onItemSeletectedChange() {
-
+    onItemSeletectedChange($event: Event, index: number) {
+        this.candidates[index].checked = true;
+        console.log(this.candidates[index]);
     }
     onSelectAllChange() {
+        if (this.selectedAll) {
+            this.candidates.forEach((item) => {
+                item.checked = true;
+            });
+        } else {
+            this.candidates.forEach((item) => {
+                item.checked = false;
+            });
+        }
+        console.log(this.selectedAll);
 
     }
 }
