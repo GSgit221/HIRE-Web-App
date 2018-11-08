@@ -666,3 +666,32 @@ p-selectbutton {
         }
     }
 }
+
+
+// Slider candidate-item
+.overall-rating {
+    p-slider {
+        margin: 18px 0 16px;
+        display: block;
+        cursor: pointer;
+    }
+    .ui-slider {
+        background: $light-grey;
+        height: 3px;
+        border-radius: 50px;
+        box-shadow: none;
+        .ui-slider-handle {
+            width: 16px !important;
+            height: 16px !important;
+            background: $pink;
+            border-radius: 50%;
+            top: -6px !important;
+        }
+        .ui-slider-range {
+            background: $pink;
+            height: 7px !important;
+            top: -2px !important;
+            box-shadow: none !important;
+        }
+    }
+}

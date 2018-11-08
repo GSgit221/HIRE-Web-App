@@ -84,6 +84,7 @@ import { BillingPlanComponent } from './settings/billing/billing-plan/billing-pl
 import { BillingComponent } from './settings/billing/billing.component';
 import { BillingDetailsComponent } from './settings/billing/billing-details/billing-details.component';
 import { BillingHistoryComponent } from './settings/billing/billing-history/billing-history.component';
+import { CandidateItemFeedbackComponent } from './candidates/candidate-item-feedback/candidate-item-feedback.component';
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -144,7 +145,8 @@ export function provideConfig() {
         BillingComponent,
         BillingDetailsComponent,
         BillingHistoryComponent,
-        CompleteSignupComponent
+        CompleteSignupComponent,
+        CandidateItemFeedbackComponent
     ],
     imports: [
         AppRoutingModule,
