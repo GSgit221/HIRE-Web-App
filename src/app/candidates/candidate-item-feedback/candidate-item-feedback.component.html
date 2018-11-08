@@ -1,0 +1,59 @@
+
+<div class="wrap-btn">
+    <button class="save-results btn btn-primary" (click)="saveResults()">Save</button>
+</div>
+<h3>Overall Candidate Thoughts?</h3>
+<textarea></textarea>
+<h3>Overall Rating?</h3>
+<div class="overall-rating">
+    <div class="slider-wrap">
+        <p-slider [(ngModel)]="valOverallRating" [styleClass]="wert" [style]="{'width':'100%'}"></p-slider>
+        <div class="bar">
+            <div class="bar-step w25"></div>
+            <div class="bar-step w50"></div>
+            <div class="bar-step w75"></div>
+            <div class="bar-step w100"></div>
+        </div>
+    </div>
+
+    <div class="img-icons">
+        <img src="/assets/images/sad-icon.svg" alt="Sad icon">
+        <img src="/assets/images/neutral-icon.svg" alt="Neutral icon">
+        <img src="/assets/images/happy-icon.svg" alt="Happy icon">
+    </div>
+</div>
+<div class="position-rating">
+    <div class="wrap">
+        <h3>Potisition Specific Rating</h3>
+        <button class="btn-add btn" *ngIf="!editView" (click)="openEdit()">Add</button>
+    </div>
+    <div class="list-abilities" [ngClass]="{'not-edit': !editView }">
+        <div class="item" *ngFor="let ability of abilities;let ind = index">
+            <p>{{ ability }}</p>
+            <ng-container *ngIf="editView">
+                <button class="btn" (click)="moveUp(ind)" [ngClass]="{'disabled': ind == 0}" [disabled]="ind == 0">
+                    <img src="/assets/images/arrow-up.svg" alt="Arrow icon">
+                </button>
+                <button class="btn" (click)="moveDown(ind)" [ngClass]="{'disabled': ind == abilities.length - 1}"
+                        [disabled]="ind == abilities.length - 1">
+                    <img src="/assets/images/arrow-down.svg" alt="Arrow icon">
+                </button>
+                <button class="btn" (click)="removeAbility(ind)">
+                    <img src="/assets/images/close.svg" alt="Arrow icon">
+                </button>
+            </ng-container>
+            <ng-container *ngIf="!editView">
+                <div class="img-icons">
+                    <img src="/assets/images/sad-icon.svg" alt="Sad icon">
+                    <img src="/assets/images/neutral-icon.svg" alt="Neutral icon">
+                    <img src="/assets/images/happy-icon.svg" alt="Happy icon">
+                </div>
+            </ng-container>
+
+        </div>
+        <input class="add-abilities" *ngIf="editView" (keyup.enter)="addAbilities(input)" type="text" #input
+               placeholder="Add annother">
+    </div>
+    <button class="save btn btn-primary" *ngIf="editView" (click)="saveAbilities(input)">Save</button>
+
+</div>
