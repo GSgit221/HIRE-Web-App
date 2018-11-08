@@ -49,7 +49,7 @@
 
             </div>
         </button>
-        <!--<div class="sum-candidate">{{ candidates?.length }} Candidates</div>-->
+        <div class="sum-candidate">{{ amountCandidates }} Candidates</div>
     </div>
     <div class="list-people" #scrollMe>
         <div>
@@ -87,7 +87,7 @@
                     <div class="col col7 flex-8">Status</div>
                 </div>
                 <div class="nr-list-content" infiniteScroll
-                     [infiniteScrollDistance]="0.2"
+                     [infiniteScrollDistance]="1"
                      [infiniteScrollThrottle]="10"
                      (scrolled)="onScroll()">
                     <div class="hc-blocker"></div>
@@ -95,7 +95,7 @@
                         <div class="hc-list-row-content">
                             <div class="col col1 flex-6 ">
                                 <div class="hc-checkbox" data-escape-click>
-                                    <p-checkbox binary="true" name="group" [inputId]="candidate.first_name"
+                                    <p-checkbox binary="true" name="group" [inputId]="'candidate-'+ind"
                                     [value]="candidate.first_name" [(ngModel)]="candidate.checked" (onChange)="onItemSeletectedChange($event, ind)"></p-checkbox>
                                 </div>
                                 <div class="img-block" *ngIf="!candidate.checked">
@@ -123,7 +123,7 @@
                 </div>
             </div>
             <svg *ngIf="!finishDownLoadCandidates" class="svg-loader" version="1.1" id="L4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
+                x="0px" y="0px" viewBox="0 0 55 100" enable-background="new 0 0 0 0" xml:space="preserve">
                 <circle fill="#FF2D55" stroke="none" cx="6" cy="50" r="6">
                     <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.1" />
                 </circle>

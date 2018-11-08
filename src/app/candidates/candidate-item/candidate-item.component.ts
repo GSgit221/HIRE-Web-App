@@ -13,7 +13,7 @@ import { Job } from '../../models/job';
 })
 export class CandidateItemComponent implements OnInit {
     activeSection = 'overview';
-    activeInteractivity = 'chat';
+    activeInteractivity = 'report';
     summaryContentShow = true;
     experienceContentShow = true;
     educationContentShow = true;

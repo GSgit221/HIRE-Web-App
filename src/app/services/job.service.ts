@@ -114,6 +114,9 @@ export class JobService {
     getCandidatesChunk(startAt, limit) {
         return this.http.get(`${this.apiURL}/tenants/${this.tenantId}/candidates-chunk?sortBy='sds'&startAt=${startAt}&limit=${limit}`);
     }
+    getCandidatesAmount() {
+        return this.http.get(`${this.apiURL}/tenants/${this.tenantId}/candidates-amount`);
+    }
     getDataCompany(url) {
         return this.http.post(`${this.apiURL}/company`, { url : url });
     }

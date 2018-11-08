@@ -20,6 +20,7 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
     showFilter = false;
     finishDownLoadCandidates = false;
     selectedAll = false;
+    amountCandidates;
 
     constructor(private jobService: JobService) {
     }
@@ -34,32 +35,36 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
                 first_name: this.candidates[this.candidates.length - 1].first_name,
                 last_name: this.candidates[this.candidates.length - 1].last_name
             };
-            // console.log(this.candidates);
+            // console.log(this.candidates, this.lastCandidate.first_name);
             // console.log(this.lastCandidate.first_name);
+            this.jobService.getCandidatesAmount().subscribe((amount: number) => {
+                this.amountCandidates = amount;
+            });
         });
     }
     download() {
         this.jobService.getCandidatesChunk(this.lastCandidate.first_name, 100).subscribe((candidates: any) => {
-            // console.log('ssss', candidates.length, candidates);
+            // console.log('ssss', candidates.length, this.lastCandidate.first_name);
             if (candidates.length === 0) {
                 this.finishDownLoadCandidates = true;
             }
-            
             candidates.forEach((item) => {
+                if (this.selectedAll) {
+                    item.checked = true;
+                }
                 this.candidates.push(item);
             });
             this.lastCandidate = {
                 first_name: this.candidates[this.candidates.length - 1].first_name,
                 last_name: this.candidates[this.candidates.length - 1].last_name
             };
-
-            
-            // console.log(this.lastCandidate.first_name);
+            // console.log(this.candidates);
         });
     }
     onScroll() {
-        // console.log('scrolled!!');
-        this.download();
+        setTimeout(() => {
+            this.download();
+        }, 1000);
     }
 
 
@@ -84,8 +89,11 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
 
     }
     onItemSeletectedChange($event: Event, index: number) {
-        this.candidates[index].checked = true;
-        console.log(this.candidates[index]);
+        if (this.candidates[index].checked) {
+            this.candidates[index].checked = true;
+        } else {
+            this.candidates[index].checked = false;
+        }
     }
     onSelectAllChange() {
         if (this.selectedAll) {
@@ -97,7 +105,5 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
                 item.checked = false;
             });
         }
-        console.log(this.selectedAll);
-
     }
 }
