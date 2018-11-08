@@ -20,12 +20,12 @@ export class CandidateItemComponent implements OnInit {
     jobId: string;
     job: Job;
     candidateId: string;
-    skillsMap = {
-        'SKILLS': 'Skills',
-        'LANGUAGES': 'Languages',
-        'MANAGEMENT_LEVEL': 'Management',
-        'EDUCATION': 'Education',
-        'LOCATION': 'Location'
+    matchingMap = {
+        JOB_TITLES: 'Job Titles',
+        SKILLS: 'Skills',
+        INDUSTRIES: 'Industries',
+        CERTIFICATIONS: 'Certifications',
+        MANAGEMENT_LEVEL: 'Management Level',
     };
 
     candidate: JobCandidate;
@@ -47,11 +47,9 @@ export class CandidateItemComponent implements OnInit {
             .subscribe((candidate: JobCandidate) => {
                 this.candidate = candidate;
                 console.log(this.candidate);
+                this.processMatching();
                 setTimeout(() => this.contentLoading = false, 200);
                 console.log('FROM ROUTE-------------------- JOB:', this.jobId, this.candidateId);
-
-
-
                 if (!this.candidate.resume_file) {
                     this.activeSection = 'attachments';
                 }
@@ -67,6 +65,21 @@ export class CandidateItemComponent implements OnInit {
     }
 
     ngOnInit() {
+    }
+
+    processMatching() {
+        if (this.candidate && this.candidate.matching && this.candidate.matching[this.jobId] && this.candidate.matching[this.jobId].UnweightedCategoryScores && this.candidate.skills) {
+            const matching = this.candidate.matching[this.jobId];
+            const scores = matching.UnweightedCategoryScores;
+            scores.forEach(s => {
+                s.TermsFound.forEach(t => {
+                    const skill = this.candidate.skills.find(sk => sk.title === t);
+                    if (skill) {
+                        skill.found_in_matching = true;
+                    }
+                });
+            });
+        }
     }
 
 

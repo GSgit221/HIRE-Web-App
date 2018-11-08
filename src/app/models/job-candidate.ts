@@ -5,5 +5,7 @@ export class JobCandidate {
     email: string;
     stage: any;
     score?: any;
+    skills?: any;
+    matching?: any;
     resume_file?: string;
 }
