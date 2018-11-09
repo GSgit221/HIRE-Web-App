@@ -9,6 +9,7 @@
 
 .text {
     margin: 0 0 0 4px;
+
     span {
         display: block;
         font-weight: bold;
@@ -17,6 +18,7 @@
         color: $sapphire-blue;
         margin: 0 0 2px;
     }
+
     strong {
         display: block;
         font-weight: bold;
@@ -57,18 +59,38 @@
     fill: none;
 }
 
-.greenbg .progress-value {
-    stroke: $dark-green;
+.green-bg {
+    background: none !important;
+
+    .progress-value {
+        stroke: $dark-green;
+    }
+
+    .result, .text strong {
+        color: $dark-green;
+    }
 }
 
-.greenbg .result, .greenbg .text strong {
-    color: $dark-green
+.orange-bg {
+    background: none !important;
+
+    .progress-value {
+        stroke: $orange;
+    }
+
+    .result, .text strong {
+        color: $orange;
+    }
 }
 
-.redbg .progress-value {
-    stroke: $light-red;
-}
+.red-bg {
+    background: none !important;
 
-.redbg .result, .redbg .text strong {
-    color: $light-red
+    .progress-value {
+        stroke: $light-red;
+    }
+
+    .result, .text strong {
+        color: $light-red;
+    }
 }

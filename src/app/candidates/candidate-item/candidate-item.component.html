@@ -103,7 +103,7 @@
                                 <div class="score-item" *ngIf="matchingMap[item.Category]">
                                     <div class="score-name">{{matchingMap[item.Category]}}</div>
                                     <div class="score-chart">
-                                        <div class="line" [ngStyle]="{'width': item.UnweightedScore + '%'}" [ngClass]="{'green-bg': item.UnweightedScore >= 66, 'orange-bg': item.UnweightedScore >= 33 && item.UnweightedScore < 66, 'red-bg': item.UnweightedScore < 33}"></div>
+                                        <div class="line" [ngStyle]="{'width': item.UnweightedScore + '%'}" [ngClass]="{'green-bg': item.UnweightedScore >= 60, 'orange-bg': item.UnweightedScore >= 50 && item.UnweightedScore < 60, 'red-bg': item.UnweightedScore < 50}"></div>
                                     </div>
                                     <div class="score-result">{{item.UnweightedScore}}%</div>
                                 </div>
@@ -119,22 +119,12 @@
                         </div>
                         <p class="content-text content-summary">{{candidate.executive_summary}}</p>
                     </div>
-                    <ng-container *ngIf="candidate.matching && candidate.matching[jobId]">
-                        <div *ngIf="candidate.skills && candidate.skills.length">
-                            <h3>Skills</h3>
-                            <div class="skills-list">
-                                <div class="skill-name" *ngFor="let skill of candidate.skills" [ngClass]="{'green-bg': skill.found_in_matching}">{{skill.title}}</div>
-                            </div>
+                    <div *ngIf="candidate.skills && candidate.skills.length">
+                        <h3>Skills</h3>
+                        <div class="skills-list">
+                            <div class="skill-name" *ngFor="let skill of candidate.skills" [ngClass]="{'green-bg': skill.percent_of_parent_taxonomy > 30, 'orange-bg': skill.percent_of_parent_taxonomy >= 15 && skill.percent_of_parent_taxonomy < 30}">{{skill.title}}</div>
                         </div>
-                    </ng-container>
-                    <ng-container *ngIf="!candidate.matching || !candidate.matching[jobId]">
-                        <div *ngIf="candidate.skills && candidate.skills.length">
-                            <h3>Skills</h3>
-                            <div class="skills-list">
-                                <div class="skill-name" *ngFor="let skill of candidate.skills" [ngClass]="{'green-bg': skill.percent_of_overall > 30, 'orange-bg': skill.percent_of_overall >= 15 && skill.percent_of_overall < 30}">{{skill.title}}</div>
-                            </div>
-                        </div>
-                    </ng-container>
+                    </div>
                     <div *ngIf="candidate.employment_history && candidate.employment_history.length">
                         <div class="wrap-block">
                             <div class="wrap-title">

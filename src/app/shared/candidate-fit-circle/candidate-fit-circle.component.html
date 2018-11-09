@@ -1,4 +1,4 @@
-<div class="candidate-fit" [ngClass]="{greenbg: value >= 50, redbg: value < 50}">
+<div class="candidate-fit" [ngClass]="{'green-bg': value >= 60, 'orange-bg': value >= 50 && value < 60 , 'red-bg': value < 50}">
     <div class="circle">
         <svg class="progress" width="80" height="80">
             <circle class="progress-meter" cx="40" cy="40" [attr.r]="radius" stroke-width="3"></circle>

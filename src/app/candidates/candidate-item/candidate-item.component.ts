@@ -47,7 +47,6 @@ export class CandidateItemComponent implements OnInit {
             .subscribe((candidate: JobCandidate) => {
                 this.candidate = candidate;
                 console.log(this.candidate);
-                this.processMatching();
                 setTimeout(() => this.contentLoading = false, 200);
                 console.log('FROM ROUTE-------------------- JOB:', this.jobId, this.candidateId);
                 if (!this.candidate.resume_file) {
@@ -67,20 +66,20 @@ export class CandidateItemComponent implements OnInit {
     ngOnInit() {
     }
 
-    processMatching() {
-        if (this.candidate && this.candidate.matching && this.candidate.matching[this.jobId] && this.candidate.matching[this.jobId].UnweightedCategoryScores && this.candidate.skills) {
-            const matching = this.candidate.matching[this.jobId];
-            const scores = matching.UnweightedCategoryScores;
-            scores.forEach(s => {
-                s.TermsFound.forEach(t => {
-                    const skill = this.candidate.skills.find(sk => sk.title === t);
-                    if (skill) {
-                        skill.found_in_matching = true;
-                    }
-                });
-            });
-        }
-    }
+    // processMatching() {
+    //     if (this.candidate && this.candidate.matching && this.candidate.matching[this.jobId] && this.candidate.matching[this.jobId].UnweightedCategoryScores && this.candidate.skills) {
+    //         const matching = this.candidate.matching[this.jobId];
+    //         const scores = matching.UnweightedCategoryScores;
+    //         scores.forEach(s => {
+    //             s.TermsFound.forEach(t => {
+    //                 const skill = this.candidate.skills.find(sk => sk.title === t);
+    //                 if (skill) {
+    //                     skill.found_in_matching = true;
+    //                 }
+    //             });
+    //         });
+    //     }
+    // }
 
 
     onChangeSection(section: string) {
