@@ -673,7 +673,7 @@ p-selectbutton {
     p-slider {
         margin: 18px 0 16px;
         display: block;
-        cursor: pointer;
+
     }
     .ui-slider {
         background: $light-grey;
@@ -686,6 +686,7 @@ p-selectbutton {
             background: $pink;
             border-radius: 50%;
             top: -6px !important;
+            cursor: pointer;
         }
         .ui-slider-range {
             background: $pink;

@@ -1,14 +1,14 @@
 @import "../../../styles/variables.scss";
 textarea {
-    color: #637381;
+    color: $main-blue;
     width: 100%;
-    height: 71px;
+    min-height: 71px;
     outline: none;
     border: 1px solid #D8D8D8;
     border-radius: 2px;
     padding: 10px;
     margin: 6px 0 23px;
-    font-size: 12px;
+    font-size: 13px;
     resize: none;
 }
 .btn-add {
@@ -27,6 +27,35 @@ h3 {
     margin: 0;
 }
 
+.img-icons {
+    .img-block {
+        cursor: pointer;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &.pink {
+            background: $pink;
+            g {
+                fill: #fff;
+            }
+        }
+        &.yellow {
+            background: $orange2;
+            g {
+                fill: #fff;
+            }
+        }
+        &.green {
+            background: $dark-green;
+            g {
+                fill: #fff;
+            }
+        }
+    }
+}
 .overall-rating {
     margin: 0 0 35px;
     .img-icons {
@@ -69,8 +98,17 @@ h3 {
     position: relative;
     min-height: 35px;
 }
-wrap-btn {
+.wrap-btn {
     position: relative;
+}
+.btn-edit {
+    color: $pink;
+    text-decoration: underline;
+    padding-right: 0;
+    font-weight: 400;
+    &:hover {
+        text-decoration: none;
+    }
 }
 .save-results {
     position: absolute;
@@ -82,17 +120,22 @@ wrap-btn {
     margin: 0 0 10px;
     padding: 8px 0 0;
     &.not-edit {
-        opacity: 0.6;
-        font-weight: bold;
         .item {
             border: none;
             background: transparent;
             margin: 0 0 4px;
+            padding: 0 0 0 0;
         }
     }
+    .img-block {
+        cursor: auto;
+    }
     .img-icons {
-        flex: 0 0 135px;
-        img {
+        flex: 1;
+        display: flex;
+        margin: 0 -7px 0 auto;
+        justify-content: flex-end;
+        .img-block {
             margin: 0 15px;
             &:last-child {
                 margin-right: 0;
@@ -148,5 +191,170 @@ wrap-btn {
     :-moz-placeholder { 
         color: $middle-grey;
     }
-
+}
+.initial {
+    border-radius: 50%;
+    overflow: hidden;
+    display: inline-flex;
+    transition: all 0.25s;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #D7DBDF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: -1px;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+.edit {
+    .list-abilities {
+        .img-block {
+            cursor: pointer;
+        }
+        .item {
+            border: none;
+            border-bottom: 1px solid $light-grey;
+            padding: 4px 0 4px 0;
+            font-weight: bold;
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+    }
+}    
+.result {
+    .submitted-users {
+        display: flex;
+        justify-content: flex-start;  
+        margin: 30px 0 20px;  
+    }
+    .number {
+        padding: 0 23px 10px 0;
+        border-right: 1px solid $light-grey;
+        span {
+            background: $dark-green;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            color: $white;
+            font-size: 36px;
+            font-weight: 300;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+    .avatars-block {
+        padding: 0 0 0 26px;
+        h4 {
+            margin: 0 0 2px;
+            font-size: 14px;
+        }
+        .avatar {
+            display: inline-flex;
+            margin: 0 10px 0 0;
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+    .table {
+        margin: 0 0 40px;
+        .item {
+            display: flex;
+            align-items: center;
+            padding: 13px 0 13px;
+            border-bottom: 1px solid $light-grey;
+        }
+        .title {
+            color: $main-blue;
+            font-size: 13px;
+            flex: 0 0 80px;
+        }
+        .rating-bar {
+            flex: 1;
+            padding: 0 0 0 14px;
+            
+            span {
+                background: $pink;
+                border-radius: 6px;
+                height: 6px;
+                width: 0;
+                display: block;
+            }
+        }
+    }
+    
+    .list-abilities {
+        .item {
+            border: none;
+            border-bottom: 1px solid $light-grey;
+            background: transparent;
+            margin: 0 0 4px;
+            padding: 6px 0 5px 0;
+        }
+        .img-icons {
+            .img-block {
+                margin: 0;
+            }
+        }
+    }
+    .list-thoughts {
+        padding: 16px 0 0;
+        img {
+            display: block;
+            border: 2px solid $light-grey;
+            border-radius: 50%;
+        }
+        .item {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            margin: 0 0 10px; 
+        }
+        .item-content {
+            flex: 1;
+            padding: 0 0 0 17px;
+        }
+        .initial {
+            width: 20px;
+            height: 20px;
+            font-size: 10px;
+        }
+        h5 {
+            margin: 0 0 10px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .comment-text {
+            margin: 0;
+            padding: 10px;
+            background: $white;
+            z-index: 2;
+            position: relative;
+            border: none;
+            display: block;
+            line-height: 15px;
+            border-radius: 5px;
+        }
+        .comment-block {
+            position: relative;
+            border: 1px solid #D8D8D8;
+            border-radius: 5px;
+            &:after {
+                content: '';
+                position: absolute;
+                width: 10px;
+                height: 10px;
+                background: #fff;
+                border: 1px solid #D7DBDF;
+                left: 15px;
+                top: -5px;
+                -webkit-transform: rotate(45deg);
+                transform: rotate(45deg);
+            }
+        }
+    }
 }
