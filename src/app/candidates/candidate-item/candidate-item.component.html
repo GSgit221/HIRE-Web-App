@@ -243,7 +243,7 @@
                                 </g>
                             </svg>
                         </div>
-                        <div class="interactivity-nav-link" (click)="onChangeInteractivity('calendar')" [ngClass]="{'active': activeInteractivity === 'calendar'}">
+                        <!-- <div class="interactivity-nav-link" (click)="onChangeInteractivity('calendar')" [ngClass]="{'active': activeInteractivity === 'calendar'}">
                             <svg width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                 <g id="Recruit-Setup2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                     <g id="Candidate-View---Default2" transform="translate(-916.000000, -274.000000)"
@@ -255,7 +255,7 @@
                                     </g>
                                 </g>
                             </svg>
-                        </div>
+                        </div> -->
                         <div class="interactivity-nav-link" (click)="onChangeInteractivity('report')" [ngClass]="{'active': activeInteractivity === 'report'}">
                             <svg width="14px" height="12px" viewBox="0 0 14 12" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                 <g id="Recruit-Setup3" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -313,7 +313,7 @@
 
                         </div>
                     </div>
-                    <div class="interactivity-content" *ngIf="activeInteractivity === 'calendar'">calendar</div>
+                    <!-- <div class="interactivity-content" *ngIf="activeInteractivity === 'calendar'">calendar</div> -->
                     <div class="interactivity-content" *ngIf="activeInteractivity === 'report'">
                         <app-candidate-item-feedback></app-candidate-item-feedback>
                     </div>

@@ -141,6 +141,7 @@ export class CandidateItemFeedbackComponent implements OnInit {
         //     this.abilities.push({ title: input.value });
         //     input.value = '';
         // }
+        this.addAbilities(input);
         this.addPosition = false;
     }
     saveResults() {

@@ -82,8 +82,10 @@
                     </div>
                 </ng-container>
             </div>
-            <input class="add-abilities" *ngIf="addPosition" (keyup.enter)="addAbilities(input)" type="text" #input
-                placeholder="Add annother">
+            <div [ngClass]="{hidden: !addPosition}">
+                <input class="add-abilities" (keyup.enter)="addAbilities(input)" type="text" #input placeholder="Add annother">
+            </div>
+            <p>{{ input?.value }}</p>
         </div>
         <button class="save btn btn-primary" *ngIf="addPosition" (click)="saveAbilities(input)">Save</button>
     </div>

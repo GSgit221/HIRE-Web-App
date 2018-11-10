@@ -127,8 +127,8 @@ h3 {
             padding: 0 0 0 0;
         }
     }
-    .img-block {
-        cursor: auto;
+    .hidden {
+        display: none;
     }
     .img-icons {
         flex: 1;
@@ -136,7 +136,7 @@ h3 {
         margin: 0 -7px 0 auto;
         justify-content: flex-end;
         .img-block {
-            margin: 0 15px;
+            margin: 0 7px;
             &:last-child {
                 margin-right: 0;
             }
@@ -292,14 +292,19 @@ h3 {
             border: none;
             border-bottom: 1px solid $light-grey;
             background: transparent;
-            margin: 0 0 4px;
+            margin: 0 0 0;
             padding: 6px 0 5px 0;
         }
         .img-icons {
+            margin: 0 -6px 0 auto;
             .img-block {
+                width: 32px;
                 margin: 0;
             }
         }
+    }
+    .candidate-thoughts {
+        padding: 27px 0 0;
     }
     .list-thoughts {
         padding: 16px 0 0;
