@@ -1,59 +1,224 @@
-
-<div class="wrap-btn">
-    <button class="save-results btn btn-primary" (click)="saveResults()">Save</button>
-</div>
-<h3>Overall Candidate Thoughts?</h3>
-<textarea></textarea>
-<h3>Overall Rating?</h3>
-<div class="overall-rating">
-    <div class="slider-wrap">
-        <p-slider [(ngModel)]="valOverallRating" [styleClass]="wert" [style]="{'width':'100%'}"></p-slider>
-        <div class="bar">
-            <div class="bar-step w25"></div>
-            <div class="bar-step w50"></div>
-            <div class="bar-step w75"></div>
-            <div class="bar-step w100"></div>
+<ng-container *ngIf="view === 'default'">
+    <div class="wrap-btn">
+        <button class="save-results btn btn-primary" *ngIf="!editMarks" (click)="saveResults()">Save</button>
+    </div>
+    <h3>Overall Candidate Thoughts?</h3>
+    <textarea></textarea>
+    <h3>Overall Rating?</h3>
+    <div class="overall-rating">
+        <div class="slider-wrap">
+            <p-slider [(ngModel)]="valOverallRating" [step]="25" [styleClass]="wert" [style]="{'width':'100%'}"></p-slider>
+            <div class="bar">
+                <div class="bar-step w25"></div>
+                <div class="bar-step w50"></div>
+                <div class="bar-step w75"></div>
+                <div class="bar-step w100"></div>
+            </div>
+        </div>
+        <div class="img-icons">
+            <img src="/assets/images/sad-icon.svg" alt="Sad icon">
+            <img src="/assets/images/neutral-icon.svg" alt="Neutral icon">
+            <img src="/assets/images/happy-icon.svg" alt="Happy icon">       
         </div>
     </div>
-
-    <div class="img-icons">
-        <img src="/assets/images/sad-icon.svg" alt="Sad icon">
-        <img src="/assets/images/neutral-icon.svg" alt="Neutral icon">
-        <img src="/assets/images/happy-icon.svg" alt="Happy icon">
+    <div class="position-rating" [ngClass]="{'edit': editMarks}">
+        <div class="wrap">
+            <h3>Potisition Specific Rating</h3>
+            <button class="btn-add btn" *ngIf="!addPosition && !editMarks" (click)="openEdit()">Add</button>
+        </div>
+        <div class="list-abilities" [ngClass]="{'not-edit': !addPosition }">
+            <div class="item" *ngFor="let ability of abilities;let ind = index">
+                <p>{{ ability.title }}</p>
+                <ng-container *ngIf="addPosition">
+                    <button class="btn" (click)="moveUp(ind)" [ngClass]="{'disabled': ind == 0}" [disabled]="ind == 0">
+                        <img src="/assets/images/arrow-up.svg" alt="Arrow icon">
+                    </button>
+                    <button class="btn" (click)="moveDown(ind)" [ngClass]="{'disabled': ind == abilities.length - 1}"
+                            [disabled]="ind == abilities.length - 1">
+                        <img src="/assets/images/arrow-down.svg" alt="Arrow icon">
+                    </button>
+                    <button class="btn" (click)="removeAbility(ind)">
+                        <img src="/assets/images/close.svg" alt="Arrow icon">
+                    </button>
+                </ng-container>
+                <ng-container *ngIf="!addPosition">
+                    <div class="img-icons">
+                        <div class="img-block" [ngClass]="{pink: ability.checked === 1}" (click)="onEvaluateAbility(ind, 1)">
+                            <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g id="Scorecard---Default" transform="translate(-855.000000, -526.000000)" fill="#FE7F7F" fill-rule="nonzero">
+                                        <g id="icons8-sad" transform="translate(855.000000, 526.000000)">
+                                            <path d="M10,0 C4.487023,0 0,4.487023 0,10 C0,15.5129767 4.487023,20 10,20 C15.5129767,20 20,15.5129767 20,10 C20,4.487023 15.5129767,0 10,0 Z M10,1.66666667 C14.6122433,1.66666667 18.3333333,5.38775658 18.3333333,10 C18.3333333,14.6122433 14.6122433,18.3333333 10,18.3333333 C5.38775658,18.3333333 1.66666667,14.6122433 1.66666667,10 C1.66666667,5.38775658 5.38775658,1.66666667 10,1.66666667 Z M6.25,8.33333333 C5.55964406,8.33333333 5,8.8929774 5,9.58333333 C5,10.2736893 5.55964406,10.8333333 6.25,10.8333333 C6.94035594,10.8333333 7.5,10.2736893 7.5,9.58333333 C7.5,8.8929774 6.94035594,8.33333333 6.25,8.33333333 Z M13.75,8.33333333 C13.0596441,8.33333333 12.5,8.8929774 12.5,9.58333333 C12.5,10.2736893 13.0596441,10.8333333 13.75,10.8333333 C14.4403559,10.8333333 15,10.2736893 15,9.58333333 C15,8.8929774 14.4403559,8.33333333 13.75,8.33333333 Z M10,12.5 C8.73611083,12.5 7.73204333,13.0053067 7.06217417,13.4928383 C6.69019569,13.7639134 6.60831994,14.2851735 6.87927895,14.6572365 C7.15023796,15.0292995 7.67147245,15.1113379 8.04362,14.840495 C8.51875083,14.4946933 9.18055583,14.1666667 10,14.1666667 C10.8194442,14.1666667 11.4812492,14.4946933 11.95638,14.840495 C12.197111,15.015925 12.5131577,15.0495685 12.7854249,14.9287477 C13.0576922,14.8079268 13.2447982,14.5510052 13.2762363,14.2547979 C13.3076744,13.9585906 13.1786663,13.6681181 12.9378258,13.4928383 C12.2679567,13.0053067 11.2638892,12.5 10,12.5 Z"
+                                                id="Shape"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="img-block" [ngClass]="{yellow: ability.checked === 2}" (click)="onEvaluateAbility(ind, 2)">
+                            <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g id="Scorecard---Default" transform="translate(-1010.000000, -526.000000)" fill="#FEBA8B" fill-rule="nonzero">
+                                        <g id="icons8-sad" transform="translate(1010.000000, 526.000000)">
+                                            <path d="M10,0 C4.487023,0 0,4.487023 0,10 C0,15.5129767 4.487023,20 10,20 C15.5129767,20 20,15.5129767 20,10 C20,4.487023 15.5129767,0 10,0 Z M10,1.66666667 C14.6122433,1.66666667 18.3333333,5.38775658 18.3333333,10 C18.3333333,14.6122433 14.6122433,18.3333333 10,18.3333333 C5.38775658,18.3333333 1.66666667,14.6122433 1.66666667,10 C1.66666667,5.38775658 5.38775658,1.66666667 10,1.66666667 Z M6.25,8.33333333 C5.55964406,8.33333333 5,8.8929774 5,9.58333333 C5,10.2736893 5.55964406,10.8333333 6.25,10.8333333 C6.94035594,10.8333333 7.5,10.2736893 7.5,9.58333333 C7.5,8.8929774 6.94035594,8.33333333 6.25,8.33333333 Z M13.75,8.33333333 C13.0596441,8.33333333 12.5,8.8929774 12.5,9.58333333 C12.5,10.2736893 13.0596441,10.8333333 13.75,10.8333333 C14.4403559,10.8333333 15,10.2736893 15,9.58333333 C15,8.8929774 14.4403559,8.33333333 13.75,8.33333333 Z M7.08333333,13.3333333 L12.9166667,13.3333333 C13.376904,13.3333333 13.75,13.7064294 13.75,14.1666667 L13.75,14.1666667 C13.75,14.626904 13.376904,15 12.9166667,15 L7.08333333,15 C6.62309604,15 6.25,14.626904 6.25,14.1666667 L6.25,14.1666667 C6.25,13.7064294 6.62309604,13.3333333 7.08333333,13.3333333 Z"
+                                                id="Shape"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="img-block" [ngClass]="{green: ability.checked === 3}" (click)="onEvaluateAbility(ind, 3)">
+                            <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g id="Scorecard---Default" transform="translate(-1165.000000, -526.000000)" fill="#65B7A9" fill-rule="nonzero">
+                                        <g id="icons8-happy" transform="translate(1165.000000, 526.000000)">
+                                            <path d="M10,0 C4.487023,0 0,4.487023 0,10 C0,15.5129767 4.487023,20 10,20 C15.5129767,20 20,15.5129767 20,10 C20,4.487023 15.5129767,0 10,0 Z M10,1.66666667 C14.6122433,1.66666667 18.3333333,5.38775658 18.3333333,10 C18.3333333,14.6122433 14.6122433,18.3333333 10,18.3333333 C5.38775658,18.3333333 1.66666667,14.6122433 1.66666667,10 C1.66666667,5.38775658 5.38775658,1.66666667 10,1.66666667 Z M6.25,8.33333333 C5.55964406,8.33333333 5,8.8929774 5,9.58333333 C5,10.2736893 5.55964406,10.8333333 6.25,10.8333333 C6.94035594,10.8333333 7.5,10.2736893 7.5,9.58333333 C7.5,8.8929774 6.94035594,8.33333333 6.25,8.33333333 Z M13.75,8.33333333 C13.0596441,8.33333333 12.5,8.8929774 12.5,9.58333333 C12.5,10.2736893 13.0596441,10.8333333 13.75,10.8333333 C14.4403559,10.8333333 15,10.2736893 15,9.58333333 C15,8.8929774 14.4403559,8.33333333 13.75,8.33333333 Z M7.4951175,13.3268233 C7.14089758,13.3467012 6.83809009,13.5886467 6.74052826,13.9297457 C6.64296644,14.2708448 6.77203904,14.6363174 7.06217417,14.840495 C7.73243,15.3275992 8.73611083,15.8333333 10,15.8333333 C11.2638892,15.8333333 12.2679567,15.3280267 12.9378258,14.840495 C13.1786663,14.6652152 13.3076744,14.3747427 13.2762363,14.0785354 C13.2447982,13.7823281 13.0576922,13.5254065 12.7854249,13.4045857 C12.5131577,13.2837649 12.197111,13.3174083 11.95638,13.4928383 C11.4812492,13.83864 10.8194442,14.1666667 10,14.1666667 C9.18055583,14.1666667 8.51840333,13.8390675 8.0419925,13.4928383 C7.90763394,13.3920171 7.74594478,13.3341496 7.578125,13.3268233 C7.55047301,13.3254446 7.52276949,13.3254446 7.4951175,13.3268233 Z"
+                                                id="Shape"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+            <div [ngClass]="{hidden: !addPosition}">
+                <input class="add-abilities" (keyup.enter)="addAbilities(input)" type="text" #input placeholder="Add annother">
+            </div>
+            <p>{{ input?.value }}</p>
+        </div>
+        <button class="save btn btn-primary" *ngIf="addPosition" (click)="saveAbilities(input)">Save</button>
     </div>
-</div>
-<div class="position-rating">
-    <div class="wrap">
-        <h3>Potisition Specific Rating</h3>
-        <button class="btn-add btn" *ngIf="!editView" (click)="openEdit()">Add</button>
+    <div class="wrap-btn">
+        <button class="btn btn-primary" *ngIf="editMarks" (click)="saveResults()">Save</button>
     </div>
-    <div class="list-abilities" [ngClass]="{'not-edit': !editView }">
-        <div class="item" *ngFor="let ability of abilities;let ind = index">
-            <p>{{ ability }}</p>
-            <ng-container *ngIf="editView">
-                <button class="btn" (click)="moveUp(ind)" [ngClass]="{'disabled': ind == 0}" [disabled]="ind == 0">
-                    <img src="/assets/images/arrow-up.svg" alt="Arrow icon">
-                </button>
-                <button class="btn" (click)="moveDown(ind)" [ngClass]="{'disabled': ind == abilities.length - 1}"
-                        [disabled]="ind == abilities.length - 1">
-                    <img src="/assets/images/arrow-down.svg" alt="Arrow icon">
-                </button>
-                <button class="btn" (click)="removeAbility(ind)">
-                    <img src="/assets/images/close.svg" alt="Arrow icon">
-                </button>
-            </ng-container>
-            <ng-container *ngIf="!editView">
-                <div class="img-icons">
-                    <img src="/assets/images/sad-icon.svg" alt="Sad icon">
-                    <img src="/assets/images/neutral-icon.svg" alt="Neutral icon">
-                    <img src="/assets/images/happy-icon.svg" alt="Happy icon">
+</ng-container>
+<ng-container *ngIf="view === 'results'"> 
+    <div class="result">
+        <div class="submitted-users">
+            <div class="number">
+                <span>{{ candidateAbilities.length }}</span>
+            </div>
+            <div class="avatars-block">
+                <h4>Submitted by</h4>
+                <div class="wrap">
+                    <div class="avatar" *ngFor="let item of candidateAbilities;">
+                        <img *ngIf="item.avatar" [src]="item.avatar" [alt]="item.first_name" width="30" height="30">
+                        <div *ngIf="!item.avatar" class="initial">
+                            {{ item.first_name | getFitstLetter | titlecase }}
+                            {{ item.last_name | getFitstLetter | titlecase }}
+                        </div>
+                    </div>
                 </div>
-            </ng-container>
-
+            </div>
         </div>
-        <input class="add-abilities" *ngIf="editView" (keyup.enter)="addAbilities(input)" type="text" #input
-               placeholder="Add annother">
-    </div>
-    <button class="save btn btn-primary" *ngIf="editView" (click)="saveAbilities(input)">Save</button>
-
-</div>
+        <div class="overal-rating">
+            <h3>Overall Rating</h3>
+            <div class="table">
+                <div class="item">
+                    <div class="title">Excellent</div>
+                    <div class="count">0</div>
+                    <div class="rating-bar">
+                        <span></span>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="title">Good</div>
+                    <div class="count">2</div>
+                    <div class="rating-bar">
+                        <span [ngStyle]="{'width': '66%'}"></span>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="title">Average</div>
+                    <div class="count">1</div>
+                    <div class="rating-bar">
+                        <span [ngStyle]="{'width': '33%'}"></span>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="title">Poor</div>
+                    <div class="count">0</div>
+                    <div class="rating-bar">
+                        <span></span>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="title">Very Poor</div>
+                    <div class="count">0</div>
+                    <div class="rating-bar"><span></span></div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap">
+            <h3>Potisition Specific Rating</h3>
+            <button class="btn btn-edit" (click)="onEdit()">Edit</button>
+        </div>
+        <div class="list-abilities">
+            <div class="item" *ngFor="let ability of abilities;let ind = index">
+                <p>{{ ability.title }}</p>
+                <ng-container>
+                    <div class="img-icons">
+                        <div class="img-block">
+                            <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g id="Scorecard---Default" transform="translate(-855.000000, -526.000000)" fill="#FE7F7F" fill-rule="nonzero">
+                                        <g id="icons8-sad" transform="translate(855.000000, 526.000000)">
+                                            <path d="M10,0 C4.487023,0 0,4.487023 0,10 C0,15.5129767 4.487023,20 10,20 C15.5129767,20 20,15.5129767 20,10 C20,4.487023 15.5129767,0 10,0 Z M10,1.66666667 C14.6122433,1.66666667 18.3333333,5.38775658 18.3333333,10 C18.3333333,14.6122433 14.6122433,18.3333333 10,18.3333333 C5.38775658,18.3333333 1.66666667,14.6122433 1.66666667,10 C1.66666667,5.38775658 5.38775658,1.66666667 10,1.66666667 Z M6.25,8.33333333 C5.55964406,8.33333333 5,8.8929774 5,9.58333333 C5,10.2736893 5.55964406,10.8333333 6.25,10.8333333 C6.94035594,10.8333333 7.5,10.2736893 7.5,9.58333333 C7.5,8.8929774 6.94035594,8.33333333 6.25,8.33333333 Z M13.75,8.33333333 C13.0596441,8.33333333 12.5,8.8929774 12.5,9.58333333 C12.5,10.2736893 13.0596441,10.8333333 13.75,10.8333333 C14.4403559,10.8333333 15,10.2736893 15,9.58333333 C15,8.8929774 14.4403559,8.33333333 13.75,8.33333333 Z M10,12.5 C8.73611083,12.5 7.73204333,13.0053067 7.06217417,13.4928383 C6.69019569,13.7639134 6.60831994,14.2851735 6.87927895,14.6572365 C7.15023796,15.0292995 7.67147245,15.1113379 8.04362,14.840495 C8.51875083,14.4946933 9.18055583,14.1666667 10,14.1666667 C10.8194442,14.1666667 11.4812492,14.4946933 11.95638,14.840495 C12.197111,15.015925 12.5131577,15.0495685 12.7854249,14.9287477 C13.0576922,14.8079268 13.2447982,14.5510052 13.2762363,14.2547979 C13.3076744,13.9585906 13.1786663,13.6681181 12.9378258,13.4928383 C12.2679567,13.0053067 11.2638892,12.5 10,12.5 Z"
+                                                id="Shape"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="img-block">
+                            <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g id="Scorecard---Default" transform="translate(-1010.000000, -526.000000)" fill="#FEBA8B" fill-rule="nonzero">
+                                        <g id="icons8-sad" transform="translate(1010.000000, 526.000000)">
+                                            <path d="M10,0 C4.487023,0 0,4.487023 0,10 C0,15.5129767 4.487023,20 10,20 C15.5129767,20 20,15.5129767 20,10 C20,4.487023 15.5129767,0 10,0 Z M10,1.66666667 C14.6122433,1.66666667 18.3333333,5.38775658 18.3333333,10 C18.3333333,14.6122433 14.6122433,18.3333333 10,18.3333333 C5.38775658,18.3333333 1.66666667,14.6122433 1.66666667,10 C1.66666667,5.38775658 5.38775658,1.66666667 10,1.66666667 Z M6.25,8.33333333 C5.55964406,8.33333333 5,8.8929774 5,9.58333333 C5,10.2736893 5.55964406,10.8333333 6.25,10.8333333 C6.94035594,10.8333333 7.5,10.2736893 7.5,9.58333333 C7.5,8.8929774 6.94035594,8.33333333 6.25,8.33333333 Z M13.75,8.33333333 C13.0596441,8.33333333 12.5,8.8929774 12.5,9.58333333 C12.5,10.2736893 13.0596441,10.8333333 13.75,10.8333333 C14.4403559,10.8333333 15,10.2736893 15,9.58333333 C15,8.8929774 14.4403559,8.33333333 13.75,8.33333333 Z M7.08333333,13.3333333 L12.9166667,13.3333333 C13.376904,13.3333333 13.75,13.7064294 13.75,14.1666667 L13.75,14.1666667 C13.75,14.626904 13.376904,15 12.9166667,15 L7.08333333,15 C6.62309604,15 6.25,14.626904 6.25,14.1666667 L6.25,14.1666667 C6.25,13.7064294 6.62309604,13.3333333 7.08333333,13.3333333 Z"
+                                                id="Shape"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="img-block">
+                            <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g id="Scorecard---Default" transform="translate(-1165.000000, -526.000000)" fill="#65B7A9" fill-rule="nonzero">
+                                        <g id="icons8-happy" transform="translate(1165.000000, 526.000000)">
+                                            <path d="M10,0 C4.487023,0 0,4.487023 0,10 C0,15.5129767 4.487023,20 10,20 C15.5129767,20 20,15.5129767 20,10 C20,4.487023 15.5129767,0 10,0 Z M10,1.66666667 C14.6122433,1.66666667 18.3333333,5.38775658 18.3333333,10 C18.3333333,14.6122433 14.6122433,18.3333333 10,18.3333333 C5.38775658,18.3333333 1.66666667,14.6122433 1.66666667,10 C1.66666667,5.38775658 5.38775658,1.66666667 10,1.66666667 Z M6.25,8.33333333 C5.55964406,8.33333333 5,8.8929774 5,9.58333333 C5,10.2736893 5.55964406,10.8333333 6.25,10.8333333 C6.94035594,10.8333333 7.5,10.2736893 7.5,9.58333333 C7.5,8.8929774 6.94035594,8.33333333 6.25,8.33333333 Z M13.75,8.33333333 C13.0596441,8.33333333 12.5,8.8929774 12.5,9.58333333 C12.5,10.2736893 13.0596441,10.8333333 13.75,10.8333333 C14.4403559,10.8333333 15,10.2736893 15,9.58333333 C15,8.8929774 14.4403559,8.33333333 13.75,8.33333333 Z M7.4951175,13.3268233 C7.14089758,13.3467012 6.83809009,13.5886467 6.74052826,13.9297457 C6.64296644,14.2708448 6.77203904,14.6363174 7.06217417,14.840495 C7.73243,15.3275992 8.73611083,15.8333333 10,15.8333333 C11.2638892,15.8333333 12.2679567,15.3280267 12.9378258,14.840495 C13.1786663,14.6652152 13.3076744,14.3747427 13.2762363,14.0785354 C13.2447982,13.7823281 13.0576922,13.5254065 12.7854249,13.4045857 C12.5131577,13.2837649 12.197111,13.3174083 11.95638,13.4928383 C11.4812492,13.83864 10.8194442,14.1666667 10,14.1666667 C9.18055583,14.1666667 8.51840333,13.8390675 8.0419925,13.4928383 C7.90763394,13.3920171 7.74594478,13.3341496 7.578125,13.3268233 C7.55047301,13.3254446 7.52276949,13.3254446 7.4951175,13.3268233 Z"
+                                                id="Shape"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <div class="candidate-thoughts">
+            <h3>Overall Candidate Thoughts</h3>
+            <div class="list-thoughts">
+                <div class="item" *ngFor="let item of candidateAbilities;">
+                    <div class="img-block">
+                        <img *ngIf="item.avatar" [src]="item.avatar" [alt]="item.first_name" 
+                        width="23" height="23">
+                        <div *ngIf="!item.avatar" class="initial">
+                            {{ item.first_name | getFitstLetter | titlecase }}
+                            {{ item.last_name | getFitstLetter | titlecase }}
+                        </div>
+                    </div>
+                    <div class="item-content">
+                        <h5>{{ item.first_name }} {{ item.last_name }}</h5>
+                        <div class="comment-block">
+                            <div class="comment-text">{{ item.comment }}</div>
+                        </div>
+                    </div>
+                </div> 
+            </div> 
+        </div>
+    </div> 
+</ng-container>
