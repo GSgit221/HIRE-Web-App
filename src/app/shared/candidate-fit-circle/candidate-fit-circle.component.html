@@ -2,14 +2,13 @@
     <div class="circle">
         <svg class="progress" width="80" height="80">
             <circle class="progress-meter" cx="40" cy="40" [attr.r]="radius" stroke-width="3"></circle>
-            <circle class="progress-value green-color" cx="40" cy="40" [attr.r]="radius" stroke-width="7"
-                    stroke="#65B7A9"
-                    [attr.stroke-dasharray]="dasharray" [attr.stroke-dashoffset]="dashoffset"></circle>
+            <circle class="progress-value green-color" cx="40" cy="40" [attr.r]="radius" stroke-width="7" stroke="#65B7A9"
+                [attr.stroke-dasharray]="dasharray" [attr.stroke-dashoffset]="dashoffset"></circle>
         </svg>
         <div class="result">{{value}}%</div>
     </div>
     <div class="text">
         <span>{{title}}</span>
-        <strong>{{value >= 50 ? 'Good' : 'Poor'}}</strong>
+        <strong>{{text}}</strong>
     </div>
 </div>

@@ -8,6 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class CandidateFitCircleComponent implements OnInit {
     @Input() value: number;
     @Input() title: string;
+    text: string;
     dashoffset;
     dasharray;
     radius = 30;
@@ -18,6 +19,14 @@ export class CandidateFitCircleComponent implements OnInit {
         this.dashoffset = ((100 - this.value) / 100) * this.dasharray;
         if (this.value > 95) {
             this.dashoffset += 5;
+        }
+
+        if (this.value >= 60) {
+            this.text = 'Good';
+        } else if (this.value >= 50 && this.value < 60) {
+            this.text = 'Average';
+        } else if (this.value < 50) {
+            this.text = 'Poor';
         }
     }
 }
