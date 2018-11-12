@@ -314,8 +314,8 @@
                         </div>
                     </div>
                     <!-- <div class="interactivity-content" *ngIf="activeInteractivity === 'calendar'">calendar</div> -->
-                    <div class="interactivity-content" *ngIf="activeInteractivity === 'report'">
-                        <app-candidate-item-feedback></app-candidate-item-feedback>
+                    <div class="interactivity-content"  *ngIf="activeInteractivity === 'report'">
+                        <app-candidate-item-feedback [feedback]="candidate.feedback" [jobId]="jobId" [candidateId]="candidate.id"></app-candidate-item-feedback>
                     </div>
                 </div>
             </div>
