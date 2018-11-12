@@ -12,9 +12,6 @@
                                 <label for="" class="form-block-label">Name on Credit Card</label>
                                 <div class="input-holder">
                                     <input type="text" class="form-input" formControlName="name" autofocus>
-                                    <div class="input-chars-counter">
-                                        <span class="chars"><img src="/assets/images/mastercard.svg" alt="Mastercard"></span>
-                                    </div>
                                     <div class="error-message" *ngIf="!creditCardDetailsForm.get('name').valid && creditCardDetailsForm.get('name').touched">Name
                                         is required</div>
                                 </div>
@@ -22,17 +19,20 @@
                         </div>
                         <div class="form-block">
                             <div class="form-block-columns">
-                                <div class="form-block-col">
+                                <div class="form-block-col flex-50">
                                     <div class="input-block">
                                         <label for="" class="form-block-label">Card Number</label>
-                                        <input class="form-input" formControlName="cardNumber" type="tel" autocomplete="cc-number"
+                                        <input class="form-input" id="cc-number" formControlName ="cardNumber" type="tel" autocomplete="cc-number"
                                             ccNumber>
+                                        <div class="input-card">
+                                            <span class="chars"><img src="/assets/images/mastercard.svg" alt="Mastercard"></span>
+                                        </div>
                                         <div class="error-message" *ngIf="!creditCardDetailsForm.get('cardNumber').valid && creditCardDetailsForm.get('cardNumber').touched">Card
                                             Number is required</div>
                                     </div>
                                 </div>
                                 <div class="form-block-col-separator"></div>
-                                <div class="form-block-col">
+                                <div class="form-block-col flex-25">
                                     <div class="input-block">
                                         <label for="" class="form-block-label">Expiry Date</label>
                                         <input class="form-input" formControlName="expiryDate" placeholder="MM/YY" type="tel"
@@ -42,7 +42,7 @@
                                     </div>
                                 </div>
                                 <div class="form-block-col-separator"></div>
-                                <div class="form-block-col">
+                                <div class="form-block-col flex-25">
                                     <div class="input-block">
                                         <label for="" class="form-block-label">CVV Number</label>
                                         <input class="form-input" maxlength="3" formControlName="cvvNumber" type="tel"
@@ -66,12 +66,18 @@
                     <div class="form-block">
                         <div class="form-block-columns">
                             <div class="hc-list-row-content dis-flex">
-                                <div class="flex-10"><label>Card on file</label></div>
-                                <div class="flex-10 "><img src="/assets/images/mastercard.svg" alt="Mastercard" class="billing-card-around-space"></div>
-                                <div class="flex-30"><label>MasterCard ending <b>8321</b></label></div>
-                                <div class="flex-25 tcenter billing-check-green"><span><img src="/assets/images/check.svg"
-                                            alt="right"> Active</span></div>
-                                <div class="flex-25 tright billing-replace-red"><span>Replace Card</span></div>
+                                <div class="card-visa">
+                                    <label>Card on file</label>
+                                    <img src="/assets/images/mastercard.svg" alt="Mastercard" class="billing-card-around-space">
+                                    <label>MasterCard ending <b>8321</b></label>
+                                </div>
+                                <div class="billing-check-green">
+                                    <span><img src="/assets/images/active.svg"
+                                            alt="right"> Active</span>
+                                </div>
+                                <div class="billing-replace-red">
+                                    <span>Replace Card</span>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -3,11 +3,14 @@
 .dis-flex{
   display: inline-flex;
   width: 100%;
-  .tcenter{
-    text-align: center;
-  }
-  .tright{
-    text-align: right;
+  justify-content: space-between;
+  align-items: center;
+  .card-visa{
+    display: flex;
+    align-items: center;
+    img{
+      margin: 0 10px;
+    }
   }
   .billing-replace-red{
     color: $pink;
@@ -19,13 +22,22 @@
     padding: 0 5px;
   }
 }
-
-input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
+.input-block {
+  position: relative;
   margin: 0;
-}
 
-input[type="number"] {
-  -moz-appearance: textfield;
+  .input-holder {
+    position: relative;
+  }
+
+  .input-card {
+    position: absolute;
+    right: 10px;
+    top: 32px;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
 }
 
