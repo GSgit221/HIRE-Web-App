@@ -35,14 +35,14 @@
             </div>
             <div class="nr-list-content">
                 <div class="hc-blocker"></div>
-                <div class="hc-list-row" *ngFor="let user of userList ; let i = index" (mouseover)="onMouseOver(i)" (mouseout)="onMouseOut(i)">
-                    <div class="hc-list-row-content">
+                <div class="hc-list-row" *ngFor="let user of userList ; let i = index" (mouseover)="onMouseOver(i)" (mouseout)="onMouseOut(i)" >
+                    <div class="hc-list-row-content" (click)="onSelectedRow(i)">
                         <div class="col col1 flex-5 ">
                             <div class="hc-checkbox profile-check-pad-left" data-escape-click>
                                 <p-checkbox binary="true" [(ngModel)]="user.selected"
-                                            (onChange)="onItemSeletectedChange()" *ngIf="userList[i]?.isVisible"></p-checkbox>
+                                            (onChange)="onItemSeletectedChange()" *ngIf="userList[i]?.isVisible "></p-checkbox>
                             </div>
-                            <img src="/assets/images/placeholder.png" alt="Profile Icon" *ngIf="!userList[i]?.isVisible">
+                            <img src="/assets/images/placeholder.png" alt="Profile Icon" *ngIf="!userList[i]?.isVisible && !userList[i].selected">
 
                         </div>
                         <div class="col col2 flex-25">
@@ -96,13 +96,6 @@
     </div>
     <div class="content-section" id="pending-invitation" *ngIf="activeSection === 'pending-invitation'">
         <div class="hc-list">
-            <div class="hc-selected-items" *ngIf="selectedItems">
-                <div class="text-block">
-                    <p>
-                        {{selectedItems}} items selected
-                    </p>
-                </div>
-            </div>
             <div class="hc-list-header">
                 <div class="col col2 flex-25">Name</div>
                 <div class="col col3 flex-25">Email Address</div>

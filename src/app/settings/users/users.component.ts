@@ -54,7 +54,7 @@ export class UsersComponent implements OnInit {
             { label: 'User', value: 'user' }
         ];
         this.usersDetailForm = this.fb.group({
-            name: ['', [Validators.required, Validators.minLength(2)]],
+            name: ['', [Validators.required, Validators.minLength(2), Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]],
             email: ['' , [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
             accountType: [''],
         });
@@ -68,7 +68,11 @@ export class UsersComponent implements OnInit {
     }
 
     onMouseOut(index) {
-        this.userList[index].isVisible = false;
+        if( this.userList[index].selected) {
+            this.userList[index].isVisible = true;
+        }else {
+            this.userList[index].isVisible = false;
+        }
     }
 
     onChangeSection(section: string) {
@@ -83,12 +87,22 @@ export class UsersComponent implements OnInit {
     }
 
     onItemSeletectedChange() {
+        event.stopPropagation();
         this.calculateSelectedUsers();
+    }
+
+    onSelectedRow(index) {
+         this.userList[index].selected = !this.userList[index].selected;
+         this.userList[index].isVisible = true;
+         this.calculateSelectedUsers();
     }
 
     onSelectAllChange() {
         if (this.selectedAll) {
-            this.userList.forEach(user => user.selected = true);
+            this.userList.forEach(user => {
+                user.selected = true;
+                user.isVisible = true;
+            });
         } else {
             this.userList.forEach(user => user.selected = false);
         }
@@ -98,4 +112,5 @@ export class UsersComponent implements OnInit {
     onAdd() {
 
     }
+
 }
