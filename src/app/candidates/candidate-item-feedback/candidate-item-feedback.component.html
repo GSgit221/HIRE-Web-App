@@ -1,7 +1,6 @@
 <ng-container *ngIf="view === 'default'">
     <div class="light-overlay" *ngIf="contentLoading"></div>
     <div class="form" [formGroup]="feedbackForm">
-        
         <h3>Overall Candidate Thoughts?</h3>
         <textarea formControlName="comments"></textarea>
         <h3>Overall Rating?</h3>
@@ -24,7 +23,6 @@
         <div class="position-rating" [ngClass]="{'edit': editMarks}">
             <div class="wrap">
                 <h3>Position Specific Rating</h3>
-                
                 <ng-container *ngIf="!addPositionSpecificCategory && !editMarks">
                     <button class="btn-add btn" (click)="addPositionSpecificCategory = true" *ngIf="!this.positionSpecificCategories.length">Add</button>
                     <button class="btn btn-edit" (click)="addPositionSpecificCategory = true" *ngIf="this.positionSpecificCategories.length">Edit</button>
@@ -47,7 +45,7 @@
                     </ng-container>
                     <ng-container *ngIf="!addPositionSpecificCategory">
                         <div class="img-icons">
-                            <div class="img-block" [ngClass]="{pink: category.value === 1}" (click)="onEvaluateCategory(ind, 1)">
+                            <div class="img-block" [ngClass]="{pink: category.value === 1}" (click)="onEvaluateCategory(ind, 1, category)">
                                 <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                     <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                         <g id="Scorecard---Default" transform="translate(-855.000000, -526.000000)" fill="#FE7F7F" fill-rule="nonzero">
@@ -59,7 +57,7 @@
                                     </g>
                                 </svg>
                             </div>
-                            <div class="img-block" [ngClass]="{yellow: category.value === 2}" (click)="onEvaluateCategory(ind, 2)">
+                            <div class="img-block" [ngClass]="{yellow: category.value === 2}" (click)="onEvaluateCategory(ind, 2, category)">
                                 <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                     <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                         <g id="Scorecard---Default" transform="translate(-1010.000000, -526.000000)" fill="#FEBA8B" fill-rule="nonzero">
@@ -71,7 +69,7 @@
                                     </g>
                                 </svg>
                             </div>
-                            <div class="img-block" [ngClass]="{green: category.value === 3}" (click)="onEvaluateCategory(ind, 3)">
+                            <div class="img-block" [ngClass]="{green: category.value === 3}" (click)="onEvaluateCategory(ind, 3, category)">
                                 <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                     <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                         <g id="Scorecard---Default" transform="translate(-1165.000000, -526.000000)" fill="#65B7A9" fill-rule="nonzero">
@@ -94,9 +92,8 @@
             <button class="save btn btn-primary" *ngIf="addPositionSpecificCategory" (click)="onUpdateFeedbackPositionRatingCategories(input)">Save</button>
             <input type="hidden" formControlName="positionRating">
         </div>
-        
         <div class="wrap-btn">
-            <button class="save-results btn btn-primary" *ngIf="valueChanged && !addPositionSpecificCategory" (click)="onSaveFeedback()">Save</button>
+            <button class="save-results btn btn-primary" *ngIf="formIsDirty && !addPositionSpecificCategory" (click)="onSaveFeedback()">Save</button>
         </div>
     </div>
 </ng-container>
@@ -204,24 +201,26 @@
             </div>
         </div>
         <div class="candidate-thoughts">
-            <h3>Overall Candidate Thoughts</h3>
+            <h3 *ngIf="definePresenceComments()">Overall Candidate Thoughts</h3>
             <div class="list-thoughts">
                 <div class="item" *ngFor="let item of feedback[jobId].comments;">
-                    <div class="img-block">
-                        <img *ngIf="getUserData(item.user_id, 'icon_url')" [src]="getUserData(item.user_id, 'icon_url')" [alt]="getUserData(item.user_id, 'last_name')" 
-                        width="23" height="23">
-                        <div *ngIf="!getUserData(item.user_id, 'icon_url')" class="initial">
-                            {{ getUserData(item.user_id, 'first_name' ) | getFitstLetter | titlecase }}
-                            {{ getUserData(item.user_id, 'last_name' ) | getFitstLetter | titlecase }}
+                    <ng-container *ngIf="item.value.trim().length > 0">
+                        <div class="img-block">
+                            <img *ngIf="getUserData(item.user_id, 'icon_url')" [src]="getUserData(item.user_id, 'icon_url')" [alt]="getUserData(item.user_id, 'last_name')" 
+                            width="23" height="23">
+                            <div *ngIf="!getUserData(item.user_id, 'icon_url')" class="initial">
+                                {{ getUserData(item.user_id, 'first_name' ) | getFitstLetter | titlecase }}
+                                {{ getUserData(item.user_id, 'last_name' ) | getFitstLetter | titlecase }}
+                            </div>
                         </div>
-                    </div>
-                    <div class="item-content">
-                        <h5>{{ getUserData(item.user_id, 'first_name' ) }} 
-                            {{ getUserData(item.user_id, 'last_name' ) }}</h5>
-                        <div class="comment-block">
-                            <div class="comment-text">{{ item.value }}</div>
+                        <div class="item-content">
+                            <h5>{{ getUserData(item.user_id, 'first_name' ) }} 
+                                {{ getUserData(item.user_id, 'last_name' ) }}</h5>
+                            <div class="comment-block">
+                                <div class="comment-text">{{ item.value }}</div>
+                            </div>
                         </div>
-                    </div>
+                    </ng-container>
                 </div> 
             </div> 
         </div>
