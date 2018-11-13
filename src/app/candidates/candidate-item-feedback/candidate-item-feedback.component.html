@@ -91,7 +91,7 @@
                 </div>
                 <p>{{ input?.value }}</p>
             </div>
-            <button class="save btn btn-primary" *ngIf="addPositionSpecificCategory" (click)="onUpdateFeedbackPositionRatingCategories()">Save</button>
+            <button class="save btn btn-primary" *ngIf="addPositionSpecificCategory" (click)="onUpdateFeedbackPositionRatingCategories(input)">Save</button>
             <input type="hidden" formControlName="positionRating">
         </div>
         

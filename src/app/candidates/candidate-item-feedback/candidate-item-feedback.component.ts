@@ -167,7 +167,11 @@ export class CandidateItemFeedbackComponent implements OnInit {
     }
 
 
-    onUpdateFeedbackPositionRatingCategories() {
+    onUpdateFeedbackPositionRatingCategories(input = null) {
+        if (input) {
+            this.onAddPositionSpecificCategory(input);
+        }
+
         this.addPositionSpecificCategory = false;
         const data = this.positionSpecificCategories.map(item => ({
             id: item.id,
@@ -201,17 +205,6 @@ export class CandidateItemFeedbackComponent implements OnInit {
             }, (err) => {
                 console.error(err);
             });
-
-        // this.view = 'results';
-        // this.feedbackForm.patchValue({
-        //     positionRating: this.positionSpecificCategories,
-        //     rating: this.transformRating(this.feedbackForm.value.rating)
-        // });
-        // console.log(this.feedbackForm.value);
-        // console.log(this.feedbackForm.value.positionRating);
-        // this.jobService.saveCandidateFeedback(this.jobId, this.candidateId, this.feedbackForm.value).subscribe((data) => {
-        //     console.log(data);
-        // });
     }
     transformRating(value: number) {
         switch (value) {
