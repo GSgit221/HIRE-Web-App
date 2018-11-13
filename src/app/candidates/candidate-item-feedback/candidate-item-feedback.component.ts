@@ -30,6 +30,7 @@ export class CandidateItemFeedbackComponent implements OnInit {
     editMarks = false;
     view = 'default';
     candidateAbilities = [];
+    valueChanged = false;
 
     constructor(
         private candidateService: CandidateService,
@@ -54,6 +55,9 @@ export class CandidateItemFeedbackComponent implements OnInit {
         this.store.select('user').subscribe((user: User) => {
             this.user = user;
             this.populateForm();
+        });
+        this.feedbackForm.valueChanges.subscribe((a) => {
+            this.valueChanged = true;
         });
     }
 
@@ -96,6 +100,24 @@ export class CandidateItemFeedbackComponent implements OnInit {
             });
         }
     }
+    getUserData(id, field) {
+        const userData: any = this.users.find(c => {
+            return c.id === id;
+        });
+        return userData[field];
+    }
+    calculateOverallRating(mark) {
+        const length = Object.keys(this.feedback[this.jobId].rating).length;
+        return {width: `${(this.mapAmountProp(this.feedback[this.jobId].rating, 'value')[mark] / length) * 100}%`};
+    }
+
+    mapAmountProp(data, prop) {
+        return data
+            .reduce((res, item) => Object
+                .assign(res, {
+                    [item[prop]]: 1 + (res[item[prop]] || 0)
+                }), Object.create(null));
+    }
 
     onAddPositionSpecificCategory(input) {
         const val = input.value.trim();
@@ -129,6 +151,7 @@ export class CandidateItemFeedbackComponent implements OnInit {
 
     onEvaluateCategory(index: number, value: number) {
         this.positionSpecificCategories[index].value = value;
+        this.valueChanged = true;
     }
 
     updateOrder() {

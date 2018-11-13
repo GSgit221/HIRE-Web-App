@@ -114,11 +114,11 @@ h3 {
         text-decoration: none;
     }
 }
-.save-results {
-    position: absolute;
-    right: 0;
-    top: -48px;
-}
+// .save-results {
+//     position: absolute;
+//     right: 0;
+//     top: -48px;
+// }
 
 .list-abilities {
     margin: 0 0 10px;
@@ -259,9 +259,14 @@ h3 {
         .avatar {
             display: inline-flex;
             margin: 0 10px 0 0;
+            border-radius: 50%;
+            overflow: hidden;
             &:last-child {
                 margin-right: 0;
             }
+        }
+        .wrap {
+            justify-content: flex-start;
         }
     }
     .table {
