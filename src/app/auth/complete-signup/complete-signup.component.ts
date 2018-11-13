@@ -82,11 +82,11 @@ export class CompleteSignupComponent implements OnInit {
                     .subscribe(response => {
                         this.contentLoading = false;
                         console.log(response);
-                        // this.msgs = [];
-                        // this.authService.setSession(response, tenant);
-                        // const url = environment.appUrl.replace('subdomain', tenant);
-                        // console.log('REDIRECTING:', url);
-                        // window.location.href = url;
+                        this.msgs = [];
+                        this.authService.setSession(response, tenant);
+                        const url = environment.appUrl.replace('subdomain', tenant);
+                        console.log('REDIRECTING:', url);
+                        window.location.href = url;
                     }, response => {
                         this.contentLoading = false;
                         if (response.error.error === 'Company data not found') {

@@ -1,9 +1,13 @@
-import {Component, OnInit, Input} from '@angular/core';
-import { JobService } from '../../services/job.service';
-import { FormGroup, FormBuilder, Validators, FormControl, FormControlName } from '@angular/forms';
+import { HttpResponse } from '@angular/common/http';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { State } from '../../reducers';
+
 import { User } from '../../models/user';
+import { State } from '../../reducers';
+import { CandidateService } from './../../services/candidate.service';
+import { UtilitiesService } from './../../services/utilities.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
     selector: 'app-candidate-item-feedback',
@@ -14,139 +18,45 @@ export class CandidateItemFeedbackComponent implements OnInit {
     @Input() jobId;
     @Input() candidateId;
     @Input() feedback;
+    @Output() public feedbackUpdate = new EventEmitter<any>();
     feedbackForm: FormGroup;
+    positionSpecificCategories: any[] = [];
+    addPositionSpecificCategory = false;
+    user: User;
+    users: User[];
+    contentLoading = false;
 
-    abilities: any[] = [];
-    addPosition = false;
+
     editMarks = false;
     view = 'default';
-    candidateAbilities = [
-        {
-            id: 1,
-            avatar: '/assets/images/placeholders/1.png',
-            first_name: 'Greg',
-            last_name: 'Kockott',
-            overall_rating: 3,
-            abilities_rating: [
-                {
-                    name: 'Overall Culture Fit',
-                    rate: 2
-                },
-                {
-                    name: 'Java Skills',
-                    rate: 2
-                },
-                {
-                    name: 'Leadership Ability',
-                    rate: 1
-                },
-                {
-                    name: 'Self Motivated',
-                    rate: 3
-                }
-            ],
-            comment: 'He’s got a real flare for technology and I feel would make a great addition to our organisation.'
-        },
-        {
-            id: 2,
-            avatar: '/assets/images/placeholders/1.png',
-            first_name: 'Nick',
-            last_name: 'Romanenko',
-            overall_rating: 3,
-            abilities_rating: [
-                {
-                    name: 'Overall Culture Fit',
-                    rate: 3
-                },
-                {
-                    name: 'Java Skills',
-                    rate: 1
-                },
-                {
-                    name: 'Leadership Ability',
-                    rate: 2
-                },
-                {
-                    name: 'Self Motivated',
-                    rate: 1
-                }
-            ],
-            comment: '2He’s got a real flare for technology and I feel would make a great addition to our organisation.'
-        },
-        {
-            id: 3,
-            avatar: '',
-            first_name: 'Sasha',
-            last_name: 'Bondar',
-            overall_rating: 4,
-            abilities_rating: [
-                {
-                    name: 'Overall Culture Fit',
-                    rate: 2
-                },
-                {
-                    name: 'Java Skills',
-                    rate: 2
-                },
-                {
-                    name: 'Leadership Ability',
-                    rate: 1
-                },
-                {
-                    name: 'Self Motivated',
-                    rate: 3
-                }
-            ],
-            comment: '3He’s got a real flare for technology and I feel would make a great addition to our organisation.'
-        }
-    ];
+    candidateAbilities = [];
 
-    constructor(private jobService: JobService, private fb: FormBuilder, private store: Store<State>) {
+    constructor(
+        private candidateService: CandidateService,
+        private userService: UserService,
+        private fb: FormBuilder,
+        private store: Store<State>,
+        private utilities: UtilitiesService) {
+        // Get users
+        this.userService.getUsers()
+            .subscribe((users: User[]) => {
+                this.users = users;
+            });
     }
 
     ngOnInit() {
         this.initForm();
-        console.log(this.jobId, this.candidateId);
-        console.log(this.feedback);
-        if (this.feedback) {
-            this.store.select('user').subscribe((user: User) => {
-                this.feedback[this.jobId].comments.forEach(item => {
-                    if (item.user_id === user.id) {
-                        console.log('bingo');
-                        this.feedbackForm.patchValue({
-                            comments: item.value
-                        });
-                    }
-                });
-                this.feedback[this.jobId].rating.forEach(item => {
-                    if (item.user_id === user.id) {
-                        console.log('bingo 2', item.value);
-                        this.feedbackForm.patchValue({
-                            rating: this.transformRatingToPercent(item.value)
-                        });
-                    }
-                });
-                this.abilities = this.feedback[this.jobId].position_rating;
-                this.feedback[this.jobId].position_rating.forEach((item, index) => {
-                    console.log(item);
-                    this.abilities[index].order = item.order;
-                    item.votes.forEach(itemVotes => {
-                        if (itemVotes.user_id === user.id) {
-                            this.abilities[index].value = itemVotes.value;
-                        }
-                    });
-                    // if (item.user_id === user.id) {
-                    //     console.log('bingo 3', item.value);
-                    //     // this.feedbackForm.patchValue({
-                    //     //     rating: this.transformRatingToPercent(item.value)
-                    //     // });
-                    // }
-                });
-            });
+        console.log('Feedback', this.feedback);
+        if (this.feedback && this.feedback[this.jobId]) {
+            this.positionSpecificCategories = this.feedback[this.jobId].position_rating;
         }
-        
-        console.log(this.abilities);
+        // Get user
+        this.store.select('user').subscribe((user: User) => {
+            this.user = user;
+            this.populateForm();
+        });
     }
+
     initForm() {
         this.feedbackForm = this.fb.group({
             comments: ['', Validators.required],
@@ -155,51 +65,74 @@ export class CandidateItemFeedbackComponent implements OnInit {
         });
     }
 
+    populateForm() {
+        if (this.feedback && this.feedback[this.jobId]) {
+            const candidateFeedback = this.feedback[this.jobId];
+            if (candidateFeedback.comments) {
+                const item = candidateFeedback.comments.find(c => c.user_id === this.user.id);
+                if (item) {
+                    this.feedbackForm.patchValue({
+                        comments: item.value
+                    });
+                }
+            }
+            if (candidateFeedback.rating) {
+                const item = candidateFeedback.rating.find(c => c.user_id === this.user.id);
+                if (item) {
+                    this.feedbackForm.patchValue({
+                        rating: this.transformRatingToPercent(item.value)
+                    });
+                }
+            }
+
+            this.positionSpecificCategories = candidateFeedback.position_rating.map(item => {
+                if (item.votes && item.votes.length) {
+                    const vote = item.votes.find(v => v.user_id === this.user.id);
+                    if (vote) {
+                        item.value = vote.value;
+                    }
+                }
+                return item;
+            });
+        }
+    }
+
+    onAddPositionSpecificCategory(input) {
+        const val = input.value.trim();
+        if (val.length) {
+            this.positionSpecificCategories.push({
+                id: this.utilities.generateUID(10).toLowerCase(),
+                title: val,
+                order: this.positionSpecificCategories.length
+            });
+            input.value = '';
+        }
+    }
+
+
     moveUp(index: number) {
-        console.log(this.abilities);
-        this.abilities[index].order = index - 1;
-        this.abilities[index - 1].order = index;
-        // const currentAbilities = this.abilities[index];
-        // this.abilities.splice(index, 1);
-        // this.abilities.splice(index - 1, 0, currentAbilities);
+        this.positionSpecificCategories[index].order = index - 1;
+        this.positionSpecificCategories[index - 1].order = index;
         this.updateOrder();
     }
 
     moveDown(index: number) {
-        // const currentAbilities = this.abilities[index];
-        // this.abilities.splice(index, 1);
-        // this.abilities.splice(index + 1, 0, currentAbilities);
-        this.abilities[index].order = index + 1;
-        this.abilities[index + 1].order = index;
+        this.positionSpecificCategories[index].order = index + 1;
+        this.positionSpecificCategories[index + 1].order = index;
         this.updateOrder();
     }
 
-    removeAbility(index: number) {
-        if (index === 0) {
-            this.abilities.shift();
-            return false;
-        }
-        this.abilities.splice(index, 1);
+    onRemovePositionSpecificCategory(index: number) {
+        this.positionSpecificCategories.splice(index, 1);
         this.updateOrder();
-        console.log(this.abilities);
-    }
-    onEvaluateAbility(index: number, mark) {
-        this.abilities[index].value = mark;
-        console.log(this.abilities);
     }
 
-    addAbilities(input) {
-        if (input.value.trim() !== '') {
-            this.abilities.push({ title: input.value, id: this.makeid(), order: this.abilities.length });
-            input.value = '';
-        }
-        console.log(this.abilities);
+    onEvaluateCategory(index: number, value: number) {
+        this.positionSpecificCategories[index].value = value;
     }
+
     updateOrder() {
-        // this.abilities.forEach((item, index) => {
-        //     item.order = index;
-        // });
-        this.abilities.sort((a: any, b: any) => {
+        this.positionSpecificCategories = this.positionSpecificCategories.sort((a: number, b: number) => {
             if (a['order'] < b['order']) {
                 return -1;
             } else if (a['order'] > b['order']) {
@@ -210,30 +143,54 @@ export class CandidateItemFeedbackComponent implements OnInit {
         });
     }
 
-    openEdit() {
-        this.addPosition = true;
+
+    onUpdateFeedbackPositionRatingCategories() {
+        this.addPositionSpecificCategory = false;
+        const data = this.positionSpecificCategories.map(item => ({
+            id: item.id,
+            title: item.title,
+            order: item.order
+        }));
+        this.candidateService.updateFeedbackPositionRatingCategories(this.jobId, this.candidateId, data)
+            .subscribe(() => console.log('✅ Position specific categories updated'));
     }
 
-    saveAbilities(input) {
-        console.log(input);
-        this.addAbilities(input);
-        this.addPosition = false;
-        this.updateOrder();
-        console.log(this.abilities);
-    }
-    saveResults() {
-        this.view = 'results';
-        this.feedbackForm.patchValue({
-            positionRating: this.abilities,
-            rating: this.transformRating(this.feedbackForm.value.rating)
-        });
-        console.log(this.feedbackForm.value.positionRating);
-        this.jobService.saveCandidateFeedback(this.jobId, this.candidateId, this.feedbackForm.value).subscribe((data) => {
-            console.log(data);
-        });
+
+    onSaveFeedback() {
+        console.log('onSaveFeedback');
+        const data = {
+            comments: this.feedbackForm.get('comments').value,
+            rating: this.transformRating(this.feedbackForm.get('rating').value),
+            position_rating: this.positionSpecificCategories.filter(cat => cat.value).map(cat => ({ id: cat.id, value: cat.value }))
+        };
+        console.log(data);
+
+        this.contentLoading = true;
+        this.candidateService.updateFeedback(this.jobId, this.candidateId, data)
+            .subscribe((response: any) => {
+                this.contentLoading = false;
+
+                if (response.feedback) {
+                    this.feedback = response.feedback;
+                    this.view = 'results';
+                    this.feedbackUpdate.next(response.feedback);
+                }
+            }, (err) => {
+                console.error(err);
+            });
+
+        // this.view = 'results';
+        // this.feedbackForm.patchValue({
+        //     positionRating: this.positionSpecificCategories,
+        //     rating: this.transformRating(this.feedbackForm.value.rating)
+        // });
+        // console.log(this.feedbackForm.value);
+        // console.log(this.feedbackForm.value.positionRating);
+        // this.jobService.saveCandidateFeedback(this.jobId, this.candidateId, this.feedbackForm.value).subscribe((data) => {
+        //     console.log(data);
+        // });
     }
     transformRating(value: number) {
-        console.log(value);
         switch (value) {
             case 0:
                 return 1;
@@ -266,20 +223,11 @@ export class CandidateItemFeedbackComponent implements OnInit {
                 return 0;
         }
     }
+
+
     onEdit() {
-        this.addPosition = false;
+        this.addPositionSpecificCategory = false;
         this.view = 'default';
         this.editMarks = true;
     }
-    makeid() {
-        let text = '';
-        const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-        for (let i = 0; i < 10; i++) {
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
-        }
-        return text;
-    }
-
-
 }

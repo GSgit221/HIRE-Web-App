@@ -65,7 +65,7 @@ export class JobService {
                 status: 'BUILD',
                 step_completed: 0
             };
-            
+
             return of(newJob);
         } else {
             return this.http.get(`${this.baseURL}/jobs/${id}`);
@@ -117,10 +117,7 @@ export class JobService {
     getCandidatesAmount() {
         return this.http.get(`${this.apiURL}/tenants/${this.tenantId}/candidates-amount`);
     }
-    saveCandidateFeedback(jobId, candidateId, data) {
-        // /:tenantId/jobs /: jobId / candidates /: candidateId / feedback
-        return this.http.post(`${this.apiURL}/tenants/${this.tenantId}/jobs/${jobId}/candidates/${candidateId}/feedback`, {data});
-    }
+
     getDataCompany(url) {
         return this.http.post(`${this.apiURL}/company`, { url : url });
     }

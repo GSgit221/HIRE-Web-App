@@ -1,7 +1,8 @@
 <ng-container *ngIf="view === 'default'">
+    <div class="light-overlay" *ngIf="contentLoading"></div>
     <div class="form" [formGroup]="feedbackForm">
         <div class="wrap-btn">
-            <button class="save-results btn btn-primary" *ngIf="!editMarks" (click)="saveResults()">Save</button>
+            <button class="save-results btn btn-primary" *ngIf="!editMarks" (click)="onSaveFeedback()">Save</button>
         </div>
         <h3>Overall Candidate Thoughts?</h3>
         <textarea formControlName="comments"></textarea>
@@ -25,26 +26,30 @@
         <div class="position-rating" [ngClass]="{'edit': editMarks}">
             <div class="wrap">
                 <h3>Position Specific Rating</h3>
-                <button class="btn-add btn" *ngIf="!addPosition && !editMarks" (click)="openEdit()">{{ this.abilities.length ? 'Edit' : 'Add'}}</button>
+                
+                <ng-container *ngIf="!addPositionSpecificCategory && !editMarks">
+                    <button class="btn-add btn" (click)="addPositionSpecificCategory = true" *ngIf="!this.positionSpecificCategories.length">Add</button>
+                    <button class="btn btn-edit" (click)="addPositionSpecificCategory = true" *ngIf="this.positionSpecificCategories.length">Edit</button>
+                </ng-container>
             </div>
-            <div class="list-abilities" [ngClass]="{'not-edit': !addPosition }">
-                <div class="item" *ngFor="let ability of abilities | sortByOrder:'order';let ind = index;">
-                    <p>{{ ability.title }}</p>
-                    <ng-container *ngIf="addPosition">
+            <div class="list-abilities" [ngClass]="{'not-edit': !addPositionSpecificCategory }">
+                <div class="item" *ngFor="let category of positionSpecificCategories | sortByOrder:'order';let ind = index;">
+                    <p>{{ category.title }}</p>
+                    <ng-container *ngIf="addPositionSpecificCategory">
                         <button class="btn" (click)="moveUp(ind)" [ngClass]="{'disabled': ind == 0}" [disabled]="ind == 0">
                             <img src="/assets/images/arrow-up.svg" alt="Arrow icon">
                         </button>
-                        <button class="btn" (click)="moveDown(ind)" [ngClass]="{'disabled': ind == abilities.length - 1}"
-                                [disabled]="ind == abilities.length - 1">
+                        <button class="btn" (click)="moveDown(ind)" [ngClass]="{'disabled': ind == positionSpecificCategories.length - 1}"
+                                [disabled]="ind == positionSpecificCategories.length - 1">
                             <img src="/assets/images/arrow-down.svg" alt="Arrow icon">
                         </button>
-                        <button class="btn" (click)="removeAbility(ind)">
+                        <button class="btn" (click)="onRemovePositionSpecificCategory(ind)">
                             <img src="/assets/images/close.svg" alt="Arrow icon">
                         </button>
                     </ng-container>
-                    <ng-container *ngIf="!addPosition">
+                    <ng-container *ngIf="!addPositionSpecificCategory">
                         <div class="img-icons">
-                            <div class="img-block" [ngClass]="{pink: ability.value === 1}" (click)="onEvaluateAbility(ind, 1)">
+                            <div class="img-block" [ngClass]="{pink: category.value === 1}" (click)="onEvaluateCategory(ind, 1)">
                                 <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                     <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                         <g id="Scorecard---Default" transform="translate(-855.000000, -526.000000)" fill="#FE7F7F" fill-rule="nonzero">
@@ -56,7 +61,7 @@
                                     </g>
                                 </svg>
                             </div>
-                            <div class="img-block" [ngClass]="{yellow: ability.value === 2}" (click)="onEvaluateAbility(ind, 2)">
+                            <div class="img-block" [ngClass]="{yellow: category.value === 2}" (click)="onEvaluateCategory(ind, 2)">
                                 <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                     <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                         <g id="Scorecard---Default" transform="translate(-1010.000000, -526.000000)" fill="#FEBA8B" fill-rule="nonzero">
@@ -68,7 +73,7 @@
                                     </g>
                                 </svg>
                             </div>
-                            <div class="img-block" [ngClass]="{green: ability.value === 3}" (click)="onEvaluateAbility(ind, 3)">
+                            <div class="img-block" [ngClass]="{green: category.value === 3}" (click)="onEvaluateCategory(ind, 3)">
                                 <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                     <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                         <g id="Scorecard---Default" transform="translate(-1165.000000, -526.000000)" fill="#65B7A9" fill-rule="nonzero">
@@ -83,20 +88,21 @@
                         </div>
                     </ng-container>
                 </div>
-                <div [ngClass]="{hidden: !addPosition}">
-                    <input class="add-abilities" (keyup.enter)="addAbilities(input)" type="text" #input placeholder="Add annother">
+                <div [ngClass]="{hidden: !addPositionSpecificCategory}">
+                    <input class="add-abilities" (keyup.enter)="onAddPositionSpecificCategory(input)" type="text" #input placeholder="Add annother">
                 </div>
                 <p>{{ input?.value }}</p>
             </div>
-            <button class="save btn btn-primary" *ngIf="addPosition" (click)="saveAbilities(input)">Save</button>
+            <button class="save btn btn-primary" *ngIf="addPositionSpecificCategory" (click)="onUpdateFeedbackPositionRatingCategories()">Save</button>
             <input type="hidden" formControlName="positionRating">
         </div>
         <div class="wrap-btn">
-            <button class="btn btn-primary" *ngIf="editMarks" (click)="saveResults()">Save</button>
+            <button class="btn btn-primary" *ngIf="editMarks" (click)="onSaveFeedback()">Save</button>
         </div>
     </div>
 </ng-container>
 <ng-container *ngIf="view === 'results'"> 
+    <div class="light-overlay" *ngIf="contentLoading"></div>
     <div class="result">
         <div class="submitted-users">
             <div class="number">
@@ -158,8 +164,8 @@
             <button class="btn btn-edit" (click)="onEdit()">Edit</button>
         </div>
         <div class="list-abilities">
-            <div class="item" *ngFor="let ability of abilities;let ind = index">
-                <p>{{ ability.title }}</p>
+            <div class="item" *ngFor="let category of positionSpecificCategories;let ind = index">
+                <p>{{ category.title }}</p>
                 <ng-container>
                     <div class="img-icons">
                         <div class="img-block">
