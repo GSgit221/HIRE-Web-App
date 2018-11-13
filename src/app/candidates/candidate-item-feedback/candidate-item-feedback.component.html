@@ -1,9 +1,7 @@
 <ng-container *ngIf="view === 'default'">
     <div class="light-overlay" *ngIf="contentLoading"></div>
     <div class="form" [formGroup]="feedbackForm">
-        <div class="wrap-btn">
-            <button class="save-results btn btn-primary" *ngIf="!editMarks" (click)="onSaveFeedback()">Save</button>
-        </div>
+        
         <h3>Overall Candidate Thoughts?</h3>
         <textarea formControlName="comments"></textarea>
         <h3>Overall Rating?</h3>
@@ -96,8 +94,9 @@
             <button class="save btn btn-primary" *ngIf="addPositionSpecificCategory" (click)="onUpdateFeedbackPositionRatingCategories()">Save</button>
             <input type="hidden" formControlName="positionRating">
         </div>
+        
         <div class="wrap-btn">
-            <button class="btn btn-primary" *ngIf="editMarks" (click)="onSaveFeedback()">Save</button>
+            <button class="save-results btn btn-primary" *ngIf="valueChanged && !addPositionSpecificCategory" (click)="onSaveFeedback()">Save</button>
         </div>
     </div>
 </ng-container>
@@ -106,16 +105,16 @@
     <div class="result">
         <div class="submitted-users">
             <div class="number">
-                <span>{{ candidateAbilities.length }}</span>
+                <span>{{ this.feedback[this.jobId].comments.length }}</span>
             </div>
             <div class="avatars-block">
                 <h4>Submitted by</h4>
                 <div class="wrap">
-                    <div class="avatar" *ngFor="let item of candidateAbilities;">
-                        <img *ngIf="item.avatar" [src]="item.avatar" [alt]="item.first_name" width="30" height="30">
-                        <div *ngIf="!item.avatar" class="initial">
-                            {{ item.first_name | getFitstLetter | titlecase }}
-                            {{ item.last_name | getFitstLetter | titlecase }}
+                    <div class="avatar" *ngFor="let item of feedback[jobId].comments;">
+                        <img *ngIf="getUserData(item.user_id, 'icon_url')" [src]="getUserData(item.user_id, 'icon_url')" [alt]="getUserData(item.user_id, 'first_name' )" width="30" height="30">
+                        <div *ngIf="!getUserData(item.user_id, 'icon_url')" class="initial">
+                            {{ getUserData(item.user_id, 'first_name' ) | getFitstLetter | titlecase }}
+                            {{ getUserData(item.user_id, 'last_name' ) | getFitstLetter | titlecase }}
                         </div>
                     </div>
                 </div>
@@ -126,36 +125,36 @@
             <div class="table">
                 <div class="item">
                     <div class="title">Excellent</div>
-                    <div class="count">0</div>
+                    <div class="count">{{ mapAmountProp(feedback[jobId].rating, 'value')[5] || 0 }}</div>
                     <div class="rating-bar">
-                        <span></span>
+                        <span [ngStyle]="calculateOverallRating(5)"></span>
                     </div>
                 </div>
                 <div class="item">
                     <div class="title">Good</div>
-                    <div class="count">2</div>
+                    <div class="count">{{ mapAmountProp(feedback[jobId].rating, 'value')[4] || 0 }}</div>
                     <div class="rating-bar">
-                        <span [ngStyle]="{'width': '66%'}"></span>
+                        <span [ngStyle]="calculateOverallRating(4)"></span>
                     </div>
                 </div>
                 <div class="item">
                     <div class="title">Average</div>
-                    <div class="count">1</div>
+                    <div class="count">{{ mapAmountProp(feedback[jobId].rating, 'value')[3] || 0 }}</div>
                     <div class="rating-bar">
-                        <span [ngStyle]="{'width': '33%'}"></span>
+                        <span [ngStyle]="calculateOverallRating(3)"></span>
                     </div>
                 </div>
                 <div class="item">
                     <div class="title">Poor</div>
-                    <div class="count">0</div>
+                    <div class="count">{{ mapAmountProp(feedback[jobId].rating, 'value')[2] || 0 }}</div>
                     <div class="rating-bar">
-                        <span></span>
+                        <span [ngStyle]="calculateOverallRating(2)"></span>
                     </div>
                 </div>
                 <div class="item">
                     <div class="title">Very Poor</div>
-                    <div class="count">0</div>
-                    <div class="rating-bar"><span></span></div>
+                    <div class="count">{{ mapAmountProp(feedback[jobId].rating, 'value')[1] || 0}}</div>
+                    <div class="rating-bar"><span [ngStyle]="calculateOverallRating(1)"></span></div>
                 </div>
             </div>
         </div>
@@ -168,8 +167,8 @@
                 <p>{{ category.title }}</p>
                 <ng-container>
                     <div class="img-icons">
-                        <div class="img-block">
-                            <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <div class="img-block" *ngFor="let vote of category.votes;">
+                            <svg *ngIf="vote.value === 1" width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                     <g id="Scorecard---Default" transform="translate(-855.000000, -526.000000)" fill="#FE7F7F" fill-rule="nonzero">
                                         <g id="icons8-sad" transform="translate(855.000000, 526.000000)">
@@ -179,9 +178,7 @@
                                     </g>
                                 </g>
                             </svg>
-                        </div>
-                        <div class="img-block">
-                            <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <svg *ngIf="vote.value === 2" width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                     <g id="Scorecard---Default" transform="translate(-1010.000000, -526.000000)" fill="#FEBA8B" fill-rule="nonzero">
                                         <g id="icons8-sad" transform="translate(1010.000000, 526.000000)">
@@ -191,9 +188,7 @@
                                     </g>
                                 </g>
                             </svg>
-                        </div>
-                        <div class="img-block">
-                            <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <svg *ngIf="vote.value === 3" width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                     <g id="Scorecard---Default" transform="translate(-1165.000000, -526.000000)" fill="#65B7A9" fill-rule="nonzero">
                                         <g id="icons8-happy" transform="translate(1165.000000, 526.000000)">
@@ -211,19 +206,20 @@
         <div class="candidate-thoughts">
             <h3>Overall Candidate Thoughts</h3>
             <div class="list-thoughts">
-                <div class="item" *ngFor="let item of candidateAbilities;">
+                <div class="item" *ngFor="let item of feedback[jobId].comments;">
                     <div class="img-block">
-                        <img *ngIf="item.avatar" [src]="item.avatar" [alt]="item.first_name" 
+                        <img *ngIf="getUserData(item.user_id, 'icon_url')" [src]="getUserData(item.user_id, 'icon_url')" [alt]="getUserData(item.user_id, 'last_name')" 
                         width="23" height="23">
-                        <div *ngIf="!item.avatar" class="initial">
-                            {{ item.first_name | getFitstLetter | titlecase }}
-                            {{ item.last_name | getFitstLetter | titlecase }}
+                        <div *ngIf="!getUserData(item.user_id, 'icon_url')" class="initial">
+                            {{ getUserData(item.user_id, 'first_name' ) | getFitstLetter | titlecase }}
+                            {{ getUserData(item.user_id, 'last_name' ) | getFitstLetter | titlecase }}
                         </div>
                     </div>
                     <div class="item-content">
-                        <h5>{{ item.first_name }} {{ item.last_name }}</h5>
+                        <h5>{{ getUserData(item.user_id, 'first_name' ) }} 
+                            {{ getUserData(item.user_id, 'last_name' ) }}</h5>
                         <div class="comment-block">
-                            <div class="comment-text">{{ item.comment }}</div>
+                            <div class="comment-text">{{ item.value }}</div>
                         </div>
                     </div>
                 </div> 
