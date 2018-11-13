@@ -25,12 +25,15 @@ export class CandidateItemFeedbackComponent implements OnInit {
     user: User;
     users: User[];
     contentLoading = false;
+    initialState;
+    changedState;
+    formIsDirty = false;
 
 
     editMarks = false;
     view = 'default';
     candidateAbilities = [];
-    valueChanged = false;
+    test;
 
     constructor(
         private candidateService: CandidateService,
@@ -47,18 +50,21 @@ export class CandidateItemFeedbackComponent implements OnInit {
 
     ngOnInit() {
         this.initForm();
-        console.log('Feedback', this.feedback);
         if (this.feedback && this.feedback[this.jobId]) {
             this.positionSpecificCategories = this.feedback[this.jobId].position_rating;
         }
         // Get user
         this.store.select('user').subscribe((user: User) => {
+            console.log('Got user:', user);
             this.user = user;
             this.populateForm();
+            this.initialState = Object.assign({}, this.getState());
         });
         this.feedbackForm.valueChanges.subscribe((a) => {
-            this.valueChanged = true;
+            this.changedState = this.getState();
+            this.formIsDirty = !this.utilities.isEqual(this.initialState, this.changedState);
         });
+        
     }
 
     initForm() {
@@ -68,12 +74,28 @@ export class CandidateItemFeedbackComponent implements OnInit {
             positionRating: ['']
         });
     }
+    getState() {
+        return {
+            comments: this.feedbackForm.get('comments').value,
+            rating: this.transformRating(this.feedbackForm.get('rating').value),
+            position_rating: this.positionSpecificCategories.slice(0).filter(cat => cat.value).map(cat => ({ id: cat.id, value: cat.value }))
+        };
+    }
+    definePresenceComments() {
+        for (let i = 0; i < this.feedback[this.jobId].comments.length; i++ ) {
+            if (this.feedback[this.jobId].comments[i].value.trim().length > 0) {
+                return true;
+            }
+        }
+    }
 
     populateForm() {
         if (this.feedback && this.feedback[this.jobId]) {
             const candidateFeedback = this.feedback[this.jobId];
             if (candidateFeedback.comments) {
-                const item = candidateFeedback.comments.find(c => c.user_id === this.user.id);
+                const item = candidateFeedback.comments.find(c => {
+                    return c.user_id === this.user.id;
+                });
                 if (item) {
                     this.feedbackForm.patchValue({
                         comments: item.value
@@ -150,8 +172,16 @@ export class CandidateItemFeedbackComponent implements OnInit {
     }
 
     onEvaluateCategory(index: number, value: number) {
+        this.positionSpecificCategories = this.positionSpecificCategories.slice(0);
         this.positionSpecificCategories[index].value = value;
-        this.valueChanged = true;
+        if (this.positionSpecificCategories[index].votes && this.positionSpecificCategories[index].votes.length) {
+            const vote = this.positionSpecificCategories[index].votes.find(v => v.user_id === this.user.id);
+            if (vote) {
+                vote.value = value;
+            }
+        }
+        this.changedState = Object.assign({}, this.getState());
+        this.formIsDirty = !this.utilities.isEqual(this.initialState, this.changedState);
     }
 
     updateOrder() {
@@ -184,23 +214,25 @@ export class CandidateItemFeedbackComponent implements OnInit {
 
 
     onSaveFeedback() {
-        console.log('onSaveFeedback');
         const data = {
             comments: this.feedbackForm.get('comments').value,
             rating: this.transformRating(this.feedbackForm.get('rating').value),
-            position_rating: this.positionSpecificCategories.filter(cat => cat.value).map(cat => ({ id: cat.id, value: cat.value }))
+            position_rating: this.positionSpecificCategories
+                                .slice(0)
+                                .filter(cat => cat.value)
+                                .map(cat => ({ id: cat.id, value: cat.value }))
         };
-        console.log(data);
 
         this.contentLoading = true;
         this.candidateService.updateFeedback(this.jobId, this.candidateId, data)
             .subscribe((response: any) => {
                 this.contentLoading = false;
-
                 if (response.feedback) {
                     this.feedback = response.feedback;
                     this.view = 'results';
                     this.feedbackUpdate.next(response.feedback);
+                    this.initialState = Object.assign({}, this.getState());
+                    this.formIsDirty = false;
                 }
             }, (err) => {
                 console.error(err);
@@ -223,7 +255,6 @@ export class CandidateItemFeedbackComponent implements OnInit {
         }
     }
     transformRatingToPercent(value: number) {
-        console.log(value);
         switch (value) {
             case 1:
                 return 0;
