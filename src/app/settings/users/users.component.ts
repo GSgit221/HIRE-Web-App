@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../../models/user';
-import { SelectItem } from 'primeng/api';
+import { Message, SelectItem } from 'primeng/api';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UserService } from '../../services/user.service';
+import { FormHelperService } from '../../services/form-helper.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
     selector: 'app-users',
@@ -11,76 +14,57 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class UsersComponent implements OnInit {
 
     contentLoading = false;
-    user: User;
-    userList = [];
+    users = [];
     usersDetailForm: FormGroup;
     accountTypeOptions: SelectItem[];
     selectedItems = 0;
     selectedAll = false;
+    msgs: Message[] = [];
+    status = ['Active', 'Pending', 'Disabled'];
 
-    activeSection = 'users';
-    sections = ['users', 'pending-invitation'];
-
-    constructor(private fb: FormBuilder,) {
-    }
+    constructor(
+    private fb: FormBuilder,
+    public formHelper: FormHelperService,
+    public userService: UserService,
+    public authService:AuthService,
+    ) {}
 
     ngOnInit() {
-        this.userList = [
-            {
-                first_name: 'Greg',
-                last_name: 'Kockott',
-                email: 'greg@hellocrowd.net',
-                accountType: 'Account Owner',
-                invitationSent: 'May 13, 2018 13:50'
-            },
-            {
-                first_name: 'Andrew',
-                last_name: 'Jackson',
-                email: 'andrew@hellocrowd.net',
-                accountType: 'Admin',
-                invitationSent: ''
-            },
-            {
-                first_name: 'Andrew',
-                last_name: 'Jackson',
-                email: 'andrew@hellocrowd.net',
-                accountType: 'User',
-                invitationSent: ''
-            },
-        ];
+        this.contentLoading = true;
+        this.userService.getUsers().subscribe((users: User[]) => {
+            this.contentLoading = false;
+            this.users = users || [];
+             console.log(this.users);
+        });
         this.accountTypeOptions = [
             { label: 'Account Owner', value: 'account-owner' },
             { label: 'Admin', value: 'admin' },
             { label: 'User', value: 'user' }
         ];
         this.usersDetailForm = this.fb.group({
-            name: ['', [Validators.required, Validators.minLength(2), Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]],
+            full_name: ['', [Validators.required, Validators.minLength(2), Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]],
             email: ['' , [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
             accountType: [''],
         });
-        this.userList.forEach(userList => {
-            userList.isVisible = false;
+        this.users.forEach(users => {
+            users.isVisible = false;
         });
     }
 
     onMouseOver(index) {
-        this.userList[index].isVisible = true;
+        this.users[index].isVisible = true;
     }
 
     onMouseOut(index) {
-        if( this.userList[index].selected) {
-            this.userList[index].isVisible = true;
+        if( this.users[index].selected) {
+            this.users[index].isVisible = true;
         }else {
-            this.userList[index].isVisible = false;
+            this.users[index].isVisible = false;
         }
     }
 
-    onChangeSection(section: string) {
-        this.activeSection = section;
-    }
-
     private calculateSelectedUsers() {
-        this.selectedItems = this.userList.filter(user => user.selected).length;
+        this.selectedItems = this.users.filter(user => user.selected).length;
         if (!this.selectedItems) {
             this.selectedAll = false;
         }
@@ -92,25 +76,48 @@ export class UsersComponent implements OnInit {
     }
 
     onSelectedRow(index) {
-         this.userList[index].selected = !this.userList[index].selected;
-         this.userList[index].isVisible = true;
+         this.users[index].selected = !this.users[index].selected;
+         this.users[index].isVisible = true;
          this.calculateSelectedUsers();
     }
 
     onSelectAllChange() {
         if (this.selectedAll) {
-            this.userList.forEach(user => {
+            this.users.forEach(user => {
                 user.selected = true;
                 user.isVisible = true;
             });
         } else {
-            this.userList.forEach(user => user.selected = false);
+            this.users.forEach(user => user.selected = false);
         }
         this.calculateSelectedUsers();
     }
 
     onAdd() {
-
+        debugger
+        this.msgs = [];
+        const form = this.usersDetailForm;
+        if (!form.valid) {
+            this.formHelper.markFormGroupTouched(form);
+            return;
+        }
+        this.contentLoading = true;
+        let data = {
+            full_name: form.get('full_name').value,
+            email: form.get('email').value
+        }
+        debugger
+        this.userService.create(data)
+            .subscribe((response: User) => {
+                console.log(response)
+                this.contentLoading = false;
+                this.users.push(response);
+                this.usersDetailForm.reset();
+            }, error => {
+                console.log(error);
+                this.msgs.push({severity: 'error', detail: error.error.error || 'Error'});
+                this.contentLoading = false;
+            });
     }
 
 }
