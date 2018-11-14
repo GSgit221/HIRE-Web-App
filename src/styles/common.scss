@@ -696,3 +696,11 @@ p-selectbutton {
         }
     }
 }
+.owner-disabled {
+    .overall-rating .ui-slider .ui-slider-range {
+        background: grey;
+    }
+    .overall-rating .ui-slider .ui-slider-handle {
+        background: grey;
+    }
+}
