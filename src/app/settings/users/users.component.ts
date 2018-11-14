@@ -14,13 +14,12 @@ import { AuthService } from '../../auth/auth.service';
 export class UsersComponent implements OnInit {
 
     contentLoading = false;
-    users = [];
+    users: User[]= [];
     usersDetailForm: FormGroup;
     accountTypeOptions: SelectItem[];
     selectedItems = 0;
     selectedAll = false;
     msgs: Message[] = [];
-    status = ['Active', 'Pending', 'Disabled'];
 
     constructor(
     private fb: FormBuilder,
@@ -35,16 +34,25 @@ export class UsersComponent implements OnInit {
             this.contentLoading = false;
             this.users = users || [];
              console.log(this.users);
+            this.users.forEach(user => {
+                if(user.role === 'superadmin') {
+                    user.role = 'Account Owner';
+                }else if (user.role === 'admin') {
+                    user.role = 'Admin';
+                }else {
+                    user.role = 'User';
+                }
+            });
         });
         this.accountTypeOptions = [
-            { label: 'Account Owner', value: 'account-owner' },
+            { label: 'Account Owner', value: 'superadmin' },
             { label: 'Admin', value: 'admin' },
             { label: 'User', value: 'user' }
         ];
         this.usersDetailForm = this.fb.group({
             full_name: ['', [Validators.required, Validators.minLength(2), Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]],
             email: ['' , [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
-            accountType: [''],
+            accountType: ['', Validators.required],
         });
         this.users.forEach(users => {
             users.isVisible = false;
@@ -93,8 +101,32 @@ export class UsersComponent implements OnInit {
         this.calculateSelectedUsers();
     }
 
+    onUserBulkRemove() {
+        this.contentLoading = true;
+        const usersToRemove = this.users.filter(user => user.selected).map(user => user.id);
+        this.userService.bulkDeleteUsers(usersToRemove)
+            .subscribe(() => {
+                this.userService.getUsers()
+                    .subscribe((users: User[]) => {
+                        this.users = users;
+                        this.contentLoading = false;
+                        this.calculateSelectedUsers();
+                    });
+            });
+    }
+    updateOrder() {
+        this.users = this.users.sort((a: any, b: any) => {
+            if (a['first_name'] < b['first_name']) {
+                return -1;
+            } else if (a['first_name'] > b['first_name']) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+    }
+
     onAdd() {
-        debugger
         this.msgs = [];
         const form = this.usersDetailForm;
         if (!form.valid) {
@@ -104,20 +136,19 @@ export class UsersComponent implements OnInit {
         this.contentLoading = true;
         let data = {
             full_name: form.get('full_name').value,
-            email: form.get('email').value
-        }
-        debugger
-        this.userService.create(data)
-            .subscribe((response: User) => {
-                console.log(response)
-                this.contentLoading = false;
-                this.users.push(response);
-                this.usersDetailForm.reset();
-            }, error => {
-                console.log(error);
-                this.msgs.push({severity: 'error', detail: error.error.error || 'Error'});
-                this.contentLoading = false;
-            });
-    }
-
+            email: form.get('email').value,
+            role: form.get('accountType').value
+        };
+            this.userService.create(data)
+                .subscribe((response: User) => {
+                    console.log(response);
+                    this.contentLoading = false;
+                    this.users.push(response);
+                    this.usersDetailForm.reset();
+                }, error => {
+                    console.log(error);
+                    this.msgs.push({severity: 'error', detail: error.error.error || 'Error'});
+                    this.contentLoading = false;
+                });
+     }
 }
