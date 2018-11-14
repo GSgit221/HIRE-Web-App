@@ -38,4 +38,5 @@ export class Job {
     status?: string;
     created?: boolean;
     stages?: JobStage[];
+    owner?: string;
 }

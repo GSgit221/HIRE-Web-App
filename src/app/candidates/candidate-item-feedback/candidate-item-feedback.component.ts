@@ -16,6 +16,7 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class CandidateItemFeedbackComponent implements OnInit {
     @Input() jobId;
+    @Input() job;
     @Input() candidateId;
     @Input() feedback;
     @Output() public feedbackUpdate = new EventEmitter<any>();
@@ -33,7 +34,10 @@ export class CandidateItemFeedbackComponent implements OnInit {
     editMarks = false;
     view = 'default';
     candidateAbilities = [];
-    test;
+    jobOwner = false;
+    showPositionRating = false;
+    alreadySelectedPositionRating = false;
+
 
     constructor(
         private candidateService: CandidateService,
@@ -52,19 +56,28 @@ export class CandidateItemFeedbackComponent implements OnInit {
         this.initForm();
         if (this.feedback && this.feedback[this.jobId]) {
             this.positionSpecificCategories = this.feedback[this.jobId].position_rating;
+            if (this.feedback[this.jobId].show_position_rating) {
+                this.showPositionRating = true;
+            } else {
+                this.showPositionRating = false;
+            }
+            if ( this.feedback[this.jobId].active) {
+                this.alreadySelectedPositionRating = true;
+            }
         }
         // Get user
         this.store.select('user').subscribe((user: User) => {
-            console.log('Got user:', user);
             this.user = user;
             this.populateForm();
             this.initialState = Object.assign({}, this.getState());
+            if (this.job.owner === this.user.id) {
+                this.jobOwner = true;
+            }
         });
         this.feedbackForm.valueChanges.subscribe((a) => {
             this.changedState = this.getState();
             this.formIsDirty = !this.utilities.isEqual(this.initialState, this.changedState);
         });
-        
     }
 
     initForm() {
@@ -180,7 +193,7 @@ export class CandidateItemFeedbackComponent implements OnInit {
                 value
             }];
         }
-        
+
         if (this.positionSpecificCategories[index].votes && this.positionSpecificCategories[index].votes.length) {
             const vote = this.positionSpecificCategories[index].votes.find(v => v.user_id === this.user.id);
             console.log(vote);
@@ -235,8 +248,6 @@ export class CandidateItemFeedbackComponent implements OnInit {
                                 .filter(cat => cat.value)
                                 .map(cat => ({ id: cat.id, value: cat.value }))
         };
-        console.log(data.position_rating);
-
         this.contentLoading = true;
         this.candidateService.updateFeedback(this.jobId, this.candidateId, data)
             .subscribe((response: any) => {
@@ -251,7 +262,6 @@ export class CandidateItemFeedbackComponent implements OnInit {
             }, (err) => {
                 console.error(err);
             });
-            
     }
     transformRating(value: number) {
         switch (value) {
@@ -291,5 +301,23 @@ export class CandidateItemFeedbackComponent implements OnInit {
         this.addPositionSpecificCategory = false;
         this.view = 'default';
         this.editMarks = true;
+    }
+    selectSpecificRatingVisability(result) {
+        this.contentLoading = true;
+        const data = {
+            show_position_rating: result
+        };
+        this.candidateService.updateFeedback(this.jobId, this.candidateId, data)
+            .subscribe((response: any) => {
+                this.contentLoading = false;
+                this.alreadySelectedPositionRating = true;
+                if (response.feedback[this.jobId].show_position_rating) {
+                    this.showPositionRating = true;
+                } else {
+                    this.showPositionRating = false;
+                }
+            }, (err) => {
+                console.error(err);
+            });
     }
 }
