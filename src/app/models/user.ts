@@ -10,4 +10,8 @@ export class User {
     country_name?: string;
     icon_url?: string;
     icon_url_small?: string;
+    role?: string;
+    isVisible?: boolean;
+    selected?: boolean;
+    invitation_code?: string;
 }

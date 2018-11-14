@@ -27,4 +27,8 @@ export class UserService {
     takeover(email) {
         return this.http.post(`${this.baseURL}/users/takeover`, { email });
     }
+
+    bulkDeleteUsers(ids) {
+        return this.http.post(`${this.baseURL}/users/bulk-delete`, { items: ids });
+    }
 }
