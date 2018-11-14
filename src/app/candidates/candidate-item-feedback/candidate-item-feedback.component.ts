@@ -62,18 +62,15 @@ export class CandidateItemFeedbackComponent implements OnInit {
                 this.showPositionRating = false;
             }
             if ( this.feedback[this.jobId].active) {
-                console.log('already selected');
                 this.alreadySelectedPositionRating = true;
             }
         }
         // Get user
         this.store.select('user').subscribe((user: User) => {
-            console.log('Got user:', user);
             this.user = user;
             this.populateForm();
             this.initialState = Object.assign({}, this.getState());
             if (this.job.owner === this.user.id) {
-                console.log('you are owner this job');
                 this.jobOwner = true;
             }
         });
@@ -251,8 +248,6 @@ export class CandidateItemFeedbackComponent implements OnInit {
                                 .filter(cat => cat.value)
                                 .map(cat => ({ id: cat.id, value: cat.value }))
         };
-        console.log(data.position_rating);
-
         this.contentLoading = true;
         this.candidateService.updateFeedback(this.jobId, this.candidateId, data)
             .subscribe((response: any) => {
@@ -309,24 +304,18 @@ export class CandidateItemFeedbackComponent implements OnInit {
     }
     selectSpecificRatingVisability(result) {
         this.contentLoading = true;
-        
         const data = {
             show_position_rating: result
         };
-        console.log(data);
         this.candidateService.updateFeedback(this.jobId, this.candidateId, data)
             .subscribe((response: any) => {
                 this.contentLoading = false;
                 this.alreadySelectedPositionRating = true;
                 if (response.feedback[this.jobId].show_position_rating) {
-                    console.log('true');
                     this.showPositionRating = true;
-                    
                 } else {
-                    console.log('false');
                     this.showPositionRating = false;
                 }
-                
             }, (err) => {
                 console.error(err);
             });

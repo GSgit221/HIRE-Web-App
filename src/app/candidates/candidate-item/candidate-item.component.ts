@@ -75,13 +75,10 @@ export class CandidateItemComponent implements OnInit {
 
     ngOnInit() {}
     allowShowFeedback() {
-        console.log('try');
         if (this.job && this.candidate) {
-            console.log('success');
             this.store.select('user').subscribe((user: User) => {
                 console.log('Got user:', user);
                 if (this.job.owner === user.id) {
-                    console.log('you are owner this job');
                     this.showFeedback = true;
                     if (this.showFeedback) {
                         return true;
@@ -90,10 +87,8 @@ export class CandidateItemComponent implements OnInit {
                 } else if (this.candidate && this.candidate.feedback &&
                     this.candidate.feedback[this.jobId] &&
                     this.candidate.feedback[this.jobId].active) {
-                    console.log('feedback exist', this.candidate.feedback[this.jobId].active);
                     this.showFeedback = true;
                 } else {
-                    console.log('3');
                     this.showFeedback = false;
                 }
             });
