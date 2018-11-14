@@ -174,10 +174,23 @@ export class CandidateItemFeedbackComponent implements OnInit {
     onEvaluateCategory(index: number, value: number) {
         this.positionSpecificCategories = this.positionSpecificCategories.slice(0);
         this.positionSpecificCategories[index].value = value;
+        if (!this.positionSpecificCategories[index].votes) {
+            this.positionSpecificCategories[index].votes = [{
+                user_id: this.user.id,
+                value
+            }];
+        }
+        
         if (this.positionSpecificCategories[index].votes && this.positionSpecificCategories[index].votes.length) {
             const vote = this.positionSpecificCategories[index].votes.find(v => v.user_id === this.user.id);
+            console.log(vote);
             if (vote) {
                 vote.value = value;
+            } else {
+                this.positionSpecificCategories[index].votes.push({
+                    user_id: this.user.id,
+                    value
+                });
             }
         }
         this.changedState = Object.assign({}, this.getState());
@@ -222,6 +235,7 @@ export class CandidateItemFeedbackComponent implements OnInit {
                                 .filter(cat => cat.value)
                                 .map(cat => ({ id: cat.id, value: cat.value }))
         };
+        console.log(data.position_rating);
 
         this.contentLoading = true;
         this.candidateService.updateFeedback(this.jobId, this.candidateId, data)
@@ -237,6 +251,7 @@ export class CandidateItemFeedbackComponent implements OnInit {
             }, (err) => {
                 console.error(err);
             });
+            
     }
     transformRating(value: number) {
         switch (value) {
