@@ -1,6 +1,6 @@
 <ng-container *ngIf="view === 'default'">
     <div class="light-overlay" *ngIf="contentLoading"></div>
-    <div class="form" [formGroup]="feedbackForm" [ngClass]="{'owner-disabled': jobOwner && !feedback[jobId].active}">
+    <div class="form" [formGroup]="feedbackForm" [ngClass]="{'owner-disabled': jobOwner && !alreadySelectedPositionRating}">
         <h3>Overall Candidate Thoughts?</h3>
         <textarea formControlName="comments"></textarea>
         <h3>Overall Rating?</h3>
@@ -20,7 +20,7 @@
                 <img src="/assets/images/happy-icon.svg" alt="Happy icon">       
             </div>
         </div>
-        <div *ngIf="jobOwner && !feedback[jobId].active" class="question-block">
+        <div *ngIf="jobOwner && !alreadySelectedPositionRating" class="question-block">
             <div class="wrap">
                 <h3>Position Specific Rating</h3>
             </div>

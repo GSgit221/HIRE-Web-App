@@ -36,6 +36,8 @@ export class CandidateItemFeedbackComponent implements OnInit {
     candidateAbilities = [];
     jobOwner = false;
     showPositionRating = false;
+    alreadySelectedPositionRating = false;
+
 
     constructor(
         private candidateService: CandidateService,
@@ -54,13 +56,14 @@ export class CandidateItemFeedbackComponent implements OnInit {
         this.initForm();
         if (this.feedback && this.feedback[this.jobId]) {
             this.positionSpecificCategories = this.feedback[this.jobId].position_rating;
-            
             if (this.feedback[this.jobId].show_position_rating) {
-                console.log('1');
                 this.showPositionRating = true;
             } else {
-                console.log('2');
                 this.showPositionRating = false;
+            }
+            if ( this.feedback[this.jobId].active) {
+                console.log('already selected');
+                this.alreadySelectedPositionRating = true;
             }
         }
         // Get user
@@ -78,7 +81,6 @@ export class CandidateItemFeedbackComponent implements OnInit {
             this.changedState = this.getState();
             this.formIsDirty = !this.utilities.isEqual(this.initialState, this.changedState);
         });
-        console.log(this.feedback[this.jobId]);
     }
 
     initForm() {
@@ -306,16 +308,20 @@ export class CandidateItemFeedbackComponent implements OnInit {
         this.editMarks = true;
     }
     selectSpecificRatingVisability(result) {
-        this.jobOwner = false;
+        this.contentLoading = true;
+        
         const data = {
             show_position_rating: result
         };
         console.log(data);
         this.candidateService.updateFeedback(this.jobId, this.candidateId, data)
             .subscribe((response: any) => {
+                this.contentLoading = false;
+                this.alreadySelectedPositionRating = true;
                 if (response.feedback[this.jobId].show_position_rating) {
                     console.log('true');
                     this.showPositionRating = true;
+                    
                 } else {
                     console.log('false');
                     this.showPositionRating = false;

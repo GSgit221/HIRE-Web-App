@@ -48,7 +48,10 @@ export class CandidateItemComponent implements OnInit {
     ) {
         this.jobId = this.route.snapshot.paramMap.get('jobId');
         this.candidateId = this.route.snapshot.paramMap.get('candidateId');
-        this.jobService.getJob(this.jobId).subscribe((job: Job) => this.job = job);
+        this.jobService.getJob(this.jobId).subscribe((job: Job) => {
+            this.allowShowFeedback();
+            return this.job = job;
+        });
         this.jobService.getCandidate(this.jobId, this.candidateId)
             .subscribe((candidate: JobCandidate) => {
                 this.candidate = candidate;
@@ -58,26 +61,7 @@ export class CandidateItemComponent implements OnInit {
                 if (!this.candidate.resume_file) {
                     this.activeSection = 'attachments';
                 }
-                console.log(this.candidate.feedback[this.jobId].active);
-                this.store.select('user').subscribe((user: User) => {
-                    console.log('Got user:', user);
-                    if (this.job.owner === user.id) {
-                        console.log('you are owner this job');
-                        this.showFeedback = true;
-                        if (this.showFeedback) {
-                            return true;
-                        }
-
-                    } else if (this.candidate && this.candidate.feedback &&
-                        this.candidate.feedback[this.jobId] &&
-                        this.candidate.feedback[this.jobId].active) {
-                        console.log('feedback exist', this.candidate.feedback[this.jobId].active);
-                        this.showFeedback = true;
-                    } else {
-                        console.log('3')
-                        this.showFeedback = false;
-                    }
-                });
+                this.allowShowFeedback();
             });
 
         this.supportedFileTypes = [
@@ -89,8 +73,31 @@ export class CandidateItemComponent implements OnInit {
         ];
     }
 
-    ngOnInit() {
-        
+    ngOnInit() {}
+    allowShowFeedback() {
+        console.log('try');
+        if (this.job && this.candidate) {
+            console.log('success');
+            this.store.select('user').subscribe((user: User) => {
+                console.log('Got user:', user);
+                if (this.job.owner === user.id) {
+                    console.log('you are owner this job');
+                    this.showFeedback = true;
+                    if (this.showFeedback) {
+                        return true;
+                    }
+
+                } else if (this.candidate && this.candidate.feedback &&
+                    this.candidate.feedback[this.jobId] &&
+                    this.candidate.feedback[this.jobId].active) {
+                    console.log('feedback exist', this.candidate.feedback[this.jobId].active);
+                    this.showFeedback = true;
+                } else {
+                    console.log('3');
+                    this.showFeedback = false;
+                }
+            });
+        }
     }
 
     // processMatching() {
