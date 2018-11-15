@@ -373,3 +373,42 @@ h3 {
         }
     }
 }
+.question-block {
+    position: relative;
+    p {
+        flex: 0 0 60%;
+        padding: 0 20px 0 0;
+    }
+    .question-btns {
+        flex: 0 0 40%;
+        display: flex;
+        justify-content: space-between;
+    }
+}
+.owner-disabled {
+    position: relative;
+    &:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 240px;
+        z-index: 10;
+    }
+    .list-abilities {
+        display: none;
+    }
+    textarea {
+        color: grey;
+    }
+    .btn-edit {
+        display: none;
+    }
+    > h3 {
+        color: grey;
+    }
+}
+.light-overlay {
+    z-index: 10;
+}

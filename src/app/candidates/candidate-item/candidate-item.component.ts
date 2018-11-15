@@ -5,6 +5,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { JobService } from './../../services/job.service';
 import { Component, OnInit } from '@angular/core';
 import { Job } from '../../models/job';
+import { Store } from '@ngrx/store';
+import { State } from '../../reducers';
+import { User } from '../../models/user';
 
 @Component({
     selector: 'app-candidate-item',
@@ -33,16 +36,22 @@ export class CandidateItemComponent implements OnInit {
     uploadQueue: any[] = [];
     uploadError: string;
     supportedFileTypes: string[];
+    showFeedback = false;
+    jobOwner = false;
 
     constructor(
         private jobService: JobService,
         private route: ActivatedRoute,
         private router: Router,
-        private utilities: UtilitiesService
+        private utilities: UtilitiesService,
+        private store: Store<State>,
     ) {
         this.jobId = this.route.snapshot.paramMap.get('jobId');
         this.candidateId = this.route.snapshot.paramMap.get('candidateId');
-        this.jobService.getJob(this.jobId).subscribe((job: Job) => this.job = job);
+        this.jobService.getJob(this.jobId).subscribe((job: Job) => {
+            this.allowShowFeedback();
+            return this.job = job;
+        });
         this.jobService.getCandidate(this.jobId, this.candidateId)
             .subscribe((candidate: JobCandidate) => {
                 this.candidate = candidate;
@@ -52,6 +61,7 @@ export class CandidateItemComponent implements OnInit {
                 if (!this.candidate.resume_file) {
                     this.activeSection = 'attachments';
                 }
+                this.allowShowFeedback();
             });
 
         this.supportedFileTypes = [
@@ -63,7 +73,26 @@ export class CandidateItemComponent implements OnInit {
         ];
     }
 
-    ngOnInit() {
+    ngOnInit() {}
+    allowShowFeedback() {
+        if (this.job && this.candidate) {
+            this.store.select('user').subscribe((user: User) => {
+                console.log('Got user:', user);
+                if (this.job.owner === user.id) {
+                    this.showFeedback = true;
+                    if (this.showFeedback) {
+                        return true;
+                    }
+
+                } else if (this.candidate && this.candidate.feedback &&
+                    this.candidate.feedback[this.jobId] &&
+                    this.candidate.feedback[this.jobId].active) {
+                    this.showFeedback = true;
+                } else {
+                    this.showFeedback = false;
+                }
+            });
+        }
     }
 
     // processMatching() {

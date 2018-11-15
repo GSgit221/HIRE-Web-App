@@ -1,6 +1,6 @@
 <ng-container *ngIf="view === 'default'">
     <div class="light-overlay" *ngIf="contentLoading"></div>
-    <div class="form" [formGroup]="feedbackForm">
+    <div class="form" [formGroup]="feedbackForm" [ngClass]="{'owner-disabled': jobOwner && !alreadySelectedPositionRating}">
         <h3>Overall Candidate Thoughts?</h3>
         <textarea formControlName="comments"></textarea>
         <h3>Overall Rating?</h3>
@@ -20,14 +20,27 @@
                 <img src="/assets/images/happy-icon.svg" alt="Happy icon">       
             </div>
         </div>
-        <div class="position-rating" [ngClass]="{'edit': editMarks}">
+        <div *ngIf="jobOwner && !alreadySelectedPositionRating" class="question-block">
             <div class="wrap">
                 <h3>Position Specific Rating</h3>
-                <ng-container *ngIf="!addPositionSpecificCategory && !editMarks">
+            </div>
+            <div class="wrap">
+                <p>Will you be adding position specific ratings?</p>
+                <div class="question-btns">
+                    <button class="btn-add btn" (click)="selectSpecificRatingVisability(true)">Yes</button>
+                    <button class="btn-add btn" (click)="selectSpecificRatingVisability(false)">No</button>
+                </div>
+            </div>
+        </div>
+        <div class="position-rating" [ngClass]="{'edit': editMarks}" *ngIf="showPositionRating">
+            <div class="wrap">
+                <h3>Position Specific Rating</h3>
+                <ng-container *ngIf="!addPositionSpecificCategory && !editMarks && jobOwner">
                     <button class="btn-add btn" (click)="addPositionSpecificCategory = true" *ngIf="!this.positionSpecificCategories.length">Add</button>
                     <button class="btn btn-edit" (click)="addPositionSpecificCategory = true" *ngIf="this.positionSpecificCategories.length">Edit</button>
                 </ng-container>
             </div>
+            
             <div class="list-abilities" [ngClass]="{'not-edit': !addPositionSpecificCategory }">
                 <div class="item" *ngFor="let category of positionSpecificCategories | sortByOrder:'order';let ind = index;">
                     <p>{{ category.title }}</p>
