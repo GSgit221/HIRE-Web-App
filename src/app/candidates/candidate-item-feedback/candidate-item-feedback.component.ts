@@ -61,7 +61,7 @@ export class CandidateItemFeedbackComponent implements OnInit {
             } else {
                 this.showPositionRating = false;
             }
-            if ( this.feedback[this.jobId].active) {
+            if (this.feedback[this.jobId].active) {
                 this.alreadySelectedPositionRating = true;
             }
         }
@@ -307,6 +307,9 @@ export class CandidateItemFeedbackComponent implements OnInit {
         const data = {
             show_position_rating: result
         };
+        if (result) {
+            this.addPositionSpecificCategory = true;
+        }
         this.candidateService.updateFeedback(this.jobId, this.candidateId, data)
             .subscribe((response: any) => {
                 this.contentLoading = false;
