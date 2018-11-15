@@ -69,8 +69,8 @@ export class AuthService {
         return this.http.post(`${environment.apiUrl}/auth/reset-password`, { email, source: 'jobs', tenant: this.utilities.getTenant() });
     }
 
-    setPassword(password, password_reset_token) {
-        return this.http.post(`${environment.apiUrl}/auth/set-password`, { password, password_reset_token, source: 'jobs', tenant: this.utilities.getTenant() });
+    setPassword(password, password_reset_token, invitation_code) {
+        return this.http.post(`${environment.apiUrl}/auth/set-password`, { password, password_reset_token, invitation_code, source: 'jobs', tenant: this.utilities.getTenant() });
     }
 
     checkUserExists(email) {

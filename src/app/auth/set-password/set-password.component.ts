@@ -15,6 +15,7 @@ import { AuthService } from './../auth.service';
 })
 export class SetPasswordComponent implements OnInit {
     token: string;
+    invitation_code: string;
     setPasswordForm: FormGroup;
     msgs: Message[] = [];
 
@@ -45,6 +46,7 @@ export class SetPasswordComponent implements OnInit {
 
     ngOnInit() {
         this.token = this.route.snapshot.queryParamMap.get('token');
+        this.invitation_code = this.route.snapshot.queryParamMap.get('invitation_code');
     }
 
 
@@ -55,7 +57,7 @@ export class SetPasswordComponent implements OnInit {
             return;
         }
         const val = this.setPasswordForm.value;
-        this.authService.setPassword(val.password, this.token)
+        this.authService.setPassword(val.password, this.token, this.invitation_code)
             .subscribe(
                 response => {
                     this.msgs = [];
