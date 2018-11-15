@@ -1,6 +1,6 @@
 <ng-container *ngIf="view === 'default'">
     <div class="light-overlay" *ngIf="contentLoading"></div>
-    <div class="form" [formGroup]="feedbackForm" [ngClass]="{'owner-disabled': jobOwner && !alreadySelectedPositionRating}">
+    <div class="form" [formGroup]="feedbackForm" [ngClass]="{'owner-disabled': jobOwner && !alreadySelectedPositionRating, 'not-rating-disabled': jobOwner && positionSpecificCategories.length === 0 && showPositionRating}">
         <h3>Overall Candidate Thoughts?</h3>
         <textarea formControlName="comments"></textarea>
         <h3>Overall Rating?</h3>
@@ -20,7 +20,7 @@
                 <img src="/assets/images/happy-icon.svg" alt="Happy icon">       
             </div>
         </div>
-        <div *ngIf="jobOwner && !alreadySelectedPositionRating" class="question-block">
+        <div *ngIf="jobOwner && (!alreadySelectedPositionRating)" class="question-block">
             <div class="wrap">
                 <h3>Position Specific Rating</h3>
             </div>
@@ -52,7 +52,7 @@
                                 [disabled]="ind == positionSpecificCategories.length - 1">
                             <img src="/assets/images/arrow-down.svg" alt="Arrow icon">
                         </button>
-                        <button class="btn" (click)="onRemovePositionSpecificCategory(ind)">
+                        <button class="btn" (click)="onRemovePositionSpecificCategory(ind)" [ngClass]="{'hide': positionSpecificCategories.length === 1}">
                             <img src="/assets/images/close.svg" alt="Arrow icon">
                         </button>
                     </ng-container>
@@ -98,7 +98,8 @@
                     </ng-container>
                 </div>
                 <div [ngClass]="{hidden: !addPositionSpecificCategory}">
-                    <input class="add-abilities" (keyup.enter)="onAddPositionSpecificCategory(input)" type="text" #input placeholder="Add annother">
+                    <input class="add-abilities" (keyup.enter)="onAddPositionSpecificCategory(input)" type="text" #input [placeholder]="positionSpecificCategories.length ? 'Add annother' : 'Add position rating
+'">
                 </div>
                 <p>{{ input?.value }}</p>
             </div>
