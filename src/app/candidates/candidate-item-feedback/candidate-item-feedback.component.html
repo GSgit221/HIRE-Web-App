@@ -168,11 +168,11 @@
                 </div>
             </div>
         </div>
-        <div class="wrap">
+        <div class="wrap" *ngIf="showPositionRating">
             <h3>Position Specific Rating</h3>
             <button class="btn btn-edit" (click)="onEdit()">Edit</button>
         </div>
-        <div class="list-abilities">
+        <div class="list-abilities" *ngIf="showPositionRating">
             <div class="item" *ngFor="let category of positionSpecificCategories;let ind = index">
                 <p>{{ category.title }}</p>
                 <ng-container>
