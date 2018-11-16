@@ -8,12 +8,12 @@
             </div>
             <div class="select-dd-menu" *ngIf="menuIsVisible">
                 <div class="menu-item" 
-                    *ngFor="let item of _items" 
+                    *ngFor="let item of _items | sortByOrder: 'first_name'"
                     (click)="onSelectItem(item)"
                     [ngClass]="{'selected': item.selected}"
-                >{{item.first_name}}</div>
+                >{{item.first_name}} {{item.last_name}}</div>
                 <div class="menu-items-separator"></div>
-                <div class="menu-item" (click)="onAddNewClick()">+ Add new</div>
+                <!--<div class="menu-item" (click)="onAddNewClick()">+ Add new</div>-->
             </div>
         </div>
     </div>

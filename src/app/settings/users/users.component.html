@@ -93,7 +93,7 @@
                 <div class="hc-blocker"></div>
                 <div class="hc-list-row" *ngFor="let user of users | sortByOrder: 'first_name'; let i = index"
                      (mouseover)="onMouseOver(i)" (mouseout)="onMouseOut(i)">
-                    <div class="hc-list-row-content" (click)="onSelectedRow(i)">
+                    <div class="hc-list-row-content">
                         <div class="col col1 flex-5 ">
                             <div class="hc-checkbox profile-check-pad-left" data-escape-click>
                                 <p-checkbox binary="true" [(ngModel)]="user.selected"
