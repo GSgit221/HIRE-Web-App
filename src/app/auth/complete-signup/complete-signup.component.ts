@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
 import { Message } from 'primeng/components/common/api';
 
@@ -8,8 +8,6 @@ import { environment } from '../../../environments/environment';
 import { JobService } from '../../services/job.service';
 import { UtilitiesService } from '../../services/utilities.service';
 import { AuthService } from '../auth.service';
-
-
 
 @Component({
     selector: 'app-complete-signup',
@@ -30,7 +28,6 @@ export class CompleteSignupComponent implements OnInit {
     token = '';
     tenant = '';
 
-
     constructor(
         private fb: FormBuilder,
         private jobService: JobService,
@@ -47,16 +44,21 @@ export class CompleteSignupComponent implements OnInit {
         this.onSignUpWithGoogle(this.token, this.tenant);
 
         // OPTIONS
-        this.utilities.getCountries()
-            .subscribe((countries: { name: string, code: string }[]) => {
-                countries.sort((a, b) => {
-                    if (a.name < b.name) { return -1; }
-                    if (a.name > b.name) { return 1; }
+        this.utilities.getCountries().subscribe((countries: Array<{ name: string; code: string }>) => {
+            countries
+                .sort((a, b) => {
+                    if (a.name < b.name) {
+                        return -1;
+                    }
+                    if (a.name > b.name) {
+                        return 1;
+                    }
                     return 0;
-                }).forEach(c => {
+                })
+                .forEach((c) => {
                     this.countryTypeOptions.push({ label: c.name, value: c.code });
                 });
-            });
+        });
         this.employeesTypeOptions = [
             { label: '1 - 10', value: '1-10' },
             { label: '11 - 50', value: '11-50' },
@@ -71,15 +73,15 @@ export class CompleteSignupComponent implements OnInit {
         this.initForms();
     }
 
-    ngOnInit() {
-    }
+    ngOnInit() {}
 
     onSignUpWithGoogle(idToken, tenant) {
         this.contentLoading = true;
-        this.authService.getUserData()
-            .then(userData => {
-                this.authService.signUpWithGoogle(idToken, userData, tenant)
-                    .subscribe(response => {
+        this.authService
+            .getUserData()
+            .then((userData) => {
+                this.authService.signUpWithGoogle(idToken, userData, tenant).subscribe(
+                    (response) => {
                         this.contentLoading = false;
                         console.log(response);
                         this.msgs = [];
@@ -87,7 +89,8 @@ export class CompleteSignupComponent implements OnInit {
                         const url = environment.appUrl.replace('subdomain', tenant);
                         console.log('REDIRECTING:', url);
                         window.location.href = url;
-                    }, response => {
+                    },
+                    (response) => {
                         this.contentLoading = false;
                         if (response.error.error === 'Company data not found') {
                             this.step = 'second';
@@ -96,18 +99,17 @@ export class CompleteSignupComponent implements OnInit {
                             this.msgs = [];
                             this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
                         }
-                    });
+                    }
+                );
             })
-            .catch(error => console.log(error));
+            .catch((error) => console.log(error));
     }
-
 
     onKeyupEmail(event) {
         event.target.value = event.target.value.toLowerCase();
     }
 
     initForms() {
-
         this.websiteForm = this.fb.group({
             url: ['', [Validators.required, Validators.pattern(this.websiteReg)]]
         });
@@ -122,12 +124,11 @@ export class CompleteSignupComponent implements OnInit {
     }
 
     onChangeCountry(event) {
-        const countryLabel = this.countryTypeOptions.find(country => country.value === event.value);
+        const countryLabel = this.countryTypeOptions.find((country) => country.value === event.value);
         this.companyForm.patchValue({
             country_name: countryLabel.label
         });
     }
-
 
     onFinishSecondStep() {
         this.contentLoading = true;
@@ -147,36 +148,34 @@ export class CompleteSignupComponent implements OnInit {
                 agreed: [false, Validators.requiredTrue],
                 country_name: [data.geo.country]
             });
-
         });
     }
 
     onFinishThirdStep() {
         this.contentLoading = true;
-        const data = Object.assign({}, this.companyForm.value);
-        this.authService.getUserData()
-            .then(geo_data => {
+        const data = { ...this.companyForm.value };
+        this.authService
+            .getUserData()
+            .then((geo_data) => {
                 data.geo_data = geo_data;
-                this.authService.completeSignUpWithGoogle(this.token, data, this.tenant)
-                    .subscribe(
-                        (response: any) => {
-                            this.contentLoading = false;
-                            this.msgs = [];
-                            this.authService.setSession(response, response.tenant_id);
-                            const url = environment.appUrl.replace('subdomain', response.tenant_id);
-                            console.log('REDIRECTING:', url);
-                            window.location.href = url;
-                        },
-                        response => {
-                            this.contentLoading = false;
-                            this.msgs = [];
-                            this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
-                        }
-                    );
+                this.authService.completeSignUpWithGoogle(this.token, data, this.tenant).subscribe(
+                    (response: any) => {
+                        this.contentLoading = false;
+                        this.msgs = [];
+                        this.authService.setSession(response, response.tenant_id);
+                        const url = environment.appUrl.replace('subdomain', response.tenant_id);
+                        console.log('REDIRECTING:', url);
+                        window.location.href = url;
+                    },
+                    (response) => {
+                        this.contentLoading = false;
+                        this.msgs = [];
+                        this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
+                    }
+                );
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error(error);
             });
     }
-
 }

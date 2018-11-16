@@ -1,10 +1,11 @@
-import { Question } from './../../../models/question';
-import { ActivatedRoute, Router } from '@angular/router';
-import { QuestionnaireService } from './../../../services/questionnaire.service';
-import { FormHelperService } from './../../../services/form-helper.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { Questionnaire } from 'src/app/models/questionnaire';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import { Question } from './../../../models/question';
+import { Questionnaire } from './../../../models/questionnaire';
+import { FormHelperService } from './../../../services/form-helper.service';
+import { QuestionnaireService } from './../../../services/questionnaire.service';
 
 @Component({
     selector: 'app-question-item',
@@ -25,7 +26,6 @@ export class QuestionItemComponent implements OnInit {
     ];
     typeQuestion = 'multiple';
 
-
     constructor(
         private fb: FormBuilder,
         private formHelper: FormHelperService,
@@ -42,7 +42,8 @@ export class QuestionItemComponent implements OnInit {
         });
 
         if (this.questionId !== 'new') {
-            this.questionnaireService.getQuestion(this.questionnaireId, this.questionId)
+            this.questionnaireService
+                .getQuestion(this.questionnaireId, this.questionId)
                 .subscribe((question: Question) => {
                     console.log('QUESTION', question);
                     this.question = question;
@@ -55,7 +56,6 @@ export class QuestionItemComponent implements OnInit {
             this.initialLoading = false;
         }
     }
-
 
     ngOnInit() {
         this.questionForm = this.fb.group({
@@ -90,10 +90,8 @@ export class QuestionItemComponent implements OnInit {
         } else {
             this.questionForm.get('answer2').setValidators([Validators.required]);
             this.questionForm.get('answer2').updateValueAndValidity();
-
         }
     }
-
 
     onSave() {
         console.log('save');
@@ -108,18 +106,21 @@ export class QuestionItemComponent implements OnInit {
         this.contentLoading = true;
 
         if (this.questionId === 'new') {
-            this.questionnaireService.createQuestion(this.questionnaireId, form.value)
-                .subscribe(() => {
+            this.questionnaireService.createQuestion(this.questionnaireId, form.value).subscribe(
+                () => {
                     this.contentLoading = false;
                     this.router.navigateByUrl(`dashboard/questionnaires/${this.questionnaireId}/questions`);
-                }, error => console.error(error));
+                },
+                (error) => console.error(error)
+            );
         } else {
-            this.questionnaireService.updateQuestion(this.questionnaireId, this.questionId, form.value)
-                .subscribe(() => {
+            this.questionnaireService.updateQuestion(this.questionnaireId, this.questionId, form.value).subscribe(
+                () => {
                     this.contentLoading = false;
                     this.router.navigateByUrl(`dashboard/questionnaires/${this.questionnaireId}/questions`);
-                }, error => console.error(error));
+                },
+                (error) => console.error(error)
+            );
         }
     }
-
 }

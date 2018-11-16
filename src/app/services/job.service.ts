@@ -13,10 +13,7 @@ export class JobService {
     apiURL: string = environment.apiUrl;
     tenantId = 'undefined';
     baseURL = '';
-    constructor(
-        private http: HttpClient,
-        private utilities: UtilitiesService
-    ) {
+    constructor(private http: HttpClient, private utilities: UtilitiesService) {
         this.tenantId = this.utilities.getTenant();
         this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
     }
@@ -24,7 +21,6 @@ export class JobService {
     getAll() {
         return this.http.get(`${this.baseURL}/jobs`);
     }
-
 
     getJob(id) {
         if (id === 'new') {
@@ -92,7 +88,7 @@ export class JobService {
     updateJob(id, data) {
         return this.http.put(`${this.baseURL}/jobs/${id}`, {
             section: '',
-            data: data,
+            data,
             next: false
         });
     }
@@ -112,14 +108,16 @@ export class JobService {
         return this.http.get(`${this.apiURL}/tenants/${this.tenantId}/candidates`);
     }
     getCandidatesChunk(startAt, limit) {
-        return this.http.get(`${this.apiURL}/tenants/${this.tenantId}/candidates-chunk?sortBy='sds'&startAt=${startAt}&limit=${limit}`);
+        return this.http.get(
+            `${this.apiURL}/tenants/${this.tenantId}/candidates-chunk?sortBy='sds'&startAt=${startAt}&limit=${limit}`
+        );
     }
     getCandidatesAmount() {
         return this.http.get(`${this.apiURL}/tenants/${this.tenantId}/candidates-amount`);
     }
 
     getDataCompany(url) {
-        return this.http.post(`${this.apiURL}/company`, { url : url });
+        return this.http.post(`${this.apiURL}/company`, { url });
     }
 
     getStages(jobId: string) {

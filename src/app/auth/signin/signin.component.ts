@@ -1,4 +1,3 @@
-import { UtilitiesService } from './../../services/utilities.service';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -8,9 +7,10 @@ import { Message } from 'primeng/components/common/api';
 
 import { environment } from '../../../environments/environment';
 import * as fromUserActions from '../../actions/user/user.actions';
-import { AuthService } from '../auth.service';
 import { State } from '../../reducers';
 import { FormHelperService } from '../../services/form-helper.service';
+import { AuthService } from '../auth.service';
+import { UtilitiesService } from './../../services/utilities.service';
 
 @Component({
     selector: 'app-signin',
@@ -22,7 +22,6 @@ export class SigninComponent implements OnInit {
     msgs: Message[] = [];
     contentLoading = false;
     googleSigninLink = '';
-
 
     constructor(
         private location: Location,
@@ -41,9 +40,11 @@ export class SigninComponent implements OnInit {
     }
 
     ngOnInit() {
-        const urlParts = decodeURIComponent(this.location.path()).replace('#', '&').split('&');
-        const idTokenPart = urlParts.find(p => p.indexOf('id_token=') !== -1);
-        const statePart = urlParts.find(p => p.indexOf('state=') !== -1);
+        const urlParts = decodeURIComponent(this.location.path())
+            .replace('#', '&')
+            .split('&');
+        const idTokenPart = urlParts.find((p) => p.indexOf('id_token=') !== -1);
+        const statePart = urlParts.find((p) => p.indexOf('state=') !== -1);
         if (idTokenPart && statePart) {
             const token = idTokenPart.replace('id_token=', '');
             const state = statePart.replace('state=', '');
@@ -58,9 +59,7 @@ export class SigninComponent implements OnInit {
             }
             if (type === 'signup') {
                 this.router.navigateByUrl(
-                    this.router.createUrlTree(
-                        ['complete-signup'], { queryParams: { tenantId, token } }
-                    )
+                    this.router.createUrlTree(['complete-signup'], { queryParams: { tenantId, token } })
                 );
             }
         } else {
@@ -75,24 +74,26 @@ export class SigninComponent implements OnInit {
 
     onSignInWithGoogle(idToken, tenant) {
         this.contentLoading = true;
-        this.authService.getUserData()
-            .then(userData => {
-                this.authService.signInWithGoogle(idToken, userData, tenant)
-                    .subscribe(response => {
+        this.authService
+            .getUserData()
+            .then((userData) => {
+                this.authService.signInWithGoogle(idToken, userData, tenant).subscribe(
+                    (response) => {
                         this.contentLoading = false;
                         this.msgs = [];
                         this.authService.setSession(response, tenant);
                         const url = environment.appUrl.replace('subdomain', tenant);
                         console.log('REDIRECTING:', url);
                         window.location.href = url;
-                    }, response => {
+                    },
+                    (response) => {
                         this.msgs = [];
                         this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
-                    });
+                    }
+                );
             })
-            .catch(error => console.log(error));
+            .catch((error) => console.log(error));
     }
-
 
     onSignIn(event) {
         event.preventDefault();
@@ -102,20 +103,19 @@ export class SigninComponent implements OnInit {
         }
         this.contentLoading = true;
         const val = this.signinForm.value;
-        this.authService.signin(val.email, val.password)
-            .subscribe(
-                response => {
-                    this.contentLoading = false;
-                    this.msgs = [];
-                    this.authService.setSession(response);
-                    this.store.dispatch(new fromUserActions.GetAuthUser());
-                    this.router.navigateByUrl('/');
-                },
-                response => {
-                    this.contentLoading = false;
-                    this.msgs = [];
-                    this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
-                }
-            );
+        this.authService.signin(val.email, val.password).subscribe(
+            (response) => {
+                this.contentLoading = false;
+                this.msgs = [];
+                this.authService.setSession(response);
+                this.store.dispatch(new fromUserActions.GetAuthUser());
+                this.router.navigateByUrl('/');
+            },
+            (response) => {
+                this.contentLoading = false;
+                this.msgs = [];
+                this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
+            }
+        );
     }
 }

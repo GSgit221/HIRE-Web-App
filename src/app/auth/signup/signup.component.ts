@@ -9,8 +9,6 @@ import { JobService } from '../../services/job.service';
 import { UtilitiesService } from '../../services/utilities.service';
 import { AuthService } from '../auth.service';
 
-
-
 @Component({
     selector: 'app-signup',
     templateUrl: './signup.component.html',
@@ -29,7 +27,6 @@ export class SignupComponent implements OnInit {
     googleSigninLink = '';
     msgs: Message[] = [];
 
-
     constructor(
         private fb: FormBuilder,
         private jobService: JobService,
@@ -41,21 +38,24 @@ export class SignupComponent implements OnInit {
         const tenant = this.utilities.getTenant();
         console.log(tenant);
 
-
-
         // Google link
         this.googleSigninLink = this.authService.getGoogleSignupLink();
         // OPTIONS
-        this.utilities.getCountries()
-            .subscribe((countries: { name: string, code: string }[]) => {
-                countries.sort((a, b) => {
-                    if (a.name < b.name) { return -1; }
-                    if (a.name > b.name) { return 1; }
+        this.utilities.getCountries().subscribe((countries: Array<{ name: string; code: string }>) => {
+            countries
+                .sort((a, b) => {
+                    if (a.name < b.name) {
+                        return -1;
+                    }
+                    if (a.name > b.name) {
+                        return 1;
+                    }
                     return 0;
-                }).forEach(c => {
+                })
+                .forEach((c) => {
                     this.countryTypeOptions.push({ label: c.name, value: c.code });
                 });
-            });
+        });
         this.employeesTypeOptions = [
             { label: '1 - 10', value: '1-10' },
             { label: '11 - 50', value: '11-50' },
@@ -78,7 +78,6 @@ export class SignupComponent implements OnInit {
         //         email: a.email.toUpperCase()
         //     });
         // });
-
     }
     onKeyupEmail(event) {
         event.target.value = event.target.value.toLowerCase();
@@ -86,10 +85,12 @@ export class SignupComponent implements OnInit {
 
     initForms() {
         this.credentialsForm = this.fb.group({
-            name: ['', [Validators.required, Validators.minLength(2),
-            Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]],
+            name: [
+                '',
+                [Validators.required, Validators.minLength(2), Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]
+            ],
             email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
-            password: ['', [Validators.required, Validators.minLength(8)]],
+            password: ['', [Validators.required, Validators.minLength(8)]]
         });
 
         this.websiteForm = this.fb.group({
@@ -106,7 +107,7 @@ export class SignupComponent implements OnInit {
     }
 
     onChangeCountry(event) {
-        const countryLabel = this.countryTypeOptions.find(country => country.value === event.value);
+        const countryLabel = this.countryTypeOptions.find((country) => country.value === event.value);
         this.companyForm.patchValue({
             country_name: countryLabel.label
         });
@@ -115,39 +116,39 @@ export class SignupComponent implements OnInit {
     onFinishFirstStep() {
         this.contentLoading = true;
         this.msgs = [];
-        this.authService.checkUserExists(this.credentialsForm.get('email').value)
-            .subscribe((response: any) => {
-                if (response.user_exists) {
-                    this.contentLoading = false;
-                    this.msgs.push({ severity: 'error', detail: 'User with this email is already registered. Please sign in.' });
-                    return false;
-                }
-                this.authService.getCompanyByEmail(this.credentialsForm.get('email').value).subscribe((data: any) => {
-                    this.contentLoading = false;
-                    if (data) {
-                        this.step = 'third';
-                        let employees = data.metrics.employeesRange;
-                        if (employees) {
-                            employees = employees.replace(/ /g, '');
-                        }
-                        this.companyForm = this.fb.group({
-                            company_website_url: [data.domain, [Validators.required, Validators.pattern(this.websiteReg)]],
-                            company_name: [data.name, [Validators.required, Validators.pattern(this.companyNameReg)]],
-                            country_code: [data.geo.countryCode, Validators.required],
-                            employees: [employees, Validators.required],
-                            agreed: [false, Validators.requiredTrue],
-                            country_name: [data.geo.country]
-                        });
-                        return false;
-                    } else {
-                        this.msgs = [];
-                        this.step = 'second';
-                    }
+        this.authService.checkUserExists(this.credentialsForm.get('email').value).subscribe((response: any) => {
+            if (response.user_exists) {
+                this.contentLoading = false;
+                this.msgs.push({
+                    severity: 'error',
+                    detail: 'User with this email is already registered. Please sign in.'
                 });
+                return false;
+            }
+            this.authService.getCompanyByEmail(this.credentialsForm.get('email').value).subscribe((data: any) => {
+                this.contentLoading = false;
+                if (data) {
+                    this.step = 'third';
+                    let employees = data.metrics.employeesRange;
+                    if (employees) {
+                        employees = employees.replace(/ /g, '');
+                    }
+                    this.companyForm = this.fb.group({
+                        company_website_url: [data.domain, [Validators.required, Validators.pattern(this.websiteReg)]],
+                        company_name: [data.name, [Validators.required, Validators.pattern(this.companyNameReg)]],
+                        country_code: [data.geo.countryCode, Validators.required],
+                        employees: [employees, Validators.required],
+                        agreed: [false, Validators.requiredTrue],
+                        country_name: [data.geo.country]
+                    });
+                    return false;
+                } else {
+                    this.msgs = [];
+                    this.step = 'second';
+                }
             });
-
+        });
     }
-
 
     onFinishSecondStep() {
         this.contentLoading = true;
@@ -161,46 +162,46 @@ export class SignupComponent implements OnInit {
                     employees = employees.replace(/ /g, '');
                 }
                 this.companyForm = this.fb.group({
-                        company_website_url: [data.domain, [Validators.required, Validators.pattern(this.websiteReg)]],
-                        company_name: [data.name, [Validators.required, Validators.pattern(this.companyNameReg)]],
-                        country_code: [data.geo.countryCode, Validators.required],
-                        employees: [employees, Validators.required],
-                        agreed: [false, Validators.requiredTrue],
-                        country_name: [data.geo.country]
-                    });
+                    company_website_url: [data.domain, [Validators.required, Validators.pattern(this.websiteReg)]],
+                    company_name: [data.name, [Validators.required, Validators.pattern(this.companyNameReg)]],
+                    country_code: [data.geo.countryCode, Validators.required],
+                    employees: [employees, Validators.required],
+                    agreed: [false, Validators.requiredTrue],
+                    country_name: [data.geo.country]
+                });
             },
-            error => {
+            (error) => {
                 this.contentLoading = false;
                 console.error('error company not found');
-            });
+            }
+        );
     }
 
     onFinishThirdStep() {
         this.contentLoading = true;
-        const data = Object.assign({}, this.companyForm.value, this.credentialsForm.value);
-        this.authService.getUserData()
-            .then(geo_data => {
+        const data = { ...this.companyForm.value, ...this.credentialsForm.value };
+        this.authService
+            .getUserData()
+            .then((geo_data) => {
                 data.geo_data = geo_data;
-                this.authService.signup(data)
-                    .subscribe(
-                        (response: any) => {
-                            this.contentLoading = false;
-                            this.msgs = [];
-                            this.authService.setSession(response, response.tenant_id);
-                            const url = environment.appUrl.replace('subdomain', response.tenant_id);
-                            console.log('REDIRECTING:', url);
-                            window.location.href = url;
-                        },
-                        response => {
-                            this.contentLoading = false;
-                            this.msgs = [];
-                            this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
-                        }
-                    );
+                this.authService.signup(data).subscribe(
+                    (response: any) => {
+                        this.contentLoading = false;
+                        this.msgs = [];
+                        this.authService.setSession(response, response.tenant_id);
+                        const url = environment.appUrl.replace('subdomain', response.tenant_id);
+                        console.log('REDIRECTING:', url);
+                        window.location.href = url;
+                    },
+                    (response) => {
+                        this.contentLoading = false;
+                        this.msgs = [];
+                        this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
+                    }
+                );
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error(error);
             });
     }
-
 }

@@ -1,9 +1,9 @@
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import * as closest from 'closest';
+
 import { Questionnaire } from './../../../models/questionnaire';
 import { QuestionnaireService } from './../../../services/questionnaire.service';
-import { Component, OnInit } from '@angular/core';
-import * as closest from 'closest';
-import { Router } from '@angular/router';
-
 
 @Component({
     selector: 'app-questionnaires-list',
@@ -15,19 +15,17 @@ export class QuestionnairesListComponent implements OnInit {
     list: Questionnaire[] = [];
     selectedAll = false;
     selectedItems = 0;
-    constructor(
-        private router: Router,
-        private questionnaireService: QuestionnaireService
-    ) {
-        this.questionnaireService.getAll()
-            .subscribe((response: Questionnaire[]) => {
+    constructor(private router: Router, private questionnaireService: QuestionnaireService) {
+        this.questionnaireService.getAll().subscribe(
+            (response: Questionnaire[]) => {
                 console.log('Questionnaires', response);
                 this.contentLoading = false;
                 if (response) {
                     this.list = response;
                 }
-
-            }, error => console.error(error));
+            },
+            (error) => console.error(error)
+        );
     }
 
     ngOnInit() {
@@ -49,14 +47,14 @@ export class QuestionnairesListComponent implements OnInit {
     }
     onSelectAllChange() {
         if (this.selectedAll) {
-            this.list.forEach(item => item.selected = true);
+            this.list.forEach((item) => (item.selected = true));
         } else {
-            this.list.forEach(item => item.selected = false);
+            this.list.forEach((item) => (item.selected = false));
         }
         this.calculateSelectedItems();
     }
     private calculateSelectedItems() {
-        this.selectedItems = this.list.filter(item => item.selected).length;
+        this.selectedItems = this.list.filter((item) => item.selected).length;
         if (!this.selectedItems) {
             this.selectedAll = false;
         }
@@ -66,17 +64,16 @@ export class QuestionnairesListComponent implements OnInit {
     }
     onItemsBulkRemove() {
         this.contentLoading = true;
-        const itemsToRemove = this.list.filter(item => item.selected).map(item => item.id);
-        this.questionnaireService.bulkDelete(itemsToRemove)
-            .subscribe(() => {
-                this.questionnaireService.getAll()
-                    .subscribe((response: Questionnaire[]) => {
-                        this.contentLoading = false;
-                        this.list = response;
-                        this.calculateSelectedItems();
-
-                    }, error => console.error(error));
-            });
+        const itemsToRemove = this.list.filter((item) => item.selected).map((item) => item.id);
+        this.questionnaireService.bulkDelete(itemsToRemove).subscribe(() => {
+            this.questionnaireService.getAll().subscribe(
+                (response: Questionnaire[]) => {
+                    this.contentLoading = false;
+                    this.list = response;
+                    this.calculateSelectedItems();
+                },
+                (error) => console.error(error)
+            );
+        });
     }
-
 }

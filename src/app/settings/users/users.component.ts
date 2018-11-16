@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../../models/user';
-import { Message, SelectItem } from 'primeng/api';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UserService } from '../../services/user.service';
-import { FormHelperService } from '../../services/form-helper.service';
+import { Message, SelectItem } from 'primeng/api';
+
 import { AuthService } from '../../auth/auth.service';
+import { User } from '../../models/user';
+import { FormHelperService } from '../../services/form-helper.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
     selector: 'app-users',
@@ -12,7 +13,6 @@ import { AuthService } from '../../auth/auth.service';
     styleUrls: ['./users.component.scss']
 })
 export class UsersComponent implements OnInit {
-
     contentLoading = false;
     users: User[] = [];
     usersDetailForm: FormGroup;
@@ -22,10 +22,10 @@ export class UsersComponent implements OnInit {
     msgs: Message[] = [];
 
     constructor(
-    private fb: FormBuilder,
-    public formHelper: FormHelperService,
-    public userService: UserService,
-    public authService: AuthService,
+        private fb: FormBuilder,
+        public formHelper: FormHelperService,
+        public userService: UserService,
+        public authService: AuthService
     ) {}
 
     ngOnInit() {
@@ -33,8 +33,8 @@ export class UsersComponent implements OnInit {
         this.userService.getUsers().subscribe((users: User[]) => {
             this.contentLoading = false;
             this.users = users || [];
-             console.log(this.users);
-            this.users.forEach(user => {
+            console.log(this.users);
+            this.users.forEach((user) => {
                 if (user.role === 'superadmin') {
                     user.role = 'Account Owner';
                 } else if (user.role === 'admin') {
@@ -50,11 +50,14 @@ export class UsersComponent implements OnInit {
             { label: 'User', value: 'user' }
         ];
         this.usersDetailForm = this.fb.group({
-            full_name: ['', [Validators.required, Validators.minLength(2), Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]],
-            email: ['' , [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
-            accountType: ['', Validators.required],
+            full_name: [
+                '',
+                [Validators.required, Validators.minLength(2), Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]
+            ],
+            email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
+            accountType: ['', Validators.required]
         });
-        this.users.forEach(users => {
+        this.users.forEach((users) => {
             users.isVisible = false;
         });
     }
@@ -64,15 +67,11 @@ export class UsersComponent implements OnInit {
     }
 
     onMouseOut(index) {
-        if ( this.users[index].selected) {
-            this.users[index].isVisible = true;
-        } else {
-            this.users[index].isVisible = false;
-        }
+        this.users[index].isVisible = this.users[index].selected ? true : false;
     }
 
     private calculateSelectedUsers() {
-        this.selectedItems = this.users.filter(user => user.selected).length;
+        this.selectedItems = this.users.filter((user) => user.selected).length;
         if (!this.selectedItems) {
             this.selectedAll = false;
         }
@@ -84,35 +83,33 @@ export class UsersComponent implements OnInit {
     }
 
     onSelectedRow(index) {
-         this.users[index].selected = !this.users[index].selected;
-         this.users[index].isVisible = true;
-         this.calculateSelectedUsers();
+        this.users[index].selected = !this.users[index].selected;
+        this.users[index].isVisible = true;
+        this.calculateSelectedUsers();
     }
 
     onSelectAllChange() {
         if (this.selectedAll) {
-            this.users.forEach(user => {
+            this.users.forEach((user) => {
                 user.selected = true;
                 user.isVisible = true;
             });
         } else {
-            this.users.forEach(user => user.selected = false);
+            this.users.forEach((user) => (user.selected = false));
         }
         this.calculateSelectedUsers();
     }
 
     onUserBulkRemove() {
         this.contentLoading = true;
-        const usersToRemove = this.users.filter(user => user.selected).map(user => user.id);
-        this.userService.bulkDeleteUsers(usersToRemove)
-            .subscribe(() => {
-                this.userService.getUsers()
-                    .subscribe((users: User[]) => {
-                        this.users = users;
-                        this.contentLoading = false;
-                        this.calculateSelectedUsers();
-                    });
+        const usersToRemove = this.users.filter((user) => user.selected).map((user) => user.id);
+        this.userService.bulkDeleteUsers(usersToRemove).subscribe(() => {
+            this.userService.getUsers().subscribe((users: User[]) => {
+                this.users = users;
+                this.contentLoading = false;
+                this.calculateSelectedUsers();
             });
+        });
     }
     updateOrder() {
         this.users = this.users.sort((a: any, b: any) => {
@@ -139,17 +136,19 @@ export class UsersComponent implements OnInit {
             email: form.get('email').value,
             role: form.get('accountType').value
         };
-            this.userService.create(data)
-                .subscribe((response: User) => {
-                    console.log(response);
-                    this.contentLoading = false;
-                    this.users.push(response);
-                    this.usersDetailForm.reset();
-                }, error => {
-                    console.log(error);
-                    this.msgs.push({severity: 'error', detail: error.error.error || 'Error'});
-                    this.contentLoading = false;
-                });
+        this.userService.create(data).subscribe(
+            (response: User) => {
+                console.log(response);
+                this.contentLoading = false;
+                this.users.push(response);
+                this.usersDetailForm.reset();
+            },
+            (error) => {
+                console.log(error);
+                this.msgs.push({ severity: 'error', detail: error.error.error || 'Error' });
+                this.contentLoading = false;
+            }
+        );
     }
 
     onResendClick(event, userId: string) {
@@ -157,15 +156,17 @@ export class UsersComponent implements OnInit {
         event.stopPropagation();
         if (userId) {
             this.contentLoading = true;
-            this.userService.resendInvitation(userId)
-                .subscribe(() => {
+            this.userService.resendInvitation(userId).subscribe(
+                () => {
                     console.log('Invitation was sent');
                     this.contentLoading = false;
-                }, response => {
+                },
+                (response) => {
                     console.error(response);
                     this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
                     this.contentLoading = false;
-                });
+                }
+            );
         }
     }
 }

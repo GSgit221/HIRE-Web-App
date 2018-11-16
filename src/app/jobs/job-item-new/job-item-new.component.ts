@@ -1,10 +1,11 @@
-import { UtilitiesService } from './../../services/utilities.service';
-import { FormHelperService } from './../../services/form-helper.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { JobService } from './../../services/job.service';
-import { FormGroup, FormBuilder } from '@angular/forms';
 import { HttpResponse } from '@angular/common/http';
-import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import { FormHelperService } from './../../services/form-helper.service';
+import { JobService } from './../../services/job.service';
+import { UtilitiesService } from './../../services/utilities.service';
 
 @Component({
     selector: 'app-job-item-new',
@@ -55,12 +56,12 @@ export class JobItemNewComponent implements OnInit {
     }
 
     processFiles(files) {
-        for (let i = 0, file; file = files[i]; i++) {
+        for (let i = 0, file; (file = files[i]); i++) {
             if (this.validateFileType(file, this.supportedFileTypes)) {
                 // ADD TO THE QUEUE
                 console.log('We need to upload that file 🎈');
                 this.uploadQueue.push({
-                    file: file,
+                    file,
                     uploadStarted: false,
                     uploadFinished: false,
                     progress: 0,
@@ -69,7 +70,7 @@ export class JobItemNewComponent implements OnInit {
                 });
             } else {
                 this.uploadError = 'Only supported formats are: pdf, doc, docx, rtf, odt';
-                setTimeout(() => this.uploadError = null, 10000);
+                setTimeout(() => (this.uploadError = null), 10000);
             }
         }
         this.processQueue();
@@ -86,7 +87,7 @@ export class JobItemNewComponent implements OnInit {
     }
 
     processQueue() {
-        this.uploadQueue.forEach(item => {
+        this.uploadQueue.forEach((item) => {
             if (!item.uploadStarted && !item.uploadFinished) {
                 this.uploadFile(item);
             }
@@ -94,14 +95,15 @@ export class JobItemNewComponent implements OnInit {
     }
 
     uploadFile(item) {
-        this.utilities.readFile(item.file)
-            .then(fileValue => {
+        this.utilities
+            .readFile(item.file)
+            .then((fileValue) => {
                 item.uploadStarted = true;
                 const uploadProgressInterval = setInterval(() => {
-                    item.progress = (item.progress + 1 < 100) ? item.progress + 1 : 90;
+                    item.progress = item.progress + 1 < 100 ? item.progress + 1 : 90;
                 }, 400);
-                this.jobService.createJobFromCv({ file: fileValue })
-                    .subscribe((response: HttpResponse<any>) => {
+                this.jobService.createJobFromCv({ file: fileValue }).subscribe(
+                    (response: HttpResponse<any>) => {
                         console.log('📬 Uploaded:', response);
                         const resp: any = response;
                         item.text = resp.job.title;
@@ -115,23 +117,24 @@ export class JobItemNewComponent implements OnInit {
 
                         // Remove from upload queue
                         setTimeout(() => {
-                            const itemIndex = this.uploadQueue.findIndex(ui => ui.id === item.id);
+                            const itemIndex = this.uploadQueue.findIndex((ui) => ui.id === item.id);
                             if (itemIndex !== -1) {
                                 this.uploadQueue.splice(itemIndex, 1);
                             }
                         }, 3000);
-                    }, error => {
+                    },
+                    (error) => {
                         console.error(error);
                         item.text = error && error.error && error.error.message ? error.error.error.message : 'Error';
                         item.progress = 100;
                         item.uploadFinished = true;
                         clearInterval(uploadProgressInterval);
-                    });
+                    }
+                );
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error(error);
                 console.error('Error reading uploaded file');
             });
     }
-
 }

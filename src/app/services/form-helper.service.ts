@@ -1,18 +1,17 @@
-import { FormGroup } from '@angular/forms';
 import { Injectable } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
     providedIn: 'root'
 })
 export class FormHelperService {
-
-    constructor() { }
+    constructor() {}
 
     markFormGroupTouched(formGroup: FormGroup) {
-        (<any>Object).values(formGroup.controls).forEach(control => {
+        (Object as any).values(formGroup.controls).forEach((control) => {
             control.markAsTouched();
             if (control.controls) {
-                control.controls.forEach(c => this.markFormGroupTouched(c));
+                control.controls.forEach((c) => this.markFormGroupTouched(c));
             }
         });
     }

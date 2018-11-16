@@ -1,13 +1,13 @@
-import { JobCandidate } from './../../models/job-candidate';
-import { JobStage } from '../../models/job-stage';
-import { JobService } from '../../services/job.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { SelectItem } from 'primeng/api';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SelectItem } from 'primeng/api';
+
 import { Job } from '../../models/job';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { JobStage } from '../../models/job-stage';
 import { User } from '../../models/user';
-import { HttpResponse } from '@angular/common/http';
+import { JobService } from '../../services/job.service';
+import { JobCandidate } from './../../models/job-candidate';
 
 @Component({
     selector: 'app-job-item-view',
@@ -36,15 +36,8 @@ export class JobItemViewComponent implements OnInit {
     appliedCandidates: any;
     resumeThreshold = 60;
 
-    constructor(
-        private router: Router,
-        private fb: FormBuilder,
-        private jobService: JobService
-    ) {
-        this.statusOptions = [
-            { label: 'LIVE', value: 'LIVE' },
-            { label: 'BUILD', value: 'BUILD' }
-        ];
+    constructor(private router: Router, private fb: FormBuilder, private jobService: JobService) {
+        this.statusOptions = [{ label: 'LIVE', value: 'LIVE' }, { label: 'BUILD', value: 'BUILD' }];
 
         this.jobService.getUsers().subscribe((users: User[]) => {
             this.users = users || [];
@@ -61,8 +54,8 @@ export class JobItemViewComponent implements OnInit {
         this.newJobStageForm = this.fb.group({
             title: ['']
         });
-        this.appliedStage = this.job.stages.find(stage => stage.id === 'applied');
-        this.stages = this.job.stages.filter(stage => stage.id !== 'applied').sort((a, b) => a.order - b.order);
+        this.appliedStage = this.job.stages.find((stage) => stage.id === 'applied');
+        this.stages = this.job.stages.filter((stage) => stage.id !== 'applied').sort((a, b) => a.order - b.order);
         this.jobService.getCandidates(this.job.id).subscribe((candidates: JobCandidate[]) => {
             // console.log(candidates);
             this.initialLoad = true;
@@ -80,7 +73,7 @@ export class JobItemViewComponent implements OnInit {
     stageCandidates(stageName: string) {
         if (this.candidates && this.candidates.length) {
             const sC: JobCandidate[] = [];
-            this.candidates.forEach(c => {
+            this.candidates.forEach((c) => {
                 if (c.stage && c.stage[this.job.id]) {
                     if (c.stage[this.job.id] === stageName) {
                         sC.push(c);
@@ -99,7 +92,7 @@ export class JobItemViewComponent implements OnInit {
 
     setAppliedCanidates(candidates: JobCandidate[]) {
         const sC: JobCandidate[] = [];
-        candidates.forEach(c => {
+        candidates.forEach((c) => {
             if (c.stage && c.stage[this.job.id]) {
                 if (c.stage[this.job.id] === 'applied') {
                     sC.push(c);
@@ -114,8 +107,8 @@ export class JobItemViewComponent implements OnInit {
             hidden: [],
             total: sC.length
         };
-        sC.forEach(c => {
-            if (c.score >= (this.resumeThreshold - 15)) {
+        sC.forEach((c) => {
+            if (c.score >= this.resumeThreshold - 15) {
                 applied.visible.push(c);
             } else {
                 applied.hidden.push(c);
@@ -157,18 +150,20 @@ export class JobItemViewComponent implements OnInit {
         const formValue = this.newJobStageForm.value;
         if (formValue && formValue.title && formValue.title.length) {
             this.stageFormIsSaving = true;
-            this.jobService.createStage(this.job.id, formValue).subscribe((stage: JobStage) => {
-                this.stages.push(stage);
-                this.stageFormIsSaving = false;
-                this.newJobStageForm.reset();
-                this.createStageMode = false;
-            }, (error) => {
-                this.stageFormIsSaving = false;
-                console.error(error);
-            });
+            this.jobService.createStage(this.job.id, formValue).subscribe(
+                (stage: JobStage) => {
+                    this.stages.push(stage);
+                    this.stageFormIsSaving = false;
+                    this.newJobStageForm.reset();
+                    this.createStageMode = false;
+                },
+                (error) => {
+                    this.stageFormIsSaving = false;
+                    console.error(error);
+                }
+            );
         }
     }
-
 
     getHm(id: string) {
         return this.users.find((user: User) => user.id === id) || null;
@@ -201,10 +196,10 @@ export class JobItemViewComponent implements OnInit {
         this.contentLoading = true;
         this.jobService.deleteCandidate(this.job.id, candidateId).subscribe(() => {
             this.contentLoading = false;
-            const index = this.candidates.findIndex(c => c.id === candidateId);
+            const index = this.candidates.findIndex((c) => c.id === candidateId);
             this.candidates.splice(index, 1);
 
-            const visibleIndex = this.appliedCandidates.visible.findIndex(c => c.id === candidateId);
+            const visibleIndex = this.appliedCandidates.visible.findIndex((c) => c.id === candidateId);
             this.appliedCandidates.visible.splice(visibleIndex, 1);
 
             this.appliedCandidates.total = this.appliedCandidates.visible.length + this.appliedCandidates.hidden.length;
@@ -214,9 +209,10 @@ export class JobItemViewComponent implements OnInit {
     onCandidateDrop(event, stageId) {
         // console.log('drop', event.dragData, stageId);
         const candidate = event.dragData;
-        const candidateIndex = this.candidates.findIndex(c => c.id === candidate.id);
+        const candidateIndex = this.candidates.findIndex((c) => c.id === candidate.id);
         this.candidates[candidateIndex].stage[this.job.id] = stageId;
-        this.jobService.updateCandidateStage(this.job.id, candidate.id, this.candidates[candidateIndex].stage)
+        this.jobService
+            .updateCandidateStage(this.job.id, candidate.id, this.candidates[candidateIndex].stage)
             .subscribe(() => {
                 console.log('Candidate stage was updated to:', stageId);
             });
@@ -225,8 +221,8 @@ export class JobItemViewComponent implements OnInit {
 
     getJobResumeMatchingThreshold() {
         let threshold = 60;
-        if (this.job && this.job.stages && this.job.stages.find(s => s.id === 'applied')) {
-            const appliedStage = this.job.stages.find(s => s.id === 'applied');
+        if (this.job && this.job.stages && this.job.stages.find((s) => s.id === 'applied')) {
+            const appliedStage = this.job.stages.find((s) => s.id === 'applied');
             threshold = appliedStage.resume_matching_threshold;
         }
         return threshold;

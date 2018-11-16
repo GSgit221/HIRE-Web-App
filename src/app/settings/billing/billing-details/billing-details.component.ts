@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { SelectItem } from 'primeng/api';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CreditCardValidator } from 'angular-cc-library';
+import { SelectItem } from 'primeng/api';
 
 @Component({
     selector: 'app-billing-details',
@@ -9,15 +9,12 @@ import { CreditCardValidator } from 'angular-cc-library';
     styleUrls: ['./billing-details.component.scss']
 })
 export class BillingDetailsComponent implements OnInit {
-
     billingDetailsForm: FormGroup;
     countryOptions: SelectItem[];
     creditCardDetailsForm: FormGroup;
     date;
 
-    constructor(
-        private fb: FormBuilder,
-    ) { }
+    constructor(private fb: FormBuilder) {}
 
     ngOnInit() {
         this.billingDetailsForm = this.fb.group({
@@ -30,11 +27,13 @@ export class BillingDetailsComponent implements OnInit {
             country: ['']
         });
         this.creditCardDetailsForm = this.fb.group({
-            name: ['Mr Greg Kockott', [Validators.required, Validators.minLength(2), Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]],
+            name: [
+                'Mr Greg Kockott',
+                [Validators.required, Validators.minLength(2), Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]
+            ],
             cardNumber: ['', [CreditCardValidator.validateCCNumber]],
             expiryDate: ['', [CreditCardValidator.validateExpDate]],
-            cvvNumber: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(4)]],
-
+            cvvNumber: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(4)]]
         });
         this.countryOptions = [
             { label: 'South Africa', value: '1' },

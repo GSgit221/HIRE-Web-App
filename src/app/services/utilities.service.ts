@@ -7,8 +7,7 @@ import { environment } from '../../environments/environment';
     providedIn: 'root'
 })
 export class UtilitiesService {
-
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {}
 
     readFile(file) {
         return new Promise((resolve, reject) => {
@@ -21,7 +20,7 @@ export class UtilitiesService {
                     name: file.name,
                     size: file.size,
                     mimetype: file.type,
-                    data: result.split(',')[1],
+                    data: result.split(',')[1]
                 });
             };
         });
@@ -45,7 +44,7 @@ export class UtilitiesService {
 
     getTenant() {
         const url = window.location.hostname.split('.hire');
-        let tenant = (url[0] && url[0].indexOf('.') === -1) ? url[0] : 'undefined';
+        let tenant = url[0] && url[0].indexOf('.') === -1 ? url[0] : 'undefined';
         // TEMPORARY
         if (tenant === 'dev' || tenant === 'undefined') {
             tenant = 'dimensiondata';
@@ -55,14 +54,19 @@ export class UtilitiesService {
 
     isLocalDevelopment() {
         const url = window.location.hostname;
-        return (url.indexOf('hire.local') !== -1);
+        return url.indexOf('hire.local') !== -1;
     }
 
     getCountries() {
         return this.http.get(`${environment.apiUrl}/countries`);
     }
+
+    /* tslint:disable */
     isEqual(obj1, obj2) {
-        var i, l, leftChain = [], rightChain = [];
+        var i,
+            l,
+            leftChain = [],
+            rightChain = [];
 
         function compare2Objects(x, y) {
             var p;
@@ -73,7 +77,7 @@ export class UtilitiesService {
                 return true;
             }
 
-            // Compare primitives and functions.     
+            // Compare primitives and functions.
             // Check if both arguments link to the same object.
             // Especially useful on the step where we compare prototypes
             if (x === y) {
@@ -83,11 +87,13 @@ export class UtilitiesService {
             // Works in case when functions are created in constructor.
             // Comparing dates is a common scenario. Another built-ins?
             // We can even handle functions passed across iframes
-            if ((typeof x === 'function' && typeof y === 'function') ||
+            if (
+                (typeof x === 'function' && typeof y === 'function') ||
                 (x instanceof Date && y instanceof Date) ||
                 (x instanceof RegExp && y instanceof RegExp) ||
                 (x instanceof String && y instanceof String) ||
-                (x instanceof Number && y instanceof Number)) {
+                (x instanceof Number && y instanceof Number)
+            ) {
                 return x.toString() === y.toString();
             }
 
@@ -118,8 +124,7 @@ export class UtilitiesService {
             for (p in y) {
                 if (y.hasOwnProperty(p) !== x.hasOwnProperty(p)) {
                     return false;
-                }
-                else if (typeof y[p] !== typeof x[p]) {
+                } else if (typeof y[p] !== typeof x[p]) {
                     return false;
                 }
             }
@@ -127,15 +132,13 @@ export class UtilitiesService {
             for (p in x) {
                 if (y.hasOwnProperty(p) !== x.hasOwnProperty(p)) {
                     return false;
-                }
-                else if (typeof y[p] !== typeof x[p]) {
+                } else if (typeof y[p] !== typeof x[p]) {
                     return false;
                 }
 
-                switch (typeof (x[p])) {
+                switch (typeof x[p]) {
                     case 'object':
                     case 'function':
-
                         leftChain.push(x);
                         rightChain.push(y);
 
@@ -164,4 +167,5 @@ export class UtilitiesService {
 
         return true;
     }
+    /* tslint:enable */
 }

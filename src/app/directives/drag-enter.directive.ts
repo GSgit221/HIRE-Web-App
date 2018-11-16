@@ -1,4 +1,4 @@
-import { Directive, Input, ElementRef, OnInit, Output, EventEmitter } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Directive({
     selector: '[appDragEnter]'
@@ -23,7 +23,6 @@ export class DragEnterDirective implements OnInit {
 
         // Add a style to indicate that this element is a drop target
         el.addEventListener('dragenter', (e) => {
-
             // console.log('dragenter', e);
             // el.classList.add('over');
         });
@@ -39,7 +38,8 @@ export class DragEnterDirective implements OnInit {
             //     && e.dataTransfer.items[0]
             //     && e.dataTransfer.items[0].type ? e.dataTransfer.items[0].type : null;
 
-            const type = e.dataTransfer && e.dataTransfer.types && e.dataTransfer.types[0] ? e.dataTransfer.types[0] : null;
+            const type =
+                e.dataTransfer && e.dataTransfer.types && e.dataTransfer.types[0] ? e.dataTransfer.types[0] : null;
             if (type === 'Files') {
                 el.classList.add('over');
                 if (e.preventDefault) {
@@ -53,11 +53,14 @@ export class DragEnterDirective implements OnInit {
         // On drop, get the data and convert it back to a JSON object
         // and fire off an event passing the data
         el.addEventListener('drop', (e) => {
-            const fileType = e.dataTransfer
-                && e.dataTransfer.items
-                && e.dataTransfer
-                && e.dataTransfer.items[0]
-                && e.dataTransfer.items[0].type ? e.dataTransfer.items[0].type : null;
+            const fileType =
+                e.dataTransfer &&
+                e.dataTransfer.items &&
+                e.dataTransfer &&
+                e.dataTransfer.items[0] &&
+                e.dataTransfer.items[0].type
+                    ? e.dataTransfer.items[0].type
+                    : null;
             // console.log(fileType);
             if (fileType && fileType !== 'text/plain') {
                 if (e.stopPropagation) {
@@ -76,5 +79,4 @@ export class DragEnterDirective implements OnInit {
     private validateFileType(type: string, types: string[]) {
         return types.indexOf(type) !== -1;
     }
-
 }

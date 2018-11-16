@@ -41,6 +41,7 @@ import { SetPasswordComponent } from './auth/set-password/set-password.component
 import { SigninComponent } from './auth/signin/signin.component';
 import { SignoutComponent } from './auth/signout.component';
 import { SignupComponent } from './auth/signup/signup.component';
+import { CandidateItemFeedbackComponent } from './candidates/candidate-item-feedback/candidate-item-feedback.component';
 import { CandidateItemComponent } from './candidates/candidate-item/candidate-item.component';
 import { NewCandidateItemComponent } from './candidates/new-candidate-item/new-candidate-item.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -61,11 +62,16 @@ import { JobsListComponent } from './jobs/jobs-list/jobs-list.component';
 import { StageSettingsComponent } from './jobs/stages/stage-settings/stage-settings.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { PeopleListComponent } from './people/people-list/people-list.component';
-import { InitialsPipe } from './pipes/initials.pipe';
-import { UploadFileNamePipe } from './pipes/upload-file-name.pipe';
 import { GetFitstLetterPipe } from './pipes/get-fitst-letter.pipe';
+import { InitialsPipe } from './pipes/initials.pipe';
+import { SortByOrderPipe } from './pipes/sort-by-order.pipe';
+import { UploadFileNamePipe } from './pipes/upload-file-name.pipe';
 import { metaReducers, reducers } from './reducers';
 import { UserResolver } from './resolvers/user.resolver';
+import { BillingDetailsComponent } from './settings/billing/billing-details/billing-details.component';
+import { BillingHistoryComponent } from './settings/billing/billing-history/billing-history.component';
+import { BillingPlanComponent } from './settings/billing/billing-plan/billing-plan.component';
+import { BillingComponent } from './settings/billing/billing.component';
 import { EmailTemplatesComponent } from './settings/email-templates/email-templates.component';
 import { IntegrationsComponent } from './settings/integrations/integrations.component';
 import { QuestionItemComponent } from './settings/questionnaires/question-item/question-item.component';
@@ -73,19 +79,13 @@ import { QuestionnaireNewComponent } from './settings/questionnaires/questionnai
 import { QuestionnairesListComponent } from './settings/questionnaires/questionnaires-list/questionnaires-list.component';
 import { QuestionsListComponent } from './settings/questionnaires/questions-list/questions-list.component';
 import { ScorecardsComponent } from './settings/scorecards/scorecards.component';
+import { UsersComponent } from './settings/users/users.component';
 import { CandidateFitCircleComponent } from './shared/candidate-fit-circle/candidate-fit-circle.component';
 import { FileTypeComponent } from './shared/file-type/file-type.component';
 import { LoaderComponent } from './shared/loader/loader.component';
 import { MultiSelectComponent } from './shared/multi-select/multi-select.component';
 import { ProgressCircleComponent } from './shared/progress-circle/progress-circle.component';
 import { ResumeFileTypeComponent } from './shared/resume-file-type/resume-file-type.component';
-import { UsersComponent } from './settings/users/users.component';
-import { BillingPlanComponent } from './settings/billing/billing-plan/billing-plan.component';
-import { BillingComponent } from './settings/billing/billing.component';
-import { BillingDetailsComponent } from './settings/billing/billing-details/billing-details.component';
-import { BillingHistoryComponent } from './settings/billing/billing-history/billing-history.component';
-import { CandidateItemFeedbackComponent } from './candidates/candidate-item-feedback/candidate-item-feedback.component';
-import { SortByOrderPipe } from './pipes/sort-by-order.pipe';
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -95,8 +95,6 @@ export function provideConfig() {
         }
     ]);
 }
-
-
 
 @NgModule({
     declarations: [
@@ -193,4 +191,4 @@ export function provideConfig() {
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
