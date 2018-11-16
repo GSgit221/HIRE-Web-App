@@ -121,7 +121,7 @@
                             <div class="status" [ngClass]="'live'" *ngIf="!user.invitation_code"></div>
                             {{ user.invitation_code ? 'Pending' : 'Active' }}
                         </div>
-                        <div class="col col6 flex-5" *ngIf="user.invitation_code">
+                        <div class="col col6 flex-5" *ngIf="user.invitation_code" (click)="onResendClick($event, user.id)">
                             <img src="/assets/images/email-send.svg" class="resend-invitation" alt="invitation icon"
                                  pTooltip="Resend Invitation">
                         </div>

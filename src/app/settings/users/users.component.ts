@@ -14,7 +14,7 @@ import { AuthService } from '../../auth/auth.service';
 export class UsersComponent implements OnInit {
 
     contentLoading = false;
-    users: User[]= [];
+    users: User[] = [];
     usersDetailForm: FormGroup;
     accountTypeOptions: SelectItem[];
     selectedItems = 0;
@@ -25,7 +25,7 @@ export class UsersComponent implements OnInit {
     private fb: FormBuilder,
     public formHelper: FormHelperService,
     public userService: UserService,
-    public authService:AuthService,
+    public authService: AuthService,
     ) {}
 
     ngOnInit() {
@@ -35,11 +35,11 @@ export class UsersComponent implements OnInit {
             this.users = users || [];
              console.log(this.users);
             this.users.forEach(user => {
-                if(user.role === 'superadmin') {
+                if (user.role === 'superadmin') {
                     user.role = 'Account Owner';
-                }else if (user.role === 'admin') {
+                } else if (user.role === 'admin') {
                     user.role = 'Admin';
-                }else {
+                } else {
                     user.role = 'User';
                 }
             });
@@ -64,9 +64,9 @@ export class UsersComponent implements OnInit {
     }
 
     onMouseOut(index) {
-        if( this.users[index].selected) {
+        if ( this.users[index].selected) {
             this.users[index].isVisible = true;
-        }else {
+        } else {
             this.users[index].isVisible = false;
         }
     }
@@ -134,7 +134,7 @@ export class UsersComponent implements OnInit {
             return;
         }
         this.contentLoading = true;
-        let data = {
+        const data = {
             full_name: form.get('full_name').value,
             email: form.get('email').value,
             role: form.get('accountType').value
@@ -150,5 +150,22 @@ export class UsersComponent implements OnInit {
                     this.msgs.push({severity: 'error', detail: error.error.error || 'Error'});
                     this.contentLoading = false;
                 });
-     }
+    }
+
+    onResendClick(event, userId: string) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (userId) {
+            this.contentLoading = true;
+            this.userService.resendInvitation(userId)
+                .subscribe(() => {
+                    console.log('Invitation was sent');
+                    this.contentLoading = false;
+                }, response => {
+                    console.error(response);
+                    this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
+                    this.contentLoading = false;
+                });
+        }
+    }
 }

@@ -20,6 +20,10 @@ export class UserService {
         return this.http.post(`${this.baseURL}/users`, { data });
     }
 
+    resendInvitation(userId: string) {
+        return this.http.post(`${this.baseURL}/users/resend-invitation`, { user_id: userId });
+    }
+
     getUsers() {
         return this.http.get(`${this.baseURL}/users`);
     }
