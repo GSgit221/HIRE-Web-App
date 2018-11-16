@@ -33,31 +33,28 @@ export class UsersComponent implements OnInit {
         this.userService.getUsers().subscribe((users: User[]) => {
             this.contentLoading = false;
             this.users = users || [];
-            console.log(this.users);
-            this.users.forEach((user) => {
-                if (user.role === 'superadmin') {
+             console.log(this.users);
+            this.users.forEach(user => {
+                if(user.role === 'superadmin') {
                     user.role = 'Account Owner';
-                } else if (user.role === 'admin') {
+                }else if (user.role === 'admin') {
                     user.role = 'Admin';
-                } else {
-                    user.role = 'User';
+                }else {
+                    user.role = 'Recruiter';
                 }
             });
         });
         this.accountTypeOptions = [
             { label: 'Account Owner', value: 'superadmin' },
             { label: 'Admin', value: 'admin' },
-            { label: 'User', value: 'user' }
+            { label: 'Recruiter', value: 'recruiter' }
         ];
         this.usersDetailForm = this.fb.group({
-            full_name: [
-                '',
-                [Validators.required, Validators.minLength(2), Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]
-            ],
-            email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
-            accountType: ['', Validators.required]
+            full_name: ['', [Validators.required, Validators.minLength(2), Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]],
+            email: ['' , [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
+            accountType: ['', Validators.required],
         });
-        this.users.forEach((users) => {
+        this.users.forEach(users => {
             users.isVisible = false;
         });
     }
@@ -82,12 +79,6 @@ export class UsersComponent implements OnInit {
         this.calculateSelectedUsers();
     }
 
-    onSelectedRow(index) {
-        this.users[index].selected = !this.users[index].selected;
-        this.users[index].isVisible = true;
-        this.calculateSelectedUsers();
-    }
-
     onSelectAllChange() {
         if (this.selectedAll) {
             this.users.forEach((user) => {
@@ -102,15 +93,19 @@ export class UsersComponent implements OnInit {
 
     onUserBulkRemove() {
         this.contentLoading = true;
-        const usersToRemove = this.users.filter((user) => user.selected).map((user) => user.id);
-        this.userService.bulkDeleteUsers(usersToRemove).subscribe(() => {
-            this.userService.getUsers().subscribe((users: User[]) => {
-                this.users = users;
-                this.contentLoading = false;
-                this.calculateSelectedUsers();
+        const usersToRemove = this.users.filter(user => user.selected).map(user => user.id);
+        this.userService.bulkDeleteUsers(usersToRemove)
+            .subscribe(() => {
+                this.userService.getUsers()
+                    .subscribe((users: User[]) => {
+                        this.users = users;
+                        this.contentLoading = false;
+                        this.calculateSelectedUsers();
+                        this.updateOrder();
+                    });
             });
-        });
     }
+
     updateOrder() {
         this.users = this.users.sort((a: any, b: any) => {
             if (a['first_name'] < b['first_name']) {
@@ -130,27 +125,29 @@ export class UsersComponent implements OnInit {
             this.formHelper.markFormGroupTouched(form);
             return;
         }
+        let fullName = form.get('full_name').value.toLowerCase()
+            .split(' ')
+            .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ');
         this.contentLoading = true;
-        const data = {
-            full_name: form.get('full_name').value,
+        let data = {
+            full_name: fullName,
             email: form.get('email').value,
             role: form.get('accountType').value
         };
-        this.userService.create(data).subscribe(
-            (response: User) => {
+        this.userService.create(data)
+            .subscribe((response: User) => {
                 console.log(response);
                 this.contentLoading = false;
                 this.users.push(response);
-                this.usersDetailForm.reset();
-            },
-            (error) => {
+                this.updateOrder();
+            }, error => {
                 console.log(error);
-                this.msgs.push({ severity: 'error', detail: error.error.error || 'Error' });
+                this.msgs.push({severity: 'error', detail: error.error.error || 'Error'});
                 this.contentLoading = false;
-            }
-        );
+            });
+        this.usersDetailForm.reset();
     }
-
     onResendClick(event, userId: string) {
         event.preventDefault();
         event.stopPropagation();
