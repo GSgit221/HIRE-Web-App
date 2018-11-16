@@ -696,7 +696,7 @@ p-selectbutton {
         }
     }
 }
-.owner-disabled {
+.owner-disabled, .not-rating-disabled {
     .overall-rating .ui-slider .ui-slider-range {
         background: grey;
     }
