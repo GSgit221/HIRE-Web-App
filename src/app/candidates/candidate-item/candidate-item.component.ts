@@ -73,7 +73,8 @@ export class CandidateItemComponent implements OnInit {
         ];
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+    }
     allowShowFeedback() {
         if (this.job && this.candidate) {
             this.store.select('user').subscribe((user: User) => {
@@ -84,9 +85,7 @@ export class CandidateItemComponent implements OnInit {
                         return true;
                     }
 
-                } else if (this.candidate && this.candidate.feedback &&
-                    this.candidate.feedback[this.jobId] &&
-                    this.candidate.feedback[this.jobId].active) {
+                } else if (this.job && typeof this.job.show_position_rating !== 'undefined') {
                     this.showFeedback = true;
                 } else {
                     this.showFeedback = false;

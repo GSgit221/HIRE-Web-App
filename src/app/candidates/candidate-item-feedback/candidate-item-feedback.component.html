@@ -20,7 +20,7 @@
                 <img src="/assets/images/happy-icon.svg" alt="Happy icon">       
             </div>
         </div>
-        <div *ngIf="jobOwner && (!alreadySelectedPositionRating)" class="question-block">
+        <div *ngIf="jobOwner && !alreadySelectedPositionRating" class="question-block">
             <div class="wrap">
                 <h3>Position Specific Rating</h3>
             </div>
@@ -40,7 +40,6 @@
                     <button class="btn btn-edit" (click)="addPositionSpecificCategory = true" *ngIf="this.positionSpecificCategories.length">Edit</button>
                 </ng-container>
             </div>
-            
             <div class="list-abilities" [ngClass]="{'not-edit': !addPositionSpecificCategory }">
                 <div class="item" *ngFor="let category of positionSpecificCategories | sortByOrder:'order';let ind = index;">
                     <p>{{ category.title }}</p>
@@ -103,7 +102,7 @@
                 </div>
                 <p>{{ input?.value }}</p>
             </div>
-            <button class="save btn btn-primary" *ngIf="addPositionSpecificCategory" (click)="onUpdateFeedbackPositionRatingCategories(input)">Save</button>
+            <button class="save btn btn-primary" *ngIf="addPositionSpecificCategory" (click)="onUpdateFeedbackPositionRatingCategories(input)">Save rat</button>
             <input type="hidden" formControlName="positionRating">
         </div>
         <div class="wrap-btn">

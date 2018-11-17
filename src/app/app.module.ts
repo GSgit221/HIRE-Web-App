@@ -86,6 +86,7 @@ import { BillingDetailsComponent } from './settings/billing/billing-details/bill
 import { BillingHistoryComponent } from './settings/billing/billing-history/billing-history.component';
 import { CandidateItemFeedbackComponent } from './candidates/candidate-item-feedback/candidate-item-feedback.component';
 import { SortByOrderPipe } from './pipes/sort-by-order.pipe';
+import { CandidateItemTimelineComponent } from './candidates/candidate-item-timeline/candidate-item-timeline.component';
 
 export function provideConfig() {
     return new AuthServiceConfig([
@@ -148,7 +149,8 @@ export function provideConfig() {
         BillingHistoryComponent,
         CompleteSignupComponent,
         CandidateItemFeedbackComponent,
-        SortByOrderPipe
+        SortByOrderPipe,
+        CandidateItemTimelineComponent
     ],
     imports: [
         AppRoutingModule,

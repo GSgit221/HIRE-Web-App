@@ -39,4 +39,5 @@ export class Job {
     created?: boolean;
     stages?: JobStage[];
     owner?: string;
+    show_position_rating?: boolean;
 }

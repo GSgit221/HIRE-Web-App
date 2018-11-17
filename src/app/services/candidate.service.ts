@@ -19,8 +19,8 @@ export class CandidateService {
     }
 
 
-    updateFeedbackPositionRatingCategories(jobId: string, candidateId: string, data: any[]) {
-        return this.http.put(`${this.apiURL}/tenants/${this.tenantId}/jobs/${jobId}/candidates/${candidateId}/feedback/position-rating-categories`, { data });
+    updateFeedbackPositionRatingCategories(jobId: string, data: any[]) {
+        return this.http.put(`${this.apiURL}/tenants/${this.tenantId}/jobs/${jobId}/position-rating-categories`, { data });
     }
 
 
