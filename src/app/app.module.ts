@@ -41,10 +41,7 @@ import { SetPasswordComponent } from './auth/set-password/set-password.component
 import { SigninComponent } from './auth/signin/signin.component';
 import { SignoutComponent } from './auth/signout.component';
 import { SignupComponent } from './auth/signup/signup.component';
-import {
-    CandidateItemFeedbackComponent,
-    CandidateItemFeedbackComponent
-} from './candidates/candidate-item-feedback/candidate-item-feedback.component';
+import { CandidateItemFeedbackComponent } from './candidates/candidate-item-feedback/candidate-item-feedback.component';
 import { CandidateItemTimelineComponent } from './candidates/candidate-item-timeline/candidate-item-timeline.component';
 import { CandidateItemComponent } from './candidates/candidate-item/candidate-item.component';
 import { NewCandidateItemComponent } from './candidates/new-candidate-item/new-candidate-item.component';
@@ -69,7 +66,7 @@ import { PeopleListComponent } from './people/people-list/people-list.component'
 import { GetFitstLetterPipe } from './pipes/get-fitst-letter.pipe';
 import { InitialsPipe } from './pipes/initials.pipe';
 import { SortByDatePipe } from './pipes/sort-by-date.pipe';
-import { SortByOrderPipe, SortByOrderPipe } from './pipes/sort-by-order.pipe';
+import { SortByOrderPipe } from './pipes/sort-by-order.pipe';
 import { UploadFileNamePipe } from './pipes/upload-file-name.pipe';
 import { metaReducers, reducers } from './reducers';
 import { UserResolver } from './resolvers/user.resolver';
