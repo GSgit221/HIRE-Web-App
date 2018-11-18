@@ -1,11 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { CandidateService } from '../../services/candidate.service';
-import { UtilitiesService } from '../../services/utilities.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
+
 import { User } from '../../models/user';
 import { State } from '../../reducers/user/user.reducer';
-import { Store } from '@ngrx/store';
+import { CandidateService } from '../../services/candidate.service';
 import { UserService } from '../../services/user.service';
+import { UtilitiesService } from '../../services/utilities.service';
 
 @Component({
     selector: 'app-candidate-item-timeline',
@@ -20,11 +21,13 @@ export class CandidateItemTimelineComponent implements OnInit {
     timeline = [];
     user: User;
     users: User[];
-    constructor(private fb: FormBuilder,
+    constructor(
+        private fb: FormBuilder,
         private candidateService: CandidateService,
         private userService: UserService,
         private store: Store<State>,
-        private utilities: UtilitiesService) { }
+        private utilities: UtilitiesService
+    ) {}
 
     ngOnInit() {
         this.initForm();
@@ -35,12 +38,12 @@ export class CandidateItemTimelineComponent implements OnInit {
     }
     populateFeed() {
         // console.log(this.timeline);
-        this.userService.getUsers()
-            .subscribe((users: User[]) => {
-                this.users = users;
-                if (this.candidate.feed && this.candidate.feed[this.jobId]) {
-                    this.timeline = this.candidate.feed[this.jobId];
-                    this.timeline.map((item) => {
+        this.userService.getUsers().subscribe((users: User[]) => {
+            this.users = users;
+            if (this.candidate.feed && this.candidate.feed[this.jobId]) {
+                this.timeline = this.candidate.feed[this.jobId];
+                this.timeline
+                    .map((item) => {
                         const itemIndex = this.users.find((c) => c.id === item.sender_id);
                         if (itemIndex) {
                             item.icon_url = itemIndex.icon_url;
@@ -51,17 +54,17 @@ export class CandidateItemTimelineComponent implements OnInit {
                             // console.log('2');
                         }
                         return item;
-                    }).sort((a: any, b: any) => {
+                    })
+                    .sort((a: any, b: any) => {
                         return b.created - a.created;
                     });
-                }
-            });
+            }
+        });
     }
     initForm() {
         this.feedForm = this.fb.group({
-            description: ['', Validators.required],
+            description: ['', Validators.required]
         });
-
     }
     onSaveFeed() {
         this.contentLoading = true;
@@ -74,15 +77,22 @@ export class CandidateItemTimelineComponent implements OnInit {
             }
         };
         if (this.feedForm.valid) {
-            this.candidateService.saveFeed(this.jobId, this.candidate.id, data).subscribe((response) => {
-                this.feedForm.reset();
-                this.contentLoading = false;
-                this.timeline.unshift(Object.assign({ 'icon_url': this.user.icon_url, 'created_at_rel': 'Today', 'first_name': this.user.first_name, 'last_name': this.user.last_name }, data.comments));
-            }, (err) => {
-                console.error(err);
-            });
+            this.candidateService.saveFeed(this.jobId, this.candidate.id, data).subscribe(
+                (response) => {
+                    this.feedForm.reset();
+                    this.contentLoading = false;
+                    this.timeline.unshift({
+                        icon_url: this.user.icon_url,
+                        created_at_rel: 'Today',
+                        first_name: this.user.first_name,
+                        last_name: this.user.last_name,
+                        ...data.comments
+                    });
+                },
+                (err) => {
+                    console.error(err);
+                }
+            );
         }
-
     }
-
 }

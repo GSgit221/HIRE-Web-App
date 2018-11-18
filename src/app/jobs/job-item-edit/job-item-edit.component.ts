@@ -1,18 +1,16 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
 import { SelectItem } from 'primeng/api';
 
 import { Job } from '../../models/job';
 import { User } from '../../models/user';
+import { State } from '../../reducers';
 import { FormHelperService } from '../../services/form-helper.service';
 import { JobService } from '../../services/job.service';
 import { ConditionalValidator } from '../../validators/conditional.validator';
-import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
-import {State} from "../../reducers";
-import {Store} from "@ngrx/store";
-
-
 import { Questionnaire } from './../../models/questionnaire';
 import { QuestionnaireService } from './../../services/questionnaire.service';
 
@@ -50,7 +48,7 @@ export class JobItemEditComponent implements OnInit {
     // activeSection = 'hiring-team';
     sections = ['job-details', 'applications', 'hiring-team'];
     contentLoading = false;
-    recruiters : SelectItem[] = [];
+    recruiters: SelectItem[] = [];
     jobOwner = '';
 
     place: any;
@@ -67,7 +65,6 @@ export class JobItemEditComponent implements OnInit {
         private router: Router,
         private formHelper: FormHelperService
     ) {
-
         this.route.paramMap.subscribe((params: ParamMap) => {
             const section = this.route.snapshot.queryParamMap.get('section');
             // console.log('ROUTE CHANGE:', section);
@@ -78,23 +75,23 @@ export class JobItemEditComponent implements OnInit {
 
         this.jobService.getUsers().subscribe((users: User[]) => {
             this.users = users || [];
-            if(this.job) {
+            if (this.job) {
                 this.store.select('user').subscribe((user: User) => {
                     console.log('Got user:', user);
                     if (this.job.owner === user.id || user.role === 'admin') {
                         this.isJobOwner = true;
                         this.jobOwner = `${user.first_name} ${user.last_name}`;
-                        this.hiringForm.patchValue({default_email_name: this.jobOwner})
+                        this.hiringForm.patchValue({ default_email_name: this.jobOwner });
                     }
                 });
             }
-            this.users.forEach(user => {
-                if(user.role === 'recruiter' && this.job.owner !== user.id ) {
-                    let rectruter = `${user.first_name} ${user.last_name}`;
-                    this.recruiters.push({label:rectruter, value: user.id});
+            this.users.forEach((user) => {
+                if (user.role === 'recruiter' && this.job.owner !== user.id) {
+                    const rectruter = `${user.first_name} ${user.last_name}`;
+                    this.recruiters.push({ label: rectruter, value: user.id });
                 }
             });
-            console.log('isJobOwner',this.isJobOwner);
+            console.log('isJobOwner', this.isJobOwner);
             this.setDefaultNameOptions();
         });
 
@@ -173,9 +170,9 @@ export class JobItemEditComponent implements OnInit {
     }
 
     onChangeUser(event) {
-        let user = this.users.filter(x => x.id === event.value);
+        const user = this.users.filter((x) => x.id === event.value);
         this.jobOwner = `${user[0].first_name} ${user[0].last_name}`;
-        this.hiringForm.patchValue({default_email_name: this.jobOwner})
+        this.hiringForm.patchValue({ default_email_name: this.jobOwner });
     }
     // TEMPORARY (till Quill fixes it)
     private editorAutofocusFix() {

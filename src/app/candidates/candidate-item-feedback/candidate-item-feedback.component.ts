@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { UserService } from './../../services/user.service';
 
 import { User } from '../../models/user';
 import { State } from '../../reducers';
 import { CandidateService } from './../../services/candidate.service';
+import { UserService } from './../../services/user.service';
 import { UtilitiesService } from './../../services/utilities.service';
 
 @Component({
@@ -54,17 +54,11 @@ export class CandidateItemFeedbackComponent implements OnInit {
         if (this.feedback && this.feedback[this.jobId]) {
             this.positionSpecificCategories = this.feedback[this.jobId].position_rating;
         }
-        if (this.job.show_position_rating) {
-            this.showPositionRating = true;
-        } else {
-            this.showPositionRating = false;
-        }
-        if (this.job && (typeof this.job.show_position_rating === 'undefined' ||
-            this.job.show_position_rating === null)) {
-            this.alreadySelectedPositionRating = false;
-        } else {
-            this.alreadySelectedPositionRating = true;
-        }
+        this.showPositionRating = this.job.show_position_rating ? true : false;
+        this.alreadySelectedPositionRating =
+            this.job && (typeof this.job.show_position_rating === 'undefined' || this.job.show_position_rating === null)
+                ? false
+                : true;
         // Get user
         this.store.select('user').subscribe((user: User) => {
             this.user = user;
@@ -140,12 +134,12 @@ export class CandidateItemFeedbackComponent implements OnInit {
             // console.log(this.positionSpecificCategories);
         }
         if (this.job.position_rating) {
-            this.positionSpecificCategories = this.job.position_rating.map(item => {
+            this.positionSpecificCategories = this.job.position_rating.map((item) => {
                 if (this.feedback && this.feedback[this.jobId]) {
-                    const obj = this.feedback[this.jobId].position_rating.find(v => v.id === item.id);
+                    const obj = this.feedback[this.jobId].position_rating.find((v) => v.id === item.id);
                     if (obj) {
                         item.votes = obj.votes;
-                        const val = obj.votes.find(u => u.user_id === this.user.id);
+                        const val = obj.votes.find((u) => u.user_id === this.user.id);
                         if (val) {
                             item.value = val.value;
                         }
@@ -251,7 +245,8 @@ export class CandidateItemFeedbackComponent implements OnInit {
             title: item.title,
             order: item.order
         }));
-        this.candidateService.updateFeedbackPositionRatingCategories(this.jobId, data)
+        this.candidateService
+            .updateFeedbackPositionRatingCategories(this.jobId, data)
             .subscribe((r) => console.log('✅ Position specific categories updated'));
     }
 
@@ -267,8 +262,8 @@ export class CandidateItemFeedbackComponent implements OnInit {
         };
         this.contentLoading = true;
         console.log(data);
-        this.candidateService.updateFeedback(this.jobId, this.candidateId, data)
-            .subscribe((response: any) => {
+        this.candidateService.updateFeedback(this.jobId, this.candidateId, data).subscribe(
+            (response: any) => {
                 this.contentLoading = false;
                 if (response.feedback) {
                     this.feedback = response.feedback;
@@ -331,17 +326,14 @@ export class CandidateItemFeedbackComponent implements OnInit {
             this.addPositionSpecificCategory = true;
         }
         console.log(data);
-        this.candidateService.updateFeedbackPositionRatingCategories(this.jobId, data)
-            .subscribe((response: any) => {
+        this.candidateService.updateFeedbackPositionRatingCategories(this.jobId, data).subscribe(
+            (response: any) => {
                 console.log(response);
                 this.contentLoading = false;
                 this.alreadySelectedPositionRating = true;
-                if (response.success) {
-                    this.showPositionRating = true;
-                } else {
-                    this.showPositionRating = false;
-                }
-            }, (err) => {
+                this.showPositionRating = response.success ? true : false;
+            },
+            (err) => {
                 console.error(err);
             }
         );
