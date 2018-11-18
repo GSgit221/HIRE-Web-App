@@ -235,7 +235,7 @@ export class CandidateItemFeedbackComponent implements OnInit {
     }
 
     onUpdateFeedbackPositionRatingCategories(input = null) {
-        if (input.value.trim().length > 0) {
+        if (input.value.trim().length > 0 || this.positionSpecificCategories.length) {
             if (input) {
                 this.onAddPositionSpecificCategory(input);
             }
