@@ -1,19 +1,58 @@
 <div class="container fixed-width-container">
     <div class="title-block">
-        <h1 class="page-title">{{ user && user.first_name ? user.last_name : 'Users'}}</h1>
-        <div class="sections-nav">
-            <div class="section-nav-link"
-                 (click)="onChangeSection('users')"
-                 [ngClass]="{'active': activeSection === 'users'}">Users
-            </div>
-            <div class="section-nav-link"
-                 (click)="onChangeSection('pending-invitation')"
-                 [ngClass]="{'active': activeSection === 'pending-invitation'}">Pending Invitations
-            </div>
-        </div>
+        <h1 class="page-title">Users</h1>
     </div>
-    <div class="section-separator mb20"></div>
-    <div class="content-section" id="users" *ngIf="activeSection === 'users'">
+    <div class="content-section">
+        <form [formGroup]="usersDetailForm">
+            <div class="form-content-section">
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <p-messages [(value)]="msgs"></p-messages>
+                        <div class="form-block">
+                            <label for="" class="form-block-label">Invite a New User</label>
+                            <div class="form-block-columns padding-columns">
+                                <div class="form-block-col flex-30">
+                                    <div class="input-block">
+                                        <input type="text" class="form-input pl45" placeholder="Full Name"
+                                               formControlName="full_name">
+                                        <div class="error-message"
+                                             *ngIf="!usersDetailForm.get('full_name').valid && usersDetailForm.get('full_name').touched">
+                                            Full Name is required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-block-col flex-30">
+                                    <div class="input-block">
+                                        <input type="text" class="form-input pl45" placeholder="Email Address"
+                                               formControlName="email">
+                                        <div class="error-message"
+                                             *ngIf="!usersDetailForm.get('email').valid && usersDetailForm.get('email').touched">
+                                            Email is required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-block-col flex-25">
+                                    <div class="input-block">
+                                        <p-dropdown [options]="accountTypeOptions" formControlName="accountType"
+                                                    [style]="{'width':'85%'}" placeholder="Account Type"></p-dropdown>
+                                        <div class="error-message"
+                                             *ngIf="!usersDetailForm.get('accountType').valid && usersDetailForm.get('accountType').touched">
+                                            Account Type is required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex-15">
+                                    <button class="btn btn-primary mla btn-add-user-component" (click)="onAdd()"
+                                            [disabled]="!usersDetailForm.valid">Add User
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="mb20"></div>
         <div class="hc-list">
             <div class="hc-selected-items" *ngIf="selectedItems">
                 <div class="text-block">
@@ -21,6 +60,22 @@
                         {{selectedItems}} items selected
                     </p>
                 </div>
+                <span class="delete-ico" (click)="onUserBulkRemove()">
+                        <svg width="16px" height="20px" viewBox="0 0 8 10" version="1.1"
+                             xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <g id="Job-View---Default" transform="translate(-498.000000, -237.000000)"
+                                   fill="#1e88e5"
+                                   fill-rule="nonzero">
+                                    <g id="icons8-delete" transform="translate(498.000000, 237.000000)">
+                                        <path d="M3.26988655,0 C2.67329527,0 2.18181818,0.519831538 2.18181818,1.15084154 L2.18181818,1.53846154 L0,1.53846154 L0,2.30769231 L0.727272727,2.30769231 L0.727272727,8.84615385 C0.727272727,9.48016846 1.21874982,10 1.81818182,10 L6.18181818,10 C6.78125018,10 7.27272727,9.48016846 7.27272727,8.84615385 L7.27272727,2.30769231 L8,2.30769231 L8,1.53846154 L5.81818182,1.53846154 L5.81818182,1.15084154 C5.81818182,0.519831538 5.32670473,0 4.73011345,0 L3.26988655,0 Z M3.26988655,0.769230769 L4.73011345,0.769230769 C4.93465891,0.769230769 5.09090909,0.934495385 5.09090909,1.15084154 L5.09090909,2.30769231 L6.54545455,2.30769231 L6.54545455,8.84615385 C6.54545455,9.0625 6.38636364,9.23076923 6.18181818,9.23076923 L1.81818182,9.23076923 C1.61363636,9.23076923 1.45454545,9.0625 1.45454545,8.84615385 L1.45454545,2.30769231 L2.90909091,2.30769231 L2.90909091,1.15084154 C2.90909091,0.934495385 3.06534109,0.769230769 3.26988655,0.769230769 Z M2.18181818,3.07692308 L2.18181818,8.46153846 L2.90909091,8.46153846 L2.90909091,3.07692308 L2.18181818,3.07692308 Z M3.63636364,3.07692308 L3.63636364,8.46153846 L4.36363636,8.46153846 L4.36363636,3.07692308 L3.63636364,3.07692308 Z M5.09090909,3.07692308 L5.09090909,8.46153846 L5.81818182,8.46153846 L5.81818182,3.07692308 L5.09090909,3.07692308 Z"
+                                              id="Shape"></path>
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </span>
             </div>
             <div class="hc-list-header">
                 <div class="col col1 flex-5 hc-checkbox-col">
@@ -32,18 +87,27 @@
                 <div class="col col2 flex-25">Name</div>
                 <div class="col col3 flex-25">Email Address</div>
                 <div class="col col4 flex-25">Account Type</div>
+                <div class="col col4 flex-15">Status</div>
             </div>
             <div class="nr-list-content">
                 <div class="hc-blocker"></div>
-                <div class="hc-list-row" *ngFor="let user of userList ; let i = index" (mouseover)="onMouseOver(i)" (mouseout)="onMouseOut(i)" >
-                    <div class="hc-list-row-content" (click)="onSelectedRow(i)">
+                <div class="hc-list-row" *ngFor="let user of users | sortByOrder: 'first_name'; let i = index"
+                     (mouseover)="onMouseOver(i)" (mouseout)="onMouseOut(i)">
+                    <div class="hc-list-row-content">
                         <div class="col col1 flex-5 ">
                             <div class="hc-checkbox profile-check-pad-left" data-escape-click>
                                 <p-checkbox binary="true" [(ngModel)]="user.selected"
-                                            (onChange)="onItemSeletectedChange()" *ngIf="userList[i]?.isVisible "></p-checkbox>
+                                            (onChange)="onItemSeletectedChange()"
+                                            *ngIf="users[i]?.isVisible "></p-checkbox>
                             </div>
-                            <img src="/assets/images/placeholder.png" alt="Profile Icon" *ngIf="!userList[i]?.isVisible && !userList[i].selected">
-
+                            <div class="img-block" *ngIf="!users[i]?.isVisible && !users[i].selected">
+                                <div class="initial" *ngIf="!user.icon_url">
+                                    {{ user.first_name | getFitstLetter }}
+                                    {{ user.last_name | getFitstLetter }}
+                                </div>
+                                <img *ngIf="user.icon_url" [src]="user.icon_url" width="30" height="30"
+                                     [alt]="user.first_name">
+                            </div>
                         </div>
                         <div class="col col2 flex-25">
                             <p class="hc-content-p">{{user.first_name}} {{user.last_name}}</p>
@@ -51,72 +115,15 @@
                         <div class="col col3  flex-25">
                             <p class="hc-content-p">{{user.email}}</p>
                         </div>
-                        <div class="col col4 flex-25">{{ user.accountType }}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="mb20"></div>
-        <form [formGroup]="usersDetailForm">
-            <div class="form-content-section">
-                <div class="form-content-holder">
-                    <div class="form-content-box">
-                        <div class="form-block">
-                            <label for="" class="form-block-label">Invite a New User</label>
-                            <div class="form-block-columns padding-columns">
-                                <div class="form-block-col flex-30">
-                                    <div class="input-block">
-                                        <input type="text" class="form-input pl45" placeholder="Full Name"
-                                               formControlName="name">
-                                         <div class="error-message" *ngIf="!usersDetailForm.get('name').valid && usersDetailForm.get('name').touched">Full Name is required</div>
-                                    </div>
-                                </div>
-                                <div class="form-block-col flex-30">
-                                    <div class="input-block">
-                                        <input type="text" class="form-input pl45" placeholder="Email Address"
-                                               formControlName="email">
-                                        <div class="error-message" *ngIf="!usersDetailForm.get('email').valid && usersDetailForm.get('email').touched">Email is required</div>
-                                    </div>
-                                </div>
-                                <div class="form-block-col flex-25">
-                                    <div class="input-block">
-                                        <p-dropdown [options]="accountTypeOptions" formControlName="accountType"
-                                                    [style]="{'width':'85%'}" placeholder="Account Type"></p-dropdown>
-                                    </div>
-                                </div>
-                                <div class="flex-15">
-                                    <button class="btn btn-primary mla btn-add-user-component" (click)="onAdd()" [disabled]="!usersDetailForm.valid">Add User</button>
-                                </div>
-                            </div>
+                        <div class="col col4 flex-25">{{ user.role }}</div>
+                        <div class="col col5 flex-15">
+                            <div class="status" [ngClass]="'build'" *ngIf="user.invitation_code"></div>
+                            <div class="status" [ngClass]="'live'" *ngIf="!user.invitation_code"></div>
+                            {{ user.invitation_code ? 'Pending' : 'Active' }}
                         </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="content-section" id="pending-invitation" *ngIf="activeSection === 'pending-invitation'">
-        <div class="hc-list">
-            <div class="hc-list-header">
-                <div class="col col2 flex-25">Name</div>
-                <div class="col col3 flex-25">Email Address</div>
-                <div class="col col4 flex-45">Invitation Sent</div>
-            </div>
-            <div class="nr-list-content">
-                <div class="hc-blocker"></div>
-                <div class="hc-list-row" *ngFor="let user of userList; let i = index">
-                    <div class="hc-list-row-content" >
-                        <div class="col col2 flex-25">
-                            <p class="hc-content-p">{{user.first_name}} {{user.last_name}}</p>
-                        </div>
-                        <div class="col col3  flex-25">
-                            <p class="hc-content-p">{{user.email}}</p>
-                        </div>
-                        <div class="col col4 flex-40">{{user.invitationSent}}</div>
-                        <div class="col col5 flex-5">
-                            <img src="/assets/images/email-send.svg" alt="email icon" pTooltip="Resend Invitation">
-                        </div>
-                        <div class="col col6 flex-5">
-                            <img src="/assets/images/trash.svg" alt="Delete icon" pTooltip="Delete User">
+                        <div class="col col6 flex-5" *ngIf="user.invitation_code" (click)="onResendClick($event, user.id)">
+                            <img src="/assets/images/email-send.svg" class="resend-invitation" alt="invitation icon"
+                                 pTooltip="Resend Invitation">
                         </div>
                     </div>
                 </div>

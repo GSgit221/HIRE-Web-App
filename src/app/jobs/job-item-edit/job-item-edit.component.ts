@@ -1,18 +1,20 @@
-import { Questionnaire } from './../../models/questionnaire';
-import { QuestionnaireService } from './../../services/questionnaire.service';
-import { FormHelperService } from '../../services/form-helper.service';
-import { User } from '../../models/user';
-import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
 
 import { Job } from '../../models/job';
+import { User } from '../../models/user';
+import { FormHelperService } from '../../services/form-helper.service';
 import { JobService } from '../../services/job.service';
 import { ConditionalValidator } from '../../validators/conditional.validator';
 import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
+import {State} from "../../reducers";
+import {Store} from "@ngrx/store";
 
 
+import { Questionnaire } from './../../models/questionnaire';
+import { QuestionnaireService } from './../../services/questionnaire.service';
 
 @Component({
     selector: 'app-job-item-edit',
@@ -48,15 +50,18 @@ export class JobItemEditComponent implements OnInit {
     // activeSection = 'hiring-team';
     sections = ['job-details', 'applications', 'hiring-team'];
     contentLoading = false;
+    recruiters : SelectItem[] = [];
+    jobOwner = '';
 
     place: any;
     inputAddress: string;
     locationOptions: any;
-
+    isJobOwner = false;
 
     constructor(
         private route: ActivatedRoute,
         private jobService: JobService,
+        private store: Store<State>,
         private questionnaireService: QuestionnaireService,
         private fb: FormBuilder,
         private router: Router,
@@ -73,9 +78,25 @@ export class JobItemEditComponent implements OnInit {
 
         this.jobService.getUsers().subscribe((users: User[]) => {
             this.users = users || [];
+            if(this.job) {
+                this.store.select('user').subscribe((user: User) => {
+                    console.log('Got user:', user);
+                    if (this.job.owner === user.id || user.role === 'admin') {
+                        this.isJobOwner = true;
+                        this.jobOwner = `${user.first_name} ${user.last_name}`;
+                        this.hiringForm.patchValue({default_email_name: this.jobOwner})
+                    }
+                });
+            }
+            this.users.forEach(user => {
+                if(user.role === 'recruiter' && this.job.owner !== user.id ) {
+                    let rectruter = `${user.first_name} ${user.last_name}`;
+                    this.recruiters.push({label:rectruter, value: user.id});
+                }
+            });
+            console.log('isJobOwner',this.isJobOwner);
             this.setDefaultNameOptions();
         });
-
 
         // Options
         this.jobTypeOptions = [
@@ -99,7 +120,6 @@ export class JobItemEditComponent implements OnInit {
             { label: 'Ongoing', value: 'ongoing' }
         ];
 
-
         this.educationOptions = [
             { label: 'Unspecified', value: 'unspecified' },
             { label: 'High School or Equivalent', value: 'school' },
@@ -121,21 +141,14 @@ export class JobItemEditComponent implements OnInit {
             { label: 'Executive', value: 'executive' }
         ];
 
-        this.salaryOptions = [
-            { label: 'per year', value: 'yearly' },
-            { label: 'per month', value: 'monthly' }
-        ];
+        this.salaryOptions = [{ label: 'per year', value: 'yearly' }, { label: 'per month', value: 'monthly' }];
 
-        this.joblistingOptions = [
-            { label: 'Default', value: 'default' }
-        ];
-
+        this.joblistingOptions = [{ label: 'Default', value: 'default' }];
 
         this.questionnaireOptions = [];
-        this.questionnaireService.getAll()
-            .subscribe((questionnaires: Questionnaire[]) => {
-                questionnaires.forEach(q => this.questionnaireOptions.push({label: q.title, value: q.id}));
-            });
+        this.questionnaireService.getAll().subscribe((questionnaires: Questionnaire[]) => {
+            questionnaires.forEach((q) => this.questionnaireOptions.push({ label: q.title, value: q.id }));
+        });
 
         this.applicationFieldsOptions = [
             { label: 'Required', value: 'required' },
@@ -157,13 +170,17 @@ export class JobItemEditComponent implements OnInit {
         console.log('📓 JOB', this.job);
         // this.initForms();
         this.populateForms();
-
     }
 
+    onChangeUser(event) {
+        let user = this.users.filter(x => x.id === event.value);
+        this.jobOwner = `${user[0].first_name} ${user[0].last_name}`;
+        this.hiringForm.patchValue({default_email_name: this.jobOwner})
+    }
     // TEMPORARY (till Quill fixes it)
     private editorAutofocusFix() {
         setTimeout(() => {
-            const el = <HTMLElement>document.querySelector('[formControlName]');
+            const el = document.querySelector('[formControlName]') as HTMLElement;
             if (el) {
                 el.focus();
             }
@@ -188,7 +205,6 @@ export class JobItemEditComponent implements OnInit {
             hide_salary: [''],
             description: [''],
             requirements: ['']
-
         });
         this.applicationsForm = this.fb.group({
             job_listing: ['default'],
@@ -206,9 +222,10 @@ export class JobItemEditComponent implements OnInit {
             questionnaire: ['']
         });
         this.hiringForm = this.fb.group({
+            owner: [''],
             hiring_managers: [''],
             team_members: [''],
-            default_email_name: ['']
+            default_email_name: this.jobOwner
         });
 
         this.editorAutofocusFix();
@@ -221,7 +238,8 @@ export class JobItemEditComponent implements OnInit {
             company: [this.job.company, Validators.required],
             location: [
                 { value: this.job.location, disabled: false },
-                ConditionalValidator.validate(() => !this.job.is_remote, Validators.required)],
+                ConditionalValidator.validate(() => !this.job.is_remote, Validators.required)
+            ],
             is_remote: [this.job.is_remote || false],
             job_type: [this.job.job_type, Validators.required],
             number_of_hires: [this.job.number_of_hires, Validators.required],
@@ -252,16 +270,16 @@ export class JobItemEditComponent implements OnInit {
             questionnaire: [{ value: this.job.questionnaire, disabled: false }]
         });
         this.hiringForm = this.fb.group({
+            owner: [this.recruiters],
             hiring_managers: [this.job.hiring_managers],
             team_members: [this.job.team_members],
-            default_email_name: [this.job.default_email_name]
+            default_email_name: this.jobOwner
         });
         this.editorAutofocusFix();
 
-
         // Location
         const locationControl = this.jobDetailsForm.get('location');
-        this.jobDetailsForm.get('is_remote').valueChanges.subscribe(value => {
+        this.jobDetailsForm.get('is_remote').valueChanges.subscribe((value) => {
             console.log(value);
             if (value) {
                 locationControl.clearValidators();
@@ -272,7 +290,6 @@ export class JobItemEditComponent implements OnInit {
             }
         });
     }
-
 
     onChangeSection(section: string) {
         this.activeSection = section;
@@ -297,15 +314,14 @@ export class JobItemEditComponent implements OnInit {
             console.log('❌ FORM IS INVALID', form);
             return;
         }
-        console.log('✅ FORM IS VALID', Object.assign(this.job, form.value));
-        this.jobService.saveJob(Object.assign(this.job, form.value), this.activeSection, false)
-            .subscribe((job: Job) => {
-                console.log('RESPONSE FROM SAVE CALL:', job);
-                this.contentLoading = false;
-                if (job.created && job.id) {
-                    this.router.navigateByUrl(`dashboard/jobs/${job.id}`);
-                }
-            });
+        console.log('✅ FORM IS VALID', { ...this.job, ...form.value });
+        this.jobService.saveJob({ ...this.job, ...form.value }, this.activeSection, false).subscribe((job: Job) => {
+            console.log('RESPONSE FROM SAVE CALL:', job);
+            this.contentLoading = false;
+            if (job.created && job.id) {
+                this.router.navigateByUrl(`dashboard/jobs/${job.id}`);
+            }
+        });
     }
 
     onSave(event) {
@@ -318,23 +334,22 @@ export class JobItemEditComponent implements OnInit {
             return;
         }
         // VALID
-        console.log(Object.assign(this.job, form.value));
+        console.log({ ...this.job, ...form.value });
 
-        this.jobService.saveJob(Object.assign(this.job, form.value), this.activeSection, true)
-            .subscribe((job: Job) => {
-                console.log('RESPONSE FROM SAVE CALL:', job);
-                this.contentLoading = false;
-                if (job.created && job.id) {
-                    this.router.navigateByUrl(`dashboard/jobs/${job.id}?section=applications`);
-                } else {
-                    this.goToNextSection();
-                }
-            });
+        this.jobService.saveJob({ ...this.job, ...form.value }, this.activeSection, true).subscribe((job: Job) => {
+            console.log('RESPONSE FROM SAVE CALL:', job);
+            this.contentLoading = false;
+            if (job.created && job.id) {
+                this.router.navigateByUrl(`dashboard/jobs/${job.id}?section=applications`);
+            } else {
+                this.goToNextSection();
+            }
+        });
     }
 
     onLocationChange(address) {
         this.place = address;
-        this.job.location = (address && address.formatted_address) ? this.locationInputRef.nativeElement.value : '';
+        this.job.location = address && address.formatted_address ? this.locationInputRef.nativeElement.value : '';
         this.jobDetailsForm.patchValue({ location: this.job.location });
     }
 
@@ -362,8 +377,8 @@ export class JobItemEditComponent implements OnInit {
     private setDefaultNameOptions() {
         this.defaultNameOptions = [];
         if (this.job.hiring_managers) {
-            this.job.hiring_managers.forEach(hm => {
-                const user = this.users.find(u => u.user_id === hm);
+            this.job.hiring_managers.forEach((hm) => {
+                const user = this.users.find((u) => u.user_id === hm);
                 if (user) {
                     this.defaultNameOptions.push({
                         value: user.first_name + ' ' + user.last_name,
@@ -395,7 +410,7 @@ export class JobItemEditComponent implements OnInit {
         if (index + 1 >= this.sections.length) {
             this.router.navigateByUrl(`dashboard/jobs`);
         } else {
-            const nextIndex = (index + 1 < this.sections.length) ? index + 1 : 0;
+            const nextIndex = index + 1 < this.sections.length ? index + 1 : 0;
             this.activeSection = this.sections[nextIndex];
         }
     }
@@ -413,5 +428,4 @@ export class JobItemEditComponent implements OnInit {
         }
         return text;
     }
-
 }

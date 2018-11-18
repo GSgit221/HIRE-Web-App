@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
     selector: 'app-resume-file-type',
@@ -8,18 +8,21 @@ import { Component, OnInit, Input } from '@angular/core';
 export class ResumeFileTypeComponent implements OnInit {
     @Input() type: string;
     fileTypeText = '';
-    constructor() { }
+    constructor() {}
 
     ngOnInit() {
         // this.fileTypeText;
         if (this.type === 'application/pdf') {
             this.fileTypeText = 'pdf';
-        } else if (['application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'application/vnd.oasis.opendocument.text',
-            'text/rtf'].indexOf(this.type) !== -1) {
+        } else if (
+            [
+                'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/vnd.oasis.opendocument.text',
+                'text/rtf'
+            ].indexOf(this.type) !== -1
+        ) {
             this.fileTypeText = 'doc';
         }
     }
-
 }

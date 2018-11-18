@@ -1,25 +1,23 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
 
 import { UserEffects } from './user.effects';
 
 describe('UserEffects', () => {
-  let actions$: Observable<any>;
-  let effects: UserEffects;
+    // tslint:disable-next-line
+    let actions$: Observable<any>;
+    let effects: UserEffects;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        UserEffects,
-        provideMockActions(() => actions$)
-      ]
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [UserEffects, provideMockActions(() => actions$)]
+        });
+
+        effects = TestBed.get(UserEffects);
     });
 
-    effects = TestBed.get(UserEffects);
-  });
-
-  it('should be created', () => {
-    expect(effects).toBeTruthy();
-  });
+    it('should be created', () => {
+        expect(effects).toBeTruthy();
+    });
 });

@@ -1,10 +1,11 @@
-import { FormHelperService } from '../../services/form-helper.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
+
+import { FormHelperService } from '../../services/form-helper.service';
 import { AuthService } from '../auth.service';
-import { UtilitiesService } from 'src/app/services/utilities.service';
+import { UtilitiesService } from './../../services/utilities.service';
 
 @Component({
     selector: 'app-reset-password',
@@ -35,8 +36,7 @@ export class ResetPasswordComponent implements OnInit {
         });
     }
 
-    ngOnInit() {
-    }
+    ngOnInit() {}
 
     onReset(event) {
         event.preventDefault();
@@ -44,17 +44,16 @@ export class ResetPasswordComponent implements OnInit {
             this.formHelper.markFormGroupTouched(this.resetForm);
             return;
         }
-        this.authService.resetPassword(this.resetForm.value.email)
-            .subscribe(
-                response => {
-                    this.msgs = [];
-                    this.resetSuccess = true;
-                    setTimeout(() => this.router.navigateByUrl('/signin'), 5000);
-                },
-                response => {
-                    this.msgs = [];
-                    this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
-                }
-            );
+        this.authService.resetPassword(this.resetForm.value.email).subscribe(
+            (response) => {
+                this.msgs = [];
+                this.resetSuccess = true;
+                setTimeout(() => this.router.navigateByUrl('/signin'), 5000);
+            },
+            (response) => {
+                this.msgs = [];
+                this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
+            }
+        );
     }
 }

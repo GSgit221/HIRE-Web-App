@@ -1,9 +1,10 @@
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import * as closest from 'closest';
+import { Question } from './../../../models/question';
+
 import { Questionnaire } from './../../../models/questionnaire';
 import { QuestionnaireService } from './../../../services/questionnaire.service';
-import { Component, OnInit } from '@angular/core';
-import * as closest from 'closest';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Question } from 'src/app/models/question';
 
 @Component({
     selector: 'app-questions-list',
@@ -19,30 +20,24 @@ export class QuestionsListComponent implements OnInit {
     questionnaire: Questionnaire;
     questions: Question[] = [];
 
-
-
     constructor(
         private questionnaireService: QuestionnaireService,
         private router: Router,
         private route: ActivatedRoute
     ) {
         this.questionnaireId = this.route.snapshot.paramMap.get('id');
-        this.questionnaireService.getById(this.questionnaireId)
-            .subscribe((questionnaire: Questionnaire) => {
-                this.questionnaire = questionnaire;
-                console.log(this.questionnaire);
-            });
-        this.questionnaireService.getQuestions(this.questionnaireId)
-            .subscribe((questions: Question[]) => {
-                this.list = questions;
-                console.log(this.list);
-                this.contentLoading = false;
-            });
-
+        this.questionnaireService.getById(this.questionnaireId).subscribe((questionnaire: Questionnaire) => {
+            this.questionnaire = questionnaire;
+            console.log(this.questionnaire);
+        });
+        this.questionnaireService.getQuestions(this.questionnaireId).subscribe((questions: Question[]) => {
+            this.list = questions;
+            console.log(this.list);
+            this.contentLoading = false;
+        });
     }
 
     ngOnInit() {}
-
 
     onItemClick(event, item) {
         console.log('onItemClick');
@@ -57,45 +52,41 @@ export class QuestionsListComponent implements OnInit {
         }
     }
 
-
     onSelectAllChange() {
         if (this.selectedAll) {
-            this.list.forEach(item => item.selected = true);
+            this.list.forEach((item) => (item.selected = true));
         } else {
-            this.list.forEach(item => item.selected = false);
+            this.list.forEach((item) => (item.selected = false));
         }
         this.calculateSelectedItems();
     }
 
-
     private calculateSelectedItems() {
-        this.selectedItems = this.list.filter(item => item.selected).length;
+        this.selectedItems = this.list.filter((item) => item.selected).length;
         if (!this.selectedItems) {
             this.selectedAll = false;
         }
     }
 
-
     onItemSeletectedChange() {
         this.calculateSelectedItems();
     }
 
-
     onItemsBulkRemove() {
         this.contentLoading = true;
-        const itemsToRemove = this.list.filter(item => item.selected).map(item => item.id);
+        const itemsToRemove = this.list.filter((item) => item.selected).map((item) => item.id);
         console.log(itemsToRemove);
 
-        this.questionnaireService.questionsBulkDelete(this.questionnaireId, itemsToRemove)
-            .subscribe(() => {
-                this.questionnaireService.getQuestions(this.questionnaireId)
-                    .subscribe((questions: Question[]) => {
-                        this.list = questions;
-                        console.log(this.list);
-                        this.contentLoading = false;
-                        this.calculateSelectedItems();
-                    }, error => console.error(error));
-            });
+        this.questionnaireService.questionsBulkDelete(this.questionnaireId, itemsToRemove).subscribe(() => {
+            this.questionnaireService.getQuestions(this.questionnaireId).subscribe(
+                (questions: Question[]) => {
+                    this.list = questions;
+                    console.log(this.list);
+                    this.contentLoading = false;
+                    this.calculateSelectedItems();
+                },
+                (error) => console.error(error)
+            );
+        });
     }
-
 }

@@ -1,11 +1,11 @@
-import { SelectItem } from 'primeng/api';
-import * as closest from 'closest';
-import { Job } from './../../models/job';
 import { Component, OnInit } from '@angular/core';
+import * as closest from 'closest';
+import { SelectItem } from 'primeng/api';
 
 import { Router } from '../../../../node_modules/@angular/router';
-import { JobService } from './../../services/job.service';
 import { User } from '../../models/user';
+import { Job } from './../../models/job';
+import { JobService } from './../../services/job.service';
 
 @Component({
     selector: 'app-jobs-list',
@@ -23,28 +23,21 @@ export class JobsListComponent implements OnInit {
     droppedFiles: File[] = [];
 
     constructor(private router: Router, private jobService: JobService) {
-        this.jobService.getAll()
-            .subscribe((jobs: Job[]) => {
-                this.list = jobs;
-                console.log(this.list);
-                this.contentLoading = false;
-            });
+        this.jobService.getAll().subscribe((jobs: Job[]) => {
+            this.list = jobs;
+            console.log(this.list);
+            this.contentLoading = false;
+        });
 
         this.jobService.getUsers().subscribe((users: User[]) => {
             this.users = users || [];
             // console.log(this.users);
         });
 
-
-        this.statusOptions = [
-            { label: 'LIVE', value: 'LIVE' },
-            { label: 'BUILD', value: 'BUILD' }
-        ];
+        this.statusOptions = [{ label: 'LIVE', value: 'LIVE' }, { label: 'BUILD', value: 'BUILD' }];
     }
 
-    ngOnInit() {
-
-    }
+    ngOnInit() {}
 
     onItemClick(event, item) {
         event.preventDefault();
@@ -62,12 +55,11 @@ export class JobsListComponent implements OnInit {
         this.jobService.updateJob(item.id, { status: item.status }).subscribe(() => console.log('updated'));
     }
 
-
     onSelectAllChange() {
         if (this.selectedAll) {
-            this.list.forEach(item => item.selected = true);
+            this.list.forEach((item) => (item.selected = true));
         } else {
-            this.list.forEach(item => item.selected = false);
+            this.list.forEach((item) => (item.selected = false));
         }
         this.calculateSelectedItems();
     }
@@ -77,7 +69,7 @@ export class JobsListComponent implements OnInit {
     }
 
     private calculateSelectedItems() {
-        this.selectedItems = this.list.filter(item => item.selected).length;
+        this.selectedItems = this.list.filter((item) => item.selected).length;
         if (!this.selectedItems) {
             this.selectedAll = false;
         }
@@ -89,26 +81,22 @@ export class JobsListComponent implements OnInit {
 
     onItemsBulkRemove() {
         this.contentLoading = true;
-        const itemsToRemove = this.list.filter(item => item.selected).map(item => item.id);
-        this.jobService.bulkDeleteJobs(itemsToRemove)
-            .subscribe(() => {
-                this.jobService.getAll()
-                    .subscribe((jobs: Job[]) => {
-                        this.list = jobs;
-                        this.contentLoading = false;
-                        this.calculateSelectedItems();
-                    });
+        const itemsToRemove = this.list.filter((item) => item.selected).map((item) => item.id);
+        this.jobService.bulkDeleteJobs(itemsToRemove).subscribe(() => {
+            this.jobService.getAll().subscribe((jobs: Job[]) => {
+                this.list = jobs;
+                this.contentLoading = false;
+                this.calculateSelectedItems();
             });
+        });
     }
-
 
     onFinishedJobUpload(event) {
         this.contentLoading = true;
-        this.jobService.getAll()
-            .subscribe((jobs: Job[]) => {
-                this.list = jobs;
-                this.contentLoading = false;
-            });
+        this.jobService.getAll().subscribe((jobs: Job[]) => {
+            this.list = jobs;
+            this.contentLoading = false;
+        });
         this.uploadJobSpecMode = false;
     }
 

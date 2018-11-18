@@ -1,4 +1,4 @@
-import { reducer, initialState } from './jobs.reducer';
+import { initialState, reducer } from './jobs.reducer';
 
 describe('Jobs Reducer', () => {
     describe('unknown action', () => {

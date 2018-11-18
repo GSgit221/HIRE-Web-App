@@ -1,8 +1,9 @@
-import { Router } from '@angular/router';
-import { QuestionnaireService } from './../../../services/questionnaire.service';
-import { FormHelperService } from './../../../services/form-helper.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import { FormHelperService } from './../../../services/form-helper.service';
+import { QuestionnaireService } from './../../../services/questionnaire.service';
 
 @Component({
     selector: 'app-questionnaire-new',
@@ -18,7 +19,7 @@ export class QuestionnaireNewComponent implements OnInit {
         private formHelper: FormHelperService,
         private router: Router,
         private questionnaireService: QuestionnaireService
-    ) { }
+    ) {}
 
     ngOnInit() {
         this.form = this.fb.group({
@@ -36,11 +37,12 @@ export class QuestionnaireNewComponent implements OnInit {
         // VALID
         console.log('FORM IS VALID:', this.form.value);
         this.contentLoading = true;
-        this.questionnaireService.create(this.form.value)
-            .subscribe(() => {
+        this.questionnaireService.create(this.form.value).subscribe(
+            () => {
                 this.contentLoading = false;
                 this.router.navigateByUrl(`dashboard/questionnaires`);
-            }, error => console.error(error));
+            },
+            (error) => console.error(error)
+        );
     }
-
 }

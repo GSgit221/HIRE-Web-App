@@ -1,15 +1,8 @@
-import { User } from './../../models/user';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { SelectItem } from 'primeng/api';
 
 import { Job } from './../../models/job';
 import { JobService } from './../../services/job.service';
-import { ConditionalValidator } from './../../validators/conditional.validator';
-import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
-
-
 
 @Component({
     selector: 'app-job-item',
@@ -21,34 +14,27 @@ export class JobItemComponent implements OnInit {
     contentLoading = true;
     editMode = false;
 
-    constructor(
-        private route: ActivatedRoute,
-        private jobService: JobService,
-        private router: Router
-    ) {
+    constructor(private route: ActivatedRoute, private jobService: JobService, private router: Router) {
         let jobId = this.route.snapshot.paramMap.get('id');
-        this.jobService.getJob(jobId)
-            .subscribe((job: Job) => {
-                this.job = job;
-                setTimeout(() => this.contentLoading = false, 200);
-                console.log('FROM ROUTE-------------------- JOB:', jobId, this.job);
+        this.jobService.getJob(jobId).subscribe((job: Job) => {
+            this.job = job;
+            setTimeout(() => (this.contentLoading = false), 200);
+            console.log('FROM ROUTE-------------------- JOB:', jobId, this.job);
 
-                if (this.job && this.job.status && this.job.status === 'BUILD') {
-                    this.editMode = true;
-                }
-            });
-
+            if (this.job && this.job.status && this.job.status === 'BUILD') {
+                this.editMode = true;
+            }
+        });
 
         this.route.paramMap.subscribe((params: ParamMap) => {
             if (params.get('id') !== jobId) {
                 this.contentLoading = true;
                 jobId = params.get('id');
-                this.jobService.getJob(jobId)
-                    .subscribe((job: Job) => {
-                        this.job = job;
-                        setTimeout(() => this.contentLoading = false, 200);
-                        console.log('FROM CHANGE-------------------- JOB:', jobId, this.job);
-                    });
+                this.jobService.getJob(jobId).subscribe((job: Job) => {
+                    this.job = job;
+                    setTimeout(() => (this.contentLoading = false), 200);
+                    console.log('FROM CHANGE-------------------- JOB:', jobId, this.job);
+                });
             }
         });
 
@@ -61,9 +47,7 @@ export class JobItemComponent implements OnInit {
         });
     }
 
-    ngOnInit() {
-
-    }
+    ngOnInit() {}
 
     onSetEditMode(value) {
         this.editMode = value;

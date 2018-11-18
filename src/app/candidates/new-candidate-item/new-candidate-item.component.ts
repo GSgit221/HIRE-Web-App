@@ -1,11 +1,12 @@
-import { UtilitiesService } from './../../services/utilities.service';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import { JobService } from '../../services/job.service';
 import { Job } from './../../models/job';
 import { FormHelperService } from './../../services/form-helper.service';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { JobService } from '../../services/job.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { UtilitiesService } from './../../services/utilities.service';
 
 @Component({
     selector: 'app-new-candidate-item',
@@ -52,9 +53,7 @@ export class NewCandidateItemComponent implements OnInit {
         this.form = this.fb.group({
             send_email: [true],
             file: [''],
-            emails: this.fb.array([
-                this.fb.control('', [Validators.required, Validators.email])
-            ])
+            emails: this.fb.array([this.fb.control('', [Validators.required, Validators.email])])
         });
     }
 
@@ -73,15 +72,16 @@ export class NewCandidateItemComponent implements OnInit {
             if (formControl.valid && formControl.value) {
                 formControl.disable();
                 formControl.pendingRequest = true;
-                this.jobService.createCandidateFromEmail(this.jobId, formControl.value)
-                    .subscribe(candidate => {
+                this.jobService.createCandidateFromEmail(this.jobId, formControl.value).subscribe(
+                    (candidate) => {
                         console.log(candidate);
                         formControl.requestStatus = 'success';
                         formControl.pendingRequest = false;
                         this.addEmailInput();
 
                         this.emails.push(formControl.value);
-                    }, (response) => {
+                    },
+                    (response) => {
                         formControl.requestStatus = 'warning';
                         if (response && response.error && response.error.error) {
                             formControl.requestError = response.error.error;
@@ -89,7 +89,8 @@ export class NewCandidateItemComponent implements OnInit {
                         }
                         formControl.pendingRequest = false;
                         this.addEmailInput();
-                    });
+                    }
+                );
             }
         }
     }
@@ -97,8 +98,9 @@ export class NewCandidateItemComponent implements OnInit {
     onFinishClicked(event) {
         event.preventDefault();
         if (this.form.value.send_email && this.emails.length) {
-            this.jobService.sendEmailsToCandidates(this.jobId, this.emails)
-                .subscribe(response => console.log(response), error => console.error(error));
+            this.jobService
+                .sendEmailsToCandidates(this.jobId, this.emails)
+                .subscribe((response) => console.log(response), (error) => console.error(error));
             this.uploadQueue = [];
             this.emails = [];
             this.finishedCadidatesCreation.next(true);
@@ -110,14 +112,14 @@ export class NewCandidateItemComponent implements OnInit {
     }
 
     processFiles(files) {
-        for (let i = 0, file; file = files[i]; i++) {
+        for (let i = 0, file; (file = files[i]); i++) {
             console.log(file);
             if (this.validateFileType(file, this.supportedFileTypes)) {
                 // ADD TO THE QUEUE
                 console.log('We need to upload that file 🎈');
                 this.uploadQueue.push({
                     id: this.utilities.generateUID(10),
-                    file: file,
+                    file,
                     uploadStarted: false,
                     uploadFinished: false,
                     progress: 0,
@@ -126,7 +128,7 @@ export class NewCandidateItemComponent implements OnInit {
                 });
             } else {
                 this.uploadError = 'Only supported formats are: pdf, doc, docx, rtf, odt';
-                setTimeout(() => this.uploadError = null, 10000);
+                setTimeout(() => (this.uploadError = null), 10000);
             }
         }
         this.processQueue();
@@ -143,7 +145,7 @@ export class NewCandidateItemComponent implements OnInit {
     }
 
     processQueue() {
-        this.uploadQueue.forEach(item => {
+        this.uploadQueue.forEach((item) => {
             if (!item.uploadStarted && !item.uploadFinished) {
                 this.uploadFile(item);
             }
@@ -151,23 +153,24 @@ export class NewCandidateItemComponent implements OnInit {
     }
 
     uploadFile(item) {
-        this.utilities.readFile(item.file)
+        this.utilities
+            .readFile(item.file)
             .then((fileValue: any) => {
                 item.uploadStarted = true;
                 item.uploadFinished = false;
                 item.progress = 0;
 
                 const uploadProgressInterval = setInterval(() => {
-                    item.progress = (item.progress + 1 < 100) ? item.progress + 1 : item.progress;
+                    item.progress = item.progress + 1 < 100 ? item.progress + 1 : item.progress;
                 }, 400);
-                const formData: { resume: any, email?: string } = {
+                const formData: { resume: any; email?: string } = {
                     resume: fileValue
                 };
                 if (item.email) {
                     formData.email = item.email;
                 }
-                this.jobService.createCandidateFromCv(this.jobId, formData)
-                    .subscribe((response: HttpResponse<any>) => {
+                this.jobService.createCandidateFromCv(this.jobId, formData).subscribe(
+                    (response: HttpResponse<any>) => {
                         console.log('📬 Uploaded:', response);
                         const resp: any = response;
                         item.text = resp.candidate.email;
@@ -184,13 +187,13 @@ export class NewCandidateItemComponent implements OnInit {
 
                         // Remove from upload queue
                         setTimeout(() => {
-                            const itemIndex = this.uploadQueue.findIndex(ui => ui.id === item.id);
+                            const itemIndex = this.uploadQueue.findIndex((ui) => ui.id === item.id);
                             if (itemIndex !== -1) {
                                 this.uploadQueue.splice(itemIndex, 1);
                             }
                         }, 3000);
-
-                    }, (response: HttpErrorResponse) => {
+                    },
+                    (response: HttpErrorResponse) => {
                         console.error(response);
                         item.text = response && response.error && response.error.error ? response.error.error : 'Error';
                         if (item.text === 'Email address not found in resume. Please enter a valid email address') {
@@ -202,9 +205,10 @@ export class NewCandidateItemComponent implements OnInit {
                         item.progress = 100;
                         item.uploadFinished = true;
                         clearInterval(uploadProgressInterval);
-                    });
+                    }
+                );
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error(error);
                 console.error('Error reading uploaded file');
             });
@@ -213,7 +217,6 @@ export class NewCandidateItemComponent implements OnInit {
     onMissingEmailSumbit(event, item) {
         const email = item.email;
         if (this.formHelper.validateEmail(email)) {
-
             this.uploadFile(item);
         }
     }

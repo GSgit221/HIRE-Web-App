@@ -1,10 +1,8 @@
-import { Action } from '@ngrx/store';
 import * as fromUser from './../../actions/user/user.actions';
 
-
-export interface State {
-
-}
+/* tslint:disable */
+export interface State {}
+/* tslint:enable */
 
 export const initialState: State = null;
 

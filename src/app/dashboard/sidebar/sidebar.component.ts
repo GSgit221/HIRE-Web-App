@@ -1,12 +1,10 @@
-import { State } from './../../reducers/index';
-import { User } from './../../models/user';
-import { ActivatedRoute } from '@angular/router';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { UserService } from '../../services/user.service';
-import { map } from 'rxjs/operators';
-import { Observable, Subscription } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import * as fromUserActions from './../../actions/user/user.actions';
+import { Subscription } from 'rxjs';
+
+import { UserService } from '../../services/user.service';
+import { User } from './../../models/user';
+import { State } from './../../reducers';
 
 @Component({
     selector: 'app-sidebar',
@@ -19,16 +17,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
     users: User[];
     settingsOpened = true;
 
-
     constructor(private userService: UserService, private store: Store<State>) {
-        this.userService.getUsers()
-        .subscribe((users: User[]) => {
+        this.userService.getUsers().subscribe((users: User[]) => {
             this.users = users;
         });
     }
 
     ngOnInit() {
-        this.userSubscription = this.store.select('user').subscribe((user: User) => this.user = user);
+        this.userSubscription = this.store.select('user').subscribe((user: User) => (this.user = user));
     }
 
     onToggleOcItem(event) {
@@ -36,7 +32,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
         console.log('clicked');
         this.settingsOpened = !this.settingsOpened;
     }
-
 
     ngOnDestroy(): void {
         this.userSubscription.unsubscribe();

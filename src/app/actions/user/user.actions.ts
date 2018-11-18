@@ -1,6 +1,6 @@
-import { User } from './../../models/user';
 import { Action } from '@ngrx/store';
 
+import { User } from './../../models/user';
 
 export const GET_AUTH_USER = 'GET_AUTH_USER';
 export const CREATE_TENANT_USER = 'CREATE_TENANT_USER';

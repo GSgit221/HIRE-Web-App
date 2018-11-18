@@ -1,4 +1,5 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+
 import { JobService } from '../../services/job.service';
 
 @Component({
@@ -22,8 +23,7 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
     selectedAll = false;
     amountCandidates;
 
-    constructor(private jobService: JobService) {
-    }
+    constructor(private jobService: JobService) {}
     ngOnInit() {
         this.contentLoading = true;
         this.jobService.getCandidatesChunk('first', 100).subscribe((candidates) => {
@@ -67,33 +67,18 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
         }, 1000);
     }
 
-
-    ngAfterViewInit() {
-    }
+    ngAfterViewInit() {}
 
     onShowFilter() {
         this.showFilter = !this.showFilter;
     }
     formatWithComa(num) {
-        return ('' + num).replace(
-            /(\d)(?=(?:\d{3})+(?:\.|$))|(\.\d\d?)\d*$/g,
-            function (m, s1, s2) {
-                return s2 || (s1 + ',');
-            }
-        );
+        return ('' + num).replace(/(\d)(?=(?:\d{3})+(?:\.|$))|(\.\d\d?)\d*$/g, (m, s1, s2) => s2 || s1 + ',');
     }
-    onItemsBulkRemove() {
-
-    }
-    onItemClick(event, item) {
-
-    }
+    onItemsBulkRemove() {}
+    onItemClick(event, item) {}
     onItemSeletectedChange($event: Event, index: number) {
-        if (this.candidates[index].checked) {
-            this.candidates[index].checked = true;
-        } else {
-            this.candidates[index].checked = false;
-        }
+        this.candidates[index].checked = this.candidates[index].checked ? true : false;
     }
     onSelectAllChange() {
         if (this.selectedAll) {

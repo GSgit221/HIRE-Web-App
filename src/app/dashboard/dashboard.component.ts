@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { State } from './../reducers/index';
+
 import * as fromUserActions from './../actions/user/user.actions';
+import { State } from './../reducers';
 
 @Component({
     selector: 'app-dashboard',
@@ -16,5 +17,4 @@ export class DashboardComponent implements OnInit {
     ngOnInit() {
         console.log('Dashboard');
     }
-
 }

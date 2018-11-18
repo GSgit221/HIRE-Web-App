@@ -1,11 +1,12 @@
-import { FormHelperService } from './../../../services/form-helper.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { JobStage } from './../../../models/job-stage';
-import { JobService } from './../../../services/job.service';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Slider } from 'primeng/slider';
+
 import { Job } from '../../../models/job';
+import { JobStage } from './../../../models/job-stage';
+import { FormHelperService } from './../../../services/form-helper.service';
+import { JobService } from './../../../services/job.service';
 
 @Component({
     selector: 'app-stage-settings',
@@ -33,52 +34,59 @@ export class StageSettingsComponent implements OnInit {
         this.stageId = this.route.snapshot.paramMap.get('stageId');
         this.contentLoading = true;
 
-        this.jobService.getJob(this.jobId).subscribe((job: Job) => this.job = job);
-        this.jobService.getStage(this.jobId, this.stageId).subscribe((stage: JobStage) => {
-            this.contentLoading = false;
-            this.stage = stage;
-            if (this.stage.id === 'applied') {
-                this.stageSettingsForm = this.fb.group({
-                    question: [''],
-                    allowance: [''],
-                    send_reminder_emails: [true],
-                    resume_matching_threshold: [this.stage.resume_matching_threshold],
-                    automatically_progress_matching_threshold: [this.stage.automatically_progress_matching_threshold]
-                });
+        this.jobService.getJob(this.jobId).subscribe((job: Job) => (this.job = job));
+        this.jobService.getStage(this.jobId, this.stageId).subscribe(
+            (stage: JobStage) => {
+                this.contentLoading = false;
+                this.stage = stage;
+                if (this.stage.id === 'applied') {
+                    this.stageSettingsForm = this.fb.group({
+                        question: [''],
+                        allowance: [''],
+                        send_reminder_emails: [true],
+                        resume_matching_threshold: [this.stage.resume_matching_threshold],
+                        automatically_progress_matching_threshold: [
+                            this.stage.automatically_progress_matching_threshold
+                        ]
+                    });
 
-                setTimeout(() => {
-                    this.onHcSliderChange();
-                }, 100);
-            } else {
-                console.log('It is not applied form');
-                this.stageSettingsForm = this.fb.group({
-                    question: [''],
-                    allowance: [''],
-                    send_reminder_emails: [true],
-                    title: [this.stage.title, Validators.required],
-                    integration: [this.stage.integration],
-                    acceptance_criteria: [this.stage.acceptance_criteria],
-                    automatically_progress_meeting_criteria: [this.stage.automatically_progress_meeting_criteria || false]
-                });
-                setTimeout(() => {
-                    this.onHcSliderChange();
-                }, 100);
+                    setTimeout(() => {
+                        this.onHcSliderChange();
+                    }, 100);
+                } else {
+                    console.log('It is not applied form');
+                    this.stageSettingsForm = this.fb.group({
+                        question: [''],
+                        allowance: [''],
+                        send_reminder_emails: [true],
+                        title: [this.stage.title, Validators.required],
+                        integration: [this.stage.integration],
+                        acceptance_criteria: [this.stage.acceptance_criteria],
+                        automatically_progress_meeting_criteria: [
+                            this.stage.automatically_progress_meeting_criteria || false
+                        ]
+                    });
+                    setTimeout(() => {
+                        this.onHcSliderChange();
+                    }, 100);
+                }
+            },
+            (error) => {
+                this.contentLoading = false;
+                console.log(error);
+                this.router.navigateByUrl('dashboard/jobs/' + this.jobId);
             }
-        }, (error) => {
-            this.contentLoading = false;
-            console.log(error);
-            this.router.navigateByUrl('dashboard/jobs/' + this.jobId);
-        });
+        );
     }
     questionOptions = [
-        {label: 'Graduate Recruit Program', value: 'Graduate Recruit Program'},
-        {label: 'Graduate Recruit Program2', value: 'Graduate Recruit Program2'},
-        {label: 'Graduate Recruit Program3', value: 'Graduate Recruit Program3'}
+        { label: 'Graduate Recruit Program', value: 'Graduate Recruit Program' },
+        { label: 'Graduate Recruit Program2', value: 'Graduate Recruit Program2' },
+        { label: 'Graduate Recruit Program3', value: 'Graduate Recruit Program3' }
     ];
     allowanceOptions = [
-        {label: '1 days', value: '1'},
-        {label: '2 days', value: '2'},
-        {label: '3 days', value: '3'}
+        { label: '1 days', value: '1' },
+        { label: '2 days', value: '2' },
+        { label: '3 days', value: '3' }
     ];
 
     ngOnInit() {
@@ -88,15 +96,14 @@ export class StageSettingsComponent implements OnInit {
             send_reminder_emails: [true],
             resume_matching_threshold: [60],
             automatically_progress_matching_threshold: [true]
-
         });
     }
 
-
     onHcSliderChange() {
-        const value = (this.stage.id === 'applied')
-                        ? this.stageSettingsForm.get('resume_matching_threshold').value
-                        : this.stageSettingsForm.get('acceptance_criteria').value;
+        const value =
+            this.stage.id === 'applied'
+                ? this.stageSettingsForm.get('resume_matching_threshold').value
+                : this.stageSettingsForm.get('acceptance_criteria').value;
         if (this.hcSlider) {
             const handler = this.hcSlider.el.nativeElement.children[0].children[1];
             if (handler) {
@@ -115,15 +122,16 @@ export class StageSettingsComponent implements OnInit {
         // VALID
         console.log('FORM IS VALID:', form.value);
         this.contentLoading = true;
-        this.jobService.updateStage(this.jobId, this.stageId, form.value)
-            .subscribe(() => {
+        this.jobService.updateStage(this.jobId, this.stageId, form.value).subscribe(
+            () => {
                 console.log('updated');
                 this.contentLoading = false;
-            }, error => {
+            },
+            (error) => {
                 console.log(error);
                 this.contentLoading = false;
-            });
-
+            }
+        );
     }
 
     onBackClick() {

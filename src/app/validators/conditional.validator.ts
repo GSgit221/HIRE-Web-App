@@ -1,4 +1,5 @@
-import { ValidatorFn, AbstractControl } from '@angular/forms';
+import { AbstractControl, ValidatorFn } from '@angular/forms';
+
 export class ConditionalValidator {
     static validate(condition: (() => boolean), validator: ValidatorFn): ValidatorFn {
         return (control: AbstractControl): { [key: string]: any } => {
@@ -8,5 +9,4 @@ export class ConditionalValidator {
             return validator(control);
         };
     }
-
 }

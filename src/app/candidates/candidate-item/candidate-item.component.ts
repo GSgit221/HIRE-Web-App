@@ -1,13 +1,14 @@
 import { HttpResponse } from '@angular/common/http';
-import { UtilitiesService } from './../../services/utilities.service';
-import { JobCandidate } from './../../models/job-candidate';
-import { ActivatedRoute, Router } from '@angular/router';
-import { JobService } from './../../services/job.service';
 import { Component, OnInit } from '@angular/core';
-import { Job } from '../../models/job';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { State } from '../../reducers';
+
+import { Job } from '../../models/job';
 import { User } from '../../models/user';
+import { State } from '../../reducers';
+import { JobCandidate } from './../../models/job-candidate';
+import { JobService } from './../../services/job.service';
+import { UtilitiesService } from './../../services/utilities.service';
 
 @Component({
     selector: 'app-candidate-item',
@@ -28,7 +29,7 @@ export class CandidateItemComponent implements OnInit {
         SKILLS: 'Skills',
         INDUSTRIES: 'Industries',
         CERTIFICATIONS: 'Certifications',
-        MANAGEMENT_LEVEL: 'Management Level',
+        MANAGEMENT_LEVEL: 'Management Level'
     };
 
     candidate: JobCandidate;
@@ -44,25 +45,24 @@ export class CandidateItemComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private utilities: UtilitiesService,
-        private store: Store<State>,
+        private store: Store<State>
     ) {
         this.jobId = this.route.snapshot.paramMap.get('jobId');
         this.candidateId = this.route.snapshot.paramMap.get('candidateId');
         this.jobService.getJob(this.jobId).subscribe((job: Job) => {
             this.allowShowFeedback();
-            return this.job = job;
+            return (this.job = job);
         });
-        this.jobService.getCandidate(this.jobId, this.candidateId)
-            .subscribe((candidate: JobCandidate) => {
-                this.candidate = candidate;
-                console.log(this.candidate);
-                setTimeout(() => this.contentLoading = false, 200);
-                console.log('FROM ROUTE-------------------- JOB:', this.jobId, this.candidateId);
-                if (!this.candidate.resume_file) {
-                    this.activeSection = 'attachments';
-                }
-                this.allowShowFeedback();
-            });
+        this.jobService.getCandidate(this.jobId, this.candidateId).subscribe((candidate: JobCandidate) => {
+            this.candidate = candidate;
+            console.log(this.candidate);
+            setTimeout(() => (this.contentLoading = false), 200);
+            console.log('FROM ROUTE-------------------- JOB:', this.jobId, this.candidateId);
+            if (!this.candidate.resume_file) {
+                this.activeSection = 'attachments';
+            }
+            this.allowShowFeedback();
+        });
 
         this.supportedFileTypes = [
             'application/pdf',
@@ -84,7 +84,6 @@ export class CandidateItemComponent implements OnInit {
                     if (this.showFeedback) {
                         return true;
                     }
-
                 } else if (this.job && typeof this.job.show_position_rating !== 'undefined') {
                     this.showFeedback = true;
                 } else {
@@ -109,14 +108,12 @@ export class CandidateItemComponent implements OnInit {
     //     }
     // }
 
-
     onChangeSection(section: string) {
         this.activeSection = section;
         if (!this.candidate.resume_file) {
             this.activeSection = 'attachments';
         }
     }
-
 
     onChangeInteractivity(section: string) {
         this.activeInteractivity = section;
@@ -126,15 +123,14 @@ export class CandidateItemComponent implements OnInit {
         this.router.navigateByUrl(`dashboard/jobs/${this.jobId}`);
     }
 
-
     processFiles(files) {
-        for (let i = 0, file; file = files[i]; i++) {
+        for (let i = 0, file; (file = files[i]); i++) {
             console.log(file);
             if (this.validateFileType(file, this.supportedFileTypes)) {
                 // ADD TO THE QUEUE
                 console.log('We need to upload that file 🎈');
                 this.uploadQueue.push({
-                    file: file,
+                    file,
                     uploadStarted: false,
                     uploadFinished: false,
                     progress: 0,
@@ -143,7 +139,7 @@ export class CandidateItemComponent implements OnInit {
                 });
             } else {
                 this.uploadError = 'Only supported formats are: pdf, doc, docx, rtf, odt';
-                setTimeout(() => this.uploadError = null, 10000);
+                setTimeout(() => (this.uploadError = null), 10000);
             }
         }
         this.processQueue();
@@ -151,16 +147,15 @@ export class CandidateItemComponent implements OnInit {
 
     onDropFromFiles(event: any) {
         const file = event.dragData;
-        console.log(file);
-        // this.uploadQueue.push({
-        //     file: file,
-        //     uploadStarted: false,
-        //     uploadFinished: false,
-        //     progress: 0,
-        //     success: false,
-        //     text: file.file_name
-        // });
-        // this.processQueue();
+        this.uploadQueue.push({
+            file,
+            uploadStarted: false,
+            uploadFinished: false,
+            progress: 0,
+            success: false,
+            text: file.file_name
+        });
+        this.processQueue();
     }
 
     onDropFile(event) {
@@ -174,7 +169,7 @@ export class CandidateItemComponent implements OnInit {
     }
 
     processQueue() {
-        this.uploadQueue.forEach(item => {
+        this.uploadQueue.forEach((item) => {
             if (!item.uploadStarted && !item.uploadFinished) {
                 this.uploadFile(item);
             }
@@ -182,14 +177,15 @@ export class CandidateItemComponent implements OnInit {
     }
 
     uploadFile(item) {
-        this.utilities.readFile(item.file)
-            .then(fileValue => {
+        this.utilities
+            .readFile(item.file)
+            .then((fileValue) => {
                 item.uploadStarted = true;
                 const uploadProgressInterval = setInterval(() => {
-                    item.progress = (item.progress + 1 < 100) ? item.progress + 1 : item.progress;
+                    item.progress = item.progress + 1 < 100 ? item.progress + 1 : item.progress;
                 }, 400);
-                this.jobService.updateCandidateWithCv(this.jobId, this.candidateId, { resume: fileValue })
-                    .subscribe((response: HttpResponse<any>) => {
+                this.jobService.updateCandidateWithCv(this.jobId, this.candidateId, { resume: fileValue }).subscribe(
+                    (response: HttpResponse<any>) => {
                         console.log('📬 Uploaded:', response);
                         const resp: any = response;
                         item.progress = 100;
@@ -197,37 +193,37 @@ export class CandidateItemComponent implements OnInit {
                         item.success = true;
                         clearInterval(uploadProgressInterval);
 
-
                         setTimeout(() => {
                             item.fadeout = true;
                         }, 2000);
 
                         // Remove from upload queue
                         setTimeout(() => {
-                            const itemIndex = this.uploadQueue.findIndex(ui => ui.id === item.id);
+                            const itemIndex = this.uploadQueue.findIndex((ui) => ui.id === item.id);
                             if (itemIndex !== -1) {
                                 this.uploadQueue.splice(itemIndex, 1);
                             }
                         }, 3000);
-                        this.candidate = Object.assign(this.candidate, resp.candidate);
+                        this.candidate = { ...this.candidate, ...resp.candidate };
                         this.onChangeSection('details');
                         // this.jobService.getCandidate(this.jobId, this.candidateId)
                         //     .subscribe((candidate: JobCandidate) => {
                         //         this.candidate = candidate;
                         //     });
                         // this.router.navigateByUrl(`dashboard/jobs/${this.jobId}`);
-                    }, error => {
+                    },
+                    (error) => {
                         console.error(error);
                         item.text = error && error.error && error.error.message ? error.error.error.message : 'Error';
                         item.progress = 100;
                         item.uploadFinished = true;
                         clearInterval(uploadProgressInterval);
-                    });
+                    }
+                );
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error(error);
                 console.error('Error reading uploaded file');
             });
     }
-
 }

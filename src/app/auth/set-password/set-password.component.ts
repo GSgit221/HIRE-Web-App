@@ -1,10 +1,10 @@
-import { UtilitiesService } from 'src/app/services/utilities.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 
 import { FormHelperService } from './../../services/form-helper.service';
+import { UtilitiesService } from './../../services/utilities.service';
 import { PasswordValidation } from './../../validators/password.validator';
 import { AuthService } from './../auth.service';
 
@@ -15,6 +15,7 @@ import { AuthService } from './../auth.service';
 })
 export class SetPasswordComponent implements OnInit {
     token: string;
+    invitation_code: string;
     setPasswordForm: FormGroup;
     msgs: Message[] = [];
 
@@ -33,20 +34,22 @@ export class SetPasswordComponent implements OnInit {
             this.router.navigateByUrl('/signup');
         }
 
-
-        this.setPasswordForm = this.fb.group({
-            password: ['', Validators.required],
-            confirm_password: ['', Validators.required],
-            agreed: [false, Validators.requiredTrue]
-        }, {
+        this.setPasswordForm = this.fb.group(
+            {
+                password: ['', Validators.required],
+                confirm_password: ['', Validators.required],
+                agreed: [false, Validators.requiredTrue]
+            },
+            {
                 validator: PasswordValidation.MatchPassword
-            });
+            }
+        );
     }
 
     ngOnInit() {
         this.token = this.route.snapshot.queryParamMap.get('token');
+        this.invitation_code = this.route.snapshot.queryParamMap.get('invitation_code');
     }
-
 
     onSubmit(event) {
         event.preventDefault();
@@ -55,17 +58,16 @@ export class SetPasswordComponent implements OnInit {
             return;
         }
         const val = this.setPasswordForm.value;
-        this.authService.setPassword(val.password, this.token)
-            .subscribe(
-                response => {
-                    this.msgs = [];
-                    this.authService.setSession(response);
-                    this.router.navigateByUrl('/');
-                },
-                response => {
-                    this.msgs = [];
-                    this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
-                }
-            );
+        this.authService.setPassword(val.password, this.token, this.invitation_code).subscribe(
+            (response) => {
+                this.msgs = [];
+                this.authService.setSession(response);
+                this.router.navigateByUrl('/');
+            },
+            (response) => {
+                this.msgs = [];
+                this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
+            }
+        );
     }
 }

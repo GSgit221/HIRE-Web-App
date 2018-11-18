@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
-
+import { Actions } from '@ngrx/effects';
 
 @Injectable()
 export class JobEffects {
-
-  constructor(private actions$: Actions) {}
+    constructor(private actions$: Actions) {}
 }
