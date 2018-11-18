@@ -331,7 +331,7 @@ export class CandidateItemFeedbackComponent implements OnInit {
                 console.log(response);
                 this.contentLoading = false;
                 this.alreadySelectedPositionRating = true;
-                this.showPositionRating = response.success ? true : false;
+                this.showPositionRating = result ? true : false;
             },
             (err) => {
                 console.error(err);
