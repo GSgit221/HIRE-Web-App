@@ -44,7 +44,7 @@
                 </div>
             </div>
         </div>
-        <div class="position-rating" [ngClass]="{ edit: editMarks }" *ngIf="showPositionRating">
+        <div class="position-rating" [ngClass]="{ edit: editMarks }" *ngIf="showPositionRating && (jobOwner || positionSpecificCategories.length > 0)">
             <div class="wrap">
                 <h3>Position Specific Rating</h3>
                 <ng-container *ngIf="!addPositionSpecificCategory && !editMarks && jobOwner">
@@ -215,7 +215,6 @@
 '"
                     />
                 </div>
-                <p>{{ input?.value }}</p>
             </div>
             <button
                 class="save btn btn-primary"
