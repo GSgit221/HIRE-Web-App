@@ -235,19 +235,21 @@ export class CandidateItemFeedbackComponent implements OnInit {
     }
 
     onUpdateFeedbackPositionRatingCategories(input = null) {
-        if (input) {
-            this.onAddPositionSpecificCategory(input);
-        }
+        if (input.value.trim().length > 0) {
+            if (input) {
+                this.onAddPositionSpecificCategory(input);
+            }
 
-        this.addPositionSpecificCategory = false;
-        const data = this.positionSpecificCategories.map((item) => ({
-            id: item.id,
-            title: item.title,
-            order: item.order
-        }));
-        this.candidateService
-            .updateFeedbackPositionRatingCategories(this.jobId, data)
-            .subscribe((r) => console.log('✅ Position specific categories updated'));
+            this.addPositionSpecificCategory = false;
+            const data = this.positionSpecificCategories.map((item) => ({
+                id: item.id,
+                title: item.title,
+                order: item.order
+            }));
+            this.candidateService
+                .updateFeedbackPositionRatingCategories(this.jobId, data)
+                .subscribe((r) => console.log('✅ Position specific categories updated'));
+        }
     }
 
     onSaveFeedback() {
