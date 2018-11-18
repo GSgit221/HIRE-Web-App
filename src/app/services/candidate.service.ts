@@ -27,4 +27,7 @@ export class CandidateService {
     updateFeedback(jobId: string, candidateId: string, data: any) {
         return this.http.put(`${this.apiURL}/tenants/${this.tenantId}/jobs/${jobId}/candidates/${candidateId}/feedback`, { data });
     }
+    saveFeed(jobId: string, candidateId: string, data: any) {
+        return this.http.put(`${this.apiURL}/tenants/${this.tenantId}/jobs/${jobId}/candidates/${candidateId}/feed`, { data });
+    }
 }

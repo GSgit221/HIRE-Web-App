@@ -6,4 +6,5 @@ export class User {
     user_id?: string;
     email?: string;
     full_str?: string;
+    icon_url?: string;
 }

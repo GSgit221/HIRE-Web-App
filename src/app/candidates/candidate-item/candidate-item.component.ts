@@ -16,7 +16,7 @@ import { User } from '../../models/user';
 })
 export class CandidateItemComponent implements OnInit {
     activeSection = 'overview';
-    activeInteractivity = 'report';
+    activeInteractivity = 'chat';
     summaryContentShow = true;
     experienceContentShow = true;
     educationContentShow = true;
