@@ -53,10 +53,17 @@ export class CandidateItemFeedbackComponent implements OnInit {
         this.initForm();
         if (this.feedback && this.feedback[this.jobId]) {
             this.positionSpecificCategories = this.feedback[this.jobId].position_rating;
-            this.showPositionRating = this.feedback[this.jobId].show_position_rating ? true : false;
-            if (this.feedback[this.jobId].active) {
-                this.alreadySelectedPositionRating = true;
-            }
+        }
+        if (this.job.show_position_rating) {
+            this.showPositionRating = true;
+        } else {
+            this.showPositionRating = false;
+        }
+        if (this.job && (typeof this.job.show_position_rating === 'undefined' ||
+            this.job.show_position_rating === null)) {
+            this.alreadySelectedPositionRating = false;
+        } else {
+            this.alreadySelectedPositionRating = true;
         }
         // Get user
         this.store.select('user').subscribe((user: User) => {
@@ -120,16 +127,34 @@ export class CandidateItemFeedbackComponent implements OnInit {
                 }
             }
 
-            this.positionSpecificCategories = candidateFeedback.position_rating.map((item) => {
-                if (item.votes && item.votes.length) {
-                    const vote = item.votes.find((v) => v.user_id === this.user.id);
-                    if (vote) {
-                        item.value = vote.value;
+            // this.positionSpecificCategories = candidateFeedback.position_rating.map(item => {
+            //     if (item.votes && item.votes.length) {
+            //         const vote = item.votes.find(v => v.user_id === this.user.id);
+            //         if (vote) {
+            //             item.value = vote.value;
+            //         }
+            //     }
+            //     return item;
+            // });
+            // this.positionSpecificCategories = this.job.position_rating;
+            // console.log(this.positionSpecificCategories);
+        }
+        if (this.job.position_rating) {
+            this.positionSpecificCategories = this.job.position_rating.map(item => {
+                if (this.feedback && this.feedback[this.jobId]) {
+                    const obj = this.feedback[this.jobId].position_rating.find(v => v.id === item.id);
+                    if (obj) {
+                        item.votes = obj.votes;
+                        const val = obj.votes.find(u => u.user_id === this.user.id);
+                        if (val) {
+                            item.value = val.value;
+                        }
                     }
                 }
                 return item;
             });
         }
+        // console.log(this.positionSpecificCategories);
     }
     getUserData(id, field) {
         const userData: any = this.users.find((c) => {
@@ -226,14 +251,14 @@ export class CandidateItemFeedbackComponent implements OnInit {
             title: item.title,
             order: item.order
         }));
-        this.candidateService
-            .updateFeedbackPositionRatingCategories(this.jobId, this.candidateId, data)
-            .subscribe(() => console.log('✅ Position specific categories updated'));
+        this.candidateService.updateFeedbackPositionRatingCategories(this.jobId, data)
+            .subscribe((r) => console.log('✅ Position specific categories updated'));
     }
 
     onSaveFeedback() {
         const data = {
             comments: this.feedbackForm.get('comments').value,
+            created: new Date().getTime(),
             rating: this.transformRating(this.feedbackForm.get('rating').value),
             position_rating: this.positionSpecificCategories
                 .slice(0)
@@ -241,11 +266,13 @@ export class CandidateItemFeedbackComponent implements OnInit {
                 .map((cat) => ({ id: cat.id, value: cat.value }))
         };
         this.contentLoading = true;
-        this.candidateService.updateFeedback(this.jobId, this.candidateId, data).subscribe(
-            (response: any) => {
+        console.log(data);
+        this.candidateService.updateFeedback(this.jobId, this.candidateId, data)
+            .subscribe((response: any) => {
                 this.contentLoading = false;
                 if (response.feedback) {
                     this.feedback = response.feedback;
+                    console.log(response.feedback);
                     this.view = 'results';
                     this.feedbackUpdate.next(response.feedback);
                     this.initialState = { ...this.getState() };
@@ -297,19 +324,24 @@ export class CandidateItemFeedbackComponent implements OnInit {
     }
     selectSpecificRatingVisability(result) {
         this.contentLoading = true;
-        const data = {
+        const data: any = {
             show_position_rating: result
         };
         if (result) {
             this.addPositionSpecificCategory = true;
         }
-        this.candidateService.updateFeedback(this.jobId, this.candidateId, data).subscribe(
-            (response: any) => {
+        console.log(data);
+        this.candidateService.updateFeedbackPositionRatingCategories(this.jobId, data)
+            .subscribe((response: any) => {
+                console.log(response);
                 this.contentLoading = false;
                 this.alreadySelectedPositionRating = true;
-                this.showPositionRating = response.feedback[this.jobId].show_position_rating ? true : false;
-            },
-            (err) => {
+                if (response.success) {
+                    this.showPositionRating = true;
+                } else {
+                    this.showPositionRating = false;
+                }
+            }, (err) => {
                 console.error(err);
             }
         );

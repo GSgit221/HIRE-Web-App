@@ -86,7 +86,10 @@ import { LoaderComponent } from './shared/loader/loader.component';
 import { MultiSelectComponent } from './shared/multi-select/multi-select.component';
 import { ProgressCircleComponent } from './shared/progress-circle/progress-circle.component';
 import { ResumeFileTypeComponent } from './shared/resume-file-type/resume-file-type.component';
-
+import { SortByDatePipe } from './pipes/sort-by-date.pipe';
+import { SortByOrderPipe } from './pipes/sort-by-order.pipe';
+import { CandidateItemFeedbackComponent } from './candidates/candidate-item-feedback/candidate-item-feedback.component';
+import { CandidateItemTimelineComponent } from './candidates/candidate-item-timeline/candidate-item-timeline.component';
 export function provideConfig() {
     return new AuthServiceConfig([
         {
@@ -146,7 +149,9 @@ export function provideConfig() {
         BillingHistoryComponent,
         CompleteSignupComponent,
         CandidateItemFeedbackComponent,
-        SortByOrderPipe
+        SortByOrderPipe,
+        CandidateItemTimelineComponent,
+        SortByDatePipe
     ],
     imports: [
         AppRoutingModule,

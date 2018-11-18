@@ -16,13 +16,8 @@ export class CandidateService {
         this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
     }
 
-    updateFeedbackPositionRatingCategories(jobId: string, candidateId: string, data: any[]) {
-        return this.http.put(
-            `${this.apiURL}/tenants/${
-                this.tenantId
-            }/jobs/${jobId}/candidates/${candidateId}/feedback/position-rating-categories`,
-            { data }
-        );
+    updateFeedbackPositionRatingCategories(jobId: string, data: any[]) {
+        return this.http.put(`${this.apiURL}/tenants/${this.tenantId}/jobs/${jobId}/position-rating-categories`, { data });
     }
 
     updateFeedback(jobId: string, candidateId: string, data: any) {
@@ -30,5 +25,8 @@ export class CandidateService {
             `${this.apiURL}/tenants/${this.tenantId}/jobs/${jobId}/candidates/${candidateId}/feedback`,
             { data }
         );
+    }
+    saveFeed(jobId: string, candidateId: string, data: any) {
+        return this.http.put(`${this.apiURL}/tenants/${this.tenantId}/jobs/${jobId}/candidates/${candidateId}/feed`, { data });
     }
 }

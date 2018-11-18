@@ -409,6 +409,11 @@ h3 {
     > h3 {
         color: grey;
     }
+    .overall-rating {
+        .img-icons {
+            filter: grayscale(100%); 
+        }
+    }
 }
 .owner-disabled {
     position: relative;
@@ -432,6 +437,11 @@ h3 {
     }
     > h3 {
         color: grey;
+    }
+    .overall-rating {
+        .img-icons {
+            filter: grayscale(100%); 
+        }
     }
 }
 .light-overlay {
