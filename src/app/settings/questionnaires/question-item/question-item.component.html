@@ -1,13 +1,15 @@
 <div class="container fixed-width-container">
     <div class="pages-nav">
         <button class="back-btn" [routerLink]="'/dashboard/questionnaires/' + questionnaireId + '/questions'">
-            <span class="icon"><img src="assets/images/left.svg" height="16px" alt="Left icon"></span>
-            <span class="text">{{questionnaire?.title}}</span>
+            <span class="icon"><img src="assets/images/left.svg" height="16px" alt="Left icon"/></span>
+            <span class="text">{{ questionnaire?.title }}</span>
         </button>
     </div>
     <div class="title-block">
         <h1 class="page-title">
-            <span *ngIf="!initialLoading">{{ question && question.question ? question.question : 'New Question'}}</span>
+            <span *ngIf="!initialLoading">{{
+                question && question.question ? question.question : 'New Question'
+            }}</span>
         </h1>
         <div class="buttons-holder">
             <!-- <button class="btn btn-icon"><span class="text">Save</span></button> -->
@@ -27,7 +29,7 @@
                         <div class="form-block">
                             <label class="form-block-label">Question</label>
                             <div class="textarea-holder">
-                                <textarea class="textarea" name="question" formControlName="question"></textarea>
+                                <textarea class="textarea" formControlName="text"></textarea>
                             </div>
                         </div>
                         <div class="form-block">
@@ -35,54 +37,57 @@
                                 <div class="form-block-col">
                                     <div class="input-block">
                                         <label class="form-block-label">Question Type</label>
-                                        <p-dropdown [options]="questionTypeOptions" formControlName="type" (onChange)="onChangeType()"
-                                                    [style]="{'width':'100%'}"></p-dropdown>
+                                        <p-dropdown
+                                            [options]="questionTypeOptions"
+                                            formControlName="type"
+                                            [style]="{ width: '100%' }"
+                                        ></p-dropdown>
                                     </div>
                                 </div>
                                 <div class="form-block-col-separator"></div>
                                 <div class="form-block-col">
                                     <div class="input-block">
-                                        <p-checkbox class="checkbox-required" name="require" binary="true" label="This question is required"
-                                                    formControlName="is_required"></p-checkbox>
+                                        <p-checkbox
+                                            class="checkbox-required"
+                                            name="require"
+                                            binary="true"
+                                            label="This question is required"
+                                            formControlName="is_required"
+                                        ></p-checkbox>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-block">
-                            <div class="form-block-columns" [ngClass]="{'w50': typeQuestion === 'single'}">
-                                <div class="form-block-col" >
-                                    <div class="input-block right-option-block">
-                                        <label class="form-block-label">Answer <span *ngIf="typeQuestion === 'multiple'">1</span></label>
-                                        <div class="input-block">
-                                            <input type="text" class="form-input" formControlName="answer">
-                                            <div class="right-option">
-                                                <p-checkbox label="Knockout" formControlName="answer_is_knockout1"
-                                                            binary="true"></p-checkbox>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-block-col-separator"></div>
-                                <div class="form-block-col" *ngIf="typeQuestion === 'multiple'">
-                                    <div class="input-block right-option-block">
-                                        <label class="form-block-label">Answer 2</label>
-                                        <div class="input-block">
-                                            <input type="text" class="form-input" formControlName="answer2">
-                                            <div class="right-option">
-                                                <p-checkbox label="Knockout" formControlName="answer_is_knockout2"
-                                                            binary="true"></p-checkbox>
+                            <div class="form-block-2-columns" formArrayName="answers">
+                                <div class="form-block-2-columns-holder">
+                                    <div class="form-block-col" *ngFor="let item of answers.controls; let i = index">
+                                        <div class="input-block right-option-block" [formGroupName]="i">
+                                            <label class="form-block-label">Answer {{ i + 1 }}</label>
+                                            <div class="input-block">
+                                                <input type="text" class="form-input" formControlName="text" />
+                                                <div class="right-option">
+                                                    <p-checkbox
+                                                        label="Knockout"
+                                                        formControlName="is_knockout"
+                                                        binary="true"
+                                                    ></p-checkbox>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <span class="hc-link" (click)="onAddAnswer()" *ngIf="isAddAvailable()">Add Answer</span>
                         </div>
                         <div class="form-content-box-bottom">
                             <div class="form-content-box-bottom-holder">
                                 <div class="text-with-icon flex-row flex-aic">
-                                    <img alt="" class="icon" height="13" src="/assets/images/pin.svg" width="13">
-                                    <p><strong>Knockout:</strong> If a candidate should be disqualified based on an
-                                        answer, select the checkbox assiciated with the disqualifying answer.</p>
+                                    <img alt="" class="icon" height="13" src="/assets/images/pin.svg" width="13" />
+                                    <p>
+                                        <strong>Knockout:</strong> If a candidate should be disqualified based on an
+                                        answer, select the checkbox assiciated with the disqualifying answer.
+                                    </p>
                                 </div>
                             </div>
                         </div>

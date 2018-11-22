@@ -89,4 +89,9 @@ export class QuestionsListComponent implements OnInit {
             );
         });
     }
+
+    hasKnockoutAnswers(item: Question) {
+        const knockout = item.answers.find((a) => a.is_knockout);
+        return knockout ? true : false;
+    }
 }

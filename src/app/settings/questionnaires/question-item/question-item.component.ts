@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Question } from './../../../models/question';
 import { Questionnaire } from './../../../models/questionnaire';
 import { FormHelperService } from './../../../services/form-helper.service';
 import { QuestionnaireService } from './../../../services/questionnaire.service';
+import { UtilitiesService } from './../../../services/utilities.service';
+import { ConditionalValidator } from './../../../validators/conditional.validator';
 
 @Component({
     selector: 'app-question-item',
@@ -31,7 +33,8 @@ export class QuestionItemComponent implements OnInit {
         private formHelper: FormHelperService,
         private questionnaireService: QuestionnaireService,
         private router: Router,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private utilities: UtilitiesService
     ) {
         this.questionnaireId = this.route.snapshot.paramMap.get('id');
         this.questionId = this.route.snapshot.paramMap.get('questionId');
@@ -59,38 +62,60 @@ export class QuestionItemComponent implements OnInit {
 
     ngOnInit() {
         this.questionForm = this.fb.group({
-            question: ['', Validators.required],
+            text: ['', Validators.required],
             type: ['multiple', Validators.required],
             is_required: [true],
-            answer: ['', Validators.required],
-            answer_is_knockout1: [false],
-            answer2: ['', Validators.required],
-            answer_is_knockout2: [false]
+            answers: this.fb.array([this.createItem(true), this.createItem(true)])
         });
+    }
+
+    get answers() {
+        return this.questionForm.get('answers') as FormArray;
+    }
+
+    createItem(required = false): FormGroup {
+        return this.fb.group({
+            id: this.utilities.generateUID(8).toLowerCase(),
+            text: ['', ConditionalValidator.validate(() => required, Validators.required)],
+            is_knockout: [false]
+        });
+    }
+
+    populateItem(data, required = false): FormGroup {
+        return this.fb.group({
+            id: [data.id],
+            text: [data.text, ConditionalValidator.validate(() => required, Validators.required)],
+            is_knockout: [data.is_knockout]
+        });
+    }
+
+    isAddAvailable() {
+        const available = this.questionForm.get('answers').value.every((a) => a.text && a.text.length);
+        return available;
+    }
+
+    onAddAnswer(): void {
+        if (this.questionForm.get('answers').value.every((a) => a.text && a.text.length)) {
+            this.answers.push(this.createItem());
+        }
     }
 
     populateForm() {
         console.log('populate form', this.question);
+        const answersArr = [];
+        if (this.question.answers) {
+            this.question.answers.forEach((a, index) => {
+                const required = index < 2;
+                answersArr.push(this.populateItem(a, required));
+            });
+        }
+
         this.questionForm = this.fb.group({
-            question: [this.question.question, Validators.required],
+            text: [this.question.text, Validators.required],
             type: [this.question.type, Validators.required],
             is_required: [this.question.is_required],
-            answer: [this.question.answer, Validators.required],
-            answer_is_knockout1: [this.question.answer_is_knockout1],
-            answer2: [this.question.answer2, Validators.required],
-            answer_is_knockout2: [this.question.answer_is_knockout2]
+            answers: this.fb.array(answersArr)
         });
-    }
-
-    onChangeType() {
-        this.typeQuestion = this.questionForm.controls['type'].value;
-        if (this.typeQuestion === 'single') {
-            this.questionForm.get('answer2').clearValidators();
-            this.questionForm.get('answer2').updateValueAndValidity();
-        } else {
-            this.questionForm.get('answer2').setValidators([Validators.required]);
-            this.questionForm.get('answer2').updateValueAndValidity();
-        }
     }
 
     onSave() {
@@ -104,7 +129,6 @@ export class QuestionItemComponent implements OnInit {
         // VALID
         console.log('FORM IS VALID:', form.value);
         this.contentLoading = true;
-
         if (this.questionId === 'new') {
             this.questionnaireService.createQuestion(this.questionnaireId, form.value).subscribe(
                 () => {
