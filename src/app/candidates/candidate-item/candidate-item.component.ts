@@ -8,6 +8,7 @@ import { User } from '../../models/user';
 import { State } from '../../reducers';
 import { JobCandidate } from './../../models/job-candidate';
 import { JobService } from './../../services/job.service';
+import { QuestionnaireService } from './../../services/questionnaire.service';
 import { UtilitiesService } from './../../services/utilities.service';
 
 @Component({
@@ -16,14 +17,13 @@ import { UtilitiesService } from './../../services/utilities.service';
     styleUrls: ['./candidate-item.component.scss']
 })
 export class CandidateItemComponent implements OnInit {
+    sections: string[] = ['overview', 'details', 'attachments'];
     activeSection = 'overview';
     activeInteractivity = 'chat';
-    summaryContentShow = true;
-    experienceContentShow = true;
-    educationContentShow = true;
     jobId: string;
     job: Job;
     candidateId: string;
+    candidate: JobCandidate;
     matchingMap = {
         JOB_TITLES: 'Job Titles',
         SKILLS: 'Skills',
@@ -31,37 +31,48 @@ export class CandidateItemComponent implements OnInit {
         CERTIFICATIONS: 'Certifications',
         MANAGEMENT_LEVEL: 'Management Level'
     };
-
-    candidate: JobCandidate;
     contentLoading = true;
     uploadQueue: any[] = [];
     uploadError: string;
     supportedFileTypes: string[];
     showFeedback = false;
     jobOwner = false;
+    questions: any[];
+    questionsAnswers: any[] = [];
 
     constructor(
         private jobService: JobService,
         private route: ActivatedRoute,
         private router: Router,
         private utilities: UtilitiesService,
+        private questionnaireService: QuestionnaireService,
         private store: Store<State>
     ) {
         this.jobId = this.route.snapshot.paramMap.get('jobId');
         this.candidateId = this.route.snapshot.paramMap.get('candidateId');
         this.jobService.getJob(this.jobId).subscribe((job: Job) => {
             this.allowShowFeedback();
-            return (this.job = job);
+            this.job = job;
+            if (this.job.questionnaire) {
+                this.sections.splice(2, 0, 'questions');
+                this.questionnaireService.getQuestions(this.job.questionnaire).subscribe(
+                    (response: any) => {
+                        this.questions = response;
+                        this.prepareQuestionsAnswers();
+                    },
+                    (errorResponse) => console.error(errorResponse)
+                );
+            }
         });
         this.jobService.getCandidate(this.jobId, this.candidateId).subscribe((candidate: JobCandidate) => {
             this.candidate = candidate;
-            console.log(this.candidate);
             setTimeout(() => (this.contentLoading = false), 200);
-            console.log('FROM ROUTE-------------------- JOB:', this.jobId, this.candidateId);
-            if (!this.candidate.resume_file) {
+            // console.log(' ⚡️ FROM ROUTE  --- JOB:', this.jobId, this.candidateId);
+            if (!this.candidate.resume_file && this.candidate.source !== 'application') {
                 this.activeSection = 'attachments';
             }
             this.allowShowFeedback();
+            this.prepareQuestionsAnswers();
         });
 
         this.supportedFileTypes = [
@@ -73,12 +84,11 @@ export class CandidateItemComponent implements OnInit {
         ];
     }
 
-    ngOnInit() {
-    }
+    ngOnInit() {}
     allowShowFeedback() {
         if (this.job && this.candidate) {
             this.store.select('user').subscribe((user: User) => {
-                console.log('Got user:', user);
+                // console.log('Got user:', user);
                 if (this.job.owner === user.id) {
                     this.showFeedback = true;
                     if (this.showFeedback) {
@@ -90,6 +100,41 @@ export class CandidateItemComponent implements OnInit {
                     this.showFeedback = false;
                 }
             });
+        }
+    }
+
+    prepareQuestionsAnswers() {
+        if (this.job && this.candidate && this.questions) {
+            const questionsAnswers = [];
+            const candidateQuestions =
+                this.candidate.questions && this.candidate.questions[this.jobId]
+                    ? this.candidate.questions[this.jobId]
+                    : null;
+            this.questions.forEach((q) => {
+                const obj = {
+                    text: q.text,
+                    answers: []
+                };
+                if (candidateQuestions && candidateQuestions[q.id]) {
+                    if (Array.isArray(candidateQuestions[q.id])) {
+                        candidateQuestions[q.id].forEach((qa) => {
+                            const answer = q.answers.find((a) => a.id === qa);
+                            if (answer) {
+                                obj.answers.push(answer.text);
+                            }
+                        });
+                    } else {
+                        const qa = candidateQuestions[q.id];
+                        const answer = q.answers.find((a) => a.id === qa);
+                        if (answer) {
+                            obj.answers.push(answer.text);
+                        }
+                    }
+                }
+
+                questionsAnswers.push(obj);
+            });
+            this.questionsAnswers = questionsAnswers.slice(0);
         }
     }
 
@@ -125,10 +170,10 @@ export class CandidateItemComponent implements OnInit {
 
     processFiles(files) {
         for (let i = 0, file; (file = files[i]); i++) {
-            console.log(file);
+            // console.log(file);
             if (this.validateFileType(file, this.supportedFileTypes)) {
                 // ADD TO THE QUEUE
-                console.log('We need to upload that file 🎈');
+                // console.log('We need to upload that file 🎈');
                 this.uploadQueue.push({
                     file,
                     uploadStarted: false,
@@ -160,7 +205,7 @@ export class CandidateItemComponent implements OnInit {
 
     onDropFile(event) {
         const files = event.target.files || event.dataTransfer.files;
-        console.log('📥 onDropFile', files);
+        // console.log('📥 onDropFile', files);
         this.processFiles(files);
     }
 

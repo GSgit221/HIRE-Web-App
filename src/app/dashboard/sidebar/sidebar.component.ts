@@ -24,7 +24,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.userSubscription = this.store.select('user').subscribe((user: User) => (this.user = user));
+        this.userSubscription = this.store.select('user').subscribe((user: User) => {
+            this.user = user;
+            console.log(this.user);
+        });
     }
 
     onToggleOcItem(event) {
