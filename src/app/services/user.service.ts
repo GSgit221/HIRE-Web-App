@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { environment } from '../../environments/environment';
-import { AuthService } from './../auth/auth.service';
+import { AuthService } from './../modules/auth/auth.service';
 import { UtilitiesService } from './utilities.service';
 
 @Injectable({

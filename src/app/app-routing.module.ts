@@ -1,105 +1,53 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { CompleteSignupComponent } from './auth/complete-signup/complete-signup.component';
-import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
-import { SetPasswordComponent } from './auth/set-password/set-password.component';
-import { SigninComponent } from './auth/signin/signin.component';
-import { SignoutComponent } from './auth/signout.component';
-import { SignupComponent } from './auth/signup/signup.component';
-import { CandidateItemComponent } from './candidates/candidate-item/candidate-item.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuard } from './guards/auth.guard';
-import { JobItemComponent } from './jobs/job-item/job-item.component';
-import { JobsListComponent } from './jobs/jobs-list/jobs-list.component';
-import { StageSettingsComponent } from './jobs/stages/stage-settings/stage-settings.component';
+import { AuthModule } from './modules/auth/auth.module';
+import { JobsModule } from './modules/jobs/jobs.module';
+import { SettingsModule } from './modules/settings/settings.module';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { PeopleListComponent } from './people/people-list/people-list.component';
-import { BillingComponent } from './settings/billing/billing.component';
-import { EmailTemplatesComponent } from './settings/email-templates/email-templates.component';
-import { IntegrationsComponent } from './settings/integrations/integrations.component';
-import { QuestionItemComponent } from './settings/questionnaires/question-item/question-item.component';
-import { QuestionnaireNewComponent } from './settings/questionnaires/questionnaire-new/questionnaire-new.component';
-import { QuestionnairesListComponent } from './settings/questionnaires/questionnaires-list/questionnaires-list.component';
-import { QuestionsListComponent } from './settings/questionnaires/questions-list/questions-list.component';
-import { ScorecardsComponent } from './settings/scorecards/scorecards.component';
-import { UsersComponent } from './settings/users/users.component';
 
 const appRoutes: Routes = [
-    { path: 'signin', component: SigninComponent },
-    { path: 'signup', component: SignupComponent },
-    { path: 'complete-signup', component: CompleteSignupComponent },
-    { path: 'signout', component: SignoutComponent },
-    { path: 'reset-password', component: ResetPasswordComponent },
-    { path: 'set-password', component: SetPasswordComponent },
     {
         path: '',
         pathMatch: 'full',
         redirectTo: 'dashboard'
     },
     {
+        path: 'auth',
+        loadChildren: () => AuthModule
+    },
+    {
         path: 'dashboard',
         component: DashboardComponent,
         canActivateChild: [AuthGuard],
-        children: [{
-            path: '',
-            pathMatch: 'full',
-            redirectTo: 'jobs'
-        }, {
-            path: 'jobs',
-            component: JobsListComponent
-        }, {
-            path: 'jobs/:id',
-            component: JobItemComponent
-        }, {
-            path: 'jobs/:jobId/candidate/:candidateId',
-            component: CandidateItemComponent
-        }, {
-            path: 'jobs/:id/stages/:stageId',
-            component: StageSettingsComponent
-        }, {
-            path: 'people',
-            component: PeopleListComponent
-        }, {
-            path: 'questionnaires',
-            component: QuestionnairesListComponent
-        }, {
-            path: 'questionnaires/new',
-            component: QuestionnaireNewComponent
-        }, {
-            path: 'questionnaires/:id/questions',
-            component: QuestionsListComponent
-        }, {
-            path: 'questionnaires/:id/questions/:questionId',
-            component: QuestionItemComponent
-        }, {
-            path: 'scorecards',
-            component: ScorecardsComponent
-        }, {
-            path: 'email-templates',
-            component: EmailTemplatesComponent
-        }, {
-            path: 'integrations',
-            component: IntegrationsComponent
-        }, {
-            path: 'users',
-            component: UsersComponent
-        }, {
-            path: 'billing',
-            component: BillingComponent
-        }]
+        children: [
+            {
+                path: '',
+                pathMatch: 'full',
+                redirectTo: 'jobs'
+            },
+            {
+                path: 'jobs',
+                loadChildren: () => JobsModule
+            },
+            {
+                path: 'people',
+                loadChildren: './modules/people/people.module#PeopleModule'
+            },
+            {
+                path: 'settings',
+                loadChildren: () => SettingsModule
+            }
+        ]
     },
     { path: 'not-found', component: PageNotFoundComponent },
     { path: '**', redirectTo: 'not-found' }
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(
-        appRoutes,
-        { enableTracing: false }
-    )],
+    imports: [RouterModule.forRoot(appRoutes, { enableTracing: false })],
     exports: [RouterModule]
 })
-export class AppRoutingModule {
-
-}
+export class AppRoutingModule {}

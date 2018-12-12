@@ -1,0 +1,53 @@
+<div class="light-overlay" *ngIf="contentLoading"></div>
+<div class="message-form">
+    <form [formGroup]="feedForm">
+        <textarea name="message" formControlName="description"></textarea>
+        <button class="btn btn-primary" [disabled]="!feedForm.valid" (click)="onSaveFeed()">Add</button>
+    </form>
+</div>
+<div class="timeline">
+    <div
+        class="timeline-item"
+        *ngFor="let item of (timeline | sortByDate: 'created'); let ind = index"
+        [ngClass]="{ last: this.timeline.length - 1 === ind }"
+    >
+        <div class="timeline-item-img">
+            <div *ngIf="item.icon_url" class="inner">
+                <img [src]="item.icon_url" height="20" [alt]="item.last_name" />
+            </div>
+            <div class="initial" *ngIf="!item.icon_url">
+                {{ item.first_name | getFitstLetter }} {{ item.last_name | getFitstLetter }}
+            </div>
+        </div>
+        <div class="timeline-item-content">
+            <div class="timeline-item-header">
+                <div class="timeline-item-heading">
+                    <p>
+                        <strong>{{ item.first_name }} {{ item.last_name }} </strong> on
+                        <strong>{{ candidate.first_name }} {{ candidate.last_name }}</strong>
+                    </p>
+                </div>
+                <em class="date">{{ item.created_at_rel }}</em>
+            </div>
+            <div class="timeline-item-message">
+                <div class="inner">{{ item.text }}</div>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="timeline-item last">
+        <div class="timeline-item-img">
+            <div class="inner">
+                <div class="dot"></div>
+            </div>
+        </div>
+        <div class="timeline-item-content">
+            <div class="timeline-item-header">
+                <div class="timeline-item-heading">
+                    <p><strong>{{candidate.first_name}} {{candidate.last_name}}</strong> was added to <strong>Graduate
+                            Recruit Program</strong> from <strong>Indeed.com</strong></p>
+                </div>
+                <em class="date">4d ago</em>
+            </div>
+        </div>
+    </div> -->
+</div>

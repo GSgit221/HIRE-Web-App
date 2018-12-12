@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { tap } from 'rxjs/operators';
 
 import { ActivatedRoute, Router } from '../../../node_modules/@angular/router';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../modules/auth/auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -13,8 +13,8 @@ export class AuthInterceptor implements HttpInterceptor {
         if (err instanceof HttpErrorResponse) {
             if (err.status === 401) {
                 this.authService.logout();
-                if (this.router.url !== '/signin') {
-                    this.router.navigateByUrl('/signin');
+                if (this.router.url !== '/atuh/signin') {
+                    this.router.navigateByUrl('/auth/signin');
                 }
             }
         }

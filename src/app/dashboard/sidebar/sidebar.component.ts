@@ -32,7 +32,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
     onToggleOcItem(event) {
         event.preventDefault();
-        console.log('clicked');
         this.settingsOpened = !this.settingsOpened;
     }
 

@@ -10,5 +10,5 @@ export class JobCandidate {
     resume_file?: string;
     questions?: any;
     source?: string;
-    feedback?: [];
+    feedback?: any;
 }

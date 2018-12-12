@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import * as fromUserActions from './../../../actions/user/user.actions';
-import { AuthService } from './../../../auth/auth.service';
 import { User } from './../../../models/user';
+import { AuthService } from './../../../modules/auth/auth.service';
 import { State } from './../../../reducers';
 import { UserService } from './../../../services/user.service';
 import { UtilitiesService } from './../../../services/utilities.service';

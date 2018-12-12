@@ -1,0 +1,56 @@
+<div class="content">
+    <h2>Add Job</h2>
+    <form [formGroup]="form">
+        <div class="cvs-block">
+            <div
+                class="cv-block-wrapper"
+                *ngFor="let uploadItem of uploadQueue"
+                [ngClass]="{ fadeout: uploadItem.fadeout }"
+            >
+                <div class="cv-block">
+                    <app-file-type [type]="uploadItem.file.type"></app-file-type>
+                    <div class="text">{{ uploadItem.text }}</div>
+                    <app-progress-circle
+                        class="mla"
+                        [progress]="uploadItem.progress"
+                        *ngIf="uploadItem.uploadStarted && !uploadItem.uploadFinished"
+                    ></app-progress-circle>
+                    <div
+                        class="status-circle mla"
+                        [ngClass]="{
+                            success: uploadItem.uploadFinished && uploadItem.success,
+                            warning: uploadItem.uploadFinished && !uploadItem.success
+                        }"
+                    >
+                        <img class="success-img" src="/assets/images/check.svg" alt="" width="18" height="14" />
+                        <img
+                            class="warning-img"
+                            src="/assets/images/exclamation-mark.svg"
+                            alt=""
+                            width="6"
+                            height="17"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="upload-block">
+                <div class="drop-zone mb10" appDragEnter (dropFile)="onDropFile($event)">
+                    <div class="upload-text">Drop document or <label for="uploader">click to upload</label></div>
+                    <input
+                        class="file"
+                        type="file"
+                        name=""
+                        id="uploader"
+                        formControlName="file"
+                        (change)="onDropFile($event)"
+                    />
+                </div>
+                <div class="error-message" *ngIf="uploadError">{{ uploadError }}</div>
+            </div>
+        </div>
+        <div class="blocks-separator mb20"></div>
+        <div class="btn-holder flex-row">
+            <button class="btn btn-primary w140 mla" (click)="onFinishClicked($event)">Finish</button>
+        </div>
+    </form>
+</div>
