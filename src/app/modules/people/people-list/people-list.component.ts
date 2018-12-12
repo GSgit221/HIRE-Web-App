@@ -22,6 +22,7 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
     finishDownLoadCandidates = false;
     selectedAll = false;
     amountCandidates;
+    selectedItems = 0;
 
     constructor(private jobService: JobService) {}
     ngOnInit() {

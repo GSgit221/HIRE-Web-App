@@ -6,7 +6,7 @@
                 [(ngModel)]="job.status"
                 [style]="{ width: '47px' }"
                 class="status-dd status-dd-no-borders caret-down"
-                (onChange)="onJobStatusChange(job, $event)"
+                (onChange)="onJobStatusChange(job)"
             >
                 <ng-template let-item pTemplate="selectedItem">
                     <span class="status" [ngClass]="item.label.toLowerCase()"></span>
@@ -18,7 +18,7 @@
         </div>
         <div class="heading">
             <div class="job-title-block">
-                <div class="view" *ngIf="!editTitleMode">
+                <div class="view">
                     <strong class="title">{{ job.title }}</strong>
                     <button class="btn btn-round ml20" (click)="onEditJobClick($event)">
                         <img src="/assets/images/edit.svg" alt="" width="14" height="13" />
