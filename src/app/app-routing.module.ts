@@ -3,9 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuard } from './guards/auth.guard';
-import { AuthModule } from './modules/auth/auth.module';
-import { JobsModule } from './modules/jobs/jobs.module';
-import { SettingsModule } from './modules/settings/settings.module';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 const appRoutes: Routes = [
@@ -16,7 +13,7 @@ const appRoutes: Routes = [
     },
     {
         path: 'auth',
-        loadChildren: () => AuthModule
+        loadChildren: './modules/auth/auth.module#AuthModule'
     },
     {
         path: 'dashboard',
@@ -30,7 +27,7 @@ const appRoutes: Routes = [
             },
             {
                 path: 'jobs',
-                loadChildren: () => JobsModule
+                loadChildren: './modules/jobs/jobs.module#JobsModule'
             },
             {
                 path: 'people',
@@ -38,7 +35,7 @@ const appRoutes: Routes = [
             },
             {
                 path: 'settings',
-                loadChildren: () => SettingsModule
+                loadChildren: './modules/settings/settings.module#SettingsModule'
             }
         ]
     },
