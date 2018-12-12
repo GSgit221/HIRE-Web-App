@@ -6,27 +6,27 @@ import { SharedModule } from '../../shared/shared.module';
 const routes: Routes = [
     {
         path: 'questionnaires',
-        loadChildren: './questionnaires/questionnaires.module#QuestionnairesModule'
+        loadChildren: 'src/app/modules/settings/questionnaires/questionnaires.module#QuestionnairesModule'
     },
     {
         path: 'scorecards',
-        loadChildren: './scorecards/scorecards.module#ScorecardsModule'
+        loadChildren: 'src/app/modules/settings/scorecards/scorecards.module#ScorecardsModule'
     },
     {
         path: 'email-templates',
-        loadChildren: './email-templates/email-templates.module#EmailTemplatesModule'
+        loadChildren: 'src/app/modules/settings/email-templates/email-templates.module#EmailTemplatesModule'
     },
     {
         path: 'integrations',
-        loadChildren: './integrations/integrations.module#IntegrationsModule'
+        loadChildren: 'src/app/modules/settings/integrations/integrations.module#IntegrationsModule'
     },
     {
         path: 'users',
-        loadChildren: './users/users.module#UsersModule'
+        loadChildren: 'src/app/modules/settings/users/users.module#UsersModule'
     },
     {
         path: 'billing',
-        loadChildren: './billing/billing.module#BillingModule'
+        loadChildren: 'src/app/modules/settings/billing/billing.module#BillingModule'
     }
 ];
 @NgModule({
