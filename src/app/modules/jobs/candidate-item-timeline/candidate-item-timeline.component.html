@@ -6,11 +6,7 @@
     </form>
 </div>
 <div class="timeline">
-    <div
-        class="timeline-item"
-        *ngFor="let item of (timeline | sortByDate: 'created'); let ind = index"
-        [ngClass]="{ last: this.timeline.length - 1 === ind }"
-    >
+    <div class="timeline-item" *ngFor="let item of (timeline | sortByDate: 'created'); let ind = index">
         <div class="timeline-item-img">
             <div *ngIf="item.icon_url" class="inner">
                 <img [src]="item.icon_url" height="20" [alt]="item.last_name" />
@@ -34,20 +30,20 @@
             </div>
         </div>
     </div>
-    <!-- <div class="timeline-item last">
+    <div class="timeline-item last">
         <div class="timeline-item-img">
-            <div class="inner">
-                <div class="dot"></div>
-            </div>
+            <div class="inner"><div class="dot"></div></div>
         </div>
         <div class="timeline-item-content">
             <div class="timeline-item-header">
                 <div class="timeline-item-heading">
-                    <p><strong>{{candidate.first_name}} {{candidate.last_name}}</strong> was added to <strong>Graduate
-                            Recruit Program</strong> from <strong>Indeed.com</strong></p>
+                    <p>
+                        <strong>{{ candidate.first_name }} {{ candidate.last_name }}</strong> was added to
+                        <strong>{{ job.title }}</strong> from <strong>{{ candidate.source | uppercase }}</strong>
+                    </p>
                 </div>
-                <em class="date">4d ago</em>
+                <em class="date">{{ candidate.created_at }}</em>
             </div>
         </div>
-    </div> -->
+    </div>
 </div>

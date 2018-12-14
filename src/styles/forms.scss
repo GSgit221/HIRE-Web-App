@@ -1,4 +1,4 @@
-@import "variables.scss";
+@import 'variables.scss';
 
 .form-input {
     background: $white;
@@ -12,6 +12,7 @@
     padding: 9px 2px 9px 10px;
     box-shadow: none;
     outline: none;
+
     &::-webkit-input-placeholder {
         color: $grey;
         font-size: 13px;
@@ -37,7 +38,7 @@
 
     &[disabled],
     &.disabled,
-    &[ng-reflect-is-disabled="true"] {
+    &[ng-reflect-is-disabled='true'] {
         border: 1px solid $grey-border;
         background: $white;
         cursor: not-allowed;
@@ -64,6 +65,7 @@
     box-shadow: none;
     outline: none;
     margin: 0;
+
     &::-webkit-input-placeholder {
         color: $grey;
         font-size: 13px;
@@ -81,9 +83,11 @@
         font-size: 13px;
         line-height: 16px;
     }
+
     &.ng-invalid.ng-touched {
         border-color: $pink;
     }
+
     &:focus {
         border: 2px solid $pink;
         padding: 8px 1px 8px 9px;
@@ -215,7 +219,7 @@ p-checkbox {
             border: 2px solid $light-grey;
             background: $white;
             color: $white;
-            transition: all .2s ease;
+            transition: all 0.2s ease;
             border-radius: 2px;
         }
 
@@ -249,7 +253,7 @@ p-messages {
 
     .ui-messages {
         margin: 0;
-        color: #d0021b;
+        color: $red;
         max-height: 65px;
         padding-top: 5px;
         padding-bottom: 5px;

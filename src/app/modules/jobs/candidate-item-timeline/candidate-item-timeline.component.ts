@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { Job } from './../../../models/job';
 
 import { User } from '../../../models/user';
 import { State } from '../../../reducers/user/user.reducer';
@@ -16,6 +17,7 @@ import { UtilitiesService } from '../../../services/utilities.service';
 export class CandidateItemTimelineComponent implements OnInit {
     @Input() candidate;
     @Input() jobId;
+    @Input() job: Job;
     feedForm: FormGroup;
     contentLoading = false;
     timeline = [];
