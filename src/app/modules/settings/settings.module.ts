@@ -8,10 +8,10 @@ const routes: Routes = [
         path: 'questionnaires',
         loadChildren: './questionnaires/questionnaires.module#QuestionnairesModule'
     },
-    {
-        path: 'scorecards',
-        loadChildren: './scorecards/scorecards.module#ScorecardsModule'
-    },
+    // {
+    //     path: 'scorecards',
+    //     loadChildren: './scorecards/scorecards.module#ScorecardsModule'
+    // },
     {
         path: 'email-templates',
         loadChildren: './email-templates/email-templates.module#EmailTemplatesModule'
