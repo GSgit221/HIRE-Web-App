@@ -59,7 +59,21 @@ export class JobItemViewComponent implements OnInit {
         this.jobService.getCandidates(this.job.id).subscribe((candidates: JobCandidate[]) => {
             // console.log(candidates);
             this.initialLoad = true;
-            this.candidates = candidates;
+            this.candidates = candidates.map((c) => {
+                if (c.email.indexOf('dimensiondata') !== -1) {
+                    c.isDdEmployee = true;
+                }
+                if (
+                    c.employment_history &&
+                    c.employment_history.length &&
+                    c.employment_history[0].end_date === 'current'
+                ) {
+                    if (c.employment_history[0].title.indexOf('Dimension Data') !== -1) {
+                        c.isDdEmployee = true;
+                    }
+                }
+                return c;
+            });
             this.setAppliedCanidates(this.candidates);
         });
         this.resumeThreshold = this.getJobResumeMatchingThreshold();

@@ -231,6 +231,19 @@
         &:active {
             background: darken($white, 4%);
         }
+
+        &.dd {
+            &:before {
+                width: 30px;
+                height: 5px;
+                border-radius: 0 0 5px 5px;
+                background: $green;
+                content: '';
+                position: absolute;
+                left: 10px;
+                top: 0;
+            }
+        }
     }
 
     .ava-column {

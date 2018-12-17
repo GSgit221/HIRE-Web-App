@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { User } from './../models/user';
 
@@ -22,7 +22,7 @@ export class UserService {
     getUser(): Observable<User> {
         return this.http
             .get<User>(`${environment.apiUrl}/me`)
-            .pipe(catchError((error: any) => Observable.throw(error.json())));
+            .pipe(catchError((error: any) => throwError(error.json())));
     }
 
     create(data) {

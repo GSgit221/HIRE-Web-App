@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 
 import { UserService } from '../../../services/user.service';
@@ -24,7 +24,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.userSubscription = this.store.select(fromStore.getUserEntity).subscribe((user: User) => {
+        this.userSubscription = this.store.pipe(select(fromStore.getUserEntity)).subscribe((user: User) => {
             this.user = user;
             if (this.user) {
                 console.log('🎩', this.user);

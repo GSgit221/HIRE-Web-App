@@ -11,4 +11,6 @@ export class JobCandidate {
     questions?: any;
     source?: string;
     feedback?: any;
+    isDdEmployee?: boolean;
+    employment_history?: any;
 }

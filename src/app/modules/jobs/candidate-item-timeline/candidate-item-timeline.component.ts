@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Job } from './../../../models/job';
 
 import { User } from '../../../models/user';
@@ -33,7 +33,7 @@ export class CandidateItemTimelineComponent implements OnInit {
 
     ngOnInit() {
         this.initForm();
-        this.store.select(fromStore.getUserEntity).subscribe((user: User) => {
+        this.store.pipe(select(fromStore.getUserEntity)).subscribe((user: User) => {
             this.user = user;
         });
         this.populateFeed();

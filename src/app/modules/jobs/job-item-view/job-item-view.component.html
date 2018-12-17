@@ -188,6 +188,7 @@
                         *ngFor="let candidate of stageCandidates(stage.id)"
                         draggable
                         [dragData]="candidate"
+                        [ngClass]="{ dd: candidate.isDdEmployee }"
                     >
                         <div
                             class="compliance-rate"

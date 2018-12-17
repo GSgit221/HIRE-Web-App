@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
 import { SelectItem } from 'primeng/api';
 
@@ -76,7 +76,7 @@ export class JobItemEditComponent implements OnInit {
         this.jobService.getUsers().subscribe((users: User[]) => {
             this.users = users || [];
             if (this.job) {
-                this.store.select(fromStore.getUserEntity).subscribe((user: User) => {
+                this.store.pipe(select(fromStore.getUserEntity)).subscribe((user: User) => {
                     console.log('Got user:', user);
                     if (this.job.owner === user.id || user.role === 'admin') {
                         this.isJobOwner = true;

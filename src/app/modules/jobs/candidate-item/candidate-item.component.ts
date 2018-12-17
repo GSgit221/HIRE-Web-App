@@ -1,7 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 
 import { Job } from '../../../models/job';
 import { User } from '../../../models/user';
@@ -87,7 +87,7 @@ export class CandidateItemComponent implements OnInit {
     ngOnInit() {}
     allowShowFeedback() {
         if (this.job && this.candidate) {
-            this.store.select(fromStore.getUserEntity).subscribe((user: User) => {
+            this.store.pipe(select(fromStore.getUserEntity)).subscribe((user: User) => {
                 // console.log('Got user:', user);
                 if (this.job.owner === user.id) {
                     this.showFeedback = true;

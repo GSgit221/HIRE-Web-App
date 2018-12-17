@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 
 import { User } from '../../../models/user';
 import { CandidateService } from './../../../services/candidate.service';
@@ -60,7 +60,7 @@ export class CandidateItemFeedbackComponent implements OnInit {
                 ? false
                 : true;
         // Get user
-        this.store.select(fromStore.getUserEntity).subscribe((user: User) => {
+        this.store.pipe(select(fromStore.getUserEntity)).subscribe((user: User) => {
             this.user = user;
             this.populateForm();
             this.initialState = { ...this.getState() };
