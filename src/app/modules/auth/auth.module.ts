@@ -7,7 +7,7 @@ import { SigninComponent } from './signin/signin.component';
 import { SignoutComponent } from './signout.component';
 import { SignupComponent } from './signup/signup.component';
 
-import { SharedModule } from '../../shared/shared.module';
+import { SharedModule } from '../../modules/shared/shared.module';
 
 const routes: Routes = [
     { path: 'signin', component: SigninComponent },

@@ -1,0 +1,77 @@
+@import '../../../../styles/variables.scss';
+
+:host {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 0 0 0;
+}
+
+.candidate-fit {
+    flex: 0 0 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.text {
+    margin: 0 0 0 4px;
+
+    span {
+        display: block;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 11px;
+        color: $sapphire-blue;
+        margin: 0 0 2px;
+    }
+
+    strong {
+        display: block;
+        font-weight: bold;
+        font-size: 30px;
+        line-height: 32px;
+    }
+}
+
+.circle {
+    display: block;
+    position: relative;
+    width: 36px;
+    height: 36px;
+
+    .green-bg {
+        stroke: $dark-green;
+    }
+
+    .red-bg {
+        stroke: $light-red;
+    }
+}
+
+.result {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.progress-meter {
+    stroke: $grey-border;
+}
+
+.progress-value {
+    stroke-linecap: round;
+}
+
+.progress {
+    transform: rotate(-90deg);
+    margin: 0;
+}
+
+.progress-meter,
+.progress-value {
+    fill: none;
+}

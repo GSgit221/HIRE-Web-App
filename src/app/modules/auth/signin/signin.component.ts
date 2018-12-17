@@ -2,12 +2,9 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { Message } from 'primeng/components/common/api';
 
 import { environment } from '../../../../environments/environment';
-import * as fromUserActions from '../../../actions/user/user.actions';
-import { State } from '../../../reducers';
 import { FormHelperService } from '../../../services/form-helper.service';
 import { AuthService } from '../auth.service';
 import { UtilitiesService } from './../../../services/utilities.service';
@@ -28,7 +25,6 @@ export class SigninComponent implements OnInit {
         private authService: AuthService,
         private fb: FormBuilder,
         private router: Router,
-        private store: Store<State>,
         private formHelper: FormHelperService,
         private utilities: UtilitiesService
     ) {
@@ -108,7 +104,6 @@ export class SigninComponent implements OnInit {
                 this.contentLoading = false;
                 this.msgs = [];
                 this.authService.setSession(response);
-                this.store.dispatch(new fromUserActions.GetAuthUser());
                 this.router.navigateByUrl('/');
             },
             (response) => {

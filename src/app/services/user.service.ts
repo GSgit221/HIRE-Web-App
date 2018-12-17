@@ -1,5 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { User } from './../models/user';
 
 import { environment } from '../../environments/environment';
 import { AuthService } from './../modules/auth/auth.service';
@@ -16,6 +19,12 @@ export class UserService {
         this.tenantId = this.utilities.getTenant();
         this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
     }
+    getUser(): Observable<User> {
+        return this.http
+            .get<User>(`${environment.apiUrl}/me`)
+            .pipe(catchError((error: any) => Observable.throw(error.json())));
+    }
+
     create(data) {
         return this.http.post(`${this.baseURL}/users`, { data });
     }

@@ -5,11 +5,11 @@ import { Store } from '@ngrx/store';
 
 import { Job } from '../../../models/job';
 import { User } from '../../../models/user';
-import { State } from '../../../reducers';
 import { JobCandidate } from './../../../models/job-candidate';
 import { JobService } from './../../../services/job.service';
 import { QuestionnaireService } from './../../../services/questionnaire.service';
 import { UtilitiesService } from './../../../services/utilities.service';
+import * as fromStore from './../../../store';
 
 @Component({
     selector: 'app-candidate-item',
@@ -46,7 +46,7 @@ export class CandidateItemComponent implements OnInit {
         private router: Router,
         private utilities: UtilitiesService,
         private questionnaireService: QuestionnaireService,
-        private store: Store<State>
+        private store: Store<fromStore.State>
     ) {
         this.jobId = this.route.snapshot.paramMap.get('jobId');
         this.candidateId = this.route.snapshot.paramMap.get('candidateId');
@@ -87,7 +87,7 @@ export class CandidateItemComponent implements OnInit {
     ngOnInit() {}
     allowShowFeedback() {
         if (this.job && this.candidate) {
-            this.store.select('user').subscribe((user: User) => {
+            this.store.select(fromStore.getUserEntity).subscribe((user: User) => {
                 // console.log('Got user:', user);
                 if (this.job.owner === user.id) {
                     this.showFeedback = true;

@@ -7,12 +7,12 @@ import { SelectItem } from 'primeng/api';
 
 import { Job } from '../../../models/job';
 import { User } from '../../../models/user';
-import { State } from '../../../reducers';
 import { FormHelperService } from '../../../services/form-helper.service';
 import { JobService } from '../../../services/job.service';
 import { ConditionalValidator } from '../../../validators/conditional.validator';
 import { Questionnaire } from './../../../models/questionnaire';
 import { QuestionnaireService } from './../../../services/questionnaire.service';
+import * as fromStore from './../../../store';
 
 @Component({
     selector: 'app-job-item-edit',
@@ -59,7 +59,7 @@ export class JobItemEditComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private jobService: JobService,
-        private store: Store<State>,
+        private store: Store<fromStore.State>,
         private questionnaireService: QuestionnaireService,
         private fb: FormBuilder,
         private router: Router,
@@ -76,7 +76,7 @@ export class JobItemEditComponent implements OnInit {
         this.jobService.getUsers().subscribe((users: User[]) => {
             this.users = users || [];
             if (this.job) {
-                this.store.select('user').subscribe((user: User) => {
+                this.store.select(fromStore.getUserEntity).subscribe((user: User) => {
                     console.log('Got user:', user);
                     if (this.job.owner === user.id || user.role === 'admin') {
                         this.isJobOwner = true;

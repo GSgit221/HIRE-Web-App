@@ -3,10 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 
 import { User } from '../../../models/user';
-import { State } from '../../../reducers';
 import { CandidateService } from './../../../services/candidate.service';
 import { UserService } from './../../../services/user.service';
 import { UtilitiesService } from './../../../services/utilities.service';
+import * as fromStore from './../../../store';
 
 @Component({
     selector: 'app-candidate-item-feedback',
@@ -40,7 +40,7 @@ export class CandidateItemFeedbackComponent implements OnInit {
         private candidateService: CandidateService,
         private userService: UserService,
         private fb: FormBuilder,
-        private store: Store<State>,
+        private store: Store<fromStore.State>,
         private utilities: UtilitiesService
     ) {
         // Get users
@@ -60,7 +60,7 @@ export class CandidateItemFeedbackComponent implements OnInit {
                 ? false
                 : true;
         // Get user
-        this.store.select('user').subscribe((user: User) => {
+        this.store.select(fromStore.getUserEntity).subscribe((user: User) => {
             this.user = user;
             this.populateForm();
             this.initialState = { ...this.getState() };

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { SharedModule } from '../../shared/shared.module';
+import { SharedModule } from '../shared/shared.module';
 import { CandidateItemFeedbackComponent } from './candidate-item-feedback/candidate-item-feedback.component';
 import { CandidateItemTimelineComponent } from './candidate-item-timeline/candidate-item-timeline.component';
 import { CandidateItemComponent } from './candidate-item/candidate-item.component';

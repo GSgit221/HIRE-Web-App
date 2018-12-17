@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { SharedModule } from '../../../shared/shared.module';
+import { SharedModule } from '../../shared/shared.module';
 import { BillingDetailsComponent } from './billing-details/billing-details.component';
 import { BillingHistoryComponent } from './billing-history/billing-history.component';
 import { BillingPlanComponent } from './billing-plan/billing-plan.component';

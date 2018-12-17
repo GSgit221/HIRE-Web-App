@@ -25,13 +25,11 @@ export class JobsListComponent implements OnInit {
     constructor(private router: Router, private jobService: JobService) {
         this.jobService.getAll().subscribe((jobs: Job[]) => {
             this.list = jobs;
-            console.log(this.list);
             this.contentLoading = false;
         });
 
         this.jobService.getUsers().subscribe((users: User[]) => {
             this.users = users || [];
-            // console.log(this.users);
         });
 
         this.statusOptions = [{ label: 'LIVE', value: 'LIVE' }, { label: 'BUILD', value: 'BUILD' }];

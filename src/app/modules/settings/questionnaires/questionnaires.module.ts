@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { SharedModule } from '../../../shared/shared.module';
+import { SharedModule } from '../../shared/shared.module';
 import { QuestionItemComponent } from './question-item/question-item.component';
 import { QuestionnaireNewComponent } from './questionnaire-new/questionnaire-new.component';
 import { QuestionnairesListComponent } from './questionnaires-list/questionnaires-list.component';
