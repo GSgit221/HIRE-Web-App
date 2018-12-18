@@ -1,5 +1,12 @@
 @import '../../../../styles/variables.scss';
 
+:host > .container {
+    height: 100%;
+    position: relative;
+
+    // background: burlywood;
+}
+
 .header-block {
     display: flex;
     flex-direction: row;
@@ -473,6 +480,45 @@
     .load-more {
         &:hover {
             cursor: pointer;
+        }
+    }
+}
+
+.remove-candidate-block {
+    width: 100%;
+    height: 60px;
+    position: absolute;
+    bottom: -30px;
+    left: 0;
+    opacity: 0;
+    transition: all 0.2s ease;
+    text-align: center;
+
+    &.visible {
+        opacity: 1;
+    }
+
+    .remove-holder {
+        width: 260px;
+        height: 60px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+
+        svg {
+            #Job-View---Default {
+                transition: all 0.3s ease;
+            }
+        }
+
+        &.drag-over {
+            svg {
+                #Job-View---Default {
+                    fill: darken(#ff0000, 20%);
+                }
+            }
         }
     }
 }

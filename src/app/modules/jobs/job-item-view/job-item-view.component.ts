@@ -35,13 +35,13 @@ export class JobItemViewComponent implements OnInit {
     draggedCandidate: JobCandidate;
     appliedCandidates: any;
     resumeThreshold = 60;
+    candidateIsDragged = false;
 
     constructor(private router: Router, private fb: FormBuilder, private jobService: JobService) {
         this.statusOptions = [{ label: 'LIVE', value: 'LIVE' }, { label: 'BUILD', value: 'BUILD' }];
 
         this.jobService.getUsers().subscribe((users: User[]) => {
             this.users = users || [];
-            // console.log(this.users);
         });
 
         this.appliedCandidates = {
@@ -57,7 +57,6 @@ export class JobItemViewComponent implements OnInit {
         this.appliedStage = this.job.stages.find((stage) => stage.id === 'applied');
         this.stages = this.job.stages.filter((stage) => stage.id !== 'applied').sort((a, b) => a.order - b.order);
         this.jobService.getCandidates(this.job.id).subscribe((candidates: JobCandidate[]) => {
-            // console.log(candidates);
             this.initialLoad = true;
             this.candidates = candidates.map((c) => {
                 if (c.email.indexOf('dimensiondata') !== -1) {
@@ -80,7 +79,6 @@ export class JobItemViewComponent implements OnInit {
     }
 
     onJobStatusChange(item) {
-        // console.log('status change', item.status);
         this.jobService.updateJob(item.id, { status: item.status }).subscribe(() => console.log('updated'));
     }
 
@@ -222,6 +220,8 @@ export class JobItemViewComponent implements OnInit {
 
     onCandidateDrop(event, stageId) {
         // console.log('drop', event.dragData, stageId);
+        this.candidateIsDragged = false;
+
         const candidate = event.dragData;
         const candidateIndex = this.candidates.findIndex((c) => c.id === candidate.id);
         this.candidates[candidateIndex].stage[this.job.id] = stageId;
@@ -240,5 +240,20 @@ export class JobItemViewComponent implements OnInit {
             threshold = appliedStage.resume_matching_threshold;
         }
         return threshold;
+    }
+
+    onCandidateDragStart() {
+        this.candidateIsDragged = true;
+    }
+
+    onCandidateDragEnd() {
+        this.candidateIsDragged = false;
+    }
+
+    onCandidateDeleteDrop(event) {
+        const delteItem = event.dragData;
+        if (delteItem) {
+            this.onDeleteCandidateClick(event.nativeEvent, delteItem.id);
+        }
     }
 }

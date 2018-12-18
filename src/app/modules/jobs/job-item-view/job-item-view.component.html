@@ -66,6 +66,7 @@
         <!-- <button class="btn btn-primary w140 mla add-btn" (click)="onAddCandidateClick()">Add Candidate</button> -->
     </div>
     <div class="blocks-separator mt10 mb10"></div>
+    <p>{{ candidateIsDragged }}</p>
     <div class="stages-section" appDragEnter (dropFile)="onDropFile($event)">
         <div class="stages-holder">
             <div class="stage-column">
@@ -92,6 +93,9 @@
                         *ngFor="let candidate of appliedCandidates.visible"
                         draggable
                         [dragData]="candidate"
+                        (onDragStart)="onCandidateDragStart()"
+                        (onDragEnd)="onCandidateDragEnd()"
+                        [ngClass]="{ dd: candidate.isDdEmployee }"
                     >
                         <div class="warning-block" *ngIf="!candidate.resume_file">
                             <div class="warning-block-holder"><span>!</span></div>
@@ -188,6 +192,8 @@
                         *ngFor="let candidate of stageCandidates(stage.id)"
                         draggable
                         [dragData]="candidate"
+                        (onDragStart)="onCandidateDragStart()"
+                        (onDragEnd)="onCandidateDragEnd()"
                         [ngClass]="{ dd: candidate.isDdEmployee }"
                     >
                         <div
@@ -293,6 +299,34 @@
                 <img src="/assets/images/drop.svg" alt="" width="212" height="212" class="img" />
                 <span class="text">Drop to Upload</span>
             </div>
+        </div>
+    </div>
+    <div class="remove-candidate-block" [ngClass]="{ visible: candidateIsDragged }">
+        <div class="remove-holder" droppable [dragOverClass]="'drag-over'" (onDrop)="onCandidateDeleteDrop($event)">
+            <svg
+                width="24px"
+                height="30px"
+                viewBox="0 0 8 10"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+            >
+                <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g
+                        id="Job-View---Default"
+                        transform="translate(-498.000000, -237.000000)"
+                        fill="#FF0000"
+                        fill-rule="nonzero"
+                    >
+                        <g id="icons8-delete" transform="translate(498.000000, 237.000000)">
+                            <path
+                                d="M3.26988655,0 C2.67329527,0 2.18181818,0.519831538 2.18181818,1.15084154 L2.18181818,1.53846154 L0,1.53846154 L0,2.30769231 L0.727272727,2.30769231 L0.727272727,8.84615385 C0.727272727,9.48016846 1.21874982,10 1.81818182,10 L6.18181818,10 C6.78125018,10 7.27272727,9.48016846 7.27272727,8.84615385 L7.27272727,2.30769231 L8,2.30769231 L8,1.53846154 L5.81818182,1.53846154 L5.81818182,1.15084154 C5.81818182,0.519831538 5.32670473,0 4.73011345,0 L3.26988655,0 Z M3.26988655,0.769230769 L4.73011345,0.769230769 C4.93465891,0.769230769 5.09090909,0.934495385 5.09090909,1.15084154 L5.09090909,2.30769231 L6.54545455,2.30769231 L6.54545455,8.84615385 C6.54545455,9.0625 6.38636364,9.23076923 6.18181818,9.23076923 L1.81818182,9.23076923 C1.61363636,9.23076923 1.45454545,9.0625 1.45454545,8.84615385 L1.45454545,2.30769231 L2.90909091,2.30769231 L2.90909091,1.15084154 C2.90909091,0.934495385 3.06534109,0.769230769 3.26988655,0.769230769 Z M2.18181818,3.07692308 L2.18181818,8.46153846 L2.90909091,8.46153846 L2.90909091,3.07692308 L2.18181818,3.07692308 Z M3.63636364,3.07692308 L3.63636364,8.46153846 L4.36363636,8.46153846 L4.36363636,3.07692308 L3.63636364,3.07692308 Z M5.09090909,3.07692308 L5.09090909,8.46153846 L5.81818182,8.46153846 L5.81818182,3.07692308 L5.09090909,3.07692308 Z"
+                                id="Shape"
+                            ></path>
+                        </g>
+                    </g>
+                </g>
+            </svg>
         </div>
     </div>
 </div>
