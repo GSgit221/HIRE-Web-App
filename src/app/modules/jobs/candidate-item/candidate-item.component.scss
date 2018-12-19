@@ -463,6 +463,24 @@
     transition: all 0.2s ease;
     transform: translateY(0);
 
+    .file-block-frame {
+        display: flex;
+        flex-direction: row;
+        position: relative;
+        align-items: center;
+        padding: 0 20px 0 0;
+    }
+
+    .resume-link {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        z-index: 1;
+    }
+
     app-resume-file-type {
         width: 30px;
         height: 30px;
@@ -479,10 +497,6 @@
         line-height: 12px;
         color: $grey;
         margin: 0;
-    }
-
-    &:hover {
-        cursor: pointer;
     }
 }
 

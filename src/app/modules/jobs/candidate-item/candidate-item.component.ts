@@ -2,6 +2,7 @@ import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
+import { CandidateService } from './../../../services/candidate.service';
 
 import { Job } from '../../../models/job';
 import { User } from '../../../models/user';
@@ -42,6 +43,7 @@ export class CandidateItemComponent implements OnInit {
 
     constructor(
         private jobService: JobService,
+        private candidateService: CandidateService,
         private route: ActivatedRoute,
         private router: Router,
         private utilities: UtilitiesService,
@@ -70,6 +72,14 @@ export class CandidateItemComponent implements OnInit {
             // console.log(' ⚡️ FROM ROUTE  --- JOB:', this.jobId, this.candidateId);
             if (!this.candidate.resume_file && this.candidate.source !== 'application') {
                 this.activeSection = 'attachments';
+            }
+            if (this.candidate.resume_file && this.candidate.resume_file.length) {
+                this.candidateService
+                    .getResumeLink(this.candidate.resume_file)
+                    .subscribe(
+                        (response: string) => (this.candidate.resume_link = response),
+                        (errorResponse) => console.error(errorResponse)
+                    );
             }
             this.allowShowFeedback();
             this.prepareQuestionsAnswers();

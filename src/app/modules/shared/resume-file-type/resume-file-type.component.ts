@@ -7,11 +7,11 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ResumeFileTypeComponent implements OnInit {
     @Input() type: string;
+    @Input() name: string;
     fileTypeText = '';
     constructor() {}
 
     ngOnInit() {
-        // this.fileTypeText;
         if (this.type === 'application/pdf') {
             this.fileTypeText = 'pdf';
         } else if (
@@ -23,6 +23,9 @@ export class ResumeFileTypeComponent implements OnInit {
             ].indexOf(this.type) !== -1
         ) {
             this.fileTypeText = 'doc';
+        }
+        if (this.name) {
+            this.fileTypeText = this.name.split('.').pop();
         }
     }
 }
