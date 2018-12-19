@@ -66,188 +66,230 @@
         <!-- <button class="btn btn-primary w140 mla add-btn" (click)="onAddCandidateClick()">Add Candidate</button> -->
     </div>
     <div class="blocks-separator mt10 mb10"></div>
-    <p>{{ candidateIsDragged }}</p>
     <div class="stages-section" appDragEnter (dropFile)="onDropFile($event)">
         <div class="stages-holder">
             <div class="stage-column">
-                <div class="stage-header">
-                    <h2 class="title">Applied</h2>
-                    <span class="counter">{{ appliedCandidates.total || '0' }}</span>
-                    <button class="btn settings-btn mla" (click)="onSettigsClick('applied')">
-                        <img src="/assets/images/settings-dots.svg" alt="" width="2" height="10" />
-                    </button>
-                    <button class="btn btn-square ml10" (click)="onAddCandidateClick()">
-                        <img src="/assets/images/plus.svg" alt="" width="13" height="13" />
-                    </button>
-                </div>
-                <div
-                    class="stage-content"
-                    droppable
-                    [dragOverClass]="'drag-target-border'"
-                    (onDrop)="onCandidateDrop($event, 'applied')"
-                >
-                    <!-- CANDIDATE BLOCK -->
+                <div class="stage-column-holder">
+                    <div class="stage-header">
+                        <h2 class="title">Applied</h2>
+                        <span class="counter">{{ appliedCandidates.total || '0' }}</span>
+                        <button class="btn settings-btn mla" (click)="onSettigsClick('applied')">
+                            <img src="/assets/images/settings-dots.svg" alt="" width="2" height="10" />
+                        </button>
+                        <button class="btn btn-square ml10" (click)="onAddCandidateClick()">
+                            <img src="/assets/images/plus.svg" alt="" width="13" height="13" />
+                        </button>
+                    </div>
                     <div
-                        class="block"
-                        (click)="onCandidateClick(candidate.id)"
-                        *ngFor="let candidate of appliedCandidates.visible"
-                        draggable
-                        [dragData]="candidate"
-                        (onDragStart)="onCandidateDragStart()"
-                        (onDragEnd)="onCandidateDragEnd()"
-                        [ngClass]="{ dd: candidate.isDdEmployee }"
+                        class="stage-content"
+                        droppable
+                        [dropScope]="['candidate']"
+                        [dragOverClass]="'drag-target-border'"
+                        (onDrop)="onCandidateDrop($event, 'applied')"
                     >
-                        <div class="warning-block" *ngIf="!candidate.resume_file">
-                            <div class="warning-block-holder"><span>!</span></div>
-                        </div>
+                        <!-- CANDIDATE BLOCK -->
                         <div
-                            class="compliance-rate"
-                            [attr.data-score]="candidate.score"
-                            [ngClass]="{
-                                green: candidate.score >= resumeThreshold,
-                                orange: candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold,
-                                red: candidate.score < resumeThreshold - 15
-                            }"
-                        ></div>
-                        <span class="complience-value">{{ candidate.score }}%</span>
-                        <div class="ava-column">
-                            <div class="ava">
-                                <img
-                                    [src]="candidate.profile_image"
-                                    alt="profile image"
-                                    *ngIf="candidate.profile_image"
-                                />
-                                <div class="ava-placeholder" *ngIf="!candidate.profile_image">
-                                    {{ candidate | initials }}
+                            class="block"
+                            (click)="onCandidateClick(candidate.id)"
+                            *ngFor="let candidate of appliedCandidates.visible"
+                            draggable
+                            [dragScope]="['candidate']"
+                            [dragData]="candidate"
+                            (onDragStart)="onCandidateDragStart()"
+                            (onDragEnd)="onCandidateDragEnd()"
+                            [ngClass]="{ dd: candidate.isDdEmployee }"
+                        >
+                            <div class="warning-block" *ngIf="!candidate.resume_file">
+                                <div class="warning-block-holder"><span>!</span></div>
+                            </div>
+                            <div
+                                class="compliance-rate"
+                                [attr.data-score]="candidate.score"
+                                [ngClass]="{
+                                    green: candidate.score >= resumeThreshold,
+                                    orange:
+                                        candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold,
+                                    red: candidate.score < resumeThreshold - 15
+                                }"
+                            ></div>
+                            <span class="complience-value">{{ candidate.score }}%</span>
+                            <div class="ava-column">
+                                <div class="ava">
+                                    <img
+                                        [src]="candidate.profile_image"
+                                        alt="profile image"
+                                        *ngIf="candidate.profile_image"
+                                    />
+                                    <div class="ava-placeholder" *ngIf="!candidate.profile_image">
+                                        {{ candidate | initials }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block-content">
+                                <strong class="title"
+                                    >{{ candidate.first_name | titlecase }}
+                                    {{ candidate.last_name | titlecase }}</strong
+                                >
+                                <span class="position" *ngIf="candidate.employment_history"
+                                    >{{ candidate.employment_history[0].title | titlecase }} @
+                                    {{ candidate.employment_history[0].company | titlecase }}</span
+                                >
+                                <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
+                                <div class="stats-actions-block">
+                                    <div class="text-with-icon flex-row flex-aic" *ngIf="candidate.created_at_rel">
+                                        <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10" />
+                                        <p>{{ candidate.created_at_rel }}</p>
+                                    </div>
+                                    <div class="text-with-icon flex-row flex-aic ml20" *ngIf="candidate.updated_at_rel">
+                                        <img
+                                            src="/assets/images/update.svg"
+                                            class="icon"
+                                            alt=""
+                                            width="12"
+                                            height="13"
+                                        />
+                                        <p>{{ candidate.updated_at_rel }}</p>
+                                    </div>
+                                    <div class="actions mla">
+                                        <!-- <span class="icon-btn">
+                                                            <img src="/assets/images/refresh.svg" alt="" width="10" height="10">
+                                                        </span> -->
+                                        <span
+                                            class="icon-btn ml10"
+                                            (click)="onDeleteCandidateClick($event, candidate.id)"
+                                        >
+                                            <img src="/assets/images/delete.svg" alt="" width="10" height="10" />
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="block-content">
-                            <strong class="title"
-                                >{{ candidate.first_name | titlecase }} {{ candidate.last_name | titlecase }}</strong
-                            >
-                            <span class="position" *ngIf="candidate.employment_history"
-                                >{{ candidate.employment_history[0].title | titlecase }} @
-                                {{ candidate.employment_history[0].company | titlecase }}</span
-                            >
-                            <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
-                            <div class="stats-actions-block">
-                                <div class="text-with-icon flex-row flex-aic" *ngIf="candidate.created_at_rel">
-                                    <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10" />
-                                    <p>{{ candidate.created_at_rel }}</p>
-                                </div>
-                                <div class="text-with-icon flex-row flex-aic ml20" *ngIf="candidate.updated_at_rel">
-                                    <img src="/assets/images/update.svg" class="icon" alt="" width="12" height="13" />
-                                    <p>{{ candidate.updated_at_rel }}</p>
-                                </div>
-                                <div class="actions mla">
-                                    <!-- <span class="icon-btn">
-                                        <img src="/assets/images/refresh.svg" alt="" width="10" height="10">
-                                    </span> -->
-                                    <span class="icon-btn ml10" (click)="onDeleteCandidateClick($event, candidate.id)">
-                                        <img src="/assets/images/delete.svg" alt="" width="10" height="10" />
-                                    </span>
-                                </div>
-                            </div>
+
+                        <!-- NO MATCHES -->
+                        <div class="no-matches-block" *ngIf="initialLoad && !appliedCandidates.visible.length">
+                            <img src="/assets/images/warning.svg" class="icon" width="23" height="20" alt="warning" />
+                            <p>
+                                No matched cadidates exist for this job. Either adjust your matching threshhold or add
+                                more candidates
+                            </p>
                         </div>
-                    </div>
 
-                    <!-- NO MATCHES -->
-                    <div class="no-matches-block" *ngIf="initialLoad && !appliedCandidates.visible.length">
-                        <img src="/assets/images/warning.svg" class="icon" width="23" height="20" alt="warning" />
-                        <p>
-                            No matched cadidates exist for this job. Either adjust your matching threshhold or add more
-                            candidates
-                        </p>
-                    </div>
-
-                    <!-- LOAD MORE -->
-                    <div class="show-more-block" *ngIf="initialLoad && appliedCandidates.hidden.length">
-                        <div class="show-more-separator tac"><span></span> <span></span> <span></span></div>
-                        <div class="tac">
-                            <span class="load-more" (click)="onLoadMore()"
-                                >Show more ({{ appliedCandidates.hidden.length }})</span
-                            >
+                        <!-- LOAD MORE -->
+                        <div class="show-more-block" *ngIf="initialLoad && appliedCandidates.hidden.length">
+                            <div class="show-more-separator tac"><span></span> <span></span> <span></span></div>
+                            <div class="tac">
+                                <span class="load-more" (click)="onLoadMore()"
+                                    >Show more ({{ appliedCandidates.hidden.length }})</span
+                                >
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="stage-column" *ngFor="let stage of stages">
-                <div class="stage-header">
-                    <h2 class="title">{{ stage.title }}</h2>
-                    <span class="counter">{{ stageCandidates(stage.id)?.length || '0' }}</span>
-                    <button class="btn settings-btn mla" (click)="onSettigsClick(stage.id)">
-                        <img src="/assets/images/settings-dots.svg" alt="" width="2" height="10" />
-                    </button>
-                </div>
-                <div
-                    class="stage-content"
-                    droppable
-                    [dragOverClass]="'drag-target-border'"
-                    (onDrop)="onCandidateDrop($event, stage.id)"
-                >
+            <div
+                class="stage-column"
+                *ngFor="let stage of stages; let i = index"
+                draggable
+                [dragScope]="['stage']"
+                [dragData]="stage"
+                dragClass="is-dragged"
+                (onDragStart)="onStageDragStart(stage)"
+                (onDragEnd)="onStageDragEnd()"
+                droppable
+                [dropScope]="['stage']"
+                [dragOverClass]="'over'"
+                (onDragOver)="onStageDragOver($event, stage.order)"
+            >
+                <div class="stage-column-holder">
+                    <div class="stage-header">
+                        <h2 class="title">{{ stage.title }}</h2>
+                        <span class="counter">{{ stageCandidates(stage.id)?.length || '0' }}</span>
+                        <button class="btn settings-btn mla" (click)="onSettigsClick(stage.id)">
+                            <img src="/assets/images/settings-dots.svg" alt="" width="2" height="10" />
+                        </button>
+                    </div>
                     <div
-                        class="block"
-                        (click)="onCandidateClick(candidate.id)"
-                        *ngFor="let candidate of stageCandidates(stage.id)"
-                        draggable
-                        [dragData]="candidate"
-                        (onDragStart)="onCandidateDragStart()"
-                        (onDragEnd)="onCandidateDragEnd()"
-                        [ngClass]="{ dd: candidate.isDdEmployee }"
+                        class="stage-content"
+                        droppable
+                        [dropScope]="['candidate']"
+                        [dragOverClass]="'drag-target-border'"
+                        (onDrop)="onCandidateDrop($event, stage.id)"
                     >
                         <div
-                            class="compliance-rate"
-                            [attr.data-score]="candidate.score"
-                            [ngClass]="{
-                                green: candidate.score >= resumeThreshold,
-                                orange: candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold,
-                                red: candidate.score < resumeThreshold - 15
-                            }"
-                        ></div>
-                        <span class="complience-value">{{ candidate.score }}%</span>
-                        <div class="ava-column">
-                            <div class="ava">
-                                <img
-                                    [src]="candidate.profile_image"
-                                    alt="profile image"
-                                    *ngIf="candidate.profile_image"
-                                />
-                                <div class="ava-placeholder" *ngIf="!candidate.profile_image">
-                                    {{ candidate | initials }}
+                            class="block"
+                            (click)="onCandidateClick(candidate.id)"
+                            *ngFor="let candidate of stageCandidates(stage.id)"
+                            draggable
+                            [dragScope]="['candidate']"
+                            [dragData]="candidate"
+                            (onDragStart)="onCandidateDragStart()"
+                            (onDragEnd)="onCandidateDragEnd()"
+                            [ngClass]="{ dd: candidate.isDdEmployee }"
+                        >
+                            <div
+                                class="compliance-rate"
+                                [attr.data-score]="candidate.score"
+                                [ngClass]="{
+                                    green: candidate.score >= resumeThreshold,
+                                    orange:
+                                        candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold,
+                                    red: candidate.score < resumeThreshold - 15
+                                }"
+                            ></div>
+                            <span class="complience-value">{{ candidate.score }}%</span>
+                            <div class="ava-column">
+                                <div class="ava">
+                                    <img
+                                        [src]="candidate.profile_image"
+                                        alt="profile image"
+                                        *ngIf="candidate.profile_image"
+                                    />
+                                    <div class="ava-placeholder" *ngIf="!candidate.profile_image">
+                                        {{ candidate | initials }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block-content">
+                                <strong class="title"
+                                    >{{ candidate.first_name | titlecase }}
+                                    {{ candidate.last_name | titlecase }}</strong
+                                >
+                                <span class="position" *ngIf="candidate.employment_history"
+                                    >{{ candidate.employment_history[0].title | titlecase }} @
+                                    {{ candidate.employment_history[0].company | titlecase }}</span
+                                >
+                                <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
+                                <div class="stats-actions-block">
+                                    <div class="text-with-icon flex-row flex-aic" *ngIf="candidate.created_at_rel">
+                                        <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10" />
+                                        <p>{{ candidate.created_at_rel }}</p>
+                                    </div>
+                                    <div class="text-with-icon flex-row flex-aic ml20" *ngIf="candidate.updated_at_rel">
+                                        <img
+                                            src="/assets/images/update.svg"
+                                            class="icon"
+                                            alt=""
+                                            width="12"
+                                            height="13"
+                                        />
+                                        <p>{{ candidate.updated_at_rel }}</p>
+                                    </div>
+                                    <div class="actions mla">
+                                        <!-- <span class="icon-btn">
+                                                                                        <img src="/assets/images/refresh.svg" alt="" width="10" height="10">
+                                                                                    </span> -->
+                                        <span
+                                            class="icon-btn ml10"
+                                            (click)="onDeleteCandidateClick($event, candidate.id)"
+                                        >
+                                            <img src="/assets/images/delete.svg" alt="" width="10" height="10" />
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="block-content">
-                            <strong class="title"
-                                >{{ candidate.first_name | titlecase }} {{ candidate.last_name | titlecase }}</strong
-                            >
-                            <span class="position" *ngIf="candidate.employment_history"
-                                >{{ candidate.employment_history[0].title | titlecase }} @
-                                {{ candidate.employment_history[0].company | titlecase }}</span
-                            >
-                            <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
-                            <div class="stats-actions-block">
-                                <div class="text-with-icon flex-row flex-aic" *ngIf="candidate.created_at_rel">
-                                    <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10" />
-                                    <p>{{ candidate.created_at_rel }}</p>
-                                </div>
-                                <div class="text-with-icon flex-row flex-aic ml20" *ngIf="candidate.updated_at_rel">
-                                    <img src="/assets/images/update.svg" class="icon" alt="" width="12" height="13" />
-                                    <p>{{ candidate.updated_at_rel }}</p>
-                                </div>
-                                <div class="actions mla">
-                                    <!-- <span class="icon-btn">
-                                                                    <img src="/assets/images/refresh.svg" alt="" width="10" height="10">
-                                                                </span> -->
-                                    <span class="icon-btn ml10" (click)="onDeleteCandidateClick($event, candidate.id)">
-                                        <img src="/assets/images/delete.svg" alt="" width="10" height="10" />
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="drop-holder"></div>
                     </div>
-                    <div class="drop-holder"></div>
                 </div>
             </div>
             <form [formGroup]="newJobStageForm" class="stage-column">

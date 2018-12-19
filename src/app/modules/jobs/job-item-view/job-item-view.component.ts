@@ -36,6 +36,7 @@ export class JobItemViewComponent implements OnInit {
     appliedCandidates: any;
     resumeThreshold = 60;
     candidateIsDragged = false;
+    draggedStage: any;
 
     constructor(private router: Router, private fb: FormBuilder, private jobService: JobService) {
         this.statusOptions = [{ label: 'LIVE', value: 'LIVE' }, { label: 'BUILD', value: 'BUILD' }];
@@ -197,9 +198,11 @@ export class JobItemViewComponent implements OnInit {
 
     onDropFile(event) {
         const files = event.target.files || event.dataTransfer.files;
-        // console.log('📥 onDropFiles', files);
+        console.log('📥 onDropFiles', files);
         this.droppedFiles = files;
-        this.createCandidateMode = true;
+        if (this.droppedFiles && this.droppedFiles.length) {
+            this.createCandidateMode = true;
+        }
     }
 
     onDeleteCandidateClick(event, candidateId) {
@@ -248,6 +251,33 @@ export class JobItemViewComponent implements OnInit {
 
     onCandidateDragEnd() {
         this.candidateIsDragged = false;
+    }
+
+    onStageDragStart(stage) {
+        this.draggedStage = stage;
+    }
+
+    onStageDragEnd() {
+        this.draggedStage = null;
+    }
+
+    onStageDragOver(event, order) {
+        if (order !== this.draggedStage.order) {
+            const draggedOverStageIndex = this.stages.findIndex((s) => s.order === order);
+            const draggedStageIndex = this.stages.findIndex((s) => s.order === this.draggedStage.order);
+            this.stages.splice(draggedStageIndex, 1);
+            this.stages.splice(draggedOverStageIndex, 0, this.draggedStage);
+            this.stages.forEach((s, index) => {
+                s.order = index + 1;
+            });
+
+            this.jobService
+                .updateStages(this.job.id, this.stages)
+                .subscribe(
+                    () => console.log('Stages order was updated'),
+                    (errorResponse) => console.error(errorResponse)
+                );
+        }
     }
 
     onCandidateDeleteDrop(event) {

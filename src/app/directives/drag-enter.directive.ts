@@ -5,6 +5,7 @@ import { Directive, ElementRef, EventEmitter, Input, OnInit, Output } from '@ang
 })
 export class DragEnterDirective implements OnInit {
     @Input() appDragEnter: string;
+    @Input() appDragEnterParentClass: string;
     @Output() dropFile = new EventEmitter<File>();
     supportedFileTypes: string[];
     constructor(private _elementRef: ElementRef) {
@@ -29,18 +30,34 @@ export class DragEnterDirective implements OnInit {
 
         // Remove the style
         el.addEventListener('dragleave', (e) => {
+            const leaveTarget = e.target;
             el.classList.remove('over');
+            if (this.appDragEnterParentClass) {
+                el.parentNode.classList.remove(this.appDragEnterParentClass);
+            }
         });
 
         el.addEventListener('dragover', (e) => {
-            // const fileType = e.dataTransfer
-            //     && e.dataTransfer.items
-            //     && e.dataTransfer.items[0]
-            //     && e.dataTransfer.items[0].type ? e.dataTransfer.items[0].type : null;
-
             const type =
                 e.dataTransfer && e.dataTransfer.types && e.dataTransfer.types[0] ? e.dataTransfer.types[0] : null;
             if (type === 'Files') {
+                el.classList.add('over');
+                if (e.preventDefault) {
+                    e.preventDefault();
+                }
+                e.dataTransfer.dropEffect = 'move';
+                return false;
+            }
+            if (
+                this.appDragEnter &&
+                e.dataTransfer &&
+                e.dataTransfer.types &&
+                e.dataTransfer.types[1] &&
+                this.appDragEnter === e.dataTransfer.types[1]
+            ) {
+                if (this.appDragEnterParentClass) {
+                    el.parentNode.classList.add(this.appDragEnterParentClass);
+                }
                 el.classList.add('over');
                 if (e.preventDefault) {
                     e.preventDefault();
@@ -53,6 +70,7 @@ export class DragEnterDirective implements OnInit {
         // On drop, get the data and convert it back to a JSON object
         // and fire off an event passing the data
         el.addEventListener('drop', (e) => {
+            console.log('drop');
             const fileType =
                 e.dataTransfer &&
                 e.dataTransfer.items &&
@@ -61,7 +79,9 @@ export class DragEnterDirective implements OnInit {
                 e.dataTransfer.items[0].type
                     ? e.dataTransfer.items[0].type
                     : null;
-            // console.log(fileType);
+            if (this.appDragEnterParentClass) {
+                el.parentNode.classList.remove(this.appDragEnterParentClass);
+            }
             if (fileType && fileType !== 'text/plain') {
                 if (e.stopPropagation) {
                     e.stopPropagation(); // Stops some browsers from redirecting.
