@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import * as moment from 'moment';
 
 import { environment } from '../../environments/environment';
 
@@ -168,4 +169,22 @@ export class UtilitiesService {
         return true;
     }
     /* tslint:enable */
+
+    fromNow(date) {
+        const today = moment()
+            .utc()
+            .startOf('day')
+            .valueOf();
+        const timeinmilisec = today - date;
+        const days = Math.floor(timeinmilisec / (1000 * 60 * 60 * 24));
+        let value = '';
+        if (days === -1) {
+            value = 'Today';
+        } else if (days === 0) {
+            value = 'Yesterday';
+        } else if (days > 0) {
+            value = days + 1 + 'd ago';
+        }
+        return value;
+    }
 }

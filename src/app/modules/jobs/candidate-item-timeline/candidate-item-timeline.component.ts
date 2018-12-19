@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { Job } from './../../../models/job';
+import { JobCandidate } from './../../../models/job-candidate';
 
 import { User } from '../../../models/user';
 import { CandidateService } from '../../../services/candidate.service';
@@ -15,14 +16,16 @@ import * as fromStore from './../../../store';
     styleUrls: ['./candidate-item-timeline.component.scss']
 })
 export class CandidateItemTimelineComponent implements OnInit {
-    @Input() candidate;
-    @Input() jobId;
     @Input() job: Job;
-    feedForm: FormGroup;
-    contentLoading = false;
-    timeline = [];
+    @Input() candidate: JobCandidate;
     user: User;
     users: User[];
+
+    commentForm: FormGroup;
+    contentLoading = false;
+    auditData: any[] = [];
+    audit = [];
+
     constructor(
         private fb: FormBuilder,
         private candidateService: CandidateService,
@@ -32,67 +35,95 @@ export class CandidateItemTimelineComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.initForm();
         this.store.pipe(select(fromStore.getUserEntity)).subscribe((user: User) => {
             this.user = user;
+            this.loadAudit();
         });
-        this.populateFeed();
-    }
-    populateFeed() {
-        // console.log(this.timeline);
-        this.userService.getUsers().subscribe((users: User[]) => {
-            this.users = users;
-            if (this.candidate.feed && this.candidate.feed[this.jobId]) {
-                this.timeline = this.candidate.feed[this.jobId];
-                this.timeline
-                    .map((item) => {
-                        const itemIndex = this.users.find((c) => c.id === item.sender_id);
-                        if (itemIndex) {
-                            item.icon_url = itemIndex.icon_url;
-                            item.first_name = itemIndex.first_name;
-                            item.last_name = itemIndex.last_name;
-                            // console.log('1', itemIndex);
-                        } else {
-                            // console.log('2');
-                        }
-                        return item;
-                    })
-                    .sort((a: any, b: any) => {
-                        return b.created - a.created;
-                    });
-            }
-        });
-    }
-    initForm() {
-        this.feedForm = this.fb.group({
+        this.commentForm = this.fb.group({
             description: ['', Validators.required]
         });
     }
-    onSaveFeed() {
-        this.contentLoading = true;
-        const data = {
-            comments: {
-                id: this.utilities.generateUID(10).toLowerCase(),
-                text: this.feedForm.value.description,
-                created: new Date().getTime(),
-                sender_id: this.user.id
+
+    loadAudit() {
+        this.userService.getUsers().subscribe((users: User[]) => {
+            this.users = users;
+            if (this.candidate.audit && this.candidate.audit[this.job.id]) {
+                this.auditData = this.candidate.audit[this.job.id];
+                this.audit = this.transformAudit(this.auditData);
+            } else {
+                this.audit = this.transformAudit([]);
+
+                console.log(this.audit);
             }
-        };
-        if (this.feedForm.valid) {
-            this.candidateService.saveFeed(this.jobId, this.candidate.id, data).subscribe(
+        });
+    }
+
+    transformAudit(auditData: any[]) {
+        const creationEntry = auditData.find((e) => e.type === 'created');
+        if (!creationEntry) {
+            auditData.push({
+                type: 'created',
+                created_at: this.candidate.created_at * 1000,
+                source: this.candidate.source
+            });
+        }
+
+        const result = [];
+        auditData.forEach((e) => {
+            e.created_at_rel = this.utilities.fromNow(e.created_at);
+            e.job_title = this.job.title;
+            e.candidate_name = this.candidate.first_name + ' ' + this.candidate.last_name;
+            if (e.type === 'comment') {
+                const author = this.users.find((u) => u.id === e.user_id);
+                if (author) {
+                    e.user = author;
+                    e.image_url = author.icon_url || null;
+
+                    result.push(e);
+                }
+            } else if (e.type === 'stages_progress') {
+                const author = this.users.find((u) => u.id === e.user_id);
+                if (author) {
+                    e.user = author;
+                    e.image_url = author.icon_url || null;
+                }
+                const stages = this.job.stages;
+                const stage_from = stages.find((s) => s.id === e.stage_from_id);
+                const stage_to = stages.find((s) => s.id === e.stage_to_id);
+                e.stage_from_title = stage_from && stage_from.title;
+                e.stage_to_title = stage_from && stage_to.title;
+
+                if (e.user && e.stage_from_title && e.stage_to_title) {
+                    result.push(e);
+                }
+            } else {
+                result.push(e);
+            }
+        });
+        return result.sort((a: any, b: any) => b.created_at - a.created_at);
+    }
+
+    onSaveComment() {
+        console.log('onSaveComment');
+        this.contentLoading = true;
+        if (this.commentForm.valid) {
+            const comment = {
+                id: this.utilities.generateUID(10).toLowerCase(),
+                text: this.commentForm.value.description,
+                created_at: new Date().getTime(),
+                user_id: this.user.id,
+                type: 'comment'
+            };
+            this.candidateService.addToAudit(this.job.id, this.candidate.id, comment).subscribe(
                 (response) => {
-                    this.feedForm.reset();
+                    this.commentForm.reset();
                     this.contentLoading = false;
-                    this.timeline.unshift({
-                        icon_url: this.user.icon_url,
-                        created_at_rel: 'Today',
-                        first_name: this.user.first_name,
-                        last_name: this.user.last_name,
-                        ...data.comments
-                    });
+                    this.auditData.push(comment);
+                    this.audit = this.transformAudit(this.auditData);
                 },
-                (err) => {
-                    console.error(err);
+                (errorResponse) => {
+                    this.contentLoading = false;
+                    console.error(errorResponse);
                 }
             );
         }

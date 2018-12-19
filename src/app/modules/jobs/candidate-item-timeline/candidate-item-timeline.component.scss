@@ -34,10 +34,10 @@
     }
 }
 
-.timeline {
+.audit {
     position: relative;
 
-    .timeline-item-header {
+    .audit-item-header {
         display: flex;
         align-items: flex-start;
         position: relative;
@@ -45,7 +45,7 @@
         margin: 0 0 9px;
     }
 
-    .timeline-item-img {
+    .audit-item-img {
         height: 24px;
         text-align: center;
         align-self: flex-start;
@@ -79,12 +79,12 @@
         }
     }
 
-    .timeline-item-content {
+    .audit-item-content {
         padding: 0 0px 0 20px;
         flex: 1;
     }
 
-    .timeline-item-heading {
+    .audit-item-heading {
         flex: 1;
         display: flex;
         flex-wrap: wrap;
@@ -112,7 +112,7 @@
         }
     }
 
-    .timeline-item {
+    .audit-item {
         margin: 0 0 20px;
         position: relative;
         display: flex;
@@ -135,7 +135,7 @@
         }
     }
 
-    .timeline-item-message {
+    .audit-item-message {
         border-radius: 5px;
         border: 1px solid #d7dbdf;
         margin: 0 0 12px 0px;

@@ -14,4 +14,6 @@ export class JobCandidate {
     feedback?: any;
     isDdEmployee?: boolean;
     employment_history?: any;
+    audit?: any;
+    created_at?: number;
 }

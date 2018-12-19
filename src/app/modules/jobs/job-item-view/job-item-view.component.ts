@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { select, Store } from '@ngrx/store';
 import { SelectItem } from 'primeng/api';
 
 import { Job } from '../../../models/job';
@@ -8,6 +9,8 @@ import { JobStage } from '../../../models/job-stage';
 import { User } from '../../../models/user';
 import { JobService } from '../../../services/job.service';
 import { JobCandidate } from './../../../models/job-candidate';
+import { CandidateService } from './../../../services/candidate.service';
+import * as fromStore from './../../../store';
 
 @Component({
     selector: 'app-job-item-view',
@@ -25,6 +28,7 @@ export class JobItemViewComponent implements OnInit {
     stageFormIsSaving = false;
     appliedStage: JobStage;
     stages: JobStage[] = [];
+    user: User;
     users: User[] = [];
     createStageMode = false;
     createCandidateMode = false;
@@ -38,7 +42,13 @@ export class JobItemViewComponent implements OnInit {
     candidateIsDragged = false;
     draggedStage: any;
 
-    constructor(private router: Router, private fb: FormBuilder, private jobService: JobService) {
+    constructor(
+        private router: Router,
+        private fb: FormBuilder,
+        private jobService: JobService,
+        private candidateService: CandidateService,
+        private store: Store<fromStore.State>
+    ) {
         this.statusOptions = [{ label: 'LIVE', value: 'LIVE' }, { label: 'BUILD', value: 'BUILD' }];
 
         this.jobService.getUsers().subscribe((users: User[]) => {
@@ -52,6 +62,9 @@ export class JobItemViewComponent implements OnInit {
         };
     }
     ngOnInit() {
+        this.store.pipe(select(fromStore.getUserEntity)).subscribe((user: User) => {
+            this.user = user;
+        });
         this.newJobStageForm = this.fb.group({
             title: ['']
         });
@@ -224,15 +237,35 @@ export class JobItemViewComponent implements OnInit {
     onCandidateDrop(event, stageId) {
         // console.log('drop', event.dragData, stageId);
         this.candidateIsDragged = false;
-
         const candidate = event.dragData;
         const candidateIndex = this.candidates.findIndex((c) => c.id === candidate.id);
-        this.candidates[candidateIndex].stage[this.job.id] = stageId;
-        this.jobService
-            .updateCandidateStage(this.job.id, candidate.id, this.candidates[candidateIndex].stage)
-            .subscribe(() => {
-                console.log('Candidate stage was updated to:', stageId);
-            });
+        const stageFromId = this.candidates[candidateIndex].stage[this.job.id] || 'applied';
+        const stageToId = stageId;
+
+        if (stageFromId !== stageToId) {
+            this.candidates[candidateIndex].stage[this.job.id] = stageId;
+            this.jobService
+                .updateCandidateStage(this.job.id, candidate.id, this.candidates[candidateIndex].stage)
+                .subscribe(() => {
+                    console.log('Candidate stage was updated to:', stageId);
+                    this.candidateService
+                        .addToAudit(this.job.id, candidate.id, {
+                            type: 'stages_progress',
+                            user_id: this.user.id,
+                            stage_from_id: stageFromId,
+                            stage_to_id: stageToId,
+                            created_at: new Date().getTime()
+                        })
+                        .subscribe(
+                            (response) => {
+                                console.log(response);
+                            },
+                            (errorResponse) => {
+                                console.error(errorResponse);
+                            }
+                        );
+                });
+        }
         this.setAppliedCanidates(this.candidates);
     }
 

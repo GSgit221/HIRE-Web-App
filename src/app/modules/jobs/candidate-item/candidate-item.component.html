@@ -403,7 +403,7 @@
                     </div>
                     <div class="interactivity-content" id="chat" *ngIf="activeInteractivity === 'chat'">
                         <app-candidate-item-timeline
-                            [jobId]="jobId"
+                            *ngIf="job && candidate"
                             [job]="job"
                             [candidate]="candidate"
                         ></app-candidate-item-timeline>
