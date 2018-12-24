@@ -1,10 +1,12 @@
-@import "variables.scss";
+@import 'variables.scss';
 
 html {
     box-sizing: border-box;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
     box-sizing: inherit;
 }
 
@@ -14,11 +16,13 @@ body {
     font: 13px/1.538 'Roboto', Helvetica, Arial, sans-serif;
 }
 
-html, body {
+html,
+body {
     height: 100%;
 }
 
-a, .hc-link {
+a,
+.hc-link {
     color: $pink;
     text-decoration: none;
     transition: color 0.2s ease;
@@ -34,8 +38,9 @@ a, .hc-link {
         color: darken($pink, 20%);
     }
 
-    &.und  {
+    &.und {
         text-decoration: underline;
+
         &:hover {
             text-decoration: none;
         }
@@ -46,8 +51,8 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
 
 @each $step in $steps {
     .flex-#{$step} {
-        flex: 1 1 #{$step + "%"};
-        max-width: #{$step + "%"};
+        flex: 1 1 #{$step + '%'};
+        max-width: #{$step + '%'};
         max-height: 100%;
     }
 }
@@ -575,23 +580,26 @@ p-selectbutton {
 .red-bg {
     background: $light-red !important;
 }
+
 .green-bg {
     background: $dark-green !important;
 }
+
 .orange-bg {
     background: $orange2 !important;
 }
+
 .red-color {
     color: $light-red !important;
 }
+
 .green-color {
     color: $dark-green !important;
 }
+
 .orange-color {
     color: $orange2 !important;
 }
-
-
 
 // Status indicator
 .status {
@@ -630,7 +638,6 @@ p-selectbutton {
     }
 }
 
-
 .status-circle {
     position: absolute;
     right: 10px;
@@ -653,6 +660,7 @@ p-selectbutton {
     &.success {
         display: flex;
         border-color: $dark-green;
+
         .success-img {
             display: block;
         }
@@ -661,25 +669,26 @@ p-selectbutton {
     &.warning {
         display: flex;
         border-color: $orange2;
+
         .warning-img {
             display: block;
         }
     }
 }
 
-
 // Slider candidate-item
 .overall-rating {
     p-slider {
         margin: 18px 0 16px;
         display: block;
-
     }
+
     .ui-slider {
         background: $light-grey;
         height: 3px;
         border-radius: 50px;
         box-shadow: none;
+
         .ui-slider-handle {
             width: 16px !important;
             height: 16px !important;
@@ -688,6 +697,7 @@ p-selectbutton {
             top: -6px !important;
             cursor: pointer;
         }
+
         .ui-slider-range {
             background: $pink;
             height: 7px !important;
@@ -696,10 +706,13 @@ p-selectbutton {
         }
     }
 }
-.owner-disabled, .not-rating-disabled {
+
+.owner-disabled,
+.not-rating-disabled {
     .overall-rating .ui-slider .ui-slider-range {
         background: grey;
     }
+
     .overall-rating .ui-slider .ui-slider-handle {
         background: grey;
     }

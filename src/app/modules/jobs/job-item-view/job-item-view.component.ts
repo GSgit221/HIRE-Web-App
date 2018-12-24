@@ -314,9 +314,9 @@ export class JobItemViewComponent implements OnInit {
     }
 
     onCandidateDeleteDrop(event) {
-        const delteItem = event.dragData;
-        if (delteItem) {
-            this.onDeleteCandidateClick(event.nativeEvent, delteItem.id);
+        const deleteItem = event.dragData;
+        if (deleteItem) {
+            this.onDeleteCandidateClick(event.nativeEvent, deleteItem.id);
         }
     }
 }
