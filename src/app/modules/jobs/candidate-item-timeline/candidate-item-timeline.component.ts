@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
+import { Candidate } from '../../../models/candidate';
 import { Job } from './../../../models/job';
-import { JobCandidate } from './../../../models/job-candidate';
 
 import { User } from '../../../models/user';
 import { CandidateService } from '../../../services/candidate.service';
@@ -17,7 +17,7 @@ import * as fromStore from './../../../store';
 })
 export class CandidateItemTimelineComponent implements OnInit {
     @Input() job: Job;
-    @Input() candidate: JobCandidate;
+    @Input() candidate: Candidate;
     user: User;
     users: User[];
 

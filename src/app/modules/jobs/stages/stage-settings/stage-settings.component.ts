@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Slider } from 'primeng/slider';
 
 import { Job } from '../../../../models/job';
-import { JobStage } from './../../../../models/job-stage';
+import { Stage } from '../../../../models/stage';
 import { FormHelperService } from './../../../../services/form-helper.service';
 import { JobService } from './../../../../services/job.service';
 
@@ -16,7 +16,7 @@ import { JobService } from './../../../../services/job.service';
 export class StageSettingsComponent implements OnInit {
     @ViewChild('hcSlider') hcSlider: Slider;
     contentLoading = false;
-    stage: JobStage;
+    stage: Stage;
     jobId: string;
     job: Job;
     stageId: string;
@@ -36,7 +36,7 @@ export class StageSettingsComponent implements OnInit {
 
         this.jobService.getJob(this.jobId).subscribe((job: Job) => (this.job = job));
         this.jobService.getStage(this.jobId, this.stageId).subscribe(
-            (stage: JobStage) => {
+            (stage: Stage) => {
                 this.contentLoading = false;
                 this.stage = stage;
                 if (this.stage.id === 'applied') {

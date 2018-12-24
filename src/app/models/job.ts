@@ -1,4 +1,4 @@
-import { JobStage } from './job-stage';
+import { Stage } from './stage';
 export class Job {
     id?: string;
     title: string;
@@ -37,7 +37,7 @@ export class Job {
     step_completed?: number;
     status?: string;
     created?: boolean;
-    stages?: JobStage[];
+    stages?: Stage[];
     owner?: string;
     show_position_rating?: boolean;
 }

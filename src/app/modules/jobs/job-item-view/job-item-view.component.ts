@@ -4,11 +4,11 @@ import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { SelectItem } from 'primeng/api';
 
+import { Candidate } from '../../../models/candidate';
 import { Job } from '../../../models/job';
-import { JobStage } from '../../../models/job-stage';
+import { Stage } from '../../../models/stage';
 import { User } from '../../../models/user';
 import { JobService } from '../../../services/job.service';
-import { JobCandidate } from './../../../models/job-candidate';
 import { CandidateService } from './../../../services/candidate.service';
 import * as fromStore from './../../../store';
 
@@ -26,8 +26,8 @@ export class JobItemViewComponent implements OnInit {
     newJobStageForm: FormGroup;
     formIsSaving = false;
     stageFormIsSaving = false;
-    appliedStage: JobStage;
-    stages: JobStage[] = [];
+    appliedStage: Stage;
+    stages: Stage[] = [];
     user: User;
     users: User[] = [];
     createStageMode = false;
@@ -35,8 +35,8 @@ export class JobItemViewComponent implements OnInit {
     uploadQueue: any[] = [];
     uploadError: string;
     droppedFiles: File[] = [];
-    candidates: JobCandidate[];
-    draggedCandidate: JobCandidate;
+    candidates: Candidate[];
+    draggedCandidate: Candidate;
     appliedCandidates: any;
     resumeThreshold = 60;
     candidateIsDragged = false;
@@ -70,7 +70,7 @@ export class JobItemViewComponent implements OnInit {
         });
         this.appliedStage = this.job.stages.find((stage) => stage.id === 'applied');
         this.stages = this.job.stages.filter((stage) => stage.id !== 'applied').sort((a, b) => a.order - b.order);
-        this.jobService.getCandidates(this.job.id).subscribe((candidates: JobCandidate[]) => {
+        this.jobService.getCandidates(this.job.id).subscribe((candidates: Candidate[]) => {
             this.initialLoad = true;
             this.candidates = candidates.map((c) => {
                 if (c.email.indexOf('dimensiondata') !== -1) {
@@ -98,7 +98,7 @@ export class JobItemViewComponent implements OnInit {
 
     stageCandidates(stageName: string) {
         if (this.candidates && this.candidates.length) {
-            const sC: JobCandidate[] = [];
+            const sC: Candidate[] = [];
             this.candidates.forEach((c) => {
                 if (c.stage && c.stage[this.job.id]) {
                     if (c.stage[this.job.id] === stageName) {
@@ -116,8 +116,8 @@ export class JobItemViewComponent implements OnInit {
         }
     }
 
-    setAppliedCanidates(candidates: JobCandidate[]) {
-        const sC: JobCandidate[] = [];
+    setAppliedCanidates(candidates: Candidate[]) {
+        const sC: Candidate[] = [];
         candidates.forEach((c) => {
             if (c.stage && c.stage[this.job.id]) {
                 if (c.stage[this.job.id] === 'applied') {
@@ -177,7 +177,7 @@ export class JobItemViewComponent implements OnInit {
         if (formValue && formValue.title && formValue.title.length) {
             this.stageFormIsSaving = true;
             this.jobService.createStage(this.job.id, formValue).subscribe(
-                (stage: JobStage) => {
+                (stage: Stage) => {
                     this.stages.push(stage);
                     this.stageFormIsSaving = false;
                     this.newJobStageForm.reset();

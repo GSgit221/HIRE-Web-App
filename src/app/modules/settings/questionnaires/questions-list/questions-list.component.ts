@@ -31,7 +31,7 @@ export class QuestionsListComponent implements OnInit {
             console.log(this.questionnaire);
         });
         this.questionnaireService.getQuestions(this.questionnaireId).subscribe((questions: Question[]) => {
-            this.list = questions;
+            this.list = questions.sort((a, b) => a.created_at - b.created_at);
             console.log(this.list);
             this.contentLoading = false;
         });
@@ -91,7 +91,11 @@ export class QuestionsListComponent implements OnInit {
     }
 
     hasKnockoutAnswers(item: Question) {
-        const knockout = item.answers.find((a) => a.is_knockout);
-        return knockout ? true : false;
+        if (item.answers) {
+            const knockout = item.answers.find((a) => a.is_knockout);
+            return knockout ? true : false;
+        } else {
+            return false;
+        }
     }
 }

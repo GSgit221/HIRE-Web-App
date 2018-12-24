@@ -58,7 +58,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-block">
+                        <div class="form-block" *ngIf="type.value !== 'one-way-video'">
                             <div class="form-block-2-columns" formArrayName="answers">
                                 <div class="form-block-2-columns-holder">
                                     <div class="form-block-col" *ngFor="let item of answers.controls; let i = index">
@@ -80,7 +80,7 @@
                             </div>
                             <span class="hc-link" (click)="onAddAnswer()" *ngIf="isAddAvailable()">Add Answer</span>
                         </div>
-                        <div class="form-content-box-bottom">
+                        <div class="form-content-box-bottom" *ngIf="type.value !== 'one-way-video'">
                             <div class="form-content-box-bottom-holder">
                                 <div class="text-with-icon flex-row flex-aic">
                                     <img alt="" class="icon" height="13" src="/assets/images/pin.svg" width="13" />
@@ -88,6 +88,42 @@
                                         <strong>Knockout:</strong> If a candidate should be disqualified based on an
                                         answer, select the checkbox assiciated with the disqualifying answer.
                                     </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-block" *ngIf="type.value === 'one-way-video'">
+                            <div class="form-block-columns">
+                                <div class="form-block-col">
+                                    <div class="input-block">
+                                        <label class="form-block-label">Review time</label>
+                                        <p-dropdown
+                                            [options]="videoQuestionOption.review_time"
+                                            formControlName="review_time"
+                                            [style]="{ width: '100%' }"
+                                        ></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="form-block-col-separator"></div>
+                                <div class="form-block-col">
+                                    <div class="input-block">
+                                        <label class="form-block-label">Answer Time</label>
+                                        <p-dropdown
+                                            [options]="videoQuestionOption.answer_time"
+                                            formControlName="answer_time"
+                                            [style]="{ width: '100%' }"
+                                        ></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="form-block-col-separator"></div>
+                                <div class="form-block-col">
+                                    <div class="input-block">
+                                        <label class="form-block-label">Number of Takes</label>
+                                        <p-dropdown
+                                            [options]="videoQuestionOption.number_of_takes"
+                                            formControlName="number_of_takes"
+                                            [style]="{ width: '100%' }"
+                                        ></p-dropdown>
+                                    </div>
                                 </div>
                             </div>
                         </div>

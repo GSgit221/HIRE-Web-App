@@ -81,7 +81,12 @@
                             <p class="hc-content-p">{{ item.text }}</p>
                         </div>
                         <div class="col col3  flex-20">
-                            <p class="hc-content-p">{{ item.type | titlecase }} Choice</p>
+                            <ng-container *ngIf="item.type !== 'one-way-video'">
+                                <p class="hc-content-p">{{ item.type | titlecase }} Choice</p>
+                            </ng-container>
+                            <ng-container *ngIf="item.type === 'one-way-video'">
+                                <p class="hc-content-p">Video</p>
+                            </ng-container>
                         </div>
                         <div class="col col4 flex-15">
                             <img *ngIf="hasKnockoutAnswers(item)" src="/assets/images/checkmark.svg" alt="Check icon" />

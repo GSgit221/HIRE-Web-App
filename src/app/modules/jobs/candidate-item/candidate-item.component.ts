@@ -4,9 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { CandidateService } from './../../../services/candidate.service';
 
+import { Candidate } from '../../../models/candidate';
 import { Job } from '../../../models/job';
 import { User } from '../../../models/user';
-import { JobCandidate } from './../../../models/job-candidate';
 import { JobService } from './../../../services/job.service';
 import { QuestionnaireService } from './../../../services/questionnaire.service';
 import { UtilitiesService } from './../../../services/utilities.service';
@@ -24,7 +24,7 @@ export class CandidateItemComponent implements OnInit {
     jobId: string;
     job: Job;
     candidateId: string;
-    candidate: JobCandidate;
+    candidate: Candidate;
     matchingMap = {
         JOB_TITLES: 'Job Titles',
         SKILLS: 'Skills',
@@ -66,7 +66,7 @@ export class CandidateItemComponent implements OnInit {
                 );
             }
         });
-        this.jobService.getCandidate(this.jobId, this.candidateId).subscribe((candidate: JobCandidate) => {
+        this.jobService.getCandidate(this.jobId, this.candidateId).subscribe((candidate: Candidate) => {
             this.candidate = candidate;
             setTimeout(() => (this.contentLoading = false), 200);
             // console.log(' ⚡️ FROM ROUTE  --- JOB:', this.jobId, this.candidateId);

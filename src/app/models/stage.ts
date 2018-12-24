@@ -1,4 +1,4 @@
-export class JobStage {
+export class Stage {
     id: string;
     title: string;
     resume_matching_threshold?: number;

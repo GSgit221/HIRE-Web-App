@@ -187,4 +187,10 @@ export class UtilitiesService {
         }
         return value;
     }
+
+    omit(obj, properties) {
+        return Object.entries(obj)
+            .filter(([key]) => !properties.includes(key))
+            .reduce((newObj, [key, val]) => ({ ...newObj, [key]: val }), {});
+    }
 }

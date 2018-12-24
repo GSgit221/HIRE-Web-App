@@ -24,9 +24,29 @@ export class QuestionItemComponent implements OnInit {
     questionForm: FormGroup;
     questionTypeOptions = [
         { label: 'Multiple Choice', value: 'multiple' },
-        { label: 'Single Choice', value: 'single' }
+        { label: 'Single Choice', value: 'single' },
+        { label: 'One Way Video Question', value: 'one-way-video' }
     ];
     typeQuestion = 'multiple';
+    videoQuestionOption = {
+        review_time: [
+            { label: '30 seconds', value: 30 },
+            { label: '60 seconds', value: 60 },
+            { label: '120 seconds', value: 120 }
+        ],
+        answer_time: [
+            { label: '30 seconds', value: 30 },
+            { label: '60 seconds', value: 60 },
+            { label: '120 seconds', value: 120 }
+        ],
+        number_of_takes: [
+            { label: '1', value: 1 },
+            { label: '2', value: 2 },
+            { label: '3', value: 3 },
+            { label: '4', value: 4 },
+            { label: '5', value: 5 }
+        ]
+    };
 
     constructor(
         private fb: FormBuilder,
@@ -65,12 +85,34 @@ export class QuestionItemComponent implements OnInit {
             text: ['', Validators.required],
             type: ['multiple', Validators.required],
             is_required: [true],
-            answers: this.fb.array([this.createItem(true), this.createItem(true)])
+            answers: this.fb.array([this.createItem(true), this.createItem(true)]),
+            review_time: [30],
+            answer_time: [30],
+            number_of_takes: [1]
+        });
+        this.questionForm.get('type').valueChanges.subscribe((val) => {
+            if (val === 'one-way-video') {
+                this.answers.controls.forEach((answerControl: FormGroup, index) => {
+                    answerControl.controls['text'].setValidators([]);
+                    answerControl.controls['text'].updateValueAndValidity();
+                });
+            } else {
+                this.answers.controls.forEach((answerControl: FormGroup, index) => {
+                    if (index < 2) {
+                        answerControl.controls['text'].setValidators([Validators.required]);
+                    }
+                    answerControl.controls['text'].updateValueAndValidity();
+                });
+            }
         });
     }
 
     get answers() {
-        return this.questionForm.get('answers') as FormArray;
+        return this.questionForm && (this.questionForm.get('answers') as FormArray);
+    }
+
+    get type() {
+        return this.questionForm && this.questionForm.get('type');
     }
 
     createItem(required = false): FormGroup {
@@ -96,7 +138,8 @@ export class QuestionItemComponent implements OnInit {
 
     onAddAnswer(): void {
         if (this.questionForm.get('answers').value.every((a) => a.text && a.text.length)) {
-            this.answers.push(this.createItem());
+            const newItem = this.createItem();
+            this.answers.push(newItem);
         }
     }
 
@@ -114,7 +157,10 @@ export class QuestionItemComponent implements OnInit {
             text: [this.question.text, Validators.required],
             type: [this.question.type, Validators.required],
             is_required: [this.question.is_required],
-            answers: this.fb.array(answersArr)
+            answers: this.fb.array(answersArr),
+            review_time: [this.question.review_time || 30],
+            answer_time: [this.question.answer_time || 30],
+            number_of_takes: [this.question.number_of_takes || 1]
         });
     }
 
@@ -128,9 +174,11 @@ export class QuestionItemComponent implements OnInit {
         }
         // VALID
         console.log('FORM IS VALID:', form.value);
-        this.contentLoading = true;
+        // this.contentLoading = true;
+
+        const formValue = this.getFormValue(form);
         if (this.questionId === 'new') {
-            this.questionnaireService.createQuestion(this.questionnaireId, form.value).subscribe(
+            this.questionnaireService.createQuestion(this.questionnaireId, formValue).subscribe(
                 () => {
                     this.contentLoading = false;
                     this.router.navigateByUrl(`dashboard/settings/questionnaires/${this.questionnaireId}/questions`);
@@ -138,7 +186,7 @@ export class QuestionItemComponent implements OnInit {
                 (error) => console.error(error)
             );
         } else {
-            this.questionnaireService.updateQuestion(this.questionnaireId, this.questionId, form.value).subscribe(
+            this.questionnaireService.updateQuestion(this.questionnaireId, this.questionId, formValue).subscribe(
                 () => {
                     this.contentLoading = false;
                     this.router.navigateByUrl(`dashboard/settings/questionnaires/${this.questionnaireId}/questions`);
@@ -146,5 +194,12 @@ export class QuestionItemComponent implements OnInit {
                 (error) => console.error(error)
             );
         }
+    }
+
+    getFormValue(form) {
+        const formValue = form.value;
+        return formValue.type === 'one-way-video'
+            ? this.utilities.omit(formValue, ['answers'])
+            : this.utilities.omit(formValue, ['review_time', 'answer_time', 'number_of_takes']);
     }
 }
