@@ -43,4 +43,13 @@ export class CandidateService {
             data
         });
     }
+
+    inviteToVideoInterview(jobId, candidateId, data) {
+        return this.http.post(
+            `${this.apiURL}/tenants/${this.tenantId}/jobs/${jobId}/candidates/${candidateId}/video-interview-invite`,
+            {
+                data
+            }
+        );
+    }
 }
