@@ -167,7 +167,6 @@ export class QuestionItemComponent implements OnInit {
     }
 
     onSave() {
-        console.log('save');
         const form = this.questionForm;
         if (!form.valid) {
             this.formHelper.markFormGroupTouched(form);
@@ -187,7 +186,7 @@ export class QuestionItemComponent implements OnInit {
                 },
                 (error) => {
                     console.error(error);
-                    this.msgs.push({ severity: 'error', detail: error.error.error || 'Error' });
+                    this.msgs = [{ severity: 'error', detail: error.error.error || 'Error' }];
                     this.contentLoading = false;
                 }
             );
@@ -199,7 +198,7 @@ export class QuestionItemComponent implements OnInit {
                 },
                 (error) => {
                     console.error(error);
-                    this.msgs.push({ severity: 'error', detail: error.error.error || 'Error' });
+                    this.msgs = [{ severity: 'error', detail: error.error.error || 'Error' }];
                     this.contentLoading = false;
                 }
             );

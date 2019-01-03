@@ -4,4 +4,5 @@ export class Questionnaire {
     questions: number;
     created: string;
     selected?: boolean;
+    type?: string;
 }

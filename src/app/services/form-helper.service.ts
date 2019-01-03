@@ -7,11 +7,21 @@ import { FormGroup } from '@angular/forms';
 export class FormHelperService {
     constructor() {}
 
+    // markFormGroupTouched(formGroup: FormGroup) {
+    //     (Object as any).values(formGroup.controls).forEach((control) => {
+    //         control.markAsTouched();
+    //         if (control.controls) {
+    //             control.controls.forEach((c) => this.markFormGroupTouched(c));
+    //         }
+    //     });
+    // }
+
     markFormGroupTouched(formGroup: FormGroup) {
         (Object as any).values(formGroup.controls).forEach((control) => {
             control.markAsTouched();
+
             if (control.controls) {
-                control.controls.forEach((c) => this.markFormGroupTouched(c));
+                this.markFormGroupTouched(control);
             }
         });
     }

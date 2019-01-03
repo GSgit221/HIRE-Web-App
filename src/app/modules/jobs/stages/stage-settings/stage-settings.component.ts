@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Slider } from 'primeng/slider';
+import { Questionnaire } from './../../../../models/questionnaire';
+import { QuestionnaireService } from './../../../../services/questionnaire.service';
 
 import { Job } from '../../../../models/job';
 import { Stage } from '../../../../models/stage';
@@ -22,13 +24,24 @@ export class StageSettingsComponent implements OnInit {
     stageId: string;
     titleMaxLength: 30;
     stageSettingsForm: FormGroup;
+    questionnaireList: Questionnaire[] = [];
+    questionnaireOptions = [];
+    allowanceOptions = [
+        { label: '1 day', value: 1 },
+        { label: '2 days', value: 2 },
+        { label: '3 days', value: 3 },
+        { label: '7 days', value: 7 },
+        { label: '14 days', value: 14 },
+        { label: '30 days', value: 30 }
+    ];
 
     constructor(
         private jobService: JobService,
         private router: Router,
         private route: ActivatedRoute,
         private fb: FormBuilder,
-        private formHelper: FormHelperService
+        private formHelper: FormHelperService,
+        private questionnaireService: QuestionnaireService
     ) {
         this.jobId = this.route.snapshot.paramMap.get('id');
         this.stageId = this.route.snapshot.paramMap.get('stageId');
@@ -41,9 +54,6 @@ export class StageSettingsComponent implements OnInit {
                 this.stage = stage;
                 if (this.stage.id === 'applied') {
                     this.stageSettingsForm = this.fb.group({
-                        question: [''],
-                        allowance: [''],
-                        send_reminder_emails: [true],
                         resume_matching_threshold: [this.stage.resume_matching_threshold],
                         automatically_progress_matching_threshold: [
                             this.stage.automatically_progress_matching_threshold
@@ -54,18 +64,38 @@ export class StageSettingsComponent implements OnInit {
                         this.onHcSliderChange();
                     }, 100);
                 } else {
-                    console.log('It is not applied form');
+                    const actions = [];
+                    if (this.stage.actions && this.stage.actions.length) {
+                        this.stage.actions.forEach((a) => {
+                            actions.push(this.createActionItem(a.type, a.options || null));
+                        });
+                    }
                     this.stageSettingsForm = this.fb.group({
-                        question: [''],
-                        allowance: [''],
-                        send_reminder_emails: [true],
                         title: [this.stage.title, Validators.required],
-                        integration: [this.stage.integration],
                         acceptance_criteria: [this.stage.acceptance_criteria],
                         automatically_progress_meeting_criteria: [
                             this.stage.automatically_progress_meeting_criteria || false
-                        ]
+                        ],
+                        actions: this.fb.array(actions)
                     });
+                    this.questionnaireService.getAll().subscribe(
+                        (response: Questionnaire[]) => {
+                            this.contentLoading = false;
+                            if (response) {
+                                this.questionnaireList = response.filter((q) => q.type === 'video');
+                                const options = [];
+                                this.questionnaireList.forEach((q) => {
+                                    options.push({
+                                        value: q.id,
+                                        label: q.title
+                                    });
+                                });
+                                this.questionnaireOptions = options;
+                            }
+                        },
+                        (error) => console.error(error)
+                    );
+
                     setTimeout(() => {
                         this.onHcSliderChange();
                     }, 100);
@@ -78,22 +108,9 @@ export class StageSettingsComponent implements OnInit {
             }
         );
     }
-    questionOptions = [
-        { label: 'Graduate Recruit Program', value: 'Graduate Recruit Program' },
-        { label: 'Graduate Recruit Program2', value: 'Graduate Recruit Program2' },
-        { label: 'Graduate Recruit Program3', value: 'Graduate Recruit Program3' }
-    ];
-    allowanceOptions = [
-        { label: '1 days', value: '1' },
-        { label: '2 days', value: '2' },
-        { label: '3 days', value: '3' }
-    ];
 
     ngOnInit() {
         this.stageSettingsForm = this.fb.group({
-            question: [''],
-            allowance: [''],
-            send_reminder_emails: [true],
             resume_matching_threshold: [60],
             automatically_progress_matching_threshold: [true]
         });
@@ -116,7 +133,7 @@ export class StageSettingsComponent implements OnInit {
         const form = this.stageSettingsForm;
         if (!form.valid) {
             this.formHelper.markFormGroupTouched(form);
-            console.log('FORM IS INVALID:', form);
+            console.log('FORM IS INVALID:', form, form.value);
             return;
         }
         // VALID
@@ -124,7 +141,6 @@ export class StageSettingsComponent implements OnInit {
         this.contentLoading = true;
         this.jobService.updateStage(this.jobId, this.stageId, form.value).subscribe(
             () => {
-                console.log('updated');
                 this.contentLoading = false;
             },
             (error) => {
@@ -132,6 +148,44 @@ export class StageSettingsComponent implements OnInit {
                 this.contentLoading = false;
             }
         );
+    }
+
+    get actions(): FormArray {
+        return this.stageSettingsForm && (this.stageSettingsForm.controls.actions as FormArray);
+    }
+
+    createActionItem(type, dataOptions): FormGroup {
+        let options;
+        if (type === 'spark-hire-video') {
+            options = {
+                questionnaire_id: [(dataOptions && dataOptions.questionnaire_id) || '', Validators.required],
+                send_reminder: [(dataOptions && dataOptions.send_reminder) || true],
+                time_allowance: [(dataOptions && dataOptions.time_allowance) || 30]
+            };
+        }
+        return this.fb.group({
+            type: [type],
+            options: this.fb.group(options || null)
+        });
+    }
+
+    onActionToggle(type: string) {
+        const selected = this.isActionSelected(type);
+        if (selected) {
+            this.actions.removeAt(this.actions.value.findIndex((a) => a.type === type));
+        } else {
+            this.actions.push(this.createActionItem(type, null));
+        }
+    }
+
+    onDeleteAction(type: string) {
+        this.actions.removeAt(this.actions.value.findIndex((a) => a.type === type));
+    }
+
+    isActionSelected(type: string) {
+        const formValue = this.stageSettingsForm.value;
+        const actions = formValue.actions.map((a) => a.type);
+        return actions.indexOf(type) !== -1 ? true : false;
     }
 
     onBackClick() {
