@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Message } from 'primeng/api';
 
 import { Question } from './../../../../models/question';
 import { Questionnaire } from './../../../../models/questionnaire';
@@ -47,6 +48,7 @@ export class QuestionItemComponent implements OnInit {
             { label: '5', value: 5 }
         ]
     };
+    msgs: Message[] = [];
 
     constructor(
         private fb: FormBuilder,
@@ -183,7 +185,11 @@ export class QuestionItemComponent implements OnInit {
                     this.contentLoading = false;
                     this.router.navigateByUrl(`dashboard/settings/questionnaires/${this.questionnaireId}/questions`);
                 },
-                (error) => console.error(error)
+                (error) => {
+                    console.error(error);
+                    this.msgs.push({ severity: 'error', detail: error.error.error || 'Error' });
+                    this.contentLoading = false;
+                }
             );
         } else {
             this.questionnaireService.updateQuestion(this.questionnaireId, this.questionId, formValue).subscribe(
@@ -191,7 +197,11 @@ export class QuestionItemComponent implements OnInit {
                     this.contentLoading = false;
                     this.router.navigateByUrl(`dashboard/settings/questionnaires/${this.questionnaireId}/questions`);
                 },
-                (error) => console.error(error)
+                (error) => {
+                    console.error(error);
+                    this.msgs.push({ severity: 'error', detail: error.error.error || 'Error' });
+                    this.contentLoading = false;
+                }
             );
         }
     }
