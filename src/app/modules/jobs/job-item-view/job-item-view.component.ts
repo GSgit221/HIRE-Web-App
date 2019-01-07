@@ -81,7 +81,10 @@ export class JobItemViewComponent implements OnInit {
                     c.employment_history.length &&
                     c.employment_history[0].end_date === 'current'
                 ) {
-                    if (c.employment_history[0].title.indexOf('Dimension Data') !== -1) {
+                    if (
+                        c.employment_history[0].title.indexOf('Dimension Data') !== -1 ||
+                        c.employment_history[0].company.indexOf('Dimension Data') !== -1
+                    ) {
                         c.isDdEmployee = true;
                     }
                 }
