@@ -63,12 +63,12 @@
     background: none !important;
 
     .progress-value {
-        stroke: $dark-green;
+        stroke: $light-green;
     }
 
     .result,
     .text strong {
-        color: $dark-green;
+        color: $light-green;
     }
 }
 
@@ -89,11 +89,11 @@
     background: none !important;
 
     .progress-value {
-        stroke: $light-red;
+        stroke: $red;
     }
 
     .result,
     .text strong {
-        color: $light-red;
+        color: $red;
     }
 }
