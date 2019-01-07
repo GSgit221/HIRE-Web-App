@@ -181,6 +181,6 @@ export class JobService {
     }
 
     updateCandidateStage(jobId: string, candidateId: string, stage: any) {
-        return this.http.put(`${this.baseURL}/jobs/${jobId}/candidates/${candidateId}`, { data: { stage } });
+        return this.http.put(`${this.baseURL}/jobs/${jobId}/candidates/${candidateId}/stage`, { data: { stage } });
     }
 }

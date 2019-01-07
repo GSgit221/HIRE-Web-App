@@ -264,23 +264,6 @@ export class JobItemViewComponent implements OnInit {
                                 console.error(errorResponse);
                             }
                         );
-                    const stage = this.stages.find((s) => s.id === stageToId);
-                    if (stage) {
-                        if (stage.title.toLowerCase().indexOf('video') !== -1) {
-                            this.candidateService
-                                .inviteToVideoInterview(this.job.id, candidate.id, {
-                                    stage_id: stageToId
-                                })
-                                .subscribe(
-                                    (response) => {
-                                        console.log(response);
-                                    },
-                                    (errorResponse) => {
-                                        console.error(errorResponse);
-                                    }
-                                );
-                        }
-                    }
                 });
         }
         this.setAppliedCanidates(this.candidates);

@@ -75,8 +75,9 @@
                         ></p-checkbox>
                     </div>
                 </div>
-                <div class="col col2 flex-50">Questionnaire</div>
-                <div class="col col3 flex-25"># of Questions</div>
+                <div class="col col2 flex-35">Questionnaire</div>
+                <div class="col col2 flex-20">Type</div>
+                <div class="col col3 flex-20"># of Questions</div>
                 <div class="col col4 flex-20">Created</div>
             </div>
             <div class="nr-list-content">
@@ -92,10 +93,21 @@
                                 ></p-checkbox>
                             </div>
                         </div>
-                        <div class="col col2 flex-50">
+                        <div class="col col2 flex-35">
                             <p class="hc-content-p">{{ item.title }}</p>
                         </div>
-                        <div class="col col3  flex-25">
+                        <div class="col col2 flex-20">
+                            <p class="hc-content-p fdr aic">
+                                <span class="icon-holder" *ngIf="item.type === 'text'">
+                                    <img src="/assets/images/text.svg" width="12" height="9" alt="" />&nbsp;
+                                </span>
+                                <span class="icon-holder" *ngIf="item.type === 'video'">
+                                    <img src="/assets/images/video.svg" width="13" height="14" alt="" />&nbsp;
+                                </span>
+                                {{ item.type | titlecase }}
+                            </p>
+                        </div>
+                        <div class="col col3  flex-20">
                             <p class="hc-content-p">{{ item.questions }}</p>
                         </div>
                         <div class="col col4 flex-20">{{ item.created }}</div>
