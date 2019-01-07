@@ -16,7 +16,7 @@
             </button>
         </div>
     </div>
-    <div>
+    <div *ngIf="questionnaire">
         <div class="hc-list">
             <div class="hc-selected-items" *ngIf="selectedItems">
                 <div class="text-block">
@@ -61,7 +61,12 @@
                 </div>
                 <div class="col col2 flex-60">Questions</div>
                 <div class="col col3 flex-20">Type</div>
-                <div class="col col4 flex-15">Knockout</div>
+                <div
+                    class="col col4 flex-15"
+                    *ngIf="questionnaire && questionnaire.type && questionnaire.type === 'text'"
+                >
+                    Knockout
+                </div>
             </div>
             <div class="nr-list-content">
                 <div class="hc-blocker"></div>
@@ -88,7 +93,10 @@
                                 <p class="hc-content-p">Video</p>
                             </ng-container>
                         </div>
-                        <div class="col col4 flex-15">
+                        <div
+                            class="col col4 flex-15"
+                            *ngIf="questionnaire && questionnaire.type && questionnaire.type === 'text'"
+                        >
                             <img *ngIf="hasKnockoutAnswers(item)" src="/assets/images/checkmark.svg" alt="Check icon" />
                             <img
                                 *ngIf="!hasKnockoutAnswers(item)"
