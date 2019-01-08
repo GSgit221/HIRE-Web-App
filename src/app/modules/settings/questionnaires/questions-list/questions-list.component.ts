@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import * as closest from 'closest';
 
 import { Questionnaire } from '../../../../models/questionnaire';
@@ -31,7 +31,7 @@ export class QuestionsListComponent implements OnInit {
     ) {
         this.questionnaireId = this.route.snapshot.paramMap.get('questionnaireId');
         this.store
-            .select<Questionnaire>(fromQuestionnaireSelectors.getSelectedQuestionnaire)
+            .pipe(select(fromQuestionnaireSelectors.getSelectedQuestionnaire))
             .subscribe((questionnaire: Questionnaire) => {
                 this.questionnaire = questionnaire;
             });

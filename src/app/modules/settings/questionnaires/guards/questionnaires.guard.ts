@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { of } from 'rxjs/observable/of';
 import { catchError, filter, switchMap, take, tap } from 'rxjs/operators';
@@ -19,7 +19,8 @@ export class QuestionnairesGuard implements CanActivate {
     }
 
     checkStore(): Observable<boolean> {
-        return this.store.select(fromStore.getQuestionnairesLoaded).pipe(
+        return this.store.pipe(
+            select(fromStore.getQuestionnairesLoaded),
             tap((loaded) => {
                 if (!loaded) {
                     this.store.dispatch(new fromStore.LoadQuestionnaires());

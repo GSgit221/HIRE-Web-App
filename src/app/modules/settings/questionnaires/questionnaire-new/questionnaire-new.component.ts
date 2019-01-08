@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 
+import * as fromStore from '../store';
 import { FormHelperService } from './../../../../services/form-helper.service';
 import { QuestionnaireService } from './../../../../services/questionnaire.service';
 
@@ -18,7 +20,8 @@ export class QuestionnaireNewComponent implements OnInit {
         private fb: FormBuilder,
         private formHelper: FormHelperService,
         private router: Router,
-        private questionnaireService: QuestionnaireService
+        private questionnaireService: QuestionnaireService,
+        private store: Store<fromStore.QuestionnairesState>
     ) {}
 
     ngOnInit() {
@@ -40,6 +43,7 @@ export class QuestionnaireNewComponent implements OnInit {
         this.questionnaireService.create(this.form.value).subscribe(
             () => {
                 this.contentLoading = false;
+                this.store.dispatch(new fromStore.LoadQuestionnaires());
                 this.router.navigateByUrl(`dashboard/settings/questionnaires`);
             },
             (error) => console.error(error)

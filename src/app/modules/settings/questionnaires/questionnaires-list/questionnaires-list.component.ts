@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import * as closest from 'closest';
 import { Observable } from 'rxjs';
 import * as fromStore from '../store';
@@ -26,15 +26,13 @@ export class QuestionnairesListComponent implements OnInit {
         private store: Store<fromStore.QuestionnairesState>
     ) {
         // Get questionnaires from store
-        this.store
-            .select<Questionnaire[]>(fromStore.getAllQuestionnaires)
-            .subscribe((questionnaires: Questionnaire[]) => {
-                if (questionnaires) {
-                    this.list = questionnaires;
-                }
-            });
+        this.store.pipe(select(fromStore.getAllQuestionnaires)).subscribe((questionnaires: Questionnaire[]) => {
+            if (questionnaires) {
+                this.list = questionnaires;
+            }
+        });
         // Get loading state from stroe
-        this.store.select(fromStore.getQuestionnairesLoaded).subscribe((loaded: boolean) => {
+        this.store.pipe(select(fromStore.getQuestionnairesLoaded)).subscribe((loaded: boolean) => {
             if (loaded) {
                 this.contentLoading = false;
             }

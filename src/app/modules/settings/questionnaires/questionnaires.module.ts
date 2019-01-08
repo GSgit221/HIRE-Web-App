@@ -20,8 +20,7 @@ const routes: Routes = [
     },
     {
         path: 'new',
-        component: QuestionnaireNewComponent,
-        canActivate: [fromGuards.QuestionnairesGuard]
+        component: QuestionnaireNewComponent
     },
     {
         path: ':questionnaireId/questions',

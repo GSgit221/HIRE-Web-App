@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
@@ -22,7 +22,7 @@ export class QuestionnaireService {
     getAll() {
         return this.http
             .get<Questionnaire[]>(`${this.baseURL}/questionnaires`)
-            .pipe(catchError((error: any) => Observable.throw(error.json())));
+            .pipe(catchError((error: any) => throwError(error.json())));
     }
 
     create(data: any) {
