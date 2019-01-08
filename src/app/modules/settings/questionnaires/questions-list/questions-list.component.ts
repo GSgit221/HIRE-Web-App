@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as closest from 'closest';
-import * as fromStore from '../store';
-import { Question } from './../../../../models/question';
 
-import { Questionnaire } from './../../../../models/questionnaire';
+import { Questionnaire } from '../../../../models/questionnaire';
+import * as fromStore from '../store';
+import * as fromQuestionnaireSelectors from '../store/selectors/questionnaires.selector';
+import { Question } from './../../../../models/question';
 import { QuestionnaireService } from './../../../../services/questionnaire.service';
 
 @Component({
@@ -28,11 +29,13 @@ export class QuestionsListComponent implements OnInit {
         private route: ActivatedRoute,
         private store: Store<fromStore.QuestionnairesState>
     ) {
-        this.questionnaireId = this.route.snapshot.paramMap.get('id');
-        this.questionnaireService.getById(this.questionnaireId).subscribe((questionnaire: Questionnaire) => {
-            this.questionnaire = questionnaire;
-            console.log(this.questionnaire);
-        });
+        this.questionnaireId = this.route.snapshot.paramMap.get('questionnaireId');
+        this.store
+            .select<Questionnaire>(fromQuestionnaireSelectors.getSelectedQuestionnaire)
+            .subscribe((questionnaire: Questionnaire) => {
+                this.questionnaire = questionnaire;
+            });
+
         this.questionnaireService.getQuestions(this.questionnaireId).subscribe((questions: Question[]) => {
             this.list = questions.sort((a, b) => a.created_at - b.created_at);
             console.log(this.list);

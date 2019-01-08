@@ -25,9 +25,6 @@ export class QuestionnairesListComponent implements OnInit {
         private questionnaireService: QuestionnaireService,
         private store: Store<fromStore.QuestionnairesState>
     ) {
-        // Get questionnaires
-        this.store.dispatch(new fromStore.LoadQuestionnaires());
-
         // Get questionnaires from store
         this.store
             .select<Questionnaire[]>(fromStore.getAllQuestionnaires)
@@ -36,7 +33,6 @@ export class QuestionnairesListComponent implements OnInit {
                     this.list = questionnaires;
                 }
             });
-
         // Get loading state from stroe
         this.store.select(fromStore.getQuestionnairesLoaded).subscribe((loaded: boolean) => {
             if (loaded) {
