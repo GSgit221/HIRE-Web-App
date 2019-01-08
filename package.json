@@ -37,7 +37,7 @@
         "core-js": "^2.5.7",
         "moment": "^2.23.0",
         "ng-drag-drop": "^5.0.0",
-        "ngrx-store-freeze": "^0.2.0",
+        "ngrx-store-freeze": "^0.2.4",
         "ngx-autosize-input": "^2.2.2",
         "ngx-cookie-service": "^1.0.10",
         "ngx-file-drop": "^4.0.6",
@@ -52,7 +52,7 @@
         "zone.js": "^0.8.26"
     },
     "devDependencies": {
-        "@angular-devkit/build-angular": "^0.8.1",
+        "@angular-devkit/build-angular": "^0.11.4",
         "@angular/cli": "^7.0.4",
         "@angular/compiler-cli": "^6.1.0",
         "@angular/language-service": "^6.1.0",

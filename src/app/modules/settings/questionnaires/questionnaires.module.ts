@@ -1,11 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 
 import { SharedModule } from '../../shared/shared.module';
 import { QuestionItemComponent } from './question-item/question-item.component';
 import { QuestionnaireNewComponent } from './questionnaire-new/questionnaire-new.component';
 import { QuestionnairesListComponent } from './questionnaires-list/questionnaires-list.component';
 import { QuestionsListComponent } from './questions-list/questions-list.component';
+
+// store
+import { effects, reducers } from './store';
 
 const routes: Routes = [
     {
@@ -32,7 +37,12 @@ const routes: Routes = [
         QuestionnairesListComponent,
         QuestionsListComponent
     ],
-    imports: [SharedModule, RouterModule.forChild(routes)],
+    imports: [
+        SharedModule,
+        RouterModule.forChild(routes),
+        StoreModule.forFeature('questionnaires', reducers),
+        EffectsModule.forFeature(effects)
+    ],
     exports: [RouterModule]
 })
 export class QuestionnairesModule {}

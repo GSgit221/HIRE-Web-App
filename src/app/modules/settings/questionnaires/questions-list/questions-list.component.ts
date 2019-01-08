@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import * as closest from 'closest';
+import * as fromStore from '../store';
 import { Question } from './../../../../models/question';
 
 import { Questionnaire } from './../../../../models/questionnaire';
@@ -23,7 +25,8 @@ export class QuestionsListComponent implements OnInit {
     constructor(
         private questionnaireService: QuestionnaireService,
         private router: Router,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private store: Store<fromStore.QuestionnairesState>
     ) {
         this.questionnaireId = this.route.snapshot.paramMap.get('id');
         this.questionnaireService.getById(this.questionnaireId).subscribe((questionnaire: Questionnaire) => {
