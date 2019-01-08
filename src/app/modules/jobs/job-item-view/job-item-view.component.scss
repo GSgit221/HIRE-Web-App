@@ -1,0 +1,563 @@
+@import '../../../../styles/variables.scss';
+
+:host > .container {
+    height: 100%;
+    position: relative;
+
+    // background: burlywood;
+    display: flex;
+    flex-direction: column;
+}
+
+.header-block {
+    display: flex;
+    flex-direction: row;
+
+    .add-btn {
+        height: 36px;
+    }
+}
+
+.status-dropdown-block {
+    width: 47px;
+    height: 47px;
+    background: $white;
+    border-radius: 3px;
+    margin-right: 20px;
+    padding: 7px 0 0;
+}
+
+.heading {
+    .job-title-block {
+        margin: 0 0 2px;
+
+        .view,
+        .edit {
+            display: flex;
+            height: 30px;
+            flex-direction: row;
+            position: relative;
+        }
+    }
+
+    .title {
+        display: inline-block;
+        font-size: 25px;
+        line-height: 30px;
+    }
+
+    .form-input-title {
+        width: auto;
+        height: 30px;
+        padding: 1px;
+        margin: -1px 0 0 -2px;
+        outline: 0;
+        font-size: 25px;
+        line-height: 26px;
+        font-weight: 700;
+        position: relative;
+
+        &:focus {
+            padding: 0;
+        }
+    }
+
+    .light-overlay {
+        z-index: 3;
+    }
+
+    .address {
+        font-size: 13px;
+        line-height: 14px;
+        color: $grey;
+        vertical-align: top;
+
+        .ico,
+        span {
+            display: inline-block;
+        }
+
+        .ico {
+            margin: 0 12px 0 0;
+        }
+    }
+}
+
+.vertical-separator {
+    display: block;
+    width: 1px;
+    height: 30px;
+    background: $grey-border;
+    margin: 0 20px;
+}
+
+.hiring-managers-block {
+    display: flex;
+    flex-direction: row;
+
+    .item {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin: 0 10px 0 0;
+
+        img {
+            display: block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+
+        span {
+            display: block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: $pink;
+            line-height: 30px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: $white;
+        }
+    }
+}
+
+.stages-section {
+    width: 100%;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
+}
+
+.stages-holder {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    display: flex;
+    flex-direction: row;
+    min-height: 100%;
+}
+
+.stage-column {
+    min-width: 270px;
+    max-width: 270px;
+    width: 270px;
+    border-radius: 3px;
+    margin: 0 30px 0 0;
+    position: relative;
+
+    .btn-dash-bordered {
+        font-size: 16px;
+        font-weight: 500;
+        color: $grey;
+    }
+
+    .stage-column-drop {
+        position: absolute;
+        left: 50%;
+        height: 100%;
+        top: 0;
+        width: 270px;
+        z-index: 0;
+    }
+
+    .stage-column-holder {
+        width: 100%;
+        min-height: 100%;
+        position: relative;
+
+        &.drag-border {
+            background: rgba(224, 230, 232, 0.5);
+        }
+    }
+
+    &.is-dragged {
+        background: rgba(224, 230, 232, 0.5);
+
+        * {
+            visibility: hidden;
+        }
+    }
+}
+
+.stage-header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 3px 0 0;
+    margin: 0 0 12px;
+
+    .title {
+        font-size: 16px;
+        line-height: 18px;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .counter {
+        display: block;
+        width: 22px;
+        height: 16px;
+        font-size: 12px;
+        line-height: 16px;
+        font-weight: 500;
+        background: $grey-border;
+        text-align: center;
+        border-radius: 8px;
+        margin: 0 0 0 8px;
+    }
+}
+
+.settings-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    width: 20px;
+    height: 29px;
+    background: $grey-border;
+
+    &:hover {
+        background: darken($grey-border, 5%);
+    }
+
+    &:active {
+        background: lighten($grey-border, 5%);
+    }
+}
+
+.stage-content {
+    width: 100%;
+    min-height: 101px;
+    position: relative;
+    border: 1px solid transparent;
+
+    .drop-holder {
+        height: 108px;
+        border: 1px dashed $grey-border;
+        border-radius: 5px;
+        width: 100%;
+        overflow: hidden;
+        opacity: 0;
+    }
+
+    &.drag-target-border {
+        // border: 1px dashed $grey-border;
+
+        .drop-holder {
+            opacity: 1;
+        }
+    }
+
+    .block {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        border-radius: 5px;
+        background: $white;
+        box-shadow: 0 0 5px 0 rgba($color: #000000, $alpha: 0.1);
+        margin: 0 0 10px;
+        padding: 14px 15px 10px 10px;
+        position: relative;
+        transition: all 0.4s ease;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &:active {
+            background: darken($white, 4%);
+        }
+
+        &.dd {
+            &:before {
+                width: 30px;
+                height: 5px;
+                border-radius: 0 0 5px 5px;
+                background: $green;
+                content: '';
+                position: absolute;
+                left: 10px;
+                top: 0;
+            }
+        }
+    }
+
+    .ava-column {
+        width: 30px;
+        margin: -3px 10px 0 0;
+    }
+
+    .ava {
+        display: block;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: $grey-border;
+        overflow: hidden;
+
+        img {
+            display: block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin: 0;
+        }
+    }
+
+    .ava-placeholder {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+        color: $main-blue;
+    }
+
+    .block-content {
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .title {
+        display: block;
+        font-size: 13px;
+        line-height: 15px;
+        margin: 0 0 4px;
+    }
+
+    .position {
+        display: block;
+        font-size: 12px;
+        line-height: 15px;
+        color: $grey;
+        margin: 0 0 0;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .stats-actions-block {
+        display: flex;
+        flex-direction: row;
+        padding: 2px 0 0;
+        font-size: 10px;
+        color: $grey;
+
+        .actions {
+            display: flex;
+            align-items: center;
+
+            .icon-btn {
+                display: flex;
+            }
+        }
+    }
+
+    .text-with-icon {
+        .icon {
+            margin: 0 5px 0 0;
+        }
+    }
+
+    .compliance-rate {
+        position: absolute;
+        right: 15px;
+        top: 14px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+
+        &.green {
+            background: $light-green;
+        }
+
+        &.orange {
+            background: $orange;
+        }
+
+        &.red {
+            background: $red;
+        }
+    }
+
+    .complience-value {
+        position: absolute;
+        right: 29px;
+        top: 12px;
+        font-size: 10px;
+        line-height: 1.4;
+        font-weight: bold;
+    }
+
+    .warning-block {
+        width: 28px;
+        height: 28px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        overflow: hidden;
+        color: $white;
+        text-align: center;
+        border-radius: 5px 0 0 0;
+
+        .warning-block-holder {
+            width: 28px;
+            height: 28px;
+            position: relative;
+
+            &:before {
+                content: '';
+                width: 50px;
+                height: 50px;
+                background: $orange;
+                display: block;
+                transform: rotate(45deg);
+                position: absolute;
+                left: -26px;
+                top: -32px;
+            }
+        }
+
+        span {
+            position: absolute;
+            left: 7px;
+            top: 0;
+        }
+    }
+}
+
+.drop-overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    background: rgba($color: $white, $alpha: 0.95);
+    display: none;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+
+    .drop-holder {
+        width: 212px;
+        font-size: 20px;
+        line-height: 1.2;
+        text-align: center;
+
+        img {
+            display: block;
+            width: 212px;
+            height: 212px;
+            margin: 0 0 30px;
+        }
+    }
+}
+
+.stages-section {
+    &.over {
+        .drop-overlay {
+            display: flex;
+        }
+    }
+}
+
+.no-matches-block {
+    display: flex;
+    flex-direction: row;
+    background: $white;
+    border: 2px dotted $grey-border;
+    border-radius: 5px;
+    padding: 14px;
+    color: $grey;
+    font-size: 12px;
+    margin: 0 0 10px;
+
+    img {
+        width: 23px;
+        min-width: 23px;
+        margin: 4px 20px 0 0;
+    }
+
+    p {
+        margin: 0;
+    }
+}
+
+.show-more-block {
+    color: $grey;
+    font-size: 11px;
+    margin: 0 0 12px;
+
+    .show-more-separator {
+        font-size: 0;
+        margin: 0 0 6px;
+
+        span {
+            display: inline-block;
+            width: 2px;
+            height: 2px;
+            margin: 0 2px;
+            border-radius: 50%;
+            background: $grey;
+        }
+    }
+
+    .load-more {
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
+
+.remove-candidate-block {
+    width: 100%;
+    height: 60px;
+    position: absolute;
+    bottom: -30px;
+    left: 0;
+    opacity: 0;
+    transition: all 0.2s ease;
+    text-align: center;
+    z-index: 1;
+
+    .remove-candidate-block-holder {
+        height: 60px;
+        margin: 0 -30px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &.visible {
+        z-index: 4;
+        opacity: 1;
+
+        .remove-candidate-block-holder {
+            background: rgba(255, 59, 48, 0.1);
+        }
+    }
+
+    svg {
+        #Job-View---Default {
+            transition: all 0.3s ease;
+        }
+    }
+
+    &.drag-over {
+        svg {
+            #Job-View---Default {
+                fill: darken(#ff0000, 20%);
+            }
+        }
+    }
+}

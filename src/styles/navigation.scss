@@ -1,0 +1,45 @@
+@import "variables.scss";
+
+.pages-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 0 15px;
+    font-size: 14px;
+    button {
+        border: none;
+        background: none;
+        box-shadow: none;
+        outline: none;
+        padding: 0;
+        font: 14px/1.538 'Roboto', Helvetica, Arial, sans-serif;
+    }
+    button {
+        color: $grey;
+        &:hover {
+            text-decoration: none;
+        }
+    }
+    .back-btn {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+    .icon {
+        display: flex;
+        align-items: center;
+        margin: 0 8px 0 0;
+    }
+    .prev-next-nav {
+        display: flex;
+        align-items: center;
+        button {
+            margin: 0;
+            display: inline-flex;
+            cursor: pointer;
+        }
+        .next-btn {
+            margin: 0 0 0 22px;
+        }
+    }
+}

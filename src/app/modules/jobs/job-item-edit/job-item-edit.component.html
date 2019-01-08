@@ -1,0 +1,620 @@
+<div class="container fixed-width-container">
+    <div class="title-block">
+        <h1 class="page-title">{{ job && job.title ? job.title : 'New Job' }}</h1>
+        <div class="sections-nav">
+            <div
+                class="section-nav-link"
+                (click)="onChangeSection('job-details')"
+                [ngClass]="{ active: activeSection === 'job-details' }"
+            >
+                Job Details
+            </div>
+            <div
+                class="section-nav-link"
+                (click)="onChangeSection('applications')"
+                [ngClass]="{
+                    active: activeSection === 'applications',
+                    disabled: !job || !job.step_completed || job.step_completed < 1
+                }"
+            >
+                Applications
+            </div>
+            <div
+                class="section-nav-link"
+                (click)="onChangeSection('hiring-team')"
+                [ngClass]="{
+                    active: activeSection === 'hiring-team',
+                    disabled: !job || !job.step_completed || job.step_completed < 2
+                }"
+            >
+                Hiring Team
+            </div>
+        </div>
+        <div class="buttons-holder">
+            <button class="btn btn-icon" (click)="onSaveDraft($event)">
+                <span class="icon">
+                    <svg
+                        width="15px"
+                        height="15px"
+                        viewBox="0 0 15 15"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                    >
+                        <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <g
+                                id="Add-Job---Details"
+                                transform="translate(-956.000000, -92.000000)"
+                                fill="#FF3B30"
+                                fill-rule="nonzero"
+                            >
+                                <g id="icons8-save_close" transform="translate(956.000000, 92.000000)">
+                                    <path
+                                        d="M1.59375,0 C0.714844,0 0,0.714844 0,1.59375 L0,11.40625 C0,12.285156 0.714844,13 1.59375,13 L6.761719,13 C7.570313,14.203125 8.945313,15 10.5,15 C12.980469,15 15,12.980469 15,10.5 C15,8.945313 14.203125,7.570313 13,6.761719 L13,2.476563 L10.527344,0 L1.59375,0 Z M1.59375,1 L2,1 L2,3.125 C2,4.113281 2.703125,5 3.667969,5 L8.332031,5 C9.296875,5 10,4.113281 10,3.125 L10,1 L10.109375,1 L12,2.890625 L12,6.273438 C11.527344,6.105469 11.027344,6 10.5,6 C8.945313,6 7.570313,6.796875 6.761719,8 L4.5,8 C3.671875,8 3,8.671875 3,9.5 L3,12 L1.59375,12 C1.265625,12 1,11.734375 1,11.40625 L1,1.59375 C1,1.265625 1.265625,1 1.59375,1 Z M3,1 L6,1 L6,3 L8,3 L8,1 L9,1 L9,3.125 C9,3.65625 8.660156,4 8.332031,4 L3.667969,4 C3.339844,4 3,3.65625 3,3.125 L3,1 Z M10.5,7 C12.4375,7 14,8.5625 14,10.5 C14,12.4375 12.4375,14 10.5,14 C8.5625,14 7,12.4375 7,10.5 C7,8.5625 8.5625,7 10.5,7 Z M12,8.859375 L10.160156,10.703125 L9.015625,9.558594 L8.304688,10.265625 L10.160156,12.117188 L12.707031,9.566406 L12,8.859375 Z M4.5,9 L6.273438,9 C6.105469,9.472656 6,9.972656 6,10.5 C6,11.027344 6.105469,11.527344 6.273438,12 L4,12 L4,9.5 C4,9.222656 4.226563,9 4.5,9 Z"
+                                        id="Shape"
+                                    ></path>
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                </span>
+                <span class="text">Save Draft</span>
+            </button>
+            <button class="btn btn-primary ml20 w140" (click)="onSave($event)">{{ saveBtnText }}</button>
+        </div>
+    </div>
+    <div class="section-separator mb20"></div>
+    <div class="content-section" id="job-details" *ngIf="activeSection === 'job-details'">
+        <form [formGroup]="jobDetailsForm">
+            <div class="form-content-section">
+                <div class="description">
+                    <strong class="title">Job Details</strong>
+                    <p>Your job details as you would like them to appear for candidates.</p>
+                    <p>
+                        The point is keep the titles shorter and more generic and not to mix the type of position with
+                        the specific company "slot" for that position.
+                    </p>
+                    <p>Find out more about <a href="#">Job Titles here</a></p>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <div class="form-block">
+                            <div class="input-block">
+                                <label for="" class="form-block-label">Job Title</label>
+                                <div class="input-holder">
+                                    <input
+                                        type="text"
+                                        class="form-input"
+                                        formControlName="title"
+                                        maxlength="{{ titleMaxLength }}"
+                                        autofocus
+                                    />
+                                    <div class="input-chars-counter">
+                                        <span class="chars"
+                                            >{{ jobDetailsForm.get('title').value.length }}/{{ titleMaxLength }}</span
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-block">
+                            <div class="input-block">
+                                <label for="" class="form-block-label">Company</label>
+                                <input type="text" class="form-input" formControlName="company" />
+                            </div>
+                        </div>
+                        <div class="form-block">
+                            <div class="input-block">
+                                <label for="" class="form-block-label">Primary Job Location</label>
+                                <div class="input-block right-option-block">
+                                    <!-- <input type="text" class="form-input" placeholder="Enter a city" formControlName="location" [appDisableControl]="jobDetailsForm.get('is_remote').value"> -->
+                                    <input type="hidden" formControlName="location" id="location-input" />
+                                    <input
+                                        type="text"
+                                        class="form-input"
+                                        placeholder="Enter a city"
+                                        ngx-google-places-autocomplete
+                                        #placesRef="ngx-places"
+                                        #locationInputRef
+                                        [options]="locationOptions"
+                                        (onAddressChange)="onLocationChange($event)"
+                                        [(value)]="inputAddress"
+                                        (change)="handleAddressTextChange($event)"
+                                        [disabled]="jobDetailsForm.get('is_remote').value"
+                                    />
+                                    <div class="right-option">
+                                        <p-checkbox
+                                            label="Remote"
+                                            formControlName="is_remote"
+                                            binary="true"
+                                            inputId="is_remote"
+                                        ></p-checkbox>
+                                    </div>
+                                </div>
+                                <div class="input-block"></div>
+                            </div>
+                        </div>
+                        <div class="form-block">
+                            <div class="form-block-columns">
+                                <div class="form-block-col">
+                                    <div class="input-block">
+                                        <label for="" class="form-block-label">Job Type</label>
+                                        <p-dropdown
+                                            [options]="jobTypeOptions"
+                                            formControlName="job_type"
+                                            [style]="{ width: '100%' }"
+                                            placeholder="Please select an option"
+                                        ></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="form-block-col-separator"></div>
+                                <div class="form-block-col">
+                                    <div class="input-block">
+                                        <label for="" class="form-block-label">Number of Positions Available</label>
+                                        <p-dropdown
+                                            [options]="hiresOptions"
+                                            formControlName="number_of_hires"
+                                            [style]="{ width: '100%' }"
+                                            placeholder="Please select an option"
+                                        ></p-dropdown>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-block">
+                            <div class="form-block-columns">
+                                <div class="form-block-col">
+                                    <div class="input-block">
+                                        <label for="" class="form-block-label">Education</label>
+                                        <p-dropdown
+                                            [options]="educationOptions"
+                                            formControlName="education"
+                                            [style]="{ width: '100%' }"
+                                            placeholder="Please select an option"
+                                        ></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="form-block-col-separator"></div>
+                                <div class="form-block-col">
+                                    <div class="input-block">
+                                        <label for="" class="form-block-label">Experience</label>
+                                        <p-dropdown
+                                            [options]="experienceOptions"
+                                            formControlName="experience"
+                                            [style]="{ width: '100%' }"
+                                            placeholder="Please select an option"
+                                        ></p-dropdown>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section-separator mb20 mt20"></div>
+            <div class="form-content-section">
+                <div class="description">
+                    <strong class="title">Salary</strong>
+                    <p>
+                        Entering a salary is compulsary for automatic matching but you may opt to hide it from the job
+                        posting.
+                    </p>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <div class="form-block">
+                            <div class="form-block-columns padding-columns">
+                                <div class="form-block-col">
+                                    <div class="input-block">
+                                        <label for="" class="form-block-label" *ngIf="!job?.single_salary">From</label>
+                                        <label for="" class="form-block-label" *ngIf="job?.single_salary">Salary</label>
+                                        <div class="input-block">
+                                            <input type="text" class="form-input pl30" formControlName="salary_from" />
+                                            <div class="currency-symbol">R</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-block-col" *ngIf="!job?.single_salary">
+                                    <div class="input-block">
+                                        <label for="" class="form-block-label">To</label>
+                                        <div class="input-block">
+                                            <input type="text" class="form-input pl30" formControlName="salary_to" />
+                                            <div class="currency-symbol">R</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-block-col mw33p">
+                                    <div class="input-block">
+                                        <label for="" class="form-block-label">&nbsp;</label>
+                                        <p-dropdown
+                                            [options]="salaryOptions"
+                                            formControlName="salary_period"
+                                            [style]="{ width: '100%' }"
+                                        ></p-dropdown>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="form-tip danger" (click)="toggleSalaryField()" *ngIf="!job?.single_salary">
+                                Use Single Salary
+                            </p>
+                            <p class="form-tip danger" (click)="toggleSalaryField()" *ngIf="job?.single_salary">
+                                Use Salary Range
+                            </p>
+                        </div>
+                        <div class="form-content-box-bottom">
+                            <div class="form-content-box-bottom-holder">
+                                <p-checkbox
+                                    name="hide_salary"
+                                    binary="true"
+                                    label="Hide this salary from the job posting"
+                                    formControlName="hide_salary"
+                                    inputId="hide_salary"
+                                ></p-checkbox>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section-separator mb20 mt20"></div>
+            <div class="form-content-section">
+                <div class="description">
+                    <strong class="title">Job Description</strong>
+                    <p>Select from our list of job templates or enter your manually.</p>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <div class="form-block">
+                            <p-editor formControlName="description" [style]="{ height: '400px' }">
+                                <p-header>
+                                    <span class="ql-formats">
+                                        <select class="ql-size">
+                                            <option selected></option>
+                                            <option value="huge">Heading</option>
+                                            <option value="large">Subheading</option>
+                                        </select>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-bold" aria-label="Bold"></button>
+                                        <button class="ql-italic" aria-label="Italic"></button>
+                                        <button class="ql-underline" aria-label="Underline"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-list" value="ordered" type="button"></button>
+                                        <button class="ql-list" value="bullet" type="button"></button>
+                                        <select class="ql-align">
+                                            <option selected=""></option>
+                                            <option value="center"></option>
+                                            <option value="right"></option>
+                                            <option value="justify"></option>
+                                        </select>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button aria-label="Remove Styles" class="ql-clean" type="button"></button>
+                                    </span>
+                                </p-header>
+                            </p-editor>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section-separator mb20 mt20"></div>
+            <div class="form-content-section">
+                <div class="description">
+                    <strong class="title">Job Requirements</strong>
+                    <p>Select from our list of job templates or enter your manually.</p>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <div class="form-block">
+                            <p-editor formControlName="requirements" [style]="{ height: '400px' }">
+                                <p-header>
+                                    <span class="ql-formats">
+                                        <select class="ql-size">
+                                            <option selected></option>
+                                            <option value="huge">Heading</option>
+                                            <option value="large">Subheading</option>
+                                        </select>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-bold" aria-label="Bold"></button>
+                                        <button class="ql-italic" aria-label="Italic"></button>
+                                        <button class="ql-underline" aria-label="Underline"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-list" value="ordered" type="button"></button>
+                                        <button class="ql-list" value="bullet" type="button"></button>
+                                        <select class="ql-align">
+                                            <option selected=""></option>
+                                            <option value="center"></option>
+                                            <option value="right"></option>
+                                            <option value="justify"></option>
+                                        </select>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button aria-label="Remove Styles" class="ql-clean" type="button"></button>
+                                    </span>
+                                </p-header>
+                            </p-editor>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="content-section" id="applications" *ngIf="activeSection === 'applications'">
+        <form [formGroup]="applicationsForm">
+            <div class="form-content-section">
+                <div class="description">
+                    <strong class="title">Candidate Application</strong>
+                    <p>Control how candidates can apply to your position and what information is required</p>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <div class="form-block">
+                            <div class="input-block">
+                                <label for="" class="form-block-label">Job Listing</label>
+                                <p-dropdown
+                                    [options]="joblistingOptions"
+                                    formControlName="job_listing"
+                                    [style]="{ width: '100%' }"
+                                ></p-dropdown>
+                            </div>
+                        </div>
+                        <div class="form-content-box-bottom">
+                            <div class="form-content-box-bottom-holder">
+                                <div class="text-with-icon flex-row flex-aic">
+                                    <img src="/assets/images/pin.svg" class="icon" alt="" width="13" height="13" />
+                                    <p>
+                                        Accept applications on your public Career Portal and enable 3rd party job boards
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section-separator mb20 mt20"></div>
+            <div class="form-content-section">
+                <div class="description">
+                    <strong class="title">Application Form</strong>
+                    <p>
+                        Choose the information collected for candidates applying through your Career or Employee
+                        Portals.
+                    </p>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box mb20">
+                        <strong class="form-content-box-title">Resume Upload</strong>
+                        <div class="form-block">
+                            <p-checkbox
+                                name="resume_upload_required"
+                                binary="true"
+                                label="The candidate is required to upload a Resume"
+                                formControlName="resume_upload_required"
+                                inputId="resume_upload_required"
+                            ></p-checkbox>
+                        </div>
+                        <div
+                            class="form-content-box-bottom"
+                            *ngIf="applicationsForm.get('resume_upload_required').value"
+                        >
+                            <div class="form-content-box-bottom-holder">
+                                <div class="form-block">
+                                    <p-checkbox
+                                        name="email_missing_info"
+                                        binary="true"
+                                        label="Email the candidate should there be missing information"
+                                        formControlName="email_missing_info"
+                                        inputId="email_missing_info"
+                                    ></p-checkbox>
+                                </div>
+                                <div class="form-block mb0">
+                                    <p-checkbox
+                                        name="email_suggestions"
+                                        binary="true"
+                                        label="Email the candidate with suggestions on how they can improve their resume"
+                                        formControlName="email_suggestions"
+                                        inputId="email_suggestions"
+                                    ></p-checkbox>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-content-box">
+                        <strong class="form-content-box-title">Application Fields</strong>
+                        <div class="options-row flex-row flex-aic mb20">
+                            <span class="text">Name</span>
+                            <div class="predefined-option mla">Required</div>
+                        </div>
+                        <div class="options-row flex-row flex-aic mb20">
+                            <span class="text">Email</span>
+                            <div class="predefined-option mla">Required</div>
+                        </div>
+                        <div class="options-row flex-row flex-aic mb20">
+                            <span class="text">Phone Number</span>
+                            <p-selectButton
+                                [options]="applicationFieldsOptions"
+                                formControlName="application_field_phone"
+                                class="mla"
+                            ></p-selectButton>
+                        </div>
+                        <div class="options-row flex-row flex-aic mb20">
+                            <span class="text">Current Location</span>
+                            <p-selectButton
+                                [options]="applicationFieldsOptions"
+                                formControlName="application_field_current_location"
+                                class="mla"
+                            ></p-selectButton>
+                        </div>
+                        <div class="options-row flex-row flex-aic mb20">
+                            <span class="text">Employment Equity Status</span>
+                            <p-selectButton
+                                [options]="applicationFieldsOptions"
+                                formControlName="application_field_employment_equity_status"
+                                class="mla"
+                            ></p-selectButton>
+                        </div>
+                        <div class="options-row flex-row flex-aic">
+                            <span class="text">Gender</span>
+                            <p-selectButton
+                                [options]="applicationFieldsOptions"
+                                formControlName="application_field_gender"
+                                class="mla"
+                            ></p-selectButton>
+                        </div>
+                        <div class="section-separator mb10 mt10"></div>
+                        <div class="options-row flex-row flex-aic mb20">
+                            <span class="text">Experiance Summary</span>
+                            <p-selectButton
+                                [options]="applicationFieldsOptions"
+                                formControlName="application_field_experience_summary"
+                                class="mla"
+                            ></p-selectButton>
+                        </div>
+                        <div class="options-row flex-row flex-aic mb20">
+                            <span class="text">Work History</span>
+                            <p-selectButton
+                                [options]="applicationFieldsOptions"
+                                formControlName="application_field_work_history"
+                                class="mla"
+                            ></p-selectButton>
+                        </div>
+                        <div class="options-row flex-row flex-aic mb20">
+                            <span class="text">Education</span>
+                            <p-selectButton
+                                [options]="applicationFieldsOptions"
+                                formControlName="application_field_education"
+                                class="mla"
+                            ></p-selectButton>
+                        </div>
+                        <div class="section-separator mb10 mt10"></div>
+                        <div class="options-row flex-row flex-aic">
+                            <span class="text">Cover Letter</span>
+                            <p-selectButton
+                                [options]="applicationFieldsOptions"
+                                formControlName="application_field_cover_letter"
+                                class="mla"
+                            ></p-selectButton>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section-separator mb20 mt20"></div>
+            <div class="form-content-section">
+                <div class="description">
+                    <strong class="title">Questionnaire</strong>
+                    <p>You can extent your application form with custom questions.</p>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <div class="form-block">
+                            <div class="input-block">
+                                <label for="" class="form-block-label">Questionnaire</label>
+                                <div class="flex-row">
+                                    <p-dropdown
+                                        [options]="questionnaireOptions"
+                                        formControlName="questionnaire"
+                                        [style]="{ width: '100%' }"
+                                        class="flex-1"
+                                        placeholder="{{
+                                            questionnaireOptions.length
+                                                ? 'Select questionnaire from the list'
+                                                : 'You have not created any questionnaires, click Add'
+                                        }}"
+                                    ></p-dropdown>
+                                    <button
+                                        class="btn btn-primary w60 ml20"
+                                        routerLink="/dashboard/settings/questionnaires/new"
+                                    >
+                                        Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="content-section" id="hiring-team" *ngIf="activeSection === 'hiring-team'">
+        <form [formGroup]="hiringForm">
+            <div class="form-content-section" *ngIf="isJobOwner">
+                <div class="description">
+                    <strong class="title">Job Owner</strong>
+                    <p>You can allocate job ownership to a user on your team.</p>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <label for="" class="form-block-label">Owner</label>
+                        <p-dropdown
+                            [options]="recruiters"
+                            formControlName="owner"
+                            placeholder="Add to this position"
+                            (onChange)="onChangeUser($event)"
+                            [style]="{ width: '100%' }"
+                        ></p-dropdown>
+                    </div>
+                </div>
+            </div>
+            <div class="section-separator mb20 mt20" *ngIf="isJobOwner"></div>
+            <div class="form-content-section">
+                <div class="description">
+                    <strong class="title">Recruiters</strong>
+                    <p>Recruiters are able to add, manage and communicate with candidates for this position.</p>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <label for="" class="form-block-label">Recruiters</label>
+                        <app-multi-select
+                            [items]="users"
+                            (newUser)="onNewUserAdded($event)"
+                            formControlName="hiring_managers"
+                        ></app-multi-select>
+                    </div>
+                </div>
+            </div>
+            <div class="section-separator mb20 mt20"></div>
+            <div class="form-content-section">
+                <div class="description">
+                    <strong class="title">Team Members</strong>
+                    <p>
+                        Members are able to review & provide feedback on candidates, including participating in
+                        interviews &amp; submitting scorecards.
+                    </p>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <app-multi-select
+                            [items]="users"
+                            (newUser)="onNewUserAdded($event)"
+                            formControlName="team_members"
+                        ></app-multi-select>
+                    </div>
+                </div>
+            </div>
+            <div class="section-separator mb20 mt20"></div>
+            <div class="form-content-section">
+                <div class="description">
+                    <strong class="title">Default Email</strong>
+                    <p>Who should automated emails triggered by the system for this job be sent from?</p>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <div class="form-block">
+                            <div class="input-block">
+                                <label for="" class="form-block-label">Default Email Name</label>
+                                <input
+                                    type="text"
+                                    class="form-input"
+                                    formControlName="default_email_name"
+                                    [value]="this.jobOwner"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<app-loader *ngIf="contentLoading"></app-loader>

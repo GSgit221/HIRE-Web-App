@@ -1,0 +1,73 @@
+<div class="light-overlay" *ngIf="contentLoading"></div>
+<div class="message-form">
+    <form [formGroup]="commentForm">
+        <textarea name="message" formControlName="description"></textarea>
+        <button class="btn btn-primary" [disabled]="!commentForm.valid" (click)="onSaveComment()">Add</button>
+    </form>
+</div>
+<div class="audit">
+    <div class="audit-item" *ngFor="let item of audit; let ind = index" [ngClass]="{ last: ind === audit.length - 1 }">
+        <ng-container *ngIf="item.type === 'comment'">
+            <div class="audit-item-img">
+                <div *ngIf="item.image_url" class="inner">
+                    <img [src]="item.image_url" height="20" [alt]="item.last_name" />
+                </div>
+                <div class="initial" *ngIf="!item.image_url">{{ item.user | initials }}</div>
+            </div>
+            <div class="audit-item-content">
+                <div class="audit-item-header">
+                    <div class="audit-item-heading">
+                        <p>
+                            <strong>{{ user.first_name }} {{ user.last_name }} </strong> on
+                            <strong>{{ item.candidate_name }}</strong>
+                        </p>
+                    </div>
+                    <em class="date">{{ item.created_at_rel }}</em>
+                </div>
+                <div class="audit-item-message">
+                    <div class="inner">{{ item.text }}</div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="item.type === 'created'">
+            <div class="audit-item last">
+                <div class="audit-item-img">
+                    <div class="inner"><div class="dot"></div></div>
+                </div>
+                <div class="audit-item-content">
+                    <div class="audit-item-header">
+                        <div class="audit-item-heading">
+                            <p>
+                                <strong>{{ item.candidate_name }}</strong> was added to
+                                <strong>{{ item.job_title }}</strong> from
+                                <strong>{{ item.source | titlecase }}</strong>
+                            </p>
+                        </div>
+                        <em class="date">{{ candidate.created_at_rel }}</em>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="item.type === 'stages_progress'">
+            <div class="audit-item-img">
+                <div *ngIf="item.image_url" class="inner">
+                    <img [src]="item.image_url" height="20" [alt]="item.last_name" />
+                </div>
+                <div class="initial" *ngIf="!item.image_url">{{ item.user | initials }}</div>
+            </div>
+            <div class="audit-item-content">
+                <div class="audit-item-header">
+                    <div class="audit-item-heading">
+                        <p>
+                            <strong>{{ user.first_name }} {{ user.last_name }} </strong> moved
+                            <strong>{{ item.candidate_name }}</strong> from
+                            <strong>{{ item.stage_from_title }}</strong> stage to
+                            <strong>{{ item.stage_to_title }}</strong> stage.
+                        </p>
+                    </div>
+                    <em class="date">{{ item.created_at_rel }}</em>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>

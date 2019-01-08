@@ -1,0 +1,40 @@
+p-messages {
+    display: block;
+    position: relative;
+    margin: 0 0 20px;
+}
+
+.textarea {
+    resize: none;
+    height: 80px;
+    color: #212b35;
+}
+
+.checkbox-required {
+    padding-top: 32px;
+    display: block;
+}
+
+.form-block-columns.w50 {
+    width: calc(50% + 10px);
+}
+
+.form-block-2-columns {
+    width: 100%;
+
+    &:after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+
+    .form-block-2-columns-holder {
+        margin: 0 -10px;
+    }
+
+    .form-block-col {
+        float: left;
+        width: 50%;
+        padding: 0 10px 10px;
+    }
+}

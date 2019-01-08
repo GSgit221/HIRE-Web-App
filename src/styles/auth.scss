@@ -1,0 +1,647 @@
+.auth-page {
+    background-color: #f6f6f6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    font-size: 14px;
+
+    .logo-holder {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .logo {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        outline: 0 !important;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        .hc-logo {
+            display: block;
+            width: 30px;
+            height: 30px;
+            margin: 0;
+        }
+
+        .logo-separator {
+            display: block;
+            font-size: 20px;
+            line-height: 30px;
+            font-weight: 500;
+            color: $pink;
+            margin: 0 5px;
+        }
+
+        .text-logo {
+            display: block;
+            font-size: 20px;
+            line-height: 30px;
+            font-weight: 500;
+            margin: 0;
+        }
+    }
+
+    .hc-help-text {
+        font-size: 14px;
+        line-height: 1.4;
+        vertical-align: top;
+        display: inline-block;
+    }
+
+    .auth-wrapper {
+        width: 584px;
+        margin: 0 auto;
+    }
+
+    .alert {
+        max-height: 65px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    //.section-container {
+    //  width: 400px;
+    //  margin: 40px auto 10px auto;
+    //
+    //  .section-content {
+    //    min-height: 0;
+    //  }
+    //
+    //  .alert-container {
+    //    margin: 0;
+    //  }
+    //
+    //  md-checkbox {
+    //    margin-left: 0;
+    //  }
+    //
+    //  .section-header, .section-footer {
+    //    padding: 20px;
+    //  }
+    //}
+    //
+    .hellocrowd-logo-long {
+        width: 180px;
+        margin: 0 auto;
+    }
+
+    //
+    //.copyright {
+    //  text-align: center;
+    //  padding: 10px;
+    //  color: $extra-light-grey;
+    //  font-size: 13px;
+    //}
+
+    .auth-container {
+        width: 584px;
+        background: #fff;
+        border-radius: 5px;
+        margin: 20px 0 10px;
+    }
+
+    .auth-container-frame {
+        width: 584px;
+        display: flex;
+        min-height: 350px;
+        flex-direction: row;
+        align-items: stretch;
+    }
+
+    .left-block {
+        display: flex;
+        width: 193px;
+        background: #192a4d;
+        color: #fff;
+        padding: 40px 10px 0;
+        border-radius: 5px 0 0 5px;
+        text-align: center;
+        flex-direction: column;
+        position: relative;
+        font-size: 14px;
+        line-height: 1.615;
+        font-weight: 400;
+
+        h2 {
+            font-size: 30px;
+            font-weight: 300;
+            line-height: 1.1;
+            margin: 0 0 24px;
+        }
+
+        .signup-link {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            padding: 10px 10px 30px;
+            font-weight: 500;
+
+            a {
+                text-decoration: underline;
+
+                &:hover {
+                    cursor: pointer;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+
+    .main-block {
+        display: flex;
+        flex: 1;
+        padding: 65px 65px 30px 56px;
+        flex-direction: column;
+        position: relative;
+
+        .alert-container {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+    }
+
+    .google-button .hc-button-inner button {
+        position: relative;
+
+        .google-icon {
+            position: absolute;
+            left: 2px;
+            top: 2px;
+            font-size: 0;
+            line-height: 0;
+            vertical-align: top;
+            background: #fff;
+            padding: 3px;
+            border-radius: 3px;
+        }
+    }
+
+    .separator {
+        margin: 10px 0;
+        position: relative;
+        color: #a5a6a6;
+        font-size: 12px;
+        font-weight: bold;
+        text-align: center;
+
+        &:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #a5a6a6;
+        }
+
+        .separator-text {
+            display: inline-block;
+            background: #fff;
+            padding: 1px 15px;
+            position: relative;
+            z-index: 2;
+        }
+    }
+
+    .hc-form-row {
+        min-height: 35px;
+        margin: 0 0 15px;
+
+        .hc-form-control {
+            font-size: 14px;
+            background: #f7f9fa;
+            border: 1px solid #f7f9fa;
+            margin: 0;
+        }
+    }
+
+    .form-bottom {
+        md-checkbox {
+            margin: 0;
+        }
+
+        .hc-help-text {
+            color: #545454;
+        }
+    }
+
+    .signin-btn {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        height: 35px;
+        padding: 1px;
+        background: $pink;
+        border-radius: 4px;
+        border: 0;
+        transition: all 0.2s ease;
+        outline: none !important;
+
+        &:hover {
+            cursor: pointer;
+            background: darken($pink, 10%);
+        }
+
+        &:active {
+            background: lighten($pink, 10%);
+        }
+
+        .abcRioButtonIcon {
+            width: 26px;
+            height: 26px;
+            border-radius: 3px;
+            margin: 1px 0 0 3px;
+            padding: 4px !important;
+            background: $white;
+        }
+
+        .text {
+            flex: 1;
+            text-align: center;
+            font-size: 14px;
+            line-height: 29px;
+            letter-spacing: 1px;
+            color: $white;
+        }
+    }
+
+    .sign-in {
+        width: 100%;
+        min-height: 31px;
+        border-radius: 4px;
+        background: $main-blue;
+
+        span[clientid] {
+            display: block;
+            width: 100%;
+        }
+
+        .abcRioButtonBlue {
+            background: $main-blue;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+            border-radius: 4px;
+        }
+
+        .abcRioButtonBlue:hover {
+            background: darken($main-blue, 10%);
+            box-shadow: none;
+        }
+
+        .abcRioButtonContents {
+            font-size: 14px !important;
+            line-height: 29px !important;
+            letter-spacing: 1px !important;
+        }
+
+        .abcRioButtonBlue .abcRioButtonIcon {
+            border-radius: 3px;
+            margin: 2px 0 0 1px;
+            padding: 4px !important;
+        }
+    }
+
+    hc-button .hc-button-inner button {
+        font-size: 14px;
+        line-height: 29px;
+    }
+
+    .btn-right {
+        margin-left: auto;
+    }
+
+    .agreed-holder {
+        a {
+            text-decoration: underline;
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
+    }
+
+    &.tenats-auth {
+        p-messages {
+            display: block;
+            position: relative;
+            margin: 0 0 20px;
+        }
+
+        p-checkbox {
+            line-height: 0;
+        }
+
+        .checkbox-holder {
+            align-items: center;
+        }
+
+        .auth-wrapper {
+            width: 100%;
+        }
+
+        .auth-container {
+            width: 100%;
+            background: #fff;
+            margin: 0 auto;
+            background-image: linear-gradient(to right, #192a4d 50%, $main-background 50%);
+        }
+
+        .auth-container-frame {
+            // max-width: 1280px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .left-block {
+            flex: 0 0 50%;
+            background: #192a4d;
+            padding: 192px 10px 0 10px;
+            position: relative;
+            text-align: left;
+
+            .inner-block {
+                max-width: 388px;
+                margin: 0 auto;
+                width: 100%;
+            }
+
+            h2 {
+                font-size: 33px;
+                font-weight: 700;
+                margin: 0 0 24px;
+            }
+        }
+
+        .main-block {
+            flex: 0 0 50%;
+            padding: 181px 10px 30px 10px;
+            position: relative;
+            background: #f1f5f9;
+
+            .inner-block {
+                margin: 0 auto;
+                max-width: 560px;
+                width: 100%;
+            }
+
+            .signup-link {
+                display: flex;
+                justify-content: center;
+                margin: 0 0 32px;
+                font-size: 15px;
+
+                p {
+                    margin: 0;
+                }
+
+                a {
+                    padding: 0 0 0 3px;
+                }
+            }
+        }
+
+        .forgot {
+            color: $red;
+            outline: none;
+            font-size: 13px;
+            margin: 0 0 0 24px;
+
+            &:hover {
+                cursor: pointer;
+                color: darken($pink, 5%);
+                text-decoration: underline;
+            }
+        }
+
+        .logo-holder {
+            justify-content: flex-start;
+            margin: 0 0 26px;
+        }
+
+        .signin-btn {
+            height: 51px;
+            padding: 1px;
+            background: $dark-blue-btn;
+            border-radius: 4px;
+
+            &:hover {
+                cursor: pointer;
+                text-decoration: none;
+                background: darken($dark-blue-btn, 10%);
+            }
+
+            &:active {
+                background: lighten($dark-blue-btn, 10%);
+            }
+
+            .abcRioButtonIcon {
+                width: 37px;
+                height: 37px;
+                border-radius: 3px;
+                margin: 1px 0 0 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        .form-input {
+            background-color: #fff !important;
+            border-radius: 5px;
+            height: 51px;
+            box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+            padding: 9px 2px 9px 23px;
+            border: 2px solid transparent;
+            font-size: 15px;
+
+            &:focus {
+                border: 2px solid $pink;
+            }
+
+            &.ng-touched.ng-invalid {
+                border: 2px solid $red;
+
+                ~ label {
+                    color: $red;
+                }
+            }
+        }
+
+        .btn.btn-primary {
+            min-width: 141px;
+            height: 51px;
+            font-size: 15px;
+            border: none;
+
+            &:disabled {
+                background: #d7dbdf;
+            }
+        }
+
+        .hc-form-row {
+            min-height: 35px;
+            margin: 0 0 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+
+            .label-input {
+                order: -1;
+                margin: 0 0 14px;
+                font-size: 13px;
+                font-weight: bold;
+            }
+
+            p-dropdown {
+                width: 100%;
+            }
+        }
+
+        .separator {
+            margin: 26px 0 20px;
+            color: #a5a6a6;
+            font-size: 12px;
+
+            &:before {
+                background: $grey;
+            }
+
+            .separator-text {
+                background: $main-background;
+                color: $grey;
+                font-size: 15px;
+                font-weight: normal;
+            }
+        }
+
+        .ui-dropdown-label {
+            border-radius: 5px;
+            height: 51px;
+            box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+            padding: 9px 2px 9px 23px !important;
+            border: 2px solid transparent;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            color: #637381;
+        }
+
+        p-dropdown.ng-valid .ui-dropdown-label {
+            color: #000000;
+        }
+
+        p-dropdown .ui-dropdown-item {
+            padding: 9px 9px 9px 25px;
+        }
+
+        input::-webkit-input-placeholder {
+            font-size: 15px;
+        }
+
+        input::-moz-placeholder {
+            font-size: 15px;
+        }
+
+        input:-ms-input-placeholder {
+            font-size: 15px;
+        }
+
+        input:-moz-placeholder {
+            font-size: 15px;
+        }
+    }
+}
+
+.auth-signup {
+    .form-bottom hc-button {
+        margin-left: auto;
+    }
+
+    .form-bottom {
+        md-checkbox .md-container {
+            margin-top: -8px;
+        }
+    }
+
+    field-errors {
+        width: 100%;
+
+        p {
+            margin: 3px 0 0 16px;
+        }
+    }
+}
+
+.password-row {
+    position: relative;
+
+    .forgot {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        color: $pink;
+        font-size: 11px;
+        line-height: 1.2;
+        z-index: 3;
+
+        &:hover {
+            cursor: pointer;
+            color: darken($pink, 5%);
+            text-decoration: underline;
+        }
+    }
+}
+
+.quote-block {
+    font-size: 15px;
+    padding: 41px 0 0;
+    margin: 0 0 10px;
+
+    p {
+        margin: 0 0 20px;
+        line-height: 28px;
+    }
+
+    .quote-author {
+        display: flex;
+    }
+
+    .text {
+        line-height: 28px;
+        margin: 0 0 0 8px;
+    }
+}
+
+@media screen and (min-width: 320px) and (max-width: 992px) {
+    .auth-page.tenats-auth {
+        .left-block {
+            padding: 75px 20px 0 20px;
+            flex: 0 0 100%;
+            width: 100%;
+        }
+
+        .main-block {
+            padding: 42px 20px 0 20px;
+            flex: 0 0 100%;
+        }
+
+        .auth-container {
+            background-image: linear-gradient(to bottom, #192a4d 50%, #f1f5f9 50%);
+        }
+
+        .auth-container-frame {
+            flex-direction: column;
+        }
+    }
+}

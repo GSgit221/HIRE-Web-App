@@ -1,0 +1,15 @@
+<div class="circle">
+    <svg class="progress" width="36" height="36">
+        <circle class="progress-meter" cx="18" cy="18" r="15" stroke-width="3"></circle>
+        <circle
+            class="progress-value green-color"
+            cx="18"
+            cy="18"
+            r="15"
+            stroke-width="3"
+            stroke="#65B7A9"
+            [ngStyle]="{ 'stroke-dasharray': 97, 'stroke-dashoffset': svgOffset }"
+        ></circle>
+    </svg>
+    <div class="result green-color">{{ progressVal }}%</div>
+</div>
