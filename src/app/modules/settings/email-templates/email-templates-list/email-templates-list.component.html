@@ -1,38 +1,13 @@
 <div class="container fixed-width-container mh500">
     <div class="title-block">
-        <h1 class="page-title">Questionnaires</h1>
-        <div class="buttons-holder" *ngIf="list && list.length">
-            <button class="btn btn-primary w140 mla" routerLink="/dashboard/settings/questionnaires/new">
-                Add Questionnaire
+        <h1 class="page-title">Email Templates</h1>
+        <div class="buttons-holder">
+            <button class="btn btn-primary w140 mla" routerLink="/dashboard/settings/email-templates/new">
+                Add Template
             </button>
         </div>
     </div>
-    <div *ngIf="!list || (!list.length && !contentLoading)">
-        <div class="section-separator"></div>
-        <div class="placeholder-block">
-            <div class="text-block">
-                <h2 class="block-title">Let’s add your first questionnaire</h2>
-                <div class="placeholder-content">
-                    <p>
-                        Adding a questionnaire can help you extend your application. Questionnaire’s can also contain
-                        questions that disqualify candidates from progressing.
-                    </p>
-                </div>
-                <div class="buttons-holder">
-                    <button class="btn btn-primary w140" routerLink="/dashboard/settings/questionnaires/new">
-                        Add Questionnaire
-                    </button>
-                </div>
-            </div>
-            <div class="upload-block"></div>
-        </div>
-        <div class="section-separator"></div>
-        <div class="info-block">
-            <div class="info-icon">?</div>
-            <span>Learn more about <a href="#">adding questionnaires </a> </span>
-        </div>
-    </div>
-    <div *ngIf="list && list.length && !contentLoading">
+    <div>
         <div class="hc-list">
             <div class="hc-selected-items" *ngIf="selectedItems">
                 <div class="text-block">
@@ -72,20 +47,21 @@
                             binary="true"
                             [(ngModel)]="selectedAll"
                             (onChange)="onSelectAllChange()"
+                            [disabled]="noOptionalItems()"
                         ></p-checkbox>
                     </div>
                 </div>
-                <div class="col col2 flex-35">Questionnaire</div>
-                <div class="col col2 flex-20">Type</div>
-                <div class="col col3 flex-20"># of Questions</div>
-                <div class="col col4 flex-20">Created</div>
+                <div class="col col2 flex-35">Name</div>
+                <div class="col col2 flex-30">Subject</div>
+                <div class="col col3 flex-15">Last Updated</div>
+                <div class="col col4 flex-15">Last Send</div>
             </div>
             <div class="nr-list-content">
                 <div class="hc-blocker"></div>
                 <div class="hc-list-row" *ngFor="let item of list; let i = index">
                     <div class="hc-list-row-content" (click)="onItemClick($event, item)">
                         <div class="col col1 flex-5 ">
-                            <div class="hc-checkbox" data-escape-click>
+                            <div class="hc-checkbox" data-escape-click *ngIf="!item.mandatory">
                                 <p-checkbox
                                     binary="true"
                                     [(ngModel)]="item.selected"
@@ -96,21 +72,19 @@
                         <div class="col col2 flex-35">
                             <p class="hc-content-p">{{ item.title }}</p>
                         </div>
-                        <div class="col col2 flex-20">
-                            <p class="hc-content-p fdr aic">
-                                <span class="icon-holder" *ngIf="item.type === 'text'">
-                                    <img src="/assets/images/text.svg" width="12" height="9" alt="" />&nbsp;
-                                </span>
-                                <span class="icon-holder" *ngIf="item.type === 'video'">
-                                    <img src="/assets/images/video.svg" width="13" height="14" alt="" />&nbsp;
-                                </span>
-                                {{ item.type | titlecase }}
+                        <div class="col col2 flex-30">
+                            <p class="hc-content-p fdr aic">{{ item.subject }}</p>
+                        </div>
+                        <div class="col col3  flex-15">
+                            <p class="hc-content-p">
+                                {{ item.updated_at ? (item.updated_at * 1000 | date: 'd MMM, y') : '-' }}
                             </p>
                         </div>
-                        <div class="col col3  flex-20">
-                            <p class="hc-content-p">{{ item.questions }}</p>
+                        <div class="col col4 flex-15">
+                            <p class="hc-content-p">
+                                {{ item.last_send ? (item.last_send * 1000 | date: 'd MMM, y') : '-' }}
+                            </p>
                         </div>
-                        <div class="col col4 flex-20">{{ item.created }}</div>
                     </div>
                 </div>
             </div>
