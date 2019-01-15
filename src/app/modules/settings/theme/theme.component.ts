@@ -13,7 +13,7 @@ import { UtilitiesService } from './../../../services/utilities.service';
 })
 export class ThemeComponent implements OnInit {
     themeForm: FormGroup;
-    contentLoading = false;
+    contentLoading = true;
     msgs: Message[] = [];
     colors: string[] = [
         '#44DB5E',
@@ -43,11 +43,12 @@ export class ThemeComponent implements OnInit {
         private themeService: ThemeService,
         private utilities: UtilitiesService
     ) {
-        this.themeForm = this.fb.group({ theme: ['#44DB5E', Validators.required], logo_url: [''] });
+        this.themeForm = this.fb.group({ color: ['#44DB5E', Validators.required], logo_url: [''] });
         this.themeService.getTheme().subscribe(
             (response) => {
                 console.log(response);
                 this.initForm(response);
+                this.contentLoading = false;
             },
             (errorResponse) => {
                 console.error(errorResponse);
@@ -60,17 +61,17 @@ export class ThemeComponent implements OnInit {
 
     initForm(data) {
         this.themeForm = this.fb.group({
-            theme: [data.theme || '#44DB5E', Validators.required],
+            color: [data.color || '#44DB5E', Validators.required],
             logo_url: [data.logo_url || '']
         });
     }
 
-    get theme() {
-        return this.themeForm.get('theme').value;
+    get color() {
+        return this.themeForm.get('color').value;
     }
 
-    set theme(value: string) {
-        this.themeForm.get('theme').setValue(value);
+    set color(value: string) {
+        this.themeForm.get('color').setValue(value);
     }
 
     get logoUrl() {

@@ -19,15 +19,15 @@
                     <div class="form-content-box">
                         <div class="form-block">
                             <div class="input-block">
-                                <label for="theme" class="form-block-label">Primary Color</label>
+                                <label for="color" class="form-block-label">Primary Color</label>
                                 <div class="input-holder colorpicker">
-                                    <div class="color-indicator" [style.background]="theme"></div>
+                                    <div class="color-indicator" [style.background]="color"></div>
                                     <input
-                                        id="theme"
+                                        id="color"
                                         type="text"
                                         class="form-input"
-                                        formControlName="theme"
-                                        [(colorPicker)]="theme"
+                                        formControlName="color"
+                                        [(colorPicker)]="color"
                                         cpPosition="top"
                                         cpOutputFormat="hex"
                                         cpAlphaChannel="disabled"
@@ -39,8 +39,8 @@
                                             <div
                                                 class="color-item"
                                                 *ngFor="let c of colors"
-                                                [ngClass]="{ selected: c === theme }"
-                                                (click)="theme = c"
+                                                [ngClass]="{ selected: c === color }"
+                                                (click)="color = c"
                                             >
                                                 <div class="color-frame">
                                                     <div class="color-block" [style.background]="c"></div>
@@ -89,7 +89,7 @@
                                         <div
                                             class="image-holder fdr aic jcc"
                                             *ngIf="logoUrl && !uploadItem"
-                                            [style.background]="theme"
+                                            [style.background]="color"
                                         >
                                             <img class="logo" [src]="logoUrl" alt="logo" />
                                         </div>
