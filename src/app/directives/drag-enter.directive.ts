@@ -70,7 +70,6 @@ export class DragEnterDirective implements OnInit {
         // On drop, get the data and convert it back to a JSON object
         // and fire off an event passing the data
         el.addEventListener('drop', (e) => {
-            console.log('drop');
             const fileType =
                 e.dataTransfer &&
                 e.dataTransfer.items &&

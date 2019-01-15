@@ -1,0 +1,160 @@
+@import '../../../../styles/variables.scss';
+
+.colorpicker {
+    position: relative;
+
+    .color-indicator {
+        position: absolute;
+        width: 26px;
+        height: 26px;
+        top: 5px;
+        left: 5px;
+        pointer-events: none;
+        z-index: 2;
+        border-radius: 3px;
+    }
+
+    .form-input {
+        padding-left: 40px;
+    }
+
+    .form-input:focus {
+        padding-left: 39px;
+    }
+}
+
+.color-switcher-block {
+    width: 100%;
+    overflow: hidden;
+    padding: 12px 0 0;
+
+    .colors-switcher {
+        margin: 0 -5px;
+    }
+
+    .colors-switcher-holder {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .color-item {
+        float: left;
+        width: 6.666%;
+        padding: 0 5px;
+
+        &.selected {
+            .color-frame {
+                border-color: #212b35;
+            }
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    .color-frame {
+        width: calc(100% - 4px);
+        border-radius: 50%;
+        padding: 1px;
+        border: 2px solid transparent;
+        transition: all 0.2s ease;
+    }
+
+    .color-block {
+        box-sizing: content-box;
+        width: 100%;
+        padding-top: 100%;
+        border-radius: 50%;
+    }
+}
+
+.logo-upload-block {
+    .status-circle {
+        position: relative;
+        right: 0;
+        top: 0;
+        transform: none;
+    }
+
+    .image-block {
+        display: block;
+        border: 1px solid #d8d8d8;
+        border-radius: 5px;
+        position: relative;
+        width: 48.2%;
+        min-width: 48.2%;
+        margin: 0 30px 0 0;
+
+        &:before {
+            display: block;
+            content: '';
+            width: 100%;
+            padding-top: 98 / 271 * 100%;
+        }
+    }
+
+    .upload-block {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        &.over {
+            background: #d8d8d8;
+        }
+    }
+
+    .upload-block-holder {
+        text-align: center;
+
+        p {
+            margin: 0;
+            font-weight: 500;
+
+            label {
+                color: $pink;
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .text {
+        p {
+            margin: 0 0 20px;
+        }
+    }
+
+    .file {
+        display: none;
+    }
+
+    .upload-overlay {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .image-holder {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+
+        img {
+            display: block;
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+        }
+    }
+}

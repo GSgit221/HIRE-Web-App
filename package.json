@@ -39,6 +39,7 @@
         "ng-drag-drop": "^5.0.0",
         "ngrx-store-freeze": "^0.2.4",
         "ngx-autosize-input": "^2.2.2",
+        "ngx-color-picker": "^7.3.0",
         "ngx-cookie-service": "^1.0.10",
         "ngx-file-drop": "^4.0.6",
         "ngx-google-places-autocomplete": "^2.0.1",

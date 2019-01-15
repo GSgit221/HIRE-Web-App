@@ -27,6 +27,43 @@ export class UtilitiesService {
         });
     }
 
+    readAndResizeImage(file, maxWidth, maxHeight) {
+        return new Promise((resolve, reject) => {
+            // console.log(file);
+            const w: any = window;
+            const d: any = document;
+            const image = new w.Image();
+
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                image.src = reader.result;
+            };
+            image.onload = () => {
+                let tempW = image.width;
+                let tempH = image.height;
+                if (tempW > tempH) {
+                    if (tempW > maxWidth) {
+                        tempH *= maxWidth / tempW;
+                        tempW = maxWidth;
+                    }
+                } else {
+                    if (tempH > maxHeight) {
+                        tempW *= maxHeight / tempH;
+                        tempH = maxHeight;
+                    }
+                }
+                const canvas = d.createElement('canvas');
+                canvas.width = tempW;
+                canvas.height = tempH;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(image, 0, 0, tempW, tempH);
+                const dataURL = canvas.toDataURL('image/png');
+                resolve({ name: file.name, size: file.size, mimetype: file.type, data: dataURL });
+            };
+        });
+    }
+
     generateUID(length = 5) {
         let pool1: any = 'ABCDEFGHIJKLMNOPQRSTUVQWXYZ';
         let pool2: any = '123456789ABCDEFGHIJKLMNOPQRSTUVQWXYZ';

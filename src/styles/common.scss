@@ -75,6 +75,10 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
     align-items: center;
 }
 
+.jcc {
+    justify-content: center;
+}
+
 // Container
 .container {
     width: 100%;
@@ -729,5 +733,48 @@ p-selectbutton {
 
     .overall-rating .ui-slider .ui-slider-handle {
         background: grey;
+    }
+}
+
+// Colorpicker
+.color-picker {
+    top: -148px !important;
+    border-color: #d7dbdf !important;
+
+    .arrow.arrow-top {
+        display: none;
+    }
+
+    .hex-text {
+        display: none !important;
+    }
+
+    .hue-alpha {
+        padding: 0 !important;
+        margin: 0 !important;
+
+        .left {
+            display: none;
+        }
+
+        .right {
+            padding: 0;
+
+            & > div:first-child {
+                display: none;
+            }
+        }
+
+        .hue {
+            margin: 0;
+        }
+    }
+
+    .box {
+        padding: 0 !important;
+    }
+
+    .type-policy {
+        display: none;
     }
 }
