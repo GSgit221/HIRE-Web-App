@@ -11,6 +11,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { CheckboxModule } from 'primeng/checkbox';
+import { ChipsModule } from 'primeng/chips';
 import { DropdownModule } from 'primeng/dropdown';
 import { EditorModule } from 'primeng/editor';
 import { MessageModule } from 'primeng/message';
@@ -35,6 +36,7 @@ import { UploadFileNamePipe } from './../../pipes/upload-file-name.pipe';
 import { AuthService } from './../auth/auth.service';
 import { CandidateFitCircleComponent } from './candidate-fit-circle/candidate-fit-circle.component';
 import { FileTypeComponent } from './file-type/file-type.component';
+import { ListFilterComponent } from './list-filter/list-filter.component';
 import { LoaderComponent } from './loader/loader.component';
 import { MultiSelectComponent } from './multi-select/multi-select.component';
 import { ProgressCircleComponent } from './progress-circle/progress-circle.component';
@@ -55,7 +57,8 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         UploadFileNamePipe,
         DisableControlDirective,
         DragEnterDirective,
-        ToggleDetailsDirective
+        ToggleDetailsDirective,
+        ListFilterComponent
     ],
     providers: [AuthService, httpInterceptorProviders, AuthGuard, CookieService],
     imports: [
@@ -80,7 +83,8 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         PanelMenuModule,
         SelectButtonModule,
         SliderModule,
-        TooltipModule
+        TooltipModule,
+        ChipsModule
     ],
     exports: [
         LoaderComponent,
@@ -89,6 +93,7 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         MultiSelectComponent,
         ProgressCircleComponent,
         ResumeFileTypeComponent,
+        ListFilterComponent,
         GetFitstLetterPipe,
         InitialsPipe,
         SortByDatePipe,
@@ -118,7 +123,8 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         PanelMenuModule,
         SelectButtonModule,
         SliderModule,
-        TooltipModule
+        TooltipModule,
+        ChipsModule
     ]
 })
 export class SharedModule {}

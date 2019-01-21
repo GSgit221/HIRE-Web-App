@@ -9,27 +9,25 @@ import { JobService } from '../../../services/job.service';
 })
 export class PeopleListComponent implements OnInit, AfterViewInit {
     candidates;
-    lengthCandidates;
     filterCandidates = [];
     contentLoading = false;
     lastCandidate = {
         first_name: '',
         last_name: ''
     };
-
     list;
-    showFilter = false;
-    finishDownLoadCandidates = false;
+    candidatesCompleted = false;
     selectedAll = false;
     amountCandidates;
     selectedItems = 0;
+    filter = [];
 
     constructor(private jobService: JobService) {}
+
     ngOnInit() {
         this.contentLoading = true;
         this.jobService.getCandidatesChunk('first', 100).subscribe((candidates) => {
             this.candidates = candidates || [];
-            this.lengthCandidates = this.formatWithComa(this.candidates.length);
             this.filterCandidates = this.candidates;
             this.contentLoading = false;
             this.lastCandidate = {
@@ -43,11 +41,12 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
             });
         });
     }
-    download() {
+
+    getCandidatesChunk() {
         this.jobService.getCandidatesChunk(this.lastCandidate.first_name, 100).subscribe((candidates: any) => {
             // console.log('ssss', candidates.length, this.lastCandidate.first_name);
             if (candidates.length === 0) {
-                this.finishDownLoadCandidates = true;
+                this.candidatesCompleted = true;
             }
             candidates.forEach((item) => {
                 if (this.selectedAll) {
@@ -62,25 +61,23 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
             // console.log(this.candidates);
         });
     }
+
     onScroll() {
         setTimeout(() => {
-            this.download();
+            this.getCandidatesChunk();
         }, 1000);
     }
 
     ngAfterViewInit() {}
 
-    onShowFilter() {
-        this.showFilter = !this.showFilter;
-    }
-    formatWithComa(num) {
-        return ('' + num).replace(/(\d)(?=(?:\d{3})+(?:\.|$))|(\.\d\d?)\d*$/g, (m, s1, s2) => s2 || s1 + ',');
-    }
     onItemsBulkRemove() {}
+
     onItemClick(event, item) {}
+
     onItemSeletectedChange($event: Event, index: number) {
         this.candidates[index].checked = this.candidates[index].checked ? true : false;
     }
+
     onSelectAllChange() {
         if (this.selectedAll) {
             this.candidates.forEach((item) => {
@@ -91,5 +88,10 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
                 item.checked = false;
             });
         }
+    }
+
+    onFilterChanges(value) {
+        console.log('onFilterChanges', value);
+        this.filter = value;
     }
 }

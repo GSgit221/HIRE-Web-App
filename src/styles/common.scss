@@ -149,6 +149,12 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
         }
     }
 
+    .total-amount {
+        display: inline-block;
+        margin: 0 0 0 40px;
+        font-size: 14px;
+    }
+
     .controls-separator {
         width: 1px;
         height: 25px;
@@ -776,5 +782,69 @@ p-selectbutton {
 
     .type-policy {
         display: none;
+    }
+}
+
+p-chips {
+    .ui-inputtext.ui-state-default.ui-corner-all {
+        border: 2px solid $pink;
+        background: $white;
+        width: 100%;
+        min-height: 36px;
+        border-radius: 2px;
+        color: $main-blue;
+        font-size: 13px;
+        line-height: 16px;
+        padding: 2px 2px 2px 4px;
+        border-radius: 3px;
+        box-shadow: none;
+        outline: none;
+
+        &:hover {
+            border: 2px solid $pink;
+        }
+    }
+
+    .ui-chips-input-token input {
+        height: 24px;
+    }
+
+    .ui-chips-token {
+        padding: 5px;
+
+        &.ui-state-highlight {
+            font-size: 13px;
+            color: $black;
+            background: $light-grey;
+        }
+
+        .ui-chips-token-icon {
+            width: 10px;
+            height: 10px;
+            margin-top: -5px;
+            right: 5px;
+
+            &:before {
+                content: '';
+                position: absolute;
+                left: -2px;
+                top: 5px;
+                width: 14px;
+                height: 1px;
+                background: $black;
+                transform: rotate(45deg);
+            }
+
+            &:after {
+                content: '';
+                position: absolute;
+                left: -2px;
+                top: 5px;
+                width: 14px;
+                height: 1px;
+                background: $black;
+                transform: rotate(-45deg);
+            }
+        }
     }
 }

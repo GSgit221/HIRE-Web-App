@@ -1,45 +1,15 @@
 <div class="container fixed-width-container mh500">
-    <h1>People</h1>
-    <div class="people-filter">
-        <button class="btn all-candidates">All Candidates</button>
-        <button class="btn add-filter">
-            <div class="text" (click)="onShowFilter()">+ Add Filter</div>
-            <div class="filter-content" *ngIf="showFilter">
-                <div class="search-text"><input type="text" placeholder="Search Filters" /></div>
-                <ul class="filter-options">
-                    <li>
-                        <div class="img-block"><img src="/assets/images/america.svg" alt="America icon" /></div>
-                        <span>City</span>
-                    </li>
-                    <li>
-                        <div class="img-block"><img src="/assets/images/america.svg" alt="America icon" /></div>
-                        <span>Country</span>
-                    </li>
-                    <li>
-                        <div class="img-block">
-                            <img src="/assets/images/student_center.svg" alt="Student center icon" />
-                        </div>
-                        <span>Education</span>
-                    </li>
-                    <li>
-                        <div class="img-block"><img src="/assets/images/company-filter.svg" alt="Company icon" /></div>
-                        <span>Employers</span>
-                    </li>
-                    <li>
-                        <div class="img-block"><img src="/assets/images/resume-filter.svg" alt="Resume icon" /></div>
-                        <span>Expereince Years</span>
-                    </li>
-                    <li>
-                        <div class="img-block">
-                            <img src="/assets/images/clipboard-filter.svg" alt="Clipboard icon" />
-                        </div>
-                        <span>Skills</span>
-                    </li>
-                </ul>
-            </div>
-        </button>
-        <div class="sum-candidate">{{ amountCandidates }} Candidates</div>
+    <div class="title-block">
+        <h1 class="page-title">
+            <span>People</span>
+            <span class="total-amount" *ngIf="amountCandidates">{{ amountCandidates | number: '2.' }} Candidates</span>
+        </h1>
     </div>
+    <app-list-filter
+        [filter]="filter"
+        (filter)="onFilterChanges($event)"
+        [availableFilters]="['city', 'country', 'education', 'employers', 'experience', 'skills']"
+    ></app-list-filter>
     <div class="list-people" #scrollMe>
         <div>
             <div class="hc-list">
@@ -155,7 +125,7 @@
                 </div>
             </div>
             <svg
-                *ngIf="!finishDownLoadCandidates"
+                *ngIf="!candidatesCompleted"
                 class="svg-loader"
                 version="1.1"
                 id="L4"
