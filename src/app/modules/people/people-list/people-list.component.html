@@ -7,7 +7,7 @@
     </div>
     <app-list-filter
         [filter]="filter"
-        (filter)="onFilterChanges($event)"
+        (filterChange)="onFilterChanges($event)"
         [availableFilters]="['city', 'country', 'education', 'employers', 'experience', 'skills']"
     ></app-list-filter>
     <div class="list-people" #scrollMe>
@@ -55,7 +55,8 @@
                         </div>
                     </div>
                     <div class="col col2 flex-25">
-                        Name <img src="/assets/images/generic_sorting_2.svg" alt="Generic_sorting icon" />
+                        Name
+                        <!-- <img src="/assets/images/generic_sorting_2.svg" alt="Generic_sorting icon" /> -->
                     </div>
                     <div class="col col3 flex-25">Location</div>
                     <div class="col col4 flex-20">Position</div>
@@ -77,10 +78,10 @@
                     <div class="hc-blocker"></div>
                     <div
                         class="hc-list-row"
-                        *ngFor="let candidate of candidates; let ind = index"
+                        *ngFor="let candidate of filteredCandidates; let ind = index"
                         (click)="onItemClick($event, item)"
                     >
-                        <div class="hc-list-row-content">
+                        <div class="hc-list-row-content" data-id="{{ candidate.id }}">
                             <div class="col col1 flex-6 ">
                                 <div class="hc-checkbox" data-escape-click>
                                     <p-checkbox

@@ -230,4 +230,8 @@ export class UtilitiesService {
             .filter(([key]) => !properties.includes(key))
             .reduce((newObj, [key, val]) => ({ ...newObj, [key]: val }), {});
     }
+
+    isBottomOfPage() {
+        return window.innerHeight + Math.ceil(window.pageYOffset + 1) >= document.body.offsetHeight;
+    }
 }

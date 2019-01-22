@@ -34,7 +34,6 @@ export class ListFilterComponent implements OnInit {
     filtersObj: any = { ...this.defaultState };
 
     educationOptions = [
-        { label: 'Unspecified', value: 'unspecified' },
         { label: 'High School or Equivalent', value: 'school' },
         { label: 'Certification', value: 'certification' },
         { label: 'Vocational', value: 'vocational' },
@@ -90,6 +89,8 @@ export class ListFilterComponent implements OnInit {
         console.log('onClearFilters');
         this.filter = [];
         this.filterVisible = false;
+        this.filtersObj = { ...this.defaultState };
+        this.filterChange.emit([]);
     }
 
     onFilterToggle() {
@@ -106,22 +107,20 @@ export class ListFilterComponent implements OnInit {
     }
 
     transformFilters() {
-        console.log(this.availableFilters);
-        console.log('TRANSFORM FILTERS:');
+        // console.log(this.availableFilters);
+        // console.log('TRANSFORM FILTERS:');
         this.filter = [];
         for (const key in this.filtersObj) {
             if (this.filtersObj.hasOwnProperty(key) && this.availableFilters.indexOf(key) !== -1) {
                 const filterObj = this.filtersObj[key];
-                console.log(key, filterObj);
                 switch (key) {
                     case 'city':
                     case 'country':
                     case 'employers':
                         if (filterObj.length) {
-                            console.log('pushing???');
                             this.filter.push({
                                 type: key,
-                                presentedVelue: filterObj.join(', '),
+                                presentedValue: filterObj.join(', '),
                                 value: filterObj
                             });
                         }
@@ -130,7 +129,7 @@ export class ListFilterComponent implements OnInit {
                         if (filterObj.level || filterObj.education || filterObj.school) {
                             this.filter.push({
                                 type: key,
-                                presentedVelue: Object.values(filterObj)
+                                presentedValue: Object.values(filterObj)
                                     .filter((v) => v)
                                     .join(', '),
                                 value: filterObj
@@ -147,7 +146,7 @@ export class ListFilterComponent implements OnInit {
                             } else if (!filterObj.min && filterObj.max) {
                                 presentedValue = `up to ${filterObj.min} years`;
                             }
-                            this.filter.push({ type: key, presentedVelue: presentedValue, value: filterObj });
+                            this.filter.push({ type: key, presentedValue, value: filterObj });
                         }
                         break;
 
@@ -166,7 +165,7 @@ export class ListFilterComponent implements OnInit {
                             }
                             this.filter.push({
                                 type: key,
-                                presentedVelue: presentedValue,
+                                presentedValue,
                                 value: filterObj
                             });
                         }
@@ -177,6 +176,7 @@ export class ListFilterComponent implements OnInit {
 
         console.log('FILTER:');
         console.log(this.filter);
+        this.filterChange.emit(this.filter);
     }
 
     onRemoveFromSelected(type) {

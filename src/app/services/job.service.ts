@@ -104,14 +104,19 @@ export class JobService {
     getUsers() {
         return this.http.get(`${this.baseURL}/users`);
     }
+
     getAllCandidates() {
         return this.http.get(`${this.apiURL}/tenants/${this.tenantId}/candidates`);
     }
-    getCandidatesChunk(startAt, limit) {
+
+    getCandidatesChunk(startAt, limit, sortBy = 'first_name') {
         return this.http.get(
-            `${this.apiURL}/tenants/${this.tenantId}/candidates-chunk?sortBy='sds'&startAt=${startAt}&limit=${limit}`
+            `${this.apiURL}/tenants/${
+                this.tenantId
+            }/candidates-chunk?sortBy=${sortBy}&startAt=${startAt}&limit=${limit}`
         );
     }
+
     getCandidatesAmount() {
         return this.http.get(`${this.apiURL}/tenants/${this.tenantId}/candidates-amount`);
     }

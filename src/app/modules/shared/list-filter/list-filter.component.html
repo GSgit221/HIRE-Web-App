@@ -5,7 +5,7 @@
     <ng-container *ngIf="filter && filter.length">
         <div class="filter-presentation-block" *ngFor="let f of filter">
             <div class="filter-presentation-name">{{ f.type | titlecase }}:</div>
-            <div class="filter-presentation-value">{{ f.presentedVelue | titlecase }}</div>
+            <div class="filter-presentation-value">{{ f.presentedValue | titlecase }}</div>
             <button class="btn remove-filter-btn">
                 <img
                     src="/assets/images/close.svg"
