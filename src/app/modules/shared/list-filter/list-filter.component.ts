@@ -10,6 +10,7 @@ import { SelectItem } from 'primeng/api';
 export class ListFilterComponent implements OnInit {
     view = 'list';
     filterVisible = false;
+    @Input() allItemsText: string;
     @Input() availableFilters: string[] = [];
     filteredFilters: string[] = [];
 
@@ -183,6 +184,7 @@ export class ListFilterComponent implements OnInit {
         console.log('onRemoveFromSelected', type);
         this.filter = this.filter.filter((f) => f.type !== type);
         if (this.filtersObj[type]) {
+            this.filterChange.emit(this.filter);
             this.filtersObj[type] = this.defaultState[type];
         }
     }

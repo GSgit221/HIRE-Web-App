@@ -40,4 +40,6 @@ export class Job {
     stages?: Stage[];
     owner?: string;
     show_position_rating?: boolean;
+    location_city?: string;
+    location_country?: string;
 }

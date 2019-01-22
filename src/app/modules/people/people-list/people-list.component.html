@@ -6,6 +6,7 @@
         </h1>
     </div>
     <app-list-filter
+        allItemsText="All Candidates"
         [filter]="filter"
         (filterChange)="onFilterChanges($event)"
         [availableFilters]="['city', 'country', 'education', 'employers', 'experience', 'skills']"

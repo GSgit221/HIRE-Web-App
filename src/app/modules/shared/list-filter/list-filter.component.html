@@ -1,6 +1,6 @@
 <div class="list-filter">
     <button class="btn all-items" [ngClass]="{ active: !filter.length }" (click)="onClearFilters()">
-        All Candidates
+        {{ allItemsText }}
     </button>
     <ng-container *ngIf="filter && filter.length">
         <div class="filter-presentation-block" *ngFor="let f of filter">
