@@ -46,14 +46,14 @@ export class QuestionsListComponent implements OnInit {
     ngOnInit() {}
 
     onItemClick(event, item) {
-        console.log('onItemClick');
+        console.log('onItemClick', item);
         event.preventDefault();
         const target = event.target;
         const escapeDD = closest(event.target, '[data-escape-click]');
         if (escapeDD) {
             console.log('DO NOTHING');
         } else {
-            console.log('REDIRECT');
+            console.log('REDIRECT', `/dashboard/settings/questionnaires/${this.questionnaireId}/questions/${item.id}`);
             this.router.navigate([`/dashboard/settings/questionnaires/${this.questionnaireId}/questions/${item.id}`]);
         }
     }
