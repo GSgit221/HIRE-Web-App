@@ -148,9 +148,7 @@
                                 ></p-checkbox>
                             </div>
                             <div class="img-block" *ngIf="!users[i]?.isVisible && !users[i].selected">
-                                <div class="initial" *ngIf="!user.icon_url">
-                                    {{ user.first_name | getFitstLetter }} {{ user.last_name | getFitstLetter }}
-                                </div>
+                                <div class="initial" *ngIf="!user.icon_url">{{ user | initials }}</div>
                                 <img
                                     *ngIf="user.icon_url"
                                     [src]="user.icon_url"

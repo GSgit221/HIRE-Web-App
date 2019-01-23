@@ -72,9 +72,9 @@ export class JobsListComponent implements OnInit {
 
     onSelectAllChange() {
         if (this.selectedAll) {
-            this.list.forEach((item) => (item.selected = true));
+            this.filteredList.forEach((item) => (item.selected = true));
         } else {
-            this.list.forEach((item) => (item.selected = false));
+            this.filteredList.forEach((item) => (item.selected = false));
         }
         this.calculateSelectedItems();
     }
@@ -84,7 +84,7 @@ export class JobsListComponent implements OnInit {
     }
 
     private calculateSelectedItems() {
-        this.selectedItems = this.list.filter((item) => item.selected).length;
+        this.selectedItems = this.filteredList.filter((item) => item.selected).length;
         if (!this.selectedItems) {
             this.selectedAll = false;
         }
@@ -96,10 +96,11 @@ export class JobsListComponent implements OnInit {
 
     onItemsBulkRemove() {
         this.contentLoading = true;
-        const itemsToRemove = this.list.filter((item) => item.selected).map((item) => item.id);
+        const itemsToRemove = this.filteredList.filter((item) => item.selected).map((item) => item.id);
         this.jobService.bulkDeleteJobs(itemsToRemove).subscribe(() => {
             this.jobService.getAll().subscribe((jobs: Job[]) => {
                 this.list = jobs;
+                this.filteredList = this.list.slice(0);
                 this.contentLoading = false;
                 this.calculateSelectedItems();
             });
@@ -110,6 +111,7 @@ export class JobsListComponent implements OnInit {
         this.contentLoading = true;
         this.jobService.getAll().subscribe((jobs: Job[]) => {
             this.list = jobs;
+            this.filteredList = this.list.slice(0);
             this.contentLoading = false;
         });
         this.uploadJobSpecMode = false;

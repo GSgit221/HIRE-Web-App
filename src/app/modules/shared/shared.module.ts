@@ -23,12 +23,12 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { SliderModule } from 'primeng/slider';
 import { TooltipModule } from 'primeng/tooltip';
 
+import { GetFirstLetterPipe } from '../../pipes/get-first-letter.pipe';
 import { DisableControlDirective } from './../../directives/disable-control.directive';
 import { DragEnterDirective } from './../../directives/drag-enter.directive';
 import { ToggleDetailsDirective } from './../../directives/toggle-details.directive';
 import { AuthGuard } from './../../guards/auth.guard';
 import { httpInterceptorProviders } from './../../http-interceptors';
-import { GetFitstLetterPipe } from './../../pipes/get-fitst-letter.pipe';
 import { InitialsPipe } from './../../pipes/initials.pipe';
 import { SortByDatePipe } from './../../pipes/sort-by-date.pipe';
 import { SortByOrderPipe } from './../../pipes/sort-by-order.pipe';
@@ -50,7 +50,7 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         MultiSelectComponent,
         ProgressCircleComponent,
         ResumeFileTypeComponent,
-        GetFitstLetterPipe,
+        GetFirstLetterPipe,
         InitialsPipe,
         SortByDatePipe,
         SortByOrderPipe,
@@ -94,7 +94,7 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         ProgressCircleComponent,
         ResumeFileTypeComponent,
         ListFilterComponent,
-        GetFitstLetterPipe,
+        GetFirstLetterPipe,
         InitialsPipe,
         SortByDatePipe,
         SortByOrderPipe,

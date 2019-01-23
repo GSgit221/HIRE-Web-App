@@ -1,16 +1,17 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { UtilitiesService } from './../../../services/utilities.service';
+import { Component, OnInit } from '@angular/core';
+import * as closest from 'closest';
 
 import { JobService } from '../../../services/job.service';
+import { UtilitiesService } from './../../../services/utilities.service';
 
 @Component({
     selector: 'app-people-list',
     templateUrl: './people-list.component.html',
     styleUrls: ['./people-list.component.scss']
 })
-export class PeopleListComponent implements OnInit, AfterViewInit {
-    candidates;
-    filteredCandidates = [];
+export class PeopleListComponent implements OnInit {
+    list;
+    filteredList = [];
     contentLoading = true;
     chunkRequestInProgress = false;
     lastCandidate = {
@@ -24,13 +25,13 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
     filter = [];
     countries: any[] = [];
     educationOptions = [
-        { label: 'High School or Equivalent', value: 'school', weight: 1 },
-        { label: 'Certification', value: 'certification', weight: 2 },
-        { label: 'Vocational', value: 'vocational', weight: 3 },
-        { label: 'Associate Degree', value: 'associate', weight: 4 },
-        { label: 'Bachelors Degree', value: 'bachelors', weight: 5 },
-        { label: 'Masters Degree', value: 'masters', weight: 6 },
-        { label: 'Professional', value: 'professional', weight: 7 }
+        { label: 'High School or Equivalent', value: 'school' },
+        { label: 'Certification', value: 'certification' },
+        { label: 'Vocational', value: 'vocational' },
+        { label: 'Associate Degree', value: 'associate' },
+        { label: 'Bachelors Degree', value: 'bachelors' },
+        { label: 'Masters Degree', value: 'masters' },
+        { label: 'Professional', value: 'professional' }
     ];
 
     constructor(private jobService: JobService, private utilities: UtilitiesService) {
@@ -41,12 +42,12 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
         this.chunkRequestInProgress = true;
         this.jobService.getCandidatesChunk('first', 100).subscribe(
             (candidates) => {
-                this.candidates = candidates || [];
-                this.filteredCandidates = this.candidates.slice(0);
+                this.list = candidates || [];
+                this.filteredList = this.list.slice(0);
                 this.contentLoading = false;
                 this.lastCandidate = {
-                    first_name: this.candidates[this.candidates.length - 1].first_name,
-                    last_name: this.candidates[this.candidates.length - 1].last_name
+                    first_name: this.list[this.list.length - 1].first_name,
+                    last_name: this.list[this.list.length - 1].last_name
                 };
                 this.jobService.getCandidatesAmount().subscribe((amount: number) => {
                     this.amountCandidates = amount;
@@ -75,11 +76,11 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
                         if (this.selectedAll) {
                             item.checked = true;
                         }
-                        this.candidates.push(item);
+                        this.list.push(item);
                     });
                     this.lastCandidate = {
-                        first_name: this.candidates[this.candidates.length - 1].first_name,
-                        last_name: this.candidates[this.candidates.length - 1].last_name
+                        first_name: this.list[this.list.length - 1].first_name,
+                        last_name: this.list[this.list.length - 1].last_name
                     };
                     this.filterCandidates();
                     this.chunkRequestInProgress = false;
@@ -99,26 +100,41 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
         }, 1000);
     }
 
-    ngAfterViewInit() {}
+    onItemsBulkRemove() {
+        this.contentLoading = true;
+        const itemsToRemove = this.filteredList.filter((item) => item.selected).map((item) => item.id);
+        console.log('Remove: ', itemsToRemove);
+    }
 
-    onItemsBulkRemove() {}
+    onItemClick(event, item) {
+        event.preventDefault();
+        const target = event.target;
+        const escapeDD = closest(event.target, '[data-escape-click]');
+        if (escapeDD) {
+            // console.log('DO NOTHING');
+        } else {
+            console.log('onItemClick', item);
+        }
+    }
 
-    onItemClick(event, item) {}
+    onItemSeletectedChange() {
+        this.calculateSelectedItems();
+    }
 
-    onItemSeletectedChange($event: Event, index: number) {
-        this.candidates[index].checked = this.candidates[index].checked ? true : false;
+    private calculateSelectedItems() {
+        this.selectedItems = this.filteredList.filter((item) => item.selected).length;
+        if (!this.selectedItems) {
+            this.selectedAll = false;
+        }
     }
 
     onSelectAllChange() {
         if (this.selectedAll) {
-            this.candidates.forEach((item) => {
-                item.checked = true;
-            });
+            this.filteredList.forEach((item) => (item.selected = true));
         } else {
-            this.candidates.forEach((item) => {
-                item.checked = false;
-            });
+            this.filteredList.forEach((item) => (item.selected = false));
         }
+        this.calculateSelectedItems();
     }
 
     onFilterChanges(value) {
@@ -131,7 +147,7 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
         if (this.filter.length) {
             console.log('=> Filtering results');
             // Filter candidates
-            this.filteredCandidates = this.candidates.slice(0).filter((c) => {
+            this.filteredList = this.list.slice(0).filter((c) => {
                 const filterValues = [];
                 this.filter.forEach((f) => {
                     // City filter
@@ -278,20 +294,20 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
                 return filterValues.every((fv) => fv);
             });
 
-            console.log('🦹🏻‍♂️ Filtered results:', this.filteredCandidates.length);
+            console.log('🦹🏻‍♂️ Filtered results:', this.filteredList.length);
             if (
-                this.filteredCandidates.length &&
-                this.filteredCandidates.length < 10 &&
+                this.filteredList.length &&
+                this.filteredList.length < 10 &&
                 !this.candidatesCompleted &&
                 this.utilities.isBottomOfPage()
             ) {
-                console.log('... Get new chunk', this.filteredCandidates.length);
+                console.log('... Get new chunk', this.filteredList.length);
                 setTimeout(() => this.getCandidatesChunk(), 2000);
             }
         } else {
             console.log('=> Show full list');
             // Show full list
-            this.filteredCandidates = this.candidates.slice(0);
+            this.filteredList = this.list.slice(0);
         }
     }
 }
