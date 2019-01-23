@@ -70,8 +70,21 @@
             </div>
             <div class="nr-list-content">
                 <div class="hc-blocker"></div>
-                <div class="hc-list-row" *ngFor="let item of list; let i = index">
-                    <div class="hc-list-row-content" (click)="onItemClick($event, item)">
+                <div
+                    class="hc-list-row"
+                    *ngFor="let item of list; let i = index"
+                    draggable
+                    [dragScope]="['item']"
+                    [dragData]="item"
+                    dragClass="is-dragged"
+                    (onDragStart)="onItemDragStart(item)"
+                    (onDragEnd)="onItemDragEnd()"
+                    droppable
+                    [dropScope]="['item']"
+                    [dragOverClass]="'over'"
+                    (onDragOver)="onItemDragOver($event, item.order)"
+                >
+                    <div class="hc-list-row-content" [attr.data-order]="item.order" (click)="onItemClick($event, item)">
                         <div class="col drag-handler"><img src="/assets/images/drag-icon.svg" alt="Drag icon" /></div>
                         <div class="col col1 flex-5 ">
                             <div class="hc-checkbox" data-escape-click>

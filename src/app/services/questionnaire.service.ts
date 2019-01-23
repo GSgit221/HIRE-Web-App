@@ -60,4 +60,8 @@ export class QuestionnaireService {
     questionsBulkDelete(id: string, ids: string[]) {
         return this.http.post(`${this.baseURL}/questionnaires/${id}/questions/bulk-delete`, { items: ids });
     }
+
+    updateQuestionsOrder(questionnaireId: string, data) {
+        return this.http.put(`${this.baseURL}/questionnaires/${questionnaireId}/questions`, { data });
+    }
 }

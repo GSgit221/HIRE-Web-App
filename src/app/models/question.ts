@@ -8,5 +8,6 @@ export class Question {
     review_time?: number;
     answer_time?: number;
     number_of_takes?: number;
+    order?: number;
     created_at?: number;
 }

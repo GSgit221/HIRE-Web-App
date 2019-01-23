@@ -97,6 +97,14 @@
         border-bottom: 1px solid $grey-border;
         width: 100%;
         position: relative;
+
+        &.is-dragged {
+            background: rgba(224, 230, 232, 0.5);
+
+            // * {
+            //     visibility: hidden;
+            // }
+        }
     }
 
     .hc-list-row-content {

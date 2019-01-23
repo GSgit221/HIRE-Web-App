@@ -5,7 +5,14 @@
     transform: translate(0, -50%);
     align-items: center;
     display: none;
+    pointer-events: none;
+
+    &:hover,
+    &:active {
+        cursor: move;
+    }
 }
+
 .hc-list-row-content:hover .drag-handler {
     display: flex;
 }
