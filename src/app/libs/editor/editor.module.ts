@@ -158,17 +158,7 @@ export class AppEditorComponent implements AfterViewInit, ControlValueAccessor {
 
         this.quill.on('text-change', (delta, oldContents, source) => {
             if (source === 'user') {
-                this.style.height = 150 + 'px';
-                this.cd.detectChanges();
-                const contentBlock = this.editorRef.nativeElement.childNodes[0];
-                const contentHeight = contentBlock.scrollHeight;
-                console.log(contentHeight);
-                if (contentHeight > 150) {
-                    this.style.height = contentHeight + 'px';
-                } else {
-                    this.style.height = 150 + 'px';
-                }
-                this.cd.detectChanges();
+                this.setHeight();
                 let html = editorElement.children[0].innerHTML;
                 const text = this.quill.getText().trim();
                 if (html === '<p><br></p>') {
@@ -190,7 +180,6 @@ export class AppEditorComponent implements AfterViewInit, ControlValueAccessor {
         this.quill.on('selection-change', (range, oldRange, source) => {
             this.isFocused = this.quill.hasFocus();
             this.cd.detectChanges();
-            console.log(this.isFocused);
             this.onSelectionChange.emit({
                 range,
                 oldRange,
@@ -201,10 +190,7 @@ export class AppEditorComponent implements AfterViewInit, ControlValueAccessor {
         this.onInit.emit({
             editor: this.quill
         });
-
-        // setTimeout(() => {
-
-        // }, 1000);
+        this.setHeight();
     }
 
     writeValue(value: any): void {
@@ -217,6 +203,20 @@ export class AppEditorComponent implements AfterViewInit, ControlValueAccessor {
                 this.quill.setText('');
             }
         }
+    }
+
+    setHeight() {
+        this.style.height = 150 + 'px';
+        this.cd.detectChanges();
+        const contentBlock = this.editorRef.nativeElement.childNodes[0];
+        const contentHeight = contentBlock.scrollHeight;
+        console.log(contentHeight);
+        if (contentHeight > 150) {
+            this.style.height = contentHeight + 'px';
+        } else {
+            this.style.height = 150 + 'px';
+        }
+        this.cd.detectChanges();
     }
 
     registerOnChange(fn: Function): void {
