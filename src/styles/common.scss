@@ -849,3 +849,46 @@ p-chips {
         }
     }
 }
+
+.editors-container {
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    border: 1px solid $grey-border;
+    border-radius: 3px;
+    padding: 42px 0 0;
+
+    .ql-editor {
+        padding: 10px;
+    }
+
+    .ql-toolbar.ql-snow {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 42px;
+        border: 0;
+        z-index: 2;
+    }
+
+    .editor-title {
+        display: block;
+        font-size: 13px;
+        font-weight: 700;
+        color: $main-blue;
+        padding: 10px;
+        margin: 0;
+    }
+
+    .active {
+        .ql-toolbar.ql-snow {
+            z-index: 5;
+        }
+    }
+
+    .ql-toolbar.ql-snow + .ql-container.ql-snow {
+        border: 0;
+        min-height: 150px !important;
+    }
+}

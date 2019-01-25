@@ -22,6 +22,7 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { SliderModule } from 'primeng/slider';
 import { TooltipModule } from 'primeng/tooltip';
+import { HireEditorModule } from '../../libs/editor/editor.module';
 
 import { GetFirstLetterPipe } from '../../pipes/get-first-letter.pipe';
 import { DisableControlDirective } from './../../directives/disable-control.directive';
@@ -76,6 +77,7 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         CheckboxModule,
         DropdownModule,
         EditorModule,
+        HireEditorModule,
         MessageModule,
         MessagesModule,
         MultiSelectModule,
@@ -116,6 +118,7 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         CheckboxModule,
         DropdownModule,
         EditorModule,
+        HireEditorModule,
         MessageModule,
         MessagesModule,
         MultiSelectModule,
