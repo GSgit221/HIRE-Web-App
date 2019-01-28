@@ -13,6 +13,7 @@ import { ConditionalValidator } from '../../../validators/conditional.validator'
 import { Questionnaire } from './../../../models/questionnaire';
 import { QuestionnaireService } from './../../../services/questionnaire.service';
 import * as fromStore from './../../../store';
+import * as fromReducers from './../../../store/reducers';
 
 @Component({
     selector: 'app-job-item-edit',
@@ -48,7 +49,7 @@ export class JobItemEditComponent implements OnInit {
     // activeSection = 'hiring-team';
     sections = ['job-details', 'applications', 'hiring-team'];
     contentLoading = false;
-    recruiters: SelectItem[] = [];
+    accountOwners: SelectItem[] = [];
     jobOwner = '';
 
     place: any;
@@ -71,28 +72,6 @@ export class JobItemEditComponent implements OnInit {
             if (section && this.sections.indexOf(section) !== -1) {
                 this.activeSection = section;
             }
-        });
-
-        this.jobService.getUsers().subscribe((users: User[]) => {
-            this.users = users || [];
-            if (this.job) {
-                this.store.pipe(select(fromStore.getUserEntity)).subscribe((user: User) => {
-                    console.log('Got user:', user);
-                    if (this.job.owner === user.id || user.role === 'admin') {
-                        this.isJobOwner = true;
-                        this.jobOwner = `${user.first_name} ${user.last_name}`;
-                        this.hiringForm.patchValue({ default_email_name: this.jobOwner });
-                    }
-                });
-            }
-            this.users.forEach((user) => {
-                if (user.role === 'recruiter' && this.job.owner !== user.id) {
-                    const rectruter = `${user.first_name} ${user.last_name}`;
-                    this.recruiters.push({ label: rectruter, value: user.id });
-                }
-            });
-            console.log('isJobOwner', this.isJobOwner);
-            this.setDefaultNameOptions();
         });
 
         // Options
@@ -165,7 +144,30 @@ export class JobItemEditComponent implements OnInit {
 
     ngOnInit() {
         console.log('📓 JOB', this.job);
-        // this.initForms();
+        this.initForms();
+        // Get current user
+        this.store.pipe(select(fromReducers.getUserEntity)).subscribe((user: User) => {
+            console.log('Got user:', user);
+            if (this.job.owner === user.id || user.role === 'admin') {
+                this.isJobOwner = true;
+                this.jobOwner = `${user.first_name} ${user.last_name}`;
+                this.hiringForm.patchValue({ default_email_name: this.jobOwner });
+            }
+        });
+
+        // Get list of users
+        this.store.pipe(select(fromReducers.getUsersEntities)).subscribe((users: User[]) => {
+            this.users = users.map((u) => ({ ...u }));
+
+            this.users.forEach((user) => {
+                if (user.role === 'superadmin') {
+                    const accountOwner = `${user.first_name} ${user.last_name}`;
+                    this.accountOwners.push({ label: accountOwner, value: user.id });
+                }
+            });
+            this.setDefaultNameOptions();
+        });
+
         this.populateForms();
     }
 
@@ -174,6 +176,7 @@ export class JobItemEditComponent implements OnInit {
         this.jobOwner = `${user[0].first_name} ${user[0].last_name}`;
         this.hiringForm.patchValue({ default_email_name: this.jobOwner });
     }
+
     // TEMPORARY (till Quill fixes it)
     private editorAutofocusFix() {
         setTimeout(() => {
@@ -267,7 +270,7 @@ export class JobItemEditComponent implements OnInit {
             questionnaire: [{ value: this.job.questionnaire, disabled: false }]
         });
         this.hiringForm = this.fb.group({
-            owner: [this.recruiters],
+            owner: [this.accountOwners],
             hiring_managers: [this.job.hiring_managers],
             team_members: [this.job.team_members],
             default_email_name: this.jobOwner

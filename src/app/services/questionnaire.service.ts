@@ -22,7 +22,7 @@ export class QuestionnaireService {
     getAll() {
         return this.http
             .get<Questionnaire[]>(`${this.baseURL}/questionnaires`)
-            .pipe(catchError((error: any) => throwError(error.json())));
+            .pipe(catchError((error: any) => throwError(error)));
     }
 
     create(data: any) {

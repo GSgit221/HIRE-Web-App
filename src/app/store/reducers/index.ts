@@ -2,6 +2,7 @@ import { ActivatedRouteSnapshot, Params, RouterStateSnapshot } from '@angular/ro
 import * as fromRouter from '@ngrx/router-store';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 import * as fromUser from './user.reducer';
+import * as fromUsers from './users.reducer';
 
 export interface RouterStateUrl {
     url: string;
@@ -12,11 +13,13 @@ export interface RouterStateUrl {
 export interface State {
     routerReducer: fromRouter.RouterReducerState<RouterStateUrl>;
     user: fromUser.UserState;
+    users: fromUsers.UsersState;
 }
 
 export const reducers: ActionReducerMap<State> = {
     routerReducer: fromRouter.routerReducer,
-    user: fromUser.reducer
+    user: fromUser.reducer,
+    users: fromUsers.reducer
 };
 
 export const getRouterState = createFeatureSelector<fromRouter.RouterReducerState<RouterStateUrl>>('routerReducer');
@@ -47,4 +50,18 @@ export const getUserLoaded = createSelector(
 export const getUserEntity = createSelector(
     getUserState,
     (state: fromUser.UserState) => state.entity
+);
+
+export const getUsersState = createFeatureSelector<fromUsers.UsersState>('users');
+export const getUsersLoading = createSelector(
+    getUsersState,
+    (state: fromUsers.UsersState) => state.loading
+);
+export const getUsersLoaded = createSelector(
+    getUsersState,
+    (state: fromUsers.UsersState) => state.loaded
+);
+export const getUsersEntities = createSelector(
+    getUsersState,
+    (state: fromUsers.UsersState) => state.entities
 );

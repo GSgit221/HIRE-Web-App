@@ -20,9 +20,7 @@ export class UserService {
         this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
     }
     getUser(): Observable<User> {
-        return this.http
-            .get<User>(`${environment.apiUrl}/me`)
-            .pipe(catchError((error: any) => throwError(error.json())));
+        return this.http.get<User>(`${environment.apiUrl}/me`).pipe(catchError((error: any) => throwError(error)));
     }
 
     create(data) {
@@ -33,8 +31,8 @@ export class UserService {
         return this.http.post(`${this.baseURL}/users/resend-invitation`, { user_id: userId });
     }
 
-    getUsers() {
-        return this.http.get(`${this.baseURL}/users`);
+    getUsers(): Observable<User[]> {
+        return this.http.get<User[]>(`${this.baseURL}/users`).pipe(catchError((error: any) => throwError(error)));
     }
 
     takeover(email) {

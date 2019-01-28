@@ -2,8 +2,6 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AngularEditorModule } from '@kolkov/angular-editor';
-import { NgSelectModule } from '@ng-select/ng-select';
 import { CreditCardDirectivesModule } from 'angular-cc-library';
 import { NgDragDropModule } from 'ng-drag-drop';
 import { AutoSizeInputModule } from 'ngx-autosize-input';
@@ -67,8 +65,6 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         ReactiveFormsModule,
         HttpClientModule,
         FormsModule,
-        AngularEditorModule,
-        NgSelectModule,
         CreditCardDirectivesModule,
         NgDragDropModule.forRoot(),
         AutoSizeInputModule,
@@ -108,8 +104,6 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         ReactiveFormsModule,
         HttpClientModule,
         FormsModule,
-        AngularEditorModule,
-        NgSelectModule,
         CreditCardDirectivesModule,
         NgDragDropModule,
         AutoSizeInputModule,

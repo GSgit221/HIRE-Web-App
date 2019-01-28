@@ -2,10 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Message, SelectItem } from 'primeng/api';
 
+import { select, Store } from '@ngrx/store';
 import { User } from '../../../models/user';
 import { AuthService } from '../../../modules/auth/auth.service';
 import { FormHelperService } from '../../../services/form-helper.service';
 import { UserService } from '../../../services/user.service';
+import * as fromStore from './../../../store';
+import * as fromReducers from './../../../store/reducers';
 
 @Component({
     selector: 'app-users',
@@ -13,7 +16,7 @@ import { UserService } from '../../../services/user.service';
     styleUrls: ['./users.component.scss']
 })
 export class UsersComponent implements OnInit {
-    contentLoading = false;
+    contentLoading = true;
     users: User[] = [];
     usersDetailForm: FormGroup;
     accountTypeOptions: SelectItem[];
@@ -25,16 +28,19 @@ export class UsersComponent implements OnInit {
         private fb: FormBuilder,
         public formHelper: FormHelperService,
         public userService: UserService,
-        public authService: AuthService
+        public authService: AuthService,
+        private store: Store<fromStore.State>
     ) {}
 
     ngOnInit() {
-        this.contentLoading = true;
-        this.userService.getUsers().subscribe((users: User[]) => {
+        this.store.pipe(select(fromReducers.getUsersEntities)).subscribe((users: User[]) => {
             this.contentLoading = false;
-            this.users = users || [];
-            console.log(this.users);
+            this.users = users.slice(0).map((u) => {
+                const obj = { ...u };
+                return obj;
+            });
             this.users.forEach((user) => {
+                user.isVisible = false;
                 if (user.role === 'superadmin') {
                     user.role = 'Account Owner';
                 } else if (user.role === 'admin') {
@@ -56,9 +62,6 @@ export class UsersComponent implements OnInit {
             ],
             email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
             accountType: ['', Validators.required]
-        });
-        this.users.forEach((users) => {
-            users.isVisible = false;
         });
     }
 

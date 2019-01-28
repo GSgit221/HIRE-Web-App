@@ -27,7 +27,7 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
     _items: any[] = [];
     @Input()
     set items(items: any[]) {
-        console.log('SET ITEMS', items);
+        // console.log('SET ITEMS', items);
         if (items && items.length) {
             this.selectedItems = [];
             items.forEach((item) => {
@@ -69,7 +69,7 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
 
     writeValue(value: any) {
         if (value !== undefined) {
-            console.log('VALUE PASSED TO COMPONENT:', value);
+            // console.log('VALUE PASSED TO COMPONENT:', value);
             this.selectedValue = value;
             this.setSelected();
         }

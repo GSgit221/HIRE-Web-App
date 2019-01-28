@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { of } from 'rxjs/observable/of';
+import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
 import * as fromServices from '../../services';
@@ -18,6 +17,16 @@ export class UserEffects {
             return this.userService.getUser().pipe(
                 map((user) => new userActions.LoadUserSuccess(user)),
                 catchError((error) => of(new userActions.LoadUserFail(error)))
+            );
+        })
+    );
+
+    @Effect() loadUsers$: Observable<Action> = this.actions$.pipe(
+        ofType(userActions.LOAD_ALL_USERS),
+        switchMap(() => {
+            return this.userService.getUsers().pipe(
+                map((users) => new userActions.LoadUsersSuccess(users)),
+                catchError((error) => of(new userActions.LoadUsersFail(error)))
             );
         })
     );

@@ -22,8 +22,9 @@ export class TakeoverComponent implements OnInit {
     set users(users: User[]) {
         if (users) {
             this._users = users.map((u: User) => {
-                u.full_str = `${u.email} ${u.first_name} ${u.last_name}`;
-                return u;
+                const obj = { ...u };
+                obj.full_str = `${u.email} ${u.first_name} ${u.last_name}`;
+                return obj;
             });
         } else {
             this._users = null;
