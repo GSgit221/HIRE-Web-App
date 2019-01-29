@@ -11,6 +11,7 @@ import { JobService } from './../../../services/job.service';
 import { QuestionnaireService } from './../../../services/questionnaire.service';
 import { UtilitiesService } from './../../../services/utilities.service';
 import * as fromStore from './../../../store';
+import * as fromSelectors from './../../../store/selectors';
 
 @Component({
     selector: 'app-candidate-item',
@@ -97,7 +98,7 @@ export class CandidateItemComponent implements OnInit {
     ngOnInit() {}
     allowShowFeedback() {
         if (this.job && this.candidate) {
-            this.store.pipe(select(fromStore.getUserEntity)).subscribe((user: User) => {
+            this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
                 // console.log('Got user:', user);
                 if (this.job.owner === user.id) {
                     this.showFeedback = true;

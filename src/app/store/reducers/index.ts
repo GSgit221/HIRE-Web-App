@@ -37,31 +37,3 @@ export class CustomSerializer implements fromRouter.RouterStateSerializer<Router
         return { url, queryParams, params };
     }
 }
-
-export const getUserState = createFeatureSelector<fromUser.UserState>('user');
-export const getUserLoading = createSelector(
-    getUserState,
-    (state: fromUser.UserState) => state.loading
-);
-export const getUserLoaded = createSelector(
-    getUserState,
-    (state: fromUser.UserState) => state.loaded
-);
-export const getUserEntity = createSelector(
-    getUserState,
-    (state: fromUser.UserState) => state.entity
-);
-
-export const getUsersState = createFeatureSelector<fromUsers.UsersState>('users');
-export const getUsersLoading = createSelector(
-    getUsersState,
-    (state: fromUsers.UsersState) => state.loading
-);
-export const getUsersLoaded = createSelector(
-    getUsersState,
-    (state: fromUsers.UsersState) => state.loaded
-);
-export const getUsersEntities = createSelector(
-    getUsersState,
-    (state: fromUsers.UsersState) => state.entities
-);

@@ -20,14 +20,4 @@ export class UserEffects {
             );
         })
     );
-
-    @Effect() loadUsers$: Observable<Action> = this.actions$.pipe(
-        ofType(userActions.LOAD_ALL_USERS),
-        switchMap(() => {
-            return this.userService.getUsers().pipe(
-                map((users) => new userActions.LoadUsersSuccess(users)),
-                catchError((error) => of(new userActions.LoadUsersFail(error)))
-            );
-        })
-    );
 }

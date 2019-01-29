@@ -11,6 +11,7 @@ import { User } from '../../../models/user';
 import { JobService } from '../../../services/job.service';
 import { CandidateService } from './../../../services/candidate.service';
 import * as fromStore from './../../../store';
+import * as fromSelectors from './../../../store/selectors';
 
 @Component({
     selector: 'app-job-item-view',
@@ -62,7 +63,7 @@ export class JobItemViewComponent implements OnInit {
         };
     }
     ngOnInit() {
-        this.store.pipe(select(fromStore.getUserEntity)).subscribe((user: User) => {
+        this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
             this.user = user;
         });
         this.newJobStageForm = this.fb.group({

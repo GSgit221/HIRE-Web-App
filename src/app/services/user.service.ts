@@ -23,8 +23,10 @@ export class UserService {
         return this.http.get<User>(`${environment.apiUrl}/me`).pipe(catchError((error: any) => throwError(error)));
     }
 
-    create(data) {
-        return this.http.post(`${this.baseURL}/users`, { data });
+    create(data): Observable<User> {
+        return this.http
+            .post<User>(`${this.baseURL}/users`, { data })
+            .pipe(catchError((error: any) => throwError(error)));
     }
 
     resendInvitation(userId: string) {

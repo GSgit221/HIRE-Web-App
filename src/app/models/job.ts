@@ -32,7 +32,7 @@ export class Job {
     application_field_cover_letter: string;
     questionnaire: string;
     hiring_managers: string[];
-    team_members: string[];
+    recruiters: string[];
     default_email_name: string;
     step_completed?: number;
     status?: string;

@@ -13,7 +13,7 @@ import { ConditionalValidator } from '../../../validators/conditional.validator'
 import { Questionnaire } from './../../../models/questionnaire';
 import { QuestionnaireService } from './../../../services/questionnaire.service';
 import * as fromStore from './../../../store';
-import * as fromReducers from './../../../store/reducers';
+import * as fromSelectors from './../../../store/selectors';
 
 @Component({
     selector: 'app-job-item-edit',
@@ -32,7 +32,9 @@ export class JobItemEditComponent implements OnInit {
 
     @Output() setEditMode = new EventEmitter<boolean>();
 
+    user: User;
     users: User[];
+    recruiters: User[] = [];
 
     jobTypeOptions: SelectItem[];
     educationOptions: SelectItem[];
@@ -146,23 +148,30 @@ export class JobItemEditComponent implements OnInit {
         console.log('📓 JOB', this.job);
         this.initForms();
         // Get current user
-        this.store.pipe(select(fromReducers.getUserEntity)).subscribe((user: User) => {
+        this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
             console.log('Got user:', user);
+            this.user = { ...user };
             if (this.job.owner === user.id || user.role === 'admin') {
                 this.isJobOwner = true;
                 this.jobOwner = `${user.first_name} ${user.last_name}`;
-                this.hiringForm.patchValue({ default_email_name: this.jobOwner });
+                this.hiringForm.patchValue({ default_email_name: this.jobOwner, owner: user.id });
+                console.log('!', this.hiringForm.value);
             }
         });
 
-        // Get list of users
-        this.store.pipe(select(fromReducers.getUsersEntities)).subscribe((users: User[]) => {
+        // Get list of usersn
+        this.store.pipe(select(fromSelectors.getUsersEntities)).subscribe((users: User[]) => {
             this.users = users.map((u) => ({ ...u }));
-
             this.users.forEach((user) => {
-                if (user.role === 'superadmin') {
-                    const accountOwner = `${user.first_name} ${user.last_name}`;
-                    this.accountOwners.push({ label: accountOwner, value: user.id });
+                if (user.role && ['superadmin', 'admin', 'account_owner', 'recruiter'].indexOf(user.role) !== -1) {
+                    this.accountOwners.push({
+                        label: `${user.first_name} ${user.last_name}`,
+                        value: user.id
+                    });
+                }
+
+                if (user.role && user.role === 'recruiter') {
+                    this.recruiters.push(user);
                 }
             });
             this.setDefaultNameOptions();
@@ -223,8 +232,8 @@ export class JobItemEditComponent implements OnInit {
         });
         this.hiringForm = this.fb.group({
             owner: [''],
+            recruiters: [''],
             hiring_managers: [''],
-            team_members: [''],
             default_email_name: this.jobOwner
         });
 
@@ -270,9 +279,9 @@ export class JobItemEditComponent implements OnInit {
             questionnaire: [{ value: this.job.questionnaire, disabled: false }]
         });
         this.hiringForm = this.fb.group({
-            owner: [this.accountOwners],
+            owner: [this.user ? this.user.id : ''],
             hiring_managers: [this.job.hiring_managers],
-            team_members: [this.job.team_members],
+            recruiters: [this.job.recruiters],
             default_email_name: this.jobOwner
         });
         this.editorAutofocusFix();

@@ -56,7 +56,7 @@ export class JobService {
                 application_field_cover_letter: 'optional',
                 questionnaire: '',
                 hiring_managers: [],
-                team_members: [],
+                recruiters: [],
                 default_email_name: '',
                 status: 'BUILD',
                 step_completed: 0

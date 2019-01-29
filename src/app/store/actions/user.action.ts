@@ -19,22 +19,4 @@ export class LoadUserSuccess implements Action {
     constructor(public payload: User) {}
 }
 
-export const LOAD_ALL_USERS = '[Dashboard] Load All Users';
-export const LOAD_ALL_USERS_FAIL = '[Dashboard] Load All Users Fail';
-export const LOAD_ALL_USERS_SUCCESS = '[Dashboard] Load All Users Success';
-
-export class LoadUsers implements Action {
-    readonly type = LOAD_ALL_USERS;
-}
-
-export class LoadUsersFail implements Action {
-    readonly type = LOAD_ALL_USERS_FAIL;
-    constructor(public payload: any) {}
-}
-
-export class LoadUsersSuccess implements Action {
-    readonly type = LOAD_ALL_USERS_SUCCESS;
-    constructor(public payload: User[]) {}
-}
-
-export type UserAction = LoadUser | LoadUserFail | LoadUserSuccess | LoadUsers | LoadUsersFail | LoadUsersSuccess;
+export type UserAction = LoadUser | LoadUserFail | LoadUserSuccess;

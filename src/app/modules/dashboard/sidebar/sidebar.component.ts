@@ -5,8 +5,8 @@ import { Subscription } from 'rxjs';
 import { UserService } from '../../../services/user.service';
 import { User } from './../../../models/user';
 import * as fromStore from './../../../store';
-import * as fromUserActions from './../../../store/actions/user.action';
-import * as fromReducer from './../../../store/reducers/index';
+import * as fromUsersActions from './../../../store/actions/users.action';
+import * as fromSelectors from './../../../store/selectors';
 
 @Component({
     selector: 'app-sidebar',
@@ -21,17 +21,17 @@ export class SidebarComponent implements OnInit, OnDestroy {
     settingsOpened = true;
 
     constructor(private userService: UserService, private store: Store<fromStore.State>) {
-        this.store.dispatch(new fromUserActions.LoadUsers());
+        this.store.dispatch(new fromUsersActions.LoadUsers());
     }
 
     ngOnInit() {
-        this.userSubscription = this.store.pipe(select(fromStore.getUserEntity)).subscribe((user: User) => {
+        this.userSubscription = this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
             this.user = user;
             if (this.user) {
                 console.log('🎩', this.user);
             }
         });
-        this.usersSubscription = this.store.pipe(select(fromReducer.getUsersEntities)).subscribe((users: User[]) => {
+        this.usersSubscription = this.store.pipe(select(fromSelectors.getUsersEntities)).subscribe((users: User[]) => {
             this.users = [...users];
             if (this.users && this.users.length) {
                 console.log('🎩 ALL:', this.users);

@@ -558,9 +558,9 @@
                     <div class="form-content-box">
                         <label for="" class="form-block-label">Recruiters</label>
                         <app-multi-select
-                            [items]="users"
+                            [items]="recruiters"
                             (newUser)="onNewUserAdded($event)"
-                            formControlName="hiring_managers"
+                            formControlName="recruiters"
                         ></app-multi-select>
                     </div>
                 </div>
@@ -568,9 +568,9 @@
             <div class="section-separator mb20 mt20"></div>
             <div class="form-content-section">
                 <div class="description">
-                    <strong class="title">Team Members</strong>
+                    <strong class="title">Hiring Managers</strong>
                     <p>
-                        Members are able to review & provide feedback on candidates, including participating in
+                        Hiring Managers are able to review & provide feedback on candidates, including participating in
                         interviews &amp; submitting scorecards.
                     </p>
                 </div>
@@ -579,7 +579,7 @@
                         <app-multi-select
                             [items]="users"
                             (newUser)="onNewUserAdded($event)"
-                            formControlName="team_members"
+                            formControlName="hiring_managers"
                         ></app-multi-select>
                     </div>
                 </div>

@@ -69,7 +69,7 @@
                                 <div class="flex-15">
                                     <button
                                         class="btn btn-primary mla btn-add-user-component"
-                                        (click)="onAdd()"
+                                        (click)="onAddUserSubmit()"
                                         [disabled]="!usersDetailForm.valid"
                                     >
                                         Add User
@@ -134,8 +134,8 @@
                 <div
                     class="hc-list-row"
                     *ngFor="let user of (users | sortByOrder: 'first_name'); let i = index"
-                    (mouseover)="onMouseOver(i)"
-                    (mouseout)="onMouseOut(i)"
+                    (mouseover)="users[i].isVisible = true"
+                    (mouseout)="users[i].isVisible = users[i].selected ? true : false"
                 >
                     <div class="hc-list-row-content">
                         <div class="col col1 flex-5 ">
@@ -164,7 +164,7 @@
                         <div class="col col3  flex-25">
                             <p class="hc-content-p">{{ user.email }}</p>
                         </div>
-                        <div class="col col4 flex-25">{{ user.role }}</div>
+                        <div class="col col4 flex-25">{{ user | accountType }}</div>
                         <div class="col col5 flex-15">
                             <div class="status" [ngClass]="'build'" *ngIf="user.invitation_code"></div>
                             <div class="status" [ngClass]="'live'" *ngIf="!user.invitation_code"></div>

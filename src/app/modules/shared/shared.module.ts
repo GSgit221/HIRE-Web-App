@@ -20,14 +20,15 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { SliderModule } from 'primeng/slider';
 import { TooltipModule } from 'primeng/tooltip';
-import { HireEditorModule } from '../../libs/editor/editor.module';
 
+import { HireEditorModule } from '../../libs/editor/editor.module';
 import { GetFirstLetterPipe } from '../../pipes/get-first-letter.pipe';
 import { DisableControlDirective } from './../../directives/disable-control.directive';
 import { DragEnterDirective } from './../../directives/drag-enter.directive';
 import { ToggleDetailsDirective } from './../../directives/toggle-details.directive';
 import { AuthGuard } from './../../guards/auth.guard';
 import { httpInterceptorProviders } from './../../http-interceptors';
+import { AccountTypePipe } from './../../pipes/account-type.pipe';
 import { InitialsPipe } from './../../pipes/initials.pipe';
 import { SortByDatePipe } from './../../pipes/sort-by-date.pipe';
 import { SortByOrderPipe } from './../../pipes/sort-by-order.pipe';
@@ -51,6 +52,7 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         ResumeFileTypeComponent,
         GetFirstLetterPipe,
         InitialsPipe,
+        AccountTypePipe,
         SortByDatePipe,
         SortByOrderPipe,
         UploadFileNamePipe,
@@ -94,6 +96,7 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         ListFilterComponent,
         GetFirstLetterPipe,
         InitialsPipe,
+        AccountTypePipe,
         SortByDatePipe,
         SortByOrderPipe,
         UploadFileNamePipe,
