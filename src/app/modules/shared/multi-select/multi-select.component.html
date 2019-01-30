@@ -44,6 +44,7 @@
                                 width="30"
                                 height="30"
                             />
+                            <span *ngIf="!item.icon_url_small"> {{ item | initials }} </span>
                         </div>
                         <div class="selected-item-name">{{ item.first_name }} {{ item.last_name }}</div>
                         <div class="selected-item-actions">

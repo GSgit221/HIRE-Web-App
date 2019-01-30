@@ -558,11 +558,7 @@
                 <div class="form-content-holder">
                     <div class="form-content-box">
                         <label for="" class="form-block-label">Recruiters</label>
-                        <app-multi-select
-                            [items]="recruiters"
-                            (newUser)="onNewUserAdded($event)"
-                            formControlName="recruiters"
-                        ></app-multi-select>
+                        <app-multi-select userType="recruiter" formControlName="recruiters"></app-multi-select>
                     </div>
                 </div>
             </div>
@@ -578,9 +574,8 @@
                 <div class="form-content-holder">
                     <div class="form-content-box">
                         <app-multi-select
-                            [items]="unprivilegedUsers"
+                            userType="user"
                             [inviteUsers]="true"
-                            (newUser)="onNewUserAdded($event)"
                             formControlName="hiring_managers"
                         ></app-multi-select>
                     </div>

@@ -40,6 +40,10 @@ export function reducer(state = initialState, action: fromUsers.UsersAction): Us
             };
         }
 
+        case fromUsers.CREATE_USER: {
+            return { ...state, loading: true };
+        }
+
         case fromUsers.CREATE_USER_SUCCESS: {
             const entities = [...state.entities];
             entities.push(action.payload);
