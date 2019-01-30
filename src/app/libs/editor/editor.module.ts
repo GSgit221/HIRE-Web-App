@@ -210,7 +210,6 @@ export class AppEditorComponent implements AfterViewInit, ControlValueAccessor {
         this.cd.detectChanges();
         const contentBlock = this.editorRef.nativeElement.childNodes[0];
         const contentHeight = contentBlock.scrollHeight;
-        console.log(contentHeight);
         if (contentHeight > 150) {
             this.style.height = contentHeight + 'px';
         } else {

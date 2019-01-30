@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
-import { SelectItem } from 'primeng/api';
+import { Message, SelectItem } from 'primeng/api';
 
 import { Job } from '../../../models/job';
 import { User } from '../../../models/user';
@@ -35,6 +35,9 @@ export class JobItemEditComponent implements OnInit {
     user: User;
     users: User[];
     recruiters: User[] = [];
+    unprivilegedUsers: User[] = [];
+
+    accountOwners: SelectItem[] = [];
 
     jobTypeOptions: SelectItem[];
     educationOptions: SelectItem[];
@@ -51,13 +54,13 @@ export class JobItemEditComponent implements OnInit {
     // activeSection = 'hiring-team';
     sections = ['job-details', 'applications', 'hiring-team'];
     contentLoading = false;
-    accountOwners: SelectItem[] = [];
     jobOwner = '';
 
     place: any;
     inputAddress: string;
     locationOptions: any;
     isJobOwner = false;
+    msgs: Message[] = [];
 
     constructor(
         private route: ActivatedRoute,
@@ -149,13 +152,11 @@ export class JobItemEditComponent implements OnInit {
         this.initForms();
         // Get current user
         this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
-            console.log('Got user:', user);
             this.user = { ...user };
             if (this.job.owner === user.id || user.role === 'admin') {
                 this.isJobOwner = true;
                 this.jobOwner = `${user.first_name} ${user.last_name}`;
                 this.hiringForm.patchValue({ default_email_name: this.jobOwner, owner: user.id });
-                console.log('!', this.hiringForm.value);
             }
         });
 
@@ -168,6 +169,8 @@ export class JobItemEditComponent implements OnInit {
                         label: `${user.first_name} ${user.last_name}`,
                         value: user.id
                     });
+                } else {
+                    this.unprivilegedUsers.push(user);
                 }
 
                 if (user.role && user.role === 'recruiter') {
@@ -289,7 +292,6 @@ export class JobItemEditComponent implements OnInit {
         // Location
         const locationControl = this.jobDetailsForm.get('location');
         this.jobDetailsForm.get('is_remote').valueChanges.subscribe((value) => {
-            console.log(value);
             if (value) {
                 locationControl.clearValidators();
                 locationControl.updateValueAndValidity();
@@ -377,9 +379,9 @@ export class JobItemEditComponent implements OnInit {
 
     onNewUserAdded(user: User) {
         console.log('💁🏼‍♀️ New user added', user);
-        this.users = this.users.slice(0);
-        this.users.push(user);
-        console.log('👫 USERS ARRAY:', this.users);
+        this.unprivilegedUsers = this.unprivilegedUsers.slice(0);
+        this.unprivilegedUsers.push(user);
+        console.log('👫 UNPREV USERS ARRAY:', this.unprivilegedUsers);
         this.setDefaultNameOptions();
     }
 

@@ -40,6 +40,8 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
     }
     @Output() newUser = new EventEmitter<User>();
 
+    @Input() inviteUsers: boolean;
+
     // Click outside of drop-down
     @HostListener('document:click', ['$event'])
     clickout(event) {
@@ -50,7 +52,10 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
 
     constructor(private elRef: ElementRef, private fb: FormBuilder, private userService: UserService) {
         this.newUserForm = this.fb.group({
-            full_name: ['', Validators.required],
+            full_name: [
+                '',
+                [Validators.required, Validators.minLength(2), Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]
+            ],
             email: ['', [Validators.required, Validators.email]]
         });
     }
@@ -110,7 +115,9 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
             return;
         }
         this.contentLoading = true;
-        this.userService.create(form.value).subscribe(
+        const data = form.value;
+        data.role = 'user';
+        this.userService.create(data).subscribe(
             (response: User) => {
                 this.contentLoading = false;
                 this.newItemMode = false;
