@@ -1,6 +1,6 @@
 <div class="container">
     <div class="header-block">
-        <div class="status-dropdown-block">
+        <div class="status-dropdown-block" *ngIf="!job.pool">
             <p-dropdown
                 [options]="statusOptions"
                 [(ngModel)]="job.status"
@@ -20,12 +20,12 @@
             <div class="job-title-block">
                 <div class="view">
                     <strong class="title">{{ job.title }}</strong>
-                    <button class="btn btn-round ml20" (click)="onEditJobClick($event)">
+                    <button class="btn btn-round ml20" (click)="onEditJobClick($event)" *ngIf="!job.pool">
                         <img src="/assets/images/edit.svg" alt="" width="14" height="13" />
                     </button>
                 </div>
             </div>
-            <div class="address">
+            <div class="address" *ngIf="!job.pool">
                 <img src="/assets/images/location.svg" class="ico" alt="" width="10" height="14" />
                 <span>{{ job.location || 'Unknown Location' }}</span>
             </div>
@@ -73,7 +73,11 @@
                     <div class="stage-header">
                         <h2 class="title">Applied</h2>
                         <span class="counter">{{ appliedCandidates.total || '0' }}</span>
-                        <button class="btn settings-btn mla" (click)="onSettigsClick('applied')">
+                        <button
+                            class="btn settings-btn mla"
+                            (click)="onSettigsClick('applied')"
+                            [ngStyle]="{ visibility: job.pool ? 'hidden' : 'visible' }"
+                        >
                             <img src="/assets/images/settings-dots.svg" alt="" width="2" height="10" />
                         </button>
                         <button class="btn btn-square ml10" (click)="onAddCandidateClick()">
@@ -166,7 +170,10 @@
                         </div>
 
                         <!-- NO MATCHES -->
-                        <div class="no-matches-block" *ngIf="initialLoad && !appliedCandidates.visible.length">
+                        <div
+                            class="no-matches-block"
+                            *ngIf="initialLoad && !appliedCandidates.visible.length && !job.pool"
+                        >
                             <img src="/assets/images/warning.svg" class="icon" width="23" height="20" alt="warning" />
                             <p>
                                 No matched cadidates exist for this job. Either adjust your matching threshhold or add
@@ -175,7 +182,10 @@
                         </div>
 
                         <!-- LOAD MORE -->
-                        <div class="show-more-block" *ngIf="initialLoad && appliedCandidates.hidden.length">
+                        <div
+                            class="show-more-block"
+                            *ngIf="initialLoad && appliedCandidates.hidden.length && !job.pool"
+                        >
                             <div class="show-more-separator tac"><span></span> <span></span> <span></span></div>
                             <div class="tac">
                                 <span class="load-more" (click)="onLoadMore()"
@@ -292,7 +302,7 @@
                     </div>
                 </div>
             </div>
-            <form [formGroup]="newJobStageForm" class="stage-column">
+            <form [formGroup]="newJobStageForm" class="stage-column" *ngIf="!job.pool">
                 <div class="light-overlay" *ngIf="stageFormIsSaving"></div>
                 <button
                     class="btn fw btn-dash-bordered tal mb10"

@@ -42,4 +42,5 @@ export class Job {
     show_position_rating?: boolean;
     location_city?: string;
     location_country?: string;
+    pool?: boolean;
 }

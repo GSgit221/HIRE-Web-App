@@ -138,10 +138,14 @@ export class JobItemViewComponent implements OnInit {
             total: sC.length
         };
         sC.forEach((c) => {
-            if (c.score >= this.resumeThreshold - 15) {
+            if (this.job.pool) {
                 applied.visible.push(c);
             } else {
-                applied.hidden.push(c);
+                if (c.score >= this.resumeThreshold - 15) {
+                    applied.visible.push(c);
+                } else {
+                    applied.hidden.push(c);
+                }
             }
         });
 
