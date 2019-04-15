@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
-import { SelectItem } from 'primeng/api';
+import { Message, SelectItem } from 'primeng/api';
 
 import { Job } from '../../../models/job';
 import { User } from '../../../models/user';
@@ -13,6 +13,7 @@ import { ConditionalValidator } from '../../../validators/conditional.validator'
 import { Questionnaire } from './../../../models/questionnaire';
 import { QuestionnaireService } from './../../../services/questionnaire.service';
 import * as fromStore from './../../../store';
+import * as fromSelectors from './../../../store/selectors';
 
 @Component({
     selector: 'app-job-item-edit',
@@ -31,7 +32,12 @@ export class JobItemEditComponent implements OnInit {
 
     @Output() setEditMode = new EventEmitter<boolean>();
 
+    user: User;
     users: User[];
+    recruiters: User[] = [];
+    unprivilegedUsers: User[] = [];
+
+    accountOwners: SelectItem[] = [];
 
     jobTypeOptions: SelectItem[];
     educationOptions: SelectItem[];
@@ -42,19 +48,18 @@ export class JobItemEditComponent implements OnInit {
     questionnaireOptions: SelectItem[];
     applicationFieldsOptions: SelectItem[];
     hiringManagersOptions: SelectItem[];
-    defaultNameOptions: SelectItem[];
 
     activeSection = 'job-details';
     // activeSection = 'hiring-team';
     sections = ['job-details', 'applications', 'hiring-team'];
     contentLoading = false;
-    recruiters: SelectItem[] = [];
     jobOwner = '';
 
     place: any;
     inputAddress: string;
     locationOptions: any;
     isJobOwner = false;
+    msgs: Message[] = [];
 
     constructor(
         private route: ActivatedRoute,
@@ -71,28 +76,6 @@ export class JobItemEditComponent implements OnInit {
             if (section && this.sections.indexOf(section) !== -1) {
                 this.activeSection = section;
             }
-        });
-
-        this.jobService.getUsers().subscribe((users: User[]) => {
-            this.users = users || [];
-            if (this.job) {
-                this.store.pipe(select(fromStore.getUserEntity)).subscribe((user: User) => {
-                    console.log('Got user:', user);
-                    if (this.job.owner === user.id || user.role === 'admin') {
-                        this.isJobOwner = true;
-                        this.jobOwner = `${user.first_name} ${user.last_name}`;
-                        this.hiringForm.patchValue({ default_email_name: this.jobOwner });
-                    }
-                });
-            }
-            this.users.forEach((user) => {
-                if (user.role === 'recruiter' && this.job.owner !== user.id) {
-                    const rectruter = `${user.first_name} ${user.last_name}`;
-                    this.recruiters.push({ label: rectruter, value: user.id });
-                }
-            });
-            console.log('isJobOwner', this.isJobOwner);
-            this.setDefaultNameOptions();
         });
 
         // Options
@@ -165,7 +148,36 @@ export class JobItemEditComponent implements OnInit {
 
     ngOnInit() {
         console.log('📓 JOB', this.job);
-        // this.initForms();
+        this.initForms();
+        // Get current user
+        this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
+            this.user = { ...user };
+            if (this.job.owner === user.id || user.role === 'admin') {
+                this.isJobOwner = true;
+                this.jobOwner = `${user.first_name} ${user.last_name}`;
+                this.hiringForm.patchValue({ default_email_name: this.jobOwner, owner: user.id });
+            }
+        });
+
+        // Get list of usersn
+        this.store.pipe(select(fromSelectors.getUsersEntities)).subscribe((users: User[]) => {
+            this.users = users.map((u) => ({ ...u }));
+            this.users.forEach((user) => {
+                if (user.role && ['superadmin', 'admin', 'account_owner', 'recruiter'].indexOf(user.role) !== -1) {
+                    this.accountOwners.push({
+                        label: `${user.first_name} ${user.last_name}`,
+                        value: user.id
+                    });
+                } else {
+                    this.unprivilegedUsers.push(user);
+                }
+
+                if (user.role && user.role === 'recruiter') {
+                    this.recruiters.push(user);
+                }
+            });
+        });
+
         this.populateForms();
     }
 
@@ -174,6 +186,7 @@ export class JobItemEditComponent implements OnInit {
         this.jobOwner = `${user[0].first_name} ${user[0].last_name}`;
         this.hiringForm.patchValue({ default_email_name: this.jobOwner });
     }
+
     // TEMPORARY (till Quill fixes it)
     private editorAutofocusFix() {
         setTimeout(() => {
@@ -220,8 +233,8 @@ export class JobItemEditComponent implements OnInit {
         });
         this.hiringForm = this.fb.group({
             owner: [''],
+            recruiters: [''],
             hiring_managers: [''],
-            team_members: [''],
             default_email_name: this.jobOwner
         });
 
@@ -267,9 +280,9 @@ export class JobItemEditComponent implements OnInit {
             questionnaire: [{ value: this.job.questionnaire, disabled: false }]
         });
         this.hiringForm = this.fb.group({
-            owner: [this.recruiters],
+            owner: [this.user ? this.user.id : ''],
             hiring_managers: [this.job.hiring_managers],
-            team_members: [this.job.team_members],
+            recruiters: [this.job.recruiters],
             default_email_name: this.jobOwner
         });
         this.editorAutofocusFix();
@@ -277,7 +290,6 @@ export class JobItemEditComponent implements OnInit {
         // Location
         const locationControl = this.jobDetailsForm.get('location');
         this.jobDetailsForm.get('is_remote').valueChanges.subscribe((value) => {
-            console.log(value);
             if (value) {
                 locationControl.clearValidators();
                 locationControl.updateValueAndValidity();
@@ -361,29 +373,6 @@ export class JobItemEditComponent implements OnInit {
                 this.locationInputRef.nativeElement.value = '';
             }
         }, 400);
-    }
-
-    onNewUserAdded(user: User) {
-        console.log('💁🏼‍♀️ New user added', user);
-        this.users = this.users.slice(0);
-        this.users.push(user);
-        console.log('👫 USERS ARRAY:', this.users);
-        this.setDefaultNameOptions();
-    }
-
-    private setDefaultNameOptions() {
-        this.defaultNameOptions = [];
-        if (this.job.hiring_managers) {
-            this.job.hiring_managers.forEach((hm) => {
-                const user = this.users.find((u) => u.user_id === hm);
-                if (user) {
-                    this.defaultNameOptions.push({
-                        value: user.first_name + ' ' + user.last_name,
-                        label: user.first_name + ' ' + user.last_name
-                    });
-                }
-            });
-        }
     }
 
     private getActiveForm() {

@@ -260,8 +260,8 @@
                             height="30"
                         />
                         <div *ngIf="!getUserData(item.user_id, 'icon_url')" class="initial">
-                            {{ getUserData(item.user_id, 'first_name') | getFitstLetter | titlecase }}
-                            {{ getUserData(item.user_id, 'last_name') | getFitstLetter | titlecase }}
+                            {{ getUserData(item.user_id, 'first_name') | getFirstLetter | titlecase }}
+                            {{ getUserData(item.user_id, 'last_name') | getFirstLetter | titlecase }}
                         </div>
                     </div>
                 </div>
@@ -401,8 +401,8 @@
                                 height="23"
                             />
                             <div *ngIf="!getUserData(item.user_id, 'icon_url')" class="initial">
-                                {{ getUserData(item.user_id, 'first_name') | getFitstLetter | titlecase }}
-                                {{ getUserData(item.user_id, 'last_name') | getFitstLetter | titlecase }}
+                                {{ getUserData(item.user_id, 'first_name') | getFirstLetter | titlecase }}
+                                {{ getUserData(item.user_id, 'last_name') | getFirstLetter | titlecase }}
                             </div>
                         </div>
                         <div class="item-content">

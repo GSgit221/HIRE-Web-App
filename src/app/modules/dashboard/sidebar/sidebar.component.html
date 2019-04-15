@@ -46,6 +46,14 @@
                         <span class="text">Users</span>
                     </a>
                 </div>
+                <div class="sidebar-nav-link" *ngIf="user && user.role === 'superadmin'">
+                    <a href="#" routerLink="/dashboard/settings/agencies" routerLinkActive="active">
+                        <span class="icon"
+                            ><img src="/assets/images/users.svg" alt="Users icon" width="14" height="13"
+                        /></span>
+                        <span class="text">Recruitment Agencies</span>
+                    </a>
+                </div>
                 <div class="sidebar-nav-link">
                     <a href="#" routerLink="/dashboard/settings/billing" routerLinkActive="active">
                         <span class="icon"
@@ -86,6 +94,14 @@
                             />
                         </span>
                         <span class="text">Email Templates</span>
+                    </a>
+                </div>
+                <div class="sidebar-nav-link">
+                    <a href="#" routerLink="/dashboard/settings/theme" routerLinkActive="active">
+                        <span class="icon">
+                            <img src="/assets/images/theme.svg" alt="Email icon" width="13" height="13" />
+                        </span>
+                        <span class="text">Theme</span>
                     </a>
                 </div>
                 <div class="sidebar-nav-link">

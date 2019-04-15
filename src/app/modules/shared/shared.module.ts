@@ -2,8 +2,6 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AngularEditorModule } from '@kolkov/angular-editor';
-import { NgSelectModule } from '@ng-select/ng-select';
 import { CreditCardDirectivesModule } from 'angular-cc-library';
 import { NgDragDropModule } from 'ng-drag-drop';
 import { AutoSizeInputModule } from 'ngx-autosize-input';
@@ -11,6 +9,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { CheckboxModule } from 'primeng/checkbox';
+import { ChipsModule } from 'primeng/chips';
 import { DropdownModule } from 'primeng/dropdown';
 import { EditorModule } from 'primeng/editor';
 import { MessageModule } from 'primeng/message';
@@ -22,12 +21,14 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { SliderModule } from 'primeng/slider';
 import { TooltipModule } from 'primeng/tooltip';
 
+import { HireEditorModule } from '../../libs/editor/editor.module';
+import { GetFirstLetterPipe } from '../../pipes/get-first-letter.pipe';
 import { DisableControlDirective } from './../../directives/disable-control.directive';
 import { DragEnterDirective } from './../../directives/drag-enter.directive';
 import { ToggleDetailsDirective } from './../../directives/toggle-details.directive';
 import { AuthGuard } from './../../guards/auth.guard';
 import { httpInterceptorProviders } from './../../http-interceptors';
-import { GetFitstLetterPipe } from './../../pipes/get-fitst-letter.pipe';
+import { AccountTypePipe } from './../../pipes/account-type.pipe';
 import { InitialsPipe } from './../../pipes/initials.pipe';
 import { SortByDatePipe } from './../../pipes/sort-by-date.pipe';
 import { SortByOrderPipe } from './../../pipes/sort-by-order.pipe';
@@ -35,6 +36,7 @@ import { UploadFileNamePipe } from './../../pipes/upload-file-name.pipe';
 import { AuthService } from './../auth/auth.service';
 import { CandidateFitCircleComponent } from './candidate-fit-circle/candidate-fit-circle.component';
 import { FileTypeComponent } from './file-type/file-type.component';
+import { ListFilterComponent } from './list-filter/list-filter.component';
 import { LoaderComponent } from './loader/loader.component';
 import { MultiSelectComponent } from './multi-select/multi-select.component';
 import { ProgressCircleComponent } from './progress-circle/progress-circle.component';
@@ -48,14 +50,16 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         MultiSelectComponent,
         ProgressCircleComponent,
         ResumeFileTypeComponent,
-        GetFitstLetterPipe,
+        GetFirstLetterPipe,
         InitialsPipe,
+        AccountTypePipe,
         SortByDatePipe,
         SortByOrderPipe,
         UploadFileNamePipe,
         DisableControlDirective,
         DragEnterDirective,
-        ToggleDetailsDirective
+        ToggleDetailsDirective,
+        ListFilterComponent
     ],
     providers: [AuthService, httpInterceptorProviders, AuthGuard, CookieService],
     imports: [
@@ -63,8 +67,6 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         ReactiveFormsModule,
         HttpClientModule,
         FormsModule,
-        AngularEditorModule,
-        NgSelectModule,
         CreditCardDirectivesModule,
         NgDragDropModule.forRoot(),
         AutoSizeInputModule,
@@ -73,6 +75,7 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         CheckboxModule,
         DropdownModule,
         EditorModule,
+        HireEditorModule,
         MessageModule,
         MessagesModule,
         MultiSelectModule,
@@ -80,7 +83,8 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         PanelMenuModule,
         SelectButtonModule,
         SliderModule,
-        TooltipModule
+        TooltipModule,
+        ChipsModule
     ],
     exports: [
         LoaderComponent,
@@ -89,8 +93,10 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         MultiSelectComponent,
         ProgressCircleComponent,
         ResumeFileTypeComponent,
-        GetFitstLetterPipe,
+        ListFilterComponent,
+        GetFirstLetterPipe,
         InitialsPipe,
+        AccountTypePipe,
         SortByDatePipe,
         SortByOrderPipe,
         UploadFileNamePipe,
@@ -101,8 +107,6 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         ReactiveFormsModule,
         HttpClientModule,
         FormsModule,
-        AngularEditorModule,
-        NgSelectModule,
         CreditCardDirectivesModule,
         NgDragDropModule,
         AutoSizeInputModule,
@@ -111,6 +115,7 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         CheckboxModule,
         DropdownModule,
         EditorModule,
+        HireEditorModule,
         MessageModule,
         MessagesModule,
         MultiSelectModule,
@@ -118,7 +123,8 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         PanelMenuModule,
         SelectButtonModule,
         SliderModule,
-        TooltipModule
+        TooltipModule,
+        ChipsModule
     ]
 })
 export class SharedModule {}

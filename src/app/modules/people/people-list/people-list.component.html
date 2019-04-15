@@ -1,45 +1,16 @@
 <div class="container fixed-width-container mh500">
-    <h1>People</h1>
-    <div class="people-filter">
-        <button class="btn all-candidates">All Candidates</button>
-        <button class="btn add-filter">
-            <div class="text" (click)="onShowFilter()">+ Add Filter</div>
-            <div class="filter-content" *ngIf="showFilter">
-                <div class="search-text"><input type="text" placeholder="Search Filters" /></div>
-                <ul class="filter-options">
-                    <li>
-                        <div class="img-block"><img src="/assets/images/america.svg" alt="America icon" /></div>
-                        <span>City</span>
-                    </li>
-                    <li>
-                        <div class="img-block"><img src="/assets/images/america.svg" alt="America icon" /></div>
-                        <span>Country</span>
-                    </li>
-                    <li>
-                        <div class="img-block">
-                            <img src="/assets/images/student_center.svg" alt="Student center icon" />
-                        </div>
-                        <span>Education</span>
-                    </li>
-                    <li>
-                        <div class="img-block"><img src="/assets/images/company-filter.svg" alt="Company icon" /></div>
-                        <span>Employers</span>
-                    </li>
-                    <li>
-                        <div class="img-block"><img src="/assets/images/resume-filter.svg" alt="Resume icon" /></div>
-                        <span>Expereince Years</span>
-                    </li>
-                    <li>
-                        <div class="img-block">
-                            <img src="/assets/images/clipboard-filter.svg" alt="Clipboard icon" />
-                        </div>
-                        <span>Skills</span>
-                    </li>
-                </ul>
-            </div>
-        </button>
-        <div class="sum-candidate">{{ amountCandidates }} Candidates</div>
+    <div class="title-block">
+        <h1 class="page-title">
+            <span>People</span>
+            <span class="total-amount" *ngIf="amountCandidates">{{ amountCandidates | number: '2.' }} Candidates</span>
+        </h1>
     </div>
+    <app-list-filter
+        allItemsText="All Candidates"
+        [filter]="filter"
+        (filterChange)="onFilterChanges($event)"
+        [availableFilters]="['city', 'country', 'education', 'employers', 'experience', 'skills']"
+    ></app-list-filter>
     <div class="list-people" #scrollMe>
         <div>
             <div class="hc-list">
@@ -85,7 +56,8 @@
                         </div>
                     </div>
                     <div class="col col2 flex-25">
-                        Name <img src="/assets/images/generic_sorting_2.svg" alt="Generic_sorting icon" />
+                        Name
+                        <!-- <img src="/assets/images/generic_sorting_2.svg" alt="Generic_sorting icon" /> -->
                     </div>
                     <div class="col col3 flex-25">Location</div>
                     <div class="col col4 flex-20">Position</div>
@@ -107,55 +79,49 @@
                     <div class="hc-blocker"></div>
                     <div
                         class="hc-list-row"
-                        *ngFor="let candidate of candidates; let ind = index"
+                        *ngFor="let item of filteredList; let ind = index"
                         (click)="onItemClick($event, item)"
                     >
-                        <div class="hc-list-row-content">
+                        <div class="hc-list-row-content" data-id="{{ item.id }}">
                             <div class="col col1 flex-6 ">
                                 <div class="hc-checkbox" data-escape-click>
                                     <p-checkbox
                                         binary="true"
-                                        name="group"
-                                        [inputId]="'candidate-' + ind"
-                                        [value]="candidate.first_name"
-                                        [(ngModel)]="candidate.checked"
-                                        (onChange)="onItemSeletectedChange($event, ind)"
+                                        [(ngModel)]="item.selected"
+                                        (onChange)="onItemSeletectedChange()"
                                     ></p-checkbox>
                                 </div>
-                                <div class="img-block" *ngIf="!candidate.checked">
-                                    <div class="initial" *ngIf="!candidate.profile_image">
-                                        {{ candidate.first_name | getFitstLetter }}
-                                        {{ candidate.last_name | getFitstLetter }}
-                                    </div>
+                                <div class="img-block" *ngIf="!item.checked">
+                                    <div class="initial" *ngIf="!item.profile_image">{{ item | initials }}</div>
                                     <img
-                                        *ngIf="candidate.profile_image"
-                                        [src]="candidate.profile_image"
+                                        *ngIf="item.profile_image"
+                                        [src]="item.profile_image"
                                         width="30"
                                         height="30"
-                                        [alt]="candidate.first_name"
+                                        [alt]="item.first_name"
                                     />
                                 </div>
                             </div>
                             <div class="col col2 flex-25">
                                 <p class="hc-content-p">
-                                    {{ candidate.first_name | titlecase }} {{ candidate.last_name | titlecase }}
+                                    {{ item.first_name | titlecase }} {{ item.last_name | titlecase }}
                                 </p>
                             </div>
                             <div class="col col3  flex-25">
-                                <p class="hc-content-p">{{ candidate.location }}</p>
+                                <p class="hc-content-p">{{ item.location }}</p>
                             </div>
                             <div class="col col4  flex-20">
-                                <p class="hc-content-p">{{ candidate.position | titlecase }}</p>
+                                <p class="hc-content-p">{{ item.position | titlecase }}</p>
                             </div>
-                            <div class="col col5 flex-8 flex-center">{{ candidate.created_at_rel }}</div>
-                            <div class="col col6 flex-8 flex-center">{{ candidate.updated_at_rel }}</div>
+                            <div class="col col5 flex-8 flex-center">{{ item.created_at_rel }}</div>
+                            <div class="col col6 flex-8 flex-center">{{ item.updated_at_rel }}</div>
                             <div class="col col7 flex-8">Active</div>
                         </div>
                     </div>
                 </div>
             </div>
             <svg
-                *ngIf="!finishDownLoadCandidates"
+                *ngIf="!candidatesCompleted"
                 class="svg-loader"
                 version="1.1"
                 id="L4"

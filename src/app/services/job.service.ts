@@ -56,7 +56,7 @@ export class JobService {
                 application_field_cover_letter: 'optional',
                 questionnaire: '',
                 hiring_managers: [],
-                team_members: [],
+                recruiters: [],
                 default_email_name: '',
                 status: 'BUILD',
                 step_completed: 0
@@ -104,14 +104,19 @@ export class JobService {
     getUsers() {
         return this.http.get(`${this.baseURL}/users`);
     }
+
     getAllCandidates() {
         return this.http.get(`${this.apiURL}/tenants/${this.tenantId}/candidates`);
     }
-    getCandidatesChunk(startAt, limit) {
+
+    getCandidatesChunk(startAt, limit, sortBy = 'first_name') {
         return this.http.get(
-            `${this.apiURL}/tenants/${this.tenantId}/candidates-chunk?sortBy='sds'&startAt=${startAt}&limit=${limit}`
+            `${this.apiURL}/tenants/${
+                this.tenantId
+            }/candidates-chunk?sortBy=${sortBy}&startAt=${startAt}&limit=${limit}`
         );
     }
+
     getCandidatesAmount() {
         return this.http.get(`${this.apiURL}/tenants/${this.tenantId}/candidates-amount`);
     }

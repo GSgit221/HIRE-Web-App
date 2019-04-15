@@ -11,6 +11,7 @@ import { User } from '../../../models/user';
 import { JobService } from '../../../services/job.service';
 import { CandidateService } from './../../../services/candidate.service';
 import * as fromStore from './../../../store';
+import * as fromSelectors from './../../../store/selectors';
 
 @Component({
     selector: 'app-job-item-view',
@@ -62,7 +63,7 @@ export class JobItemViewComponent implements OnInit {
         };
     }
     ngOnInit() {
-        this.store.pipe(select(fromStore.getUserEntity)).subscribe((user: User) => {
+        this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
             this.user = user;
         });
         this.newJobStageForm = this.fb.group({
@@ -137,10 +138,14 @@ export class JobItemViewComponent implements OnInit {
             total: sC.length
         };
         sC.forEach((c) => {
-            if (c.score >= this.resumeThreshold - 15) {
+            if (this.job.pool) {
                 applied.visible.push(c);
             } else {
-                applied.hidden.push(c);
+                if (c.score >= this.resumeThreshold - 15) {
+                    applied.visible.push(c);
+                } else {
+                    applied.hidden.push(c);
+                }
             }
         });
 

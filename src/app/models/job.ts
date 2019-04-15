@@ -32,7 +32,7 @@ export class Job {
     application_field_cover_letter: string;
     questionnaire: string;
     hiring_managers: string[];
-    team_members: string[];
+    recruiters: string[];
     default_email_name: string;
     step_completed?: number;
     status?: string;
@@ -40,4 +40,7 @@ export class Job {
     stages?: Stage[];
     owner?: string;
     show_position_rating?: boolean;
+    location_city?: string;
+    location_country?: string;
+    pool?: boolean;
 }

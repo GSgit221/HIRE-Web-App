@@ -2,10 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Message, SelectItem } from 'primeng/api';
 
+import { select, Store } from '@ngrx/store';
 import { User } from '../../../models/user';
 import { AuthService } from '../../../modules/auth/auth.service';
 import { FormHelperService } from '../../../services/form-helper.service';
 import { UserService } from '../../../services/user.service';
+import * as fromStore from './../../../store';
+import * as fromActions from './../../../store/actions/users.action';
+import * as fromSelectors from './../../../store/selectors';
 
 @Component({
     selector: 'app-users',
@@ -13,7 +17,7 @@ import { UserService } from '../../../services/user.service';
     styleUrls: ['./users.component.scss']
 })
 export class UsersComponent implements OnInit {
-    contentLoading = false;
+    contentLoading = true;
     users: User[] = [];
     usersDetailForm: FormGroup;
     accountTypeOptions: SelectItem[];
@@ -25,49 +29,49 @@ export class UsersComponent implements OnInit {
         private fb: FormBuilder,
         public formHelper: FormHelperService,
         public userService: UserService,
-        public authService: AuthService
+        public authService: AuthService,
+        private store: Store<fromStore.State>
     ) {}
 
     ngOnInit() {
-        this.contentLoading = true;
-        this.userService.getUsers().subscribe((users: User[]) => {
+        this.store.pipe(select(fromSelectors.getUsersEntities)).subscribe((users: User[]) => {
             this.contentLoading = false;
-            this.users = users || [];
-            console.log(this.users);
-            this.users.forEach((user) => {
-                if (user.role === 'superadmin') {
-                    user.role = 'Account Owner';
-                } else if (user.role === 'admin') {
-                    user.role = 'Admin';
-                } else {
-                    user.role = 'Recruiter';
-                }
-            });
+            this.users = users
+                .slice(0)
+                .map((u) => {
+                    return { ...u, isVisible: false };
+                })
+                .filter((u) => {
+                    return u.role && ['superadmin', 'admin', 'account_owner', 'recruiter'].indexOf(u.role) !== -1;
+                })
+                .sort((a, b) => (a.first_name > b.first_name ? 1 : b.first_name > a.first_name ? -1 : 0));
+
+            this.calculateSelectedUsers();
         });
+
+        this.store.pipe(select(fromSelectors.getUsersError)).subscribe((error: any) => {
+            this.contentLoading = false;
+            if (error) {
+                this.msgs.push({ severity: 'error', detail: error.error.error || 'Error' });
+            } else {
+                this.msgs = [];
+            }
+        });
+
         this.accountTypeOptions = [
-            { label: 'Account Owner', value: 'superadmin' },
+            { label: 'Account Owner', value: 'account_owner' },
             { label: 'Admin', value: 'admin' },
             { label: 'Recruiter', value: 'recruiter' }
         ];
+
         this.usersDetailForm = this.fb.group({
             full_name: [
                 '',
                 [Validators.required, Validators.minLength(2), Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]
             ],
-            email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
+            email: ['', [Validators.required, Validators.email]],
             accountType: ['', Validators.required]
         });
-        this.users.forEach((users) => {
-            users.isVisible = false;
-        });
-    }
-
-    onMouseOver(index) {
-        this.users[index].isVisible = true;
-    }
-
-    onMouseOut(index) {
-        this.users[index].isVisible = this.users[index].selected ? true : false;
     }
 
     private calculateSelectedUsers() {
@@ -97,35 +101,17 @@ export class UsersComponent implements OnInit {
     onUserBulkRemove() {
         this.contentLoading = true;
         const usersToRemove = this.users.filter((user) => user.selected).map((user) => user.id);
-        this.userService.bulkDeleteUsers(usersToRemove).subscribe(() => {
-            this.userService.getUsers().subscribe((users: User[]) => {
-                this.users = users;
-                this.contentLoading = false;
-                this.calculateSelectedUsers();
-                this.updateOrder();
-            });
-        });
+        this.store.dispatch(new fromActions.BulkDeleteUsers(usersToRemove));
     }
 
-    updateOrder() {
-        this.users = this.users.sort((a: any, b: any) => {
-            if (a['first_name'] < b['first_name']) {
-                return -1;
-            } else if (a['first_name'] > b['first_name']) {
-                return 1;
-            } else {
-                return 0;
-            }
-        });
-    }
-
-    onAdd() {
+    onAddUserSubmit() {
         this.msgs = [];
         const form = this.usersDetailForm;
         if (!form.valid) {
             this.formHelper.markFormGroupTouched(form);
             return;
         }
+
         const fullName = form
             .get('full_name')
             .value.toLowerCase()
@@ -138,21 +124,10 @@ export class UsersComponent implements OnInit {
             email: form.get('email').value,
             role: form.get('accountType').value
         };
-        this.userService.create(data).subscribe(
-            (response: User) => {
-                console.log(response);
-                this.contentLoading = false;
-                this.users.push(response);
-                this.updateOrder();
-            },
-            (error) => {
-                console.log(error);
-                this.msgs.push({ severity: 'error', detail: error.error.error || 'Error' });
-                this.contentLoading = false;
-            }
-        );
+        this.store.dispatch(new fromActions.CreateUser(data));
         this.usersDetailForm.reset();
     }
+
     onResendClick(event, userId: string) {
         event.preventDefault();
         event.stopPropagation();

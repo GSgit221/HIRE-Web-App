@@ -9,6 +9,7 @@ import { CandidateService } from '../../../services/candidate.service';
 import { UserService } from '../../../services/user.service';
 import { UtilitiesService } from '../../../services/utilities.service';
 import * as fromStore from './../../../store';
+import * as fromSelectors from './../../../store/selectors';
 
 @Component({
     selector: 'app-candidate-item-timeline',
@@ -35,7 +36,7 @@ export class CandidateItemTimelineComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.store.pipe(select(fromStore.getUserEntity)).subscribe((user: User) => {
+        this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
             this.user = user;
             this.loadAudit();
         });

@@ -15,8 +15,8 @@
                 >
                     {{ item.first_name }} {{ item.last_name }}
                 </div>
-                <div class="menu-items-separator"></div>
-                <!--<div class="menu-item" (click)="onAddNewClick()">+ Add new</div>-->
+                <div class="menu-items-separator" *ngIf="inviteUsers"></div>
+                <div class="menu-item" (click)="onAddNewClick()" *ngIf="inviteUsers">+ Add new</div>
             </div>
         </div>
     </div>
@@ -44,6 +44,7 @@
                                 width="30"
                                 height="30"
                             />
+                            <span *ngIf="!item.icon_url_small"> {{ item | initials }} </span>
                         </div>
                         <div class="selected-item-name">{{ item.first_name }} {{ item.last_name }}</div>
                         <div class="selected-item-actions">

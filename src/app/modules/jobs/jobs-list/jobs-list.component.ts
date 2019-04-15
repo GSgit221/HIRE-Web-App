@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as closest from 'closest';
 import { SelectItem } from 'primeng/api';
+import { UtilitiesService } from './../../../services/utilities.service';
 
 import { Router } from '@angular/router';
 import { User } from '../../../models/user';
@@ -15,16 +16,32 @@ import { JobService } from './../../../services/job.service';
 export class JobsListComponent implements OnInit {
     contentLoading = true;
     list = [];
+    filteredList = [];
+    filter = [];
     statusOptions: SelectItem[];
     selectedAll = false;
     selectedItems = 0;
     users: User[] = [];
     uploadJobSpecMode = false;
     droppedFiles: File[] = [];
+    countries: any[] = [];
 
-    constructor(private router: Router, private jobService: JobService) {
+    constructor(private router: Router, private jobService: JobService, private utilities: UtilitiesService) {
+        this.utilities.getCountries().subscribe((countries: Array<{ name: string; code: string }>) => {
+            this.countries = countries;
+        });
         this.jobService.getAll().subscribe((jobs: Job[]) => {
-            this.list = jobs;
+            this.list = jobs.map((job) => {
+                if (job.location && job.location.length) {
+                    job.location_city = job.location.split(',')[0].trim();
+                    job.location_country = job.location
+                        .split(',')
+                        .pop()
+                        .trim();
+                }
+                return job;
+            });
+            this.filteredList = this.list.slice(0);
             this.contentLoading = false;
         });
 
@@ -55,9 +72,9 @@ export class JobsListComponent implements OnInit {
 
     onSelectAllChange() {
         if (this.selectedAll) {
-            this.list.forEach((item) => (item.selected = true));
+            this.filteredList.forEach((item) => (item.selected = true));
         } else {
-            this.list.forEach((item) => (item.selected = false));
+            this.filteredList.forEach((item) => (item.selected = false));
         }
         this.calculateSelectedItems();
     }
@@ -67,7 +84,7 @@ export class JobsListComponent implements OnInit {
     }
 
     private calculateSelectedItems() {
-        this.selectedItems = this.list.filter((item) => item.selected).length;
+        this.selectedItems = this.filteredList.filter((item) => item.selected).length;
         if (!this.selectedItems) {
             this.selectedAll = false;
         }
@@ -79,10 +96,11 @@ export class JobsListComponent implements OnInit {
 
     onItemsBulkRemove() {
         this.contentLoading = true;
-        const itemsToRemove = this.list.filter((item) => item.selected).map((item) => item.id);
+        const itemsToRemove = this.filteredList.filter((item) => item.selected).map((item) => item.id);
         this.jobService.bulkDeleteJobs(itemsToRemove).subscribe(() => {
             this.jobService.getAll().subscribe((jobs: Job[]) => {
                 this.list = jobs;
+                this.filteredList = this.list.slice(0);
                 this.contentLoading = false;
                 this.calculateSelectedItems();
             });
@@ -93,6 +111,7 @@ export class JobsListComponent implements OnInit {
         this.contentLoading = true;
         this.jobService.getAll().subscribe((jobs: Job[]) => {
             this.list = jobs;
+            this.filteredList = this.list.slice(0);
             this.contentLoading = false;
         });
         this.uploadJobSpecMode = false;
@@ -103,5 +122,77 @@ export class JobsListComponent implements OnInit {
         console.log('📥 onDropFiles', files);
         this.droppedFiles = files;
         this.uploadJobSpecMode = true;
+    }
+
+    onFilterChanges(value) {
+        console.log('onFilterChanges', value);
+        this.filter = value;
+        this.filterItems();
+    }
+
+    filterItems() {
+        if (this.filter.length) {
+            console.log('=> Filtering results');
+            // Filter jobs
+            this.filteredList = this.list.slice(0).filter((job) => {
+                const filterValues = [];
+                this.filter.forEach((f) => {
+                    // City filter
+                    if (f.type === 'city') {
+                        const filterCities = f.value.map((item) => item.toLowerCase());
+                        const jobCity = job.location_city ? job.location_city.toLowerCase() : 'unspecified';
+                        if (filterCities.indexOf(jobCity) === -1) {
+                            filterValues.push(false);
+                        } else {
+                            filterValues.push(true);
+                        }
+                    }
+                    // Country filter
+                    if (f.type === 'country') {
+                        const filterCountries = f.value
+                            .map((item) => {
+                                const country = this.countries.find(
+                                    (countryItem) =>
+                                        countryItem.name.toLowerCase() === item.trim().toLowerCase() ||
+                                        countryItem.code.toLowerCase() === item.trim().toLowerCase()
+                                );
+
+                                return country ? country.name.toLowerCase() : null;
+                            })
+                            .filter((val) => val);
+
+                        let jobCountry = 'unspecified';
+                        if (job.location_country) {
+                            let jC = job.location_country.trim().toLowerCase();
+                            if (jC === 'USA') {
+                                jC = 'US';
+                            }
+                            const listCountry = this.countries.find(
+                                (countryItem) =>
+                                    countryItem.name.toLowerCase() === jC || countryItem.code.toLowerCase() === jC
+                            );
+                            if (listCountry) {
+                                jobCountry = listCountry.name.toLowerCase();
+                            }
+                        }
+
+                        if (filterCountries.indexOf(jobCountry) === -1) {
+                            filterValues.push(false);
+                        } else {
+                            filterValues.push(true);
+                        }
+                    }
+                });
+
+                // console.log('FILTER VALUES:', filterValues);
+                return filterValues.every((fv) => fv);
+            });
+
+            console.log('🦹🏻‍♂️ Filtered results:', this.filteredList.length);
+        } else {
+            console.log('=> Show full list');
+            // Show full list
+            this.filteredList = this.list.slice(0);
+        }
     }
 }

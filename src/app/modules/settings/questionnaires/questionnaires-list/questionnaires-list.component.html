@@ -1,7 +1,7 @@
 <div class="container fixed-width-container mh500">
     <div class="title-block">
         <h1 class="page-title">Questionnaires</h1>
-        <div class="buttons-holder">
+        <div class="buttons-holder" *ngIf="list && list.length">
             <button class="btn btn-primary w140 mla" routerLink="/dashboard/settings/questionnaires/new">
                 Add Questionnaire
             </button>

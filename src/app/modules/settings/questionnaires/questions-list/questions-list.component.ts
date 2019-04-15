@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { select, Store } from '@ngrx/store';
 import * as closest from 'closest';
-import { Question } from './../../../../models/question';
 
-import { Questionnaire } from './../../../../models/questionnaire';
+import { Questionnaire } from '../../../../models/questionnaire';
+import * as fromStore from '../store';
+import * as fromQuestionnaireSelectors from '../store/selectors/questionnaires.selector';
+import { Question } from './../../../../models/question';
 import { QuestionnaireService } from './../../../../services/questionnaire.service';
 
 @Component({
@@ -19,19 +22,32 @@ export class QuestionsListComponent implements OnInit {
     selectedItems = 0;
     questionnaire: Questionnaire;
     questions: Question[] = [];
+    draggedItem: any;
 
     constructor(
         private questionnaireService: QuestionnaireService,
         private router: Router,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private store: Store<fromStore.QuestionnairesState>
     ) {
-        this.questionnaireId = this.route.snapshot.paramMap.get('id');
-        this.questionnaireService.getById(this.questionnaireId).subscribe((questionnaire: Questionnaire) => {
-            this.questionnaire = questionnaire;
-            console.log(this.questionnaire);
-        });
+        this.questionnaireId = this.route.snapshot.paramMap.get('questionnaireId');
+        this.store
+            .pipe(select(fromQuestionnaireSelectors.getSelectedQuestionnaire))
+            .subscribe((questionnaire: Questionnaire) => {
+                this.questionnaire = questionnaire;
+            });
+
         this.questionnaireService.getQuestions(this.questionnaireId).subscribe((questions: Question[]) => {
-            this.list = questions.sort((a, b) => a.created_at - b.created_at);
+            this.list = questions
+                .map((q) => {
+                    if (!q.order) {
+                        const maxOrder =
+                            Math.max(...Object.values(questions).map((question) => question.order || 0)) || 0;
+                        q.order = maxOrder + 1;
+                    }
+                    return q;
+                })
+                .sort((a, b) => a.order - b.order);
             console.log(this.list);
             this.contentLoading = false;
         });
@@ -40,14 +56,14 @@ export class QuestionsListComponent implements OnInit {
     ngOnInit() {}
 
     onItemClick(event, item) {
-        console.log('onItemClick');
+        console.log('onItemClick', item);
         event.preventDefault();
         const target = event.target;
         const escapeDD = closest(event.target, '[data-escape-click]');
         if (escapeDD) {
             console.log('DO NOTHING');
         } else {
-            console.log('REDIRECT');
+            console.log('REDIRECT', `/dashboard/settings/questionnaires/${this.questionnaireId}/questions/${item.id}`);
             this.router.navigate([`/dashboard/settings/questionnaires/${this.questionnaireId}/questions/${item.id}`]);
         }
     }
@@ -96,6 +112,33 @@ export class QuestionsListComponent implements OnInit {
             return knockout ? true : false;
         } else {
             return false;
+        }
+    }
+
+    onItemDragStart(stage) {
+        this.draggedItem = stage;
+    }
+
+    onItemDragEnd() {
+        this.draggedItem = null;
+
+        // QUESIONS SERVICE
+        this.questionnaireService
+            .updateQuestionsOrder(this.questionnaireId, this.list)
+            .subscribe(() => console.log('Order was updated'), (errorResponse) => console.error(errorResponse));
+    }
+
+    onItemDragOver(event, order) {
+        if (order !== this.draggedItem.order) {
+            const draggedOverStageIndex = this.list.findIndex((s) => s.order === order);
+            const draggedItemIndex = this.list.findIndex((s) => s.order === this.draggedItem.order);
+            // console.log('Dragged:', draggedItemIndex, 'Over:', draggedOverStageIndex);
+
+            this.list.splice(draggedItemIndex, 1);
+            this.list.splice(draggedOverStageIndex, 0, this.draggedItem);
+            this.list.forEach((s, index) => {
+                s.order = index + 1;
+            });
         }
     }
 }

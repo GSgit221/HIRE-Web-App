@@ -2,6 +2,7 @@ import { ActivatedRouteSnapshot, Params, RouterStateSnapshot } from '@angular/ro
 import * as fromRouter from '@ngrx/router-store';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 import * as fromUser from './user.reducer';
+import * as fromUsers from './users.reducer';
 
 export interface RouterStateUrl {
     url: string;
@@ -12,11 +13,13 @@ export interface RouterStateUrl {
 export interface State {
     routerReducer: fromRouter.RouterReducerState<RouterStateUrl>;
     user: fromUser.UserState;
+    users: fromUsers.UsersState;
 }
 
 export const reducers: ActionReducerMap<State> = {
     routerReducer: fromRouter.routerReducer,
-    user: fromUser.reducer
+    user: fromUser.reducer,
+    users: fromUsers.reducer
 };
 
 export const getRouterState = createFeatureSelector<fromRouter.RouterReducerState<RouterStateUrl>>('routerReducer');
@@ -34,17 +37,3 @@ export class CustomSerializer implements fromRouter.RouterStateSerializer<Router
         return { url, queryParams, params };
     }
 }
-
-export const getUserState = createFeatureSelector<fromUser.UserState>('user');
-export const getUserLoading = createSelector(
-    getUserState,
-    (state: fromUser.UserState) => state.loading
-);
-export const getUserLoaded = createSelector(
-    getUserState,
-    (state: fromUser.UserState) => state.loaded
-);
-export const getUserEntity = createSelector(
-    getUserState,
-    (state: fromUser.UserState) => state.entity
-);

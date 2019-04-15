@@ -1,9 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'getFitstLetter'
+    name: 'getFirstLetter'
 })
-export class GetFitstLetterPipe implements PipeTransform {
+export class GetFirstLetterPipe implements PipeTransform {
     transform(value: string, args: any[]): string | boolean {
         if (value === null) {
             return '';

@@ -58,7 +58,7 @@ export class QuestionItemComponent implements OnInit {
         private route: ActivatedRoute,
         private utilities: UtilitiesService
     ) {
-        this.questionnaireId = this.route.snapshot.paramMap.get('id');
+        this.questionnaireId = this.route.snapshot.paramMap.get('questionnaireId');
         this.questionId = this.route.snapshot.paramMap.get('questionId');
         this.questionnaireService.getById(this.questionnaireId).subscribe((questionnaire: Questionnaire) => {
             this.questionnaire = questionnaire;

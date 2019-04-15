@@ -1,0 +1,204 @@
+<div class="list-filter">
+    <button class="btn all-items" [ngClass]="{ active: !filter.length }" (click)="onClearFilters()">
+        {{ allItemsText }}
+    </button>
+    <ng-container *ngIf="filter && filter.length">
+        <div class="filter-presentation-block" *ngFor="let f of filter">
+            <div class="filter-presentation-name">{{ f.type | titlecase }}:</div>
+            <div class="filter-presentation-value">{{ f.presentedValue | titlecase }}</div>
+            <button class="btn remove-filter-btn">
+                <img
+                    src="/assets/images/close.svg"
+                    alt="Remove from selected"
+                    width="12"
+                    height="12"
+                    (click)="onRemoveFromSelected(f.type)"
+                />
+            </button>
+        </div>
+    </ng-container>
+    <div class="add-filter-block">
+        <button class="btn add-filter-btn" (click)="onFilterToggle()">+ Add Filter</button>
+        <div class="filter-content" [ngClass]="{ visible: filterVisible }">
+            <ng-container *ngIf="view === 'list'">
+                <div class="search-text">
+                    <input
+                        type="text"
+                        placeholder="Search Filters"
+                        (keyup)="onSearchKeyup($event)"
+                        [(ngModel)]="search"
+                    />
+                </div>
+                <ul class="filter-options">
+                    <li
+                        (click)="onFilterItemSelect('city')"
+                        *ngIf="filteredFilters && filteredFilters.indexOf('city') !== -1"
+                    >
+                        <div class="img-block"><img src="/assets/images/america.svg" alt="city" /></div>
+                        <span>City</span>
+                    </li>
+                    <li
+                        (click)="onFilterItemSelect('country')"
+                        *ngIf="filteredFilters && filteredFilters.indexOf('country') !== -1"
+                    >
+                        <div class="img-block"><img src="/assets/images/america.svg" alt="country" /></div>
+                        <span>Country</span>
+                    </li>
+                    <li
+                        (click)="onFilterItemSelect('education')"
+                        *ngIf="filteredFilters && filteredFilters.indexOf('education') !== -1"
+                    >
+                        <div class="img-block"><img src="/assets/images/student_center.svg" alt="education" /></div>
+                        <span>Education</span>
+                    </li>
+                    <li
+                        (click)="onFilterItemSelect('employers')"
+                        *ngIf="filteredFilters && filteredFilters.indexOf('employers') !== -1"
+                    >
+                        <div class="img-block"><img src="/assets/images/company-filter.svg" alt="employers" /></div>
+                        <span>Employers</span>
+                    </li>
+                    <li
+                        (click)="onFilterItemSelect('experience')"
+                        *ngIf="filteredFilters && filteredFilters.indexOf('experience') !== -1"
+                    >
+                        <div class="img-block"><img src="/assets/images/resume-filter.svg" alt="experience" /></div>
+                        <span>Expereince Years</span>
+                    </li>
+                    <li
+                        (click)="onFilterItemSelect('skills')"
+                        *ngIf="filteredFilters && filteredFilters.indexOf('skills') !== -1"
+                    >
+                        <div class="img-block"><img src="/assets/images/clipboard-filter.svg" alt="skills" /></div>
+                        <span>Skills</span>
+                    </li>
+                </ul>
+            </ng-container>
+            <ng-container *ngIf="view === 'city'">
+                <div class="filter-title-block">
+                    <div class="img-block"><img src="/assets/images/america.svg" alt="city" /></div>
+                    <span>City</span>
+                </div>
+                <div class="filter-content-block"><p-chips [(ngModel)]="filtersObj.city"></p-chips></div>
+                <div class="filter-finish-block" (click)="onFilterEditDone()"><span>Done</span></div>
+            </ng-container>
+            <ng-container *ngIf="view === 'country'">
+                <div class="filter-title-block">
+                    <div class="img-block"><img src="/assets/images/america.svg" alt="country" /></div>
+                    <span>Country</span>
+                </div>
+                <div class="filter-content-block"><p-chips [(ngModel)]="filtersObj.country"></p-chips></div>
+                <div class="filter-finish-block" (click)="onFilterEditDone()"><span>Done</span></div>
+            </ng-container>
+            <ng-container *ngIf="view === 'education'">
+                <div class="filter-title-block">
+                    <div class="img-block"><img src="/assets/images/student_center.svg" alt="education" /></div>
+                    <span>Education</span>
+                </div>
+                <div class="filter-content-block">
+                    <div class="form-row">
+                        <p-dropdown
+                            [options]="educationOptions"
+                            [style]="{ width: '100%' }"
+                            placeholder="Level"
+                            [(ngModel)]="filtersObj.education.level"
+                        ></p-dropdown>
+                    </div>
+                    <div class="form-row">
+                        <input
+                            type="text"
+                            class="form-input"
+                            placeholder="Major"
+                            [(ngModel)]="filtersObj.education.major"
+                        />
+                    </div>
+                    <div class="form-row">
+                        <input
+                            type="text"
+                            class="form-input"
+                            placeholder="School"
+                            [(ngModel)]="filtersObj.education.school"
+                        />
+                    </div>
+                </div>
+                <div class="filter-finish-block" (click)="onFilterEditDone()"><span>Done</span></div>
+            </ng-container>
+            <ng-container *ngIf="view === 'employers'">
+                <div class="filter-title-block">
+                    <div class="img-block"><img src="/assets/images/company-filter.svg" alt="employers" /></div>
+                    <span>Employers</span>
+                </div>
+                <div class="filter-content-block"><p-chips [(ngModel)]="filtersObj.employers"></p-chips></div>
+                <div class="filter-finish-block" (click)="onFilterEditDone()"><span>Done</span></div>
+            </ng-container>
+            <ng-container *ngIf="view === 'experience'">
+                <div class="filter-title-block">
+                    <div class="img-block"><img src="/assets/images/resume-filter.svg" alt="experience" /></div>
+                    <span>Expereince Years</span>
+                </div>
+                <div class="filter-content-block">
+                    <div class="form-row">
+                        <p-dropdown
+                            [options]="yearsOptions"
+                            [style]="{ width: '100%' }"
+                            placeholder="Minimum"
+                            [(ngModel)]="filtersObj.experience.min"
+                        ></p-dropdown>
+                    </div>
+                    <div class="form-row">
+                        <p-dropdown
+                            [options]="yearsOptions"
+                            [style]="{ width: '100%' }"
+                            placeholder="Maximum"
+                            [(ngModel)]="filtersObj.experience.max"
+                        ></p-dropdown>
+                    </div>
+                </div>
+                <div class="filter-finish-block" (click)="onFilterEditDone()"><span>Done</span></div>
+            </ng-container>
+            <ng-container *ngIf="view === 'skills'">
+                <div class="filter-title-block">
+                    <div class="img-block"><img src="/assets/images/clipboard-filter.svg" alt="skills" /></div>
+                    <span>Skills</span>
+                </div>
+                <div class="filter-content-block">
+                    <div class="form-row">
+                        <input
+                            type="text"
+                            class="form-input"
+                            placeholder="Skill Name"
+                            [(ngModel)]="filtersObj.skills.name"
+                        />
+                    </div>
+                    <div class="form-row">
+                        <p-dropdown
+                            [options]="yearsOptions"
+                            [style]="{ width: '100%' }"
+                            placeholder="Minimum Experience"
+                            [(ngModel)]="filtersObj.skills.min_exp"
+                            [disabled]="!filtersObj.skills.name || !filtersObj.skills.name.length"
+                        ></p-dropdown>
+                    </div>
+                    <div class="form-row">
+                        <p-dropdown
+                            [options]="yearsOptions"
+                            [style]="{ width: '100%' }"
+                            placeholder="Maximum Experience"
+                            [(ngModel)]="filtersObj.skills.max_exp"
+                            [disabled]="!filtersObj.skills.name || !filtersObj.skills.name.length"
+                        ></p-dropdown>
+                    </div>
+                    <div class="form-row">
+                        <p-checkbox
+                            binary="true"
+                            label="Must be recently used"
+                            [(ngModel)]="filtersObj.skills.recently_used"
+                            [disabled]="!filtersObj.skills.name || !filtersObj.skills.name.length"
+                        ></p-checkbox>
+                    </div>
+                </div>
+                <div class="filter-finish-block" (click)="onFilterEditDone()"><span>Done</span></div>
+            </ng-container>
+        </div>
+    </div>
+</div>
