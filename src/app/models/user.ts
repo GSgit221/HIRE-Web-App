@@ -1,8 +1,10 @@
 export class User {
     id?: string;
+    full_name: string;
     first_name: string;
     last_name: string;
     initials?: string;
+    primary_contact?: string;
     user_id?: string;
     email?: string;
     full_str?: string;

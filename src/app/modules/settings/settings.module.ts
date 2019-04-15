@@ -27,6 +27,10 @@ const routes: Routes = [
         loadChildren: './users/users.module#UsersModule'
     },
     {
+        path: 'agencies',
+        loadChildren: './agencies/agencies.module#AgenciesModule'
+    },
+    {
         path: 'billing',
         loadChildren: './billing/billing.module#BillingModule'
     },
