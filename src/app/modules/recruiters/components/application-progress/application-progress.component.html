@@ -1,0 +1,18 @@
+<div class="bar">
+    <div class="circle">
+        <svg class="progress" width="80" height="80">
+            <circle class="progress-meter" cx="40" cy="40" [attr.r]="radius" stroke-width="3"></circle>
+            <circle
+                class="progress-value green-color"
+                cx="40"
+                cy="40"
+                [attr.r]="radius"
+                stroke-width="4"
+                stroke="#ffffff"
+                [attr.stroke-dasharray]="dasharray"
+                [attr.stroke-dashoffset]="dashoffset"
+            ></circle>
+        </svg>
+        <div class="result">{{ _value }} <span>%</span></div>
+    </div>
+</div>

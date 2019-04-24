@@ -17,4 +17,5 @@ export class User {
     isVisible?: boolean;
     selected?: boolean;
     invitation_code?: string;
+    activated?: boolean;
 }

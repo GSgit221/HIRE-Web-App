@@ -1,0 +1,22 @@
+<div class="phone-block">
+    <input
+        #phoneInput
+        type="text"
+        autocomplete="off"
+        name="phone"
+        ng2TelInput
+        [ng2TelInputOptions]="{
+            initialDialCode: true,
+            nationalMode: false,
+            initialCountry: 'za',
+            autoHideDialCode: false
+        }"
+        placeholder=" "
+        class="form-input"
+        (intlTelInputObject)="telInstance($event)"
+        (focus)="onFocus()"
+        (blur)="onBlur()"
+        (keyup)="onChange($event)"
+        (change)="onChange($event)"
+    />
+</div>

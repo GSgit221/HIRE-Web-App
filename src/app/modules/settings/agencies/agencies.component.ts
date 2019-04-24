@@ -41,7 +41,7 @@ export class AgenciesComponent implements OnInit {
                 .map((u) => {
                     return { ...u, isVisible: false };
                 })
-                .filter((u) => u.role === 'agency')
+                .filter((u) => u.role === 'recruiter')
                 .sort((a, b) => (a.full_name > b.full_name ? 1 : b.full_name > a.full_name ? -1 : 0));
 
             this.calculateSelectedUsers();
@@ -96,7 +96,7 @@ export class AgenciesComponent implements OnInit {
         this.store.dispatch(new fromActions.BulkDeleteUsers(usersToRemove));
     }
 
-    onAddAgencySubmit() {
+    onAddRecruiterSubmit() {
         this.msgs = [];
         const form = this.form;
         if (!form.valid) {
@@ -109,7 +109,7 @@ export class AgenciesComponent implements OnInit {
             full_name: form.get('full_name').value,
             email: form.get('email').value,
             primary_contact: form.get('primary_contact').value,
-            role: 'agency'
+            role: 'recruiter'
         };
         this.store.dispatch(new fromActions.CreateUser(data));
         this.form.reset();

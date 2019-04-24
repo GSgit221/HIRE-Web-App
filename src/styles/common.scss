@@ -366,6 +366,50 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
         border: 1px dashed $grey-border;
         background: none !important;
     }
+
+    &.btn-bordered {
+        background: transparent;
+        color: #fff;
+        height: 46px;
+        font-size: 14px;
+        line-height: 2.57;
+        padding: 4px 5px;
+        color: $green;
+        border: 1px solid $green;
+        transition: all 0.3s ease;
+
+        &:active {
+            color: #fff;
+            background: lighten($green, 10%);
+        }
+    }
+
+    &.btn-colored {
+        background: transparent;
+        color: #fff;
+        height: 46px;
+        font-size: 14px;
+        line-height: 2.57;
+        padding: 5px;
+        color: $green;
+    }
+
+    &.btn-dark {
+        background: $dark;
+        color: #fff;
+        height: 46px;
+        font-size: 14px;
+        line-height: 2.57;
+
+        &:hover {
+            color: #fff;
+            background: darken($dark, 10%);
+        }
+
+        &:active {
+            background: lighten($dark, 5%);
+        }
+    }
 }
 
 .btn-round {
@@ -890,5 +934,25 @@ p-chips {
     .ql-toolbar.ql-snow + .ql-container.ql-snow {
         border: 0;
         min-height: 150px !important;
+    }
+}
+
+.content-bordered-box {
+    background: #fff;
+    border-top: 6px solid #ff9500;
+    border-radius: 3px;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
+    padding: 25px 30px;
+
+    .content-box-title {
+        display: block;
+        font-size: 20px;
+        line-height: 1.1;
+        color: #424e58;
+        margin: 0 0 10px;
+    }
+
+    p {
+        margin: 0;
     }
 }

@@ -98,6 +98,10 @@
     font-size: 12px;
 }
 
+body .ui-dropdown .ui-dropdown-trigger .ui-dropdown-trigger-icon:before {
+    content: '' !important;
+}
+
 p-dropdown {
     &.ng-invalid.ng-touched {
         .ui-dropdown {
@@ -196,10 +200,15 @@ p-dropdown {
     }
 }
 
-p-checkbox {
+body p-checkbox {
     .ui-chkbox {
-        vertical-align: top;
+        // vertical-align: top;
         margin-right: 10px;
+    }
+
+    .ui-chkbox .ui-chkbox-box.ui-state-active {
+        padding: 0;
+        border: 0;
     }
 
     &.ng-invalid.ng-touched {
@@ -321,5 +330,450 @@ p-slider {
                 }
             }
         }
+    }
+}
+
+.form-row {
+    width: 100%;
+
+    .form-row-columns {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .form-row-column {
+        flex: 1;
+        position: relative;
+
+        &.w66p {
+            max-width: 66%;
+            min-width: 66%;
+        }
+    }
+
+    .form-row-colums-separator {
+        height: 46px;
+        width: 40px;
+        min-width: 40px;
+        max-width: 40px;
+    }
+
+    .dot {
+        display: inline-block;
+        background: $green;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        margin: 0 15px 0 0;
+    }
+
+    .form-block {
+        padding: 0 0 20px;
+
+        &.pr {
+            position: relative;
+        }
+
+        .form-block-label {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            font-size: 12px;
+            line-height: 1.2;
+            color: #3d4953;
+            margin: 0 0 6px;
+        }
+
+        .form-input {
+            background: #fff;
+            width: 100%;
+            height: 46px;
+            border-radius: 2px;
+            border-radius: 2px;
+            color: #3d4953;
+            border: 1px solid #e3e7eb;
+            font-size: 15px;
+            line-height: 26px;
+            padding: 9px 2px 9px 22px;
+            box-shadow: none;
+            outline: none;
+            margin: 0;
+
+            &:focus,
+            &:active {
+                border-color: $green;
+
+                ~ .form-block-label {
+                    color: #3d4953;
+                }
+            }
+
+            &.ng-invalid.ng-touched {
+                border-color: $red;
+            }
+
+            &.phone-input {
+                padding-left: 54px !important;
+            }
+
+            .placeholder {
+                color: #9ca8ae;
+                font-weight: 300;
+            }
+
+            &::-webkit-input-placeholder {
+                color: #9ca8ae;
+                font-weight: 300;
+            }
+
+            &::-moz-placeholder {
+                color: #9ca8ae;
+                font-weight: 300;
+            }
+
+            &:-ms-input-placeholder {
+                color: #9ca8ae;
+                font-weight: 300;
+            }
+
+            &:-moz-placeholder {
+                color: #9ca8ae;
+                font-weight: 300;
+            }
+        }
+    }
+
+    .error-block {
+        color: $red;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        font-size: 10px;
+        display: flex;
+
+        p {
+            margin: 0 5px 0 0;
+        }
+    }
+
+    .intl-tel-input {
+        display: block;
+        width: 100%;
+    }
+}
+
+.intl-tel-input .selected-flag {
+    padding: 0 6px 0 20px;
+    width: 48px;
+    outline: none !important;
+    position: relative;
+    z-index: 4;
+}
+
+.intl-tel-input .selected-flag .iti-arrow {
+    display: none;
+}
+
+.intl-tel-input.allow-dropdown .flag-container:hover .selected-flag {
+    background: transparent;
+}
+
+.intl-tel-input .country-list {
+    max-width: 344px;
+}
+
+.intl-tel-input {
+    width: 100%;
+}
+
+.textarea {
+    background: #fff;
+    width: 100%;
+    height: 106px;
+    border-radius: 2px;
+    border-radius: 2px;
+    color: #3d4953;
+    border: 1px solid #e3e7eb;
+    font-size: 15px;
+    line-height: 16px;
+    padding: 9px 2px 9px 22px;
+    box-shadow: none;
+    outline: none;
+    resize: none;
+    margin: 0;
+
+    &:focus {
+        border-color: $green;
+
+        ~ .form-block-label {
+            color: #3d4953;
+        }
+    }
+
+    &.ng-invalid.ng-touched {
+        border-color: $red;
+    }
+
+    &::-webkit-input-placeholder {
+        color: #9ca8ae;
+        font-weight: 300;
+    }
+
+    &::-moz-placeholder {
+        color: #9ca8ae;
+        font-weight: 300;
+    }
+
+    &:-ms-input-placeholder {
+        color: #9ca8ae;
+        font-weight: 300;
+    }
+
+    &:-moz-placeholder {
+        color: #9ca8ae;
+        font-weight: 300;
+    }
+}
+
+.form-row-separator {
+    width: 100%;
+    height: 1px;
+    background: $light-grey;
+}
+
+.radio-btns-group {
+    p-radiobutton {
+        display: block;
+        width: 100%;
+        margin: 0 0 10px;
+
+        .pi-circle-on:before {
+            display: none;
+        }
+    }
+
+    .ui-radiobutton .ui-radiobutton-box {
+        border: 1px solid #9aa8af;
+        background-color: #ffffff;
+        width: 18px;
+        height: 18px;
+    }
+
+    .ui-radiobutton .ui-radiobutton-box:not(.ui-state-disabled):not(.ui-state-active):hover {
+        border-color: #212121;
+    }
+
+    .ui-radiobutton .ui-radiobutton-box.ui-state-focus {
+        border-color: $green;
+        background-color: #ffffff;
+        color: $green;
+        box-shadow: none;
+    }
+
+    .ui-radiobutton .ui-radiobutton-box.ui-state-active {
+        border-color: $green;
+        background-color: $green;
+    }
+
+    .ui-radiobutton .ui-radiobutton-box.ui-state-active .ui-radiobutton-icon {
+        background-color: #ffffff;
+        border-radius: 50%;
+    }
+
+    .ui-radiobutton .ui-radiobutton-box.ui-state-active:not(.ui-state-disabled):hover {
+        border-color: $green;
+        background-color: $green;
+    }
+
+    .ui-radiobutton .ui-radiobutton-box.ui-state-active.ui-state-focus {
+        border-color: $green;
+        background-color: $green;
+    }
+
+    .ui-radiobutton .ui-radiobutton-box .ui-radiobutton-icon {
+        width: 8px;
+        height: 8px;
+        margin-left: -4px;
+        margin-top: -4px;
+    }
+
+    .ui-radiobutton {
+        margin-right: 10px;
+    }
+}
+
+.checkbox-row,
+.chb-block {
+    margin: 0 0 12px;
+
+    &:last-child {
+        margin: 0 0 6px;
+    }
+
+    .ui-chkbox .ui-chkbox-box {
+        border: 1px solid #9aa8af;
+        background-color: #ffffff;
+        width: 18px;
+        height: 18px;
+        text-align: center;
+        border-radius: 2px;
+        transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .ui-chkbox .ui-chkbox-box .ui-chkbox-icon {
+        font-size: 16px;
+    }
+
+    .ui-chkbox .ui-chkbox-box.ui-state-focus {
+        border-color: $green;
+        background-color: #ffffff;
+        color: $green;
+        box-shadow: none;
+    }
+
+    .ui-chkbox .ui-chkbox-box.ui-state-active {
+        border-color: $green;
+        background-color: $green;
+    }
+
+    .ui-chkbox .ui-chkbox-box.ui-state-active:not(.ui-state-disabled):hover {
+        border-color: $green;
+        background-color: $green;
+    }
+
+    .ui-chkbox .ui-chkbox-box.ui-state-active.ui-state-focus {
+        border-color: $green;
+        background-color: $green;
+    }
+}
+
+p-dialog {
+    .ui-dialog {
+        border-radius: 3px;
+        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+    }
+
+    .ui-dialog .ui-dialog-titlebar {
+        position: relative;
+        border: 0;
+        background: #fff;
+        border-bottom: 1px solid #e3e7eb;
+        padding: 18px 30px;
+
+        &:after {
+            content: '';
+            position: absolute;
+            left: 30px;
+            bottom: -1px;
+            width: 72px;
+            height: 1px;
+            background: $green;
+            font-size: 20px;
+            line-height: 1.1;
+            font-weight: normal;
+            color: $green;
+        }
+
+        .title {
+            font-weight: normal;
+        }
+    }
+
+    .ui-dialog .ui-dialog-content {
+        border: 0;
+        padding: 18px 30px 9px;
+
+        p {
+            margin: 0 0 20px;
+        }
+    }
+
+    .ui-dialog .ui-dialog-footer {
+        border: 0;
+        padding: 9px 30px 18px;
+    }
+
+    .btn-green {
+        background: $green;
+
+        &:hover {
+            background: darken($green, 5%);
+            color: #fff;
+        }
+    }
+}
+
+body .ui-dropdown .ui-dropdown-trigger {
+    background-color: transparent !important;
+}
+
+body p-calendar {
+    .ui-datepicker table td > {
+        a.ui-state-active {
+            background: $green;
+        }
+
+        a {
+            color: $green;
+        }
+    }
+
+    .ui-datepicker table td.ui-datepicker-today a {
+        background-color: #eaeaea;
+    }
+
+    .ui-datepicker:not(.ui-datepicker-inline) {
+        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
+        border: 1px solid #e3e7eb;
+    }
+
+    .ui-state-disabled,
+    .ui-widget:disabled {
+        color: $dark-grey !important;
+        opacity: 1;
+    }
+
+    .ui-datepicker {
+        color: $green;
+    }
+
+    .ui-calendar {
+        width: 100%;
+    }
+
+    .ui-inputtext {
+        background: #fff;
+        width: 100%;
+        height: 46px;
+        border-radius: 2px;
+        border-radius: 2px;
+        color: #3d4953;
+        border: 1px solid #e3e7eb;
+        font-size: 15px;
+        line-height: 16px;
+        padding: 9px 2px 9px 22px;
+        box-shadow: none;
+        outline: none;
+
+        &:focus {
+            border-color: $green;
+        }
+
+        &:enabled:hover:not(.ui-state-error) {
+            border-color: #e3e7eb;
+        }
+
+        &:enabled:focus:not(.ui-state-error) {
+            border-color: $green !important;
+        }
+    }
+
+    &.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
+        border-color: $red !important;
+    }
+
+    &.ng-touched.ng-invalid .ui-inputtext {
+        border-color: $red !important;
     }
 }

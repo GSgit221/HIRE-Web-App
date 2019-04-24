@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
+import { select, Store } from '@ngrx/store';
+import { User } from './../../models/user';
 
 import * as fromStore from '../../store';
+import * as fromSelectors from './../../store/selectors';
 
 @Component({
     selector: 'app-dashboard',
@@ -9,8 +12,15 @@ import * as fromStore from '../../store';
     styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-    constructor(private store: Store<fromStore.State>) {
+    user: User;
+    constructor(private store: Store<fromStore.State>, private router: Router) {
         this.store.dispatch(new fromStore.LoadUser());
+        this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
+            this.user = user;
+            if (this.user && this.user.role === 'recruiter' && !this.user.activated) {
+                this.router.navigateByUrl('/recruiters/onboarding');
+            }
+        });
     }
     ngOnInit() {}
 }

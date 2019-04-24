@@ -1,0 +1,31 @@
+<div class="sidebar-header">
+    <div class="logo" routerLink="/"><img *ngIf="logoUrl && logoUrl.length" [src]="logoUrl" alt="" height="35" /></div>
+    <div class="user-pic" *ngIf="user">
+        <img [src]="user.icon_url_small" *ngIf="user.icon_url_small" alt="" class="img-user" />
+        <span *ngIf="!user.icon_url_small"><img src="/assets/images/gender_neutral_user.svg" alt=""/></span>
+        <button class="arrow"><img src="/assets/images/sort_down.svg" alt="" /></button>
+    </div>
+</div>
+<div class="progress-block">
+    <app-application-progress [value]="progress"></app-application-progress>
+    <div class="text">Recruitment<br />Agency Application</div>
+</div>
+<div class="sidebar-nav" *ngIf="steps && steps.length">
+    <div class="sidebar-nav-link" *ngFor="let step of steps; index as i">
+        <a
+            [routerLink]="['/recruiters/onboarding', step.id]"
+            routerLinkActive="active"
+            [ngClass]="{ disabled: steps[i - 1] && !steps[i - 1].completed, completed: step.completed }"
+        >
+            <span class="icon"> <svg-icon [src]="step.iconUrl"></svg-icon> </span>
+            <span class="text">{{ step.title }}</span>
+            <span class="img" *ngIf="step.completed"> <img src="/assets/images/icon-check.svg" alt="" /> </span>
+            <span class="img" *ngIf="steps[i - 1] && steps[i - 1].completed && i + 1 === steps.length">
+                <img src="/assets/images/icons-refresh.svg" alt="" />
+            </span>
+        </a>
+    </div>
+</div>
+<div class="logout-link" routerLink="/auth/signout" *ngIf="isLoggedIn()">
+    <img src="/assets/images/logout.svg" alt="Logout" width="20" height="20" />
+</div>

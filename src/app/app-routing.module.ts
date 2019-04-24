@@ -19,6 +19,10 @@ const appRoutes: Routes = [
         canActivateChild: [AuthGuard],
         loadChildren: './modules/dashboard/dashboard.module#DashboardModule'
     },
+    {
+        path: 'recruiters',
+        loadChildren: './modules/recruiters/recruiters.module#RecruitersModule'
+    },
     { path: 'not-found', component: PageNotFoundComponent },
     { path: '**', redirectTo: 'not-found' }
 ];

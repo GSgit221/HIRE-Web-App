@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment';
 export class UtilitiesService {
     constructor(private http: HttpClient) {}
 
-    readFile(file) {
+    readFile(file): Promise<{ name: string; size: number; mimetype: string; data: string }> {
         return new Promise((resolve, reject) => {
             // console.log(file);
             const reader = new FileReader();
