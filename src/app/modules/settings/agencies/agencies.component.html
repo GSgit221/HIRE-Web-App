@@ -3,72 +3,69 @@
     <div class="content-section">
         <form [formGroup]="form">
             <div class="form-content-section">
-                <div class="form-content-holder">
-                    <div class="form-content-box">
-                        <p-messages [(value)]="msgs"></p-messages>
-                        <div class="form-block">
-                            <label for="full_name" class="form-block-label">Agency Company Name</label>
-                            <div class="form-block-columns padding-columns">
-                                <div class="form-block-col flex-30">
-                                    <div class="input-block">
-                                        <input
-                                            type="text"
-                                            class="form-input pl45"
-                                            placeholder="Agency Name"
-                                            formControlName="full_name"
-                                        />
-                                        <div
-                                            class="error-message"
-                                            *ngIf="!form.get('full_name').valid && form.get('full_name').touched"
-                                        >
-                                            Agency Name is required
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-block-col flex-25">
-                                    <div class="input-block">
-                                        <input
-                                            type="text"
-                                            class="form-input pl45"
-                                            placeholder="Primary Contact First Name"
-                                            formControlName="primary_contact"
-                                        />
-                                        <div
-                                            class="error-message"
-                                            *ngIf="
-                                                !form.get('primary_contact').valid &&
-                                                form.get('primary_contact').touched
-                                            "
-                                        >
-                                            Primary Contact First Name is required
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-block-col flex-30">
-                                    <div class="input-block">
-                                        <input
-                                            type="text"
-                                            class="form-input pl45"
-                                            placeholder="Email Address"
-                                            formControlName="email"
-                                        />
-                                        <div
-                                            class="error-message"
-                                            *ngIf="!form.get('email').valid && form.get('email').touched"
-                                        >
-                                            Email is required
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex-15">
-                                    <button
-                                        class="btn btn-primary mla btn-add-user-component"
-                                        (click)="onAddRecruiterSubmit()"
-                                        [disabled]="!form.valid"
+                <div class="form-content-box">
+                    <p-messages [(value)]="msgs"></p-messages>
+                    <div class="form-block">
+                        <label for="full_name" class="form-block-label">Agency Company Name</label>
+                        <div class="form-block-columns padding-columns">
+                            <div class="form-block-col flex-30">
+                                <div class="input-block">
+                                    <input
+                                        type="text"
+                                        class="form-input pl45"
+                                        placeholder="Agency Name"
+                                        formControlName="full_name"
+                                    />
+                                    <div
+                                        class="error-message"
+                                        *ngIf="!form.get('full_name').valid && form.get('full_name').touched"
                                     >
-                                        Add Agency
-                                    </button>
+                                        Agency Name is required
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="form-block-col flex-25">
+                                <div class="input-block">
+                                    <input
+                                        type="text"
+                                        class="form-input pl45"
+                                        placeholder="Primary Contact First Name"
+                                        formControlName="primary_contact"
+                                    />
+                                    <div
+                                        class="error-message"
+                                        *ngIf="
+                                            !form.get('primary_contact').valid && form.get('primary_contact').touched
+                                        "
+                                    >
+                                        Primary Contact First Name is required
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-block-col flex-30">
+                                <div class="input-block">
+                                    <input
+                                        type="text"
+                                        class="form-input pl45"
+                                        placeholder="Email Address"
+                                        formControlName="email"
+                                    />
+                                    <div
+                                        class="error-message"
+                                        *ngIf="!form.get('email').valid && form.get('email').touched"
+                                    >
+                                        Email is required
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-15">
+                                <button
+                                    class="btn btn-primary mla btn-add-user-component"
+                                    (click)="onAddRecruiterSubmit()"
+                                    [disabled]="!form.valid"
+                                >
+                                    Add Agency
+                                </button>
                             </div>
                         </div>
                     </div>
