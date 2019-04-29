@@ -19,9 +19,9 @@
                         <div
                             class="error-block"
                             *ngIf="
-                                companyDetails.controls['name'].touched &&
-                                companyDetails.controls['name'].errors &&
-                                companyDetails.controls['name'].errors.required === true
+                                companyDetails.get('name').touched &&
+                                companyDetails.get('name').errors &&
+                                companyDetails.get('name').errors.required === true
                             "
                         >
                             Company Name required
@@ -38,9 +38,9 @@
                         <div
                             class="error-block"
                             *ngIf="
-                                companyDetails.controls['reg_num'].touched &&
-                                companyDetails.controls['reg_num'].errors &&
-                                companyDetails.controls['reg_num'].errors.required === true
+                                companyDetails.get('reg_num').touched &&
+                                companyDetails.get('reg_num').errors &&
+                                companyDetails.get('reg_num').errors.required === true
                             "
                         >
                             Company Registration Number required
@@ -60,9 +60,9 @@
                         <div class="error-block">
                             <p
                                 *ngIf="
-                                    companyDetails.controls['phone'].touched &&
-                                        companyDetails.controls['phone'].errors &&
-                                        companyDetails.controls['phone'].errors.required === true;
+                                    companyDetails.get('phone').touched &&
+                                        companyDetails.get('phone').errors &&
+                                        companyDetails.get('phone').errors.required === true;
                                     else otherPhoneErrors
                                 "
                             >
@@ -71,9 +71,9 @@
                             <ng-template #otherPhoneErrors>
                                 <p
                                     *ngIf="
-                                        companyDetails.controls['phone'].touched &&
-                                        companyDetails.controls['phone'].errors &&
-                                        companyDetails.controls['phone'].errors.incorrect_number
+                                        companyDetails.get('phone').touched &&
+                                        companyDetails.get('phone').errors &&
+                                        companyDetails.get('phone').errors.incorrect_number
                                     "
                                 >
                                     Phone number is not valid
@@ -90,18 +90,18 @@
                         <div class="error-block">
                             <p
                                 *ngIf="
-                                    companyDetails.controls['email'].touched &&
-                                    companyDetails.controls['email'].errors &&
-                                    companyDetails.controls['email'].errors.required === true
+                                    companyDetails.get('email').touched &&
+                                    companyDetails.get('email').errors &&
+                                    companyDetails.get('email').errors.required === true
                                 "
                             >
                                 Email required
                             </p>
                             <p
                                 *ngIf="
-                                    companyDetails.controls['email'].touched &&
-                                    companyDetails.controls['email'].errors &&
-                                    companyDetails.controls['email'].errors.email
+                                    companyDetails.get('email').touched &&
+                                    companyDetails.get('email').errors &&
+                                    companyDetails.get('email').errors.email
                                 "
                             >
                                 Email is not valid
@@ -129,9 +129,9 @@
                     <div
                         class="error-block"
                         *ngIf="
-                            address.controls['address_line_1'].touched &&
-                            address.controls['address_line_1'].errors &&
-                            address.controls['address_line_1'].errors.required === true
+                            address.get('address_line_1').touched &&
+                            address.get('address_line_1').errors &&
+                            address.get('address_line_1').errors.required === true
                         "
                     >
                         Postal Address required
@@ -169,9 +169,9 @@
                                 <div
                                     class="error-block"
                                     *ngIf="
-                                        address.controls['state'].touched &&
-                                        address.controls['state'].errors &&
-                                        address.controls['state'].errors.required === true
+                                        address.get('state').touched &&
+                                        address.get('state').errors &&
+                                        address.get('state').errors.required === true
                                     "
                                 >
                                     State / Province required
@@ -188,9 +188,9 @@
                                 <div
                                     class="error-block"
                                     *ngIf="
-                                        address.controls['zip'].touched &&
-                                        address.controls['zip'].errors &&
-                                        address.controls['zip'].errors.required === true
+                                        address.get('zip').touched &&
+                                        address.get('zip').errors &&
+                                        address.get('zip').errors.required === true
                                     "
                                 >
                                     Zip / Postal Code required
@@ -211,9 +211,9 @@
                         <div
                             class="error-block"
                             *ngIf="
-                                address.controls['country'].touched &&
-                                address.controls['country'].errors &&
-                                address.controls['country'].errors.required === true
+                                address.get('country').touched &&
+                                address.get('country').errors &&
+                                address.get('country').errors.required === true
                             "
                         >
                             Country required
@@ -241,9 +241,9 @@
                         <div
                             class="error-block"
                             *ngIf="
-                                primaryContact.controls['first_name'].touched &&
-                                primaryContact.controls['first_name'].errors &&
-                                primaryContact.controls['first_name'].errors.required === true
+                                primaryContact.get('first_name').touched &&
+                                primaryContact.get('first_name').errors &&
+                                primaryContact.get('first_name').errors.required === true
                             "
                         >
                             First Name required
@@ -258,9 +258,9 @@
                         <div
                             class="error-block"
                             *ngIf="
-                                primaryContact.controls['last_name'].touched &&
-                                primaryContact.controls['last_name'].errors &&
-                                primaryContact.controls['last_name'].errors.required === true
+                                primaryContact.get('last_name').touched &&
+                                primaryContact.get('last_name').errors &&
+                                primaryContact.get('last_name').errors.required === true
                             "
                         >
                             Last Name required
@@ -280,9 +280,9 @@
                         <div class="error-block">
                             <p
                                 *ngIf="
-                                    primaryContact.controls['phone'].touched &&
-                                        primaryContact.controls['phone'].errors &&
-                                        primaryContact.controls['phone'].errors.required === true;
+                                    primaryContact.get('phone').touched &&
+                                        primaryContact.get('phone').errors &&
+                                        primaryContact.get('phone').errors.required === true;
                                     else otherPhone2Errors
                                 "
                             >
@@ -291,9 +291,9 @@
                             <ng-template #otherPhone2Errors>
                                 <p
                                     *ngIf="
-                                        primaryContact.controls['phone'].touched &&
-                                        primaryContact.controls['phone'].errors &&
-                                        primaryContact.controls['phone'].errors.incorrect_number
+                                        primaryContact.get('phone').touched &&
+                                        primaryContact.get('phone').errors &&
+                                        primaryContact.get('phone').errors.incorrect_number
                                     "
                                 >
                                     Phone number is not valid
@@ -310,18 +310,18 @@
                         <div class="error-block">
                             <p
                                 *ngIf="
-                                    primaryContact.controls['email'].touched &&
-                                    primaryContact.controls['email'].errors &&
-                                    primaryContact.controls['email'].errors.required === true
+                                    primaryContact.get('email').touched &&
+                                    primaryContact.get('email').errors &&
+                                    primaryContact.get('email').errors.required === true
                                 "
                             >
                                 Email required
                             </p>
                             <p
                                 *ngIf="
-                                    primaryContact.controls['email'].touched &&
-                                    primaryContact.controls['email'].errors &&
-                                    primaryContact.controls['email'].errors.email
+                                    primaryContact.get('email').touched &&
+                                    primaryContact.get('email').errors &&
+                                    primaryContact.get('email').errors.email
                                 "
                             >
                                 Email is not valid

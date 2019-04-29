@@ -2,6 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { select, Store } from '@ngrx/store';
+import { Message } from 'primeng/components/common/api';
+import { User } from './../../../../models/user';
+
+import * as fromStore from '../../../../store';
+import * as fromSelectors from '../../../../store/selectors';
 import { FormHelperService } from './../../../../services/form-helper.service';
 import { GeoService } from './../../../../services/geo.service';
 import { RecruiterService } from './../../../../services/recruiter.service';
@@ -16,6 +22,8 @@ export class CompanyDetailsComponent implements OnInit {
     countryTypeOptions = [];
     initialCountry = 'za';
     contentLoading = true;
+    user: User;
+    msgs: Message[] = [];
     @ViewChild('phone') el: ElementRef;
     constructor(
         private fb: FormBuilder,
@@ -23,7 +31,8 @@ export class CompanyDetailsComponent implements OnInit {
         private http: HttpClient,
         private router: Router,
         private geoService: GeoService,
-        private recruiterService: RecruiterService
+        private recruiterService: RecruiterService,
+        private store: Store<fromStore.State>
     ) {
         this.countryTypeOptions = this.geoService.countriesList();
         this.initForm();
@@ -32,6 +41,20 @@ export class CompanyDetailsComponent implements OnInit {
             this.contentLoading = false;
             if (data && data.companyDetails) {
                 this.populateForm(data.companyDetails);
+            }
+        });
+        this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
+            this.user = user;
+            if (
+                this.user &&
+                this.form &&
+                this.form.get('companyDetails') &&
+                this.form.get('companyDetails').get('email')
+            ) {
+                this.form
+                    .get('companyDetails')
+                    .get('email')
+                    .patchValue(this.user.email);
             }
         });
     }
@@ -61,6 +84,10 @@ export class CompanyDetailsComponent implements OnInit {
                 email: ['', Validators.required]
             })
         });
+        this.form
+            .get('companyDetails')
+            .get('email')
+            .disable();
     }
 
     populateForm(data) {

@@ -11,6 +11,7 @@ export class GeoService {
     getLocation() {
         return this.http.get('https://api.ipdata.co/?api-key=6eb2e858ad6c6a7745c08a146e7b7fb37511fae359336dfd64f8c3db');
     }
+
     setCountryCode() {
         return this.getLocation().subscribe((address: any) => {
             this.countryCode = address.country_code.toLowerCase();

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
+import { Message } from 'primeng/api';
 
 import { FormHelperService } from './../../../../services/form-helper.service';
 import { GeoService } from './../../../../services/geo.service';
@@ -35,6 +36,7 @@ export class DocumentsComponent implements OnInit {
     maxDate: Date;
     minDate: Date;
     minDateYearAgo: Date;
+    msgs: Message[] = [];
 
     constructor(
         private fb: FormBuilder,

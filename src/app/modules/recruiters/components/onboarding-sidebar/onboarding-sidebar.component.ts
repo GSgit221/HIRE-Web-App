@@ -19,7 +19,7 @@ export class OnboardingSidebarComponent implements OnInit, OnDestroy {
     user: User;
     mainColor = '#ffffff';
     logoUrl = '';
-    private steps = [];
+    steps = [];
     progress = 0;
     stepPercents = 0;
 

@@ -72,7 +72,7 @@ export class InputPhoneComponent implements ControlValueAccessor, Validator, OnI
         this.pluginInstance = inst;
     }
 
-    onChange() {
+    onChange(event) {
         this.onTouched();
         const w: any = window;
         if (typeof w.intlTelInputUtils !== 'undefined') {

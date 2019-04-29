@@ -11,6 +11,7 @@ import { SiteService } from './../../../../services/site.service';
 })
 export class OnboardingComponent implements OnInit {
     steps = [];
+    contentLoading = false;
     constructor(private siteService: SiteService, private recruiterService: RecruiterService, private router: Router) {
         this.siteService.loadTheme();
         this.recruiterService.loadOnboardingSteps();
