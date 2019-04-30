@@ -1,0 +1,18 @@
+<div class="header-container fdr aic">
+    <div class="logo-container" *ngIf="logoUrl" routerLink="/"><img [src]="logoUrl" alt="" class="logo" /></div>
+    <!-- <div class="auth-block mla fdr aic jcc" *ngIf="mode === 'signup'">
+        <span class="text">Don’t have a profile yet?</span>
+        <a routerLink="/auth/signup" class="btn btn-dark fdr aic"
+            >SIGN UP <img src="/assets/images/portal/ico-signup.svg" class="btn-ico" alt="" width="13" height="13"
+        /></a>
+    </div>
+    <div class="auth-block mla fdr aic jcc" *ngIf="mode === 'signin'">
+        <span class="text">Already have a profile?</span>
+        <a routerLink="/auth/signin" class="btn btn-dark fdr aic"
+            >SIGN IN <img src="/assets/images/portal/ico-signup.svg" class="btn-ico" alt="" width="13" height="13"
+        /></a>
+    </div> -->
+</div>
+<div class="auth-content">
+    <div class="auth-content-block"><router-outlet></router-outlet></div>
+</div>

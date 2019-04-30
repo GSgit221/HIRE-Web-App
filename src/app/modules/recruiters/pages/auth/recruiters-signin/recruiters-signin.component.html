@@ -1,0 +1,36 @@
+<div class="auth-header-block"><h2>Sign In To The Recruiters Portal</h2></div>
+<div class="auth-block-content">
+    <form [formGroup]="signinForm">
+        <ng-container *ngIf="msgs.length">
+            <div class="error-block" *ngFor="let msg of msgs">
+                <span class="error-icon"></span>
+                <p>{{ msg.detail || 'Incorrect email address or password. Try again.' }}</p>
+            </div>
+        </ng-container>
+        <div class="form-row">
+            <input name="email" formControlName="email" class="form-input" type="email" placeholder="Email Address" />
+        </div>
+        <div class="form-row">
+            <input
+                name="password"
+                formControlName="password"
+                type="password"
+                class="form-input"
+                placeholder="Password"
+                (keydown.enter)="onSignIn($event); (false)"
+            />
+        </div>
+        <div class="form-row">
+            <button class="btn sign-in" [disabled]="!signinForm.valid" (click)="onSignIn($event)" type="submit">
+                Sign In
+            </button>
+        </div>
+        <div class="form-row fdr aic">
+            <label class="checkbox-block"
+                >Keep me logged in <input type="checkbox" /> <span class="checkmark"></span>
+            </label>
+            <a [routerLink]="['/recruiters/auth/reset-password']" class="forgot mla">Forgot password?</a>
+        </div>
+    </form>
+</div>
+<app-loader *ngIf="contentLoading"></app-loader>
