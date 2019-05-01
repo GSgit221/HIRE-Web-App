@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { FormHelperService } from './../../../../../services/form-helper.service';
+import * as fromStore from './../../../../../store';
 import { PasswordValidation } from './../../../../../validators/password.validator';
 import { AuthService } from './../../../../auth/auth.service';
 
@@ -22,7 +24,8 @@ export class RecruitersSetPasswordComponent implements OnInit {
         private fb: FormBuilder,
         private router: Router,
         private route: ActivatedRoute,
-        private formHelper: FormHelperService
+        private formHelper: FormHelperService,
+        private store: Store<fromStore.State>
     ) {
         this.setPasswordForm = this.fb.group(
             {
@@ -48,9 +51,10 @@ export class RecruitersSetPasswordComponent implements OnInit {
         }
         const val = this.setPasswordForm.value;
         this.authService.setPassword(val.password, this.token, this.invitation_code).subscribe(
-            (response) => {
+            (response: any) => {
                 this.msgs = [];
                 this.authService.setSession(response);
+                this.store.dispatch(new fromStore.LoadUserSuccess(response.user));
                 this.router.navigateByUrl('/');
             },
             (response) => {

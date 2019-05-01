@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { User } from '../../../../models/user';
 import * as fromStore from '../../../../store';
 import * as fromSelectors from '../../../../store/selectors';
@@ -45,9 +46,14 @@ export class OnboardingSidebarComponent implements OnInit, OnDestroy {
             this.recruiterService.saveSteps(this.steps).subscribe((response) => console.log(response));
             this._calculateProgress();
         });
-        this.userSubscription = this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
-            this.user = user;
-        });
+        this.userSubscription = this.store
+            .pipe(
+                select(fromSelectors.getUserEntity),
+                filter((user) => !!user)
+            )
+            .subscribe((user: User) => {
+                this.user = user;
+            });
     }
 
     ngOnInit() {}

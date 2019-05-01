@@ -32,6 +32,7 @@ import { DisableControlDirective } from './../../directives/disable-control.dire
 import { DragEnterDirective } from './../../directives/drag-enter.directive';
 import { ToggleDetailsDirective } from './../../directives/toggle-details.directive';
 import { AuthGuard } from './../../guards/auth.guard';
+import { UnauthGuard } from './../../guards/unauth.guard';
 import { httpInterceptorProviders } from './../../http-interceptors';
 import { AccountTypePipe } from './../../pipes/account-type.pipe';
 import { InitialsPipe } from './../../pipes/initials.pipe';
@@ -39,6 +40,7 @@ import { SortByDatePipe } from './../../pipes/sort-by-date.pipe';
 import { SortByOrderPipe } from './../../pipes/sort-by-order.pipe';
 import { UploadFileNamePipe } from './../../pipes/upload-file-name.pipe';
 import { AuthService } from './../auth/auth.service';
+import { RecruiterRoleGuard } from './../recruiters/guards/recruiter-role.guard';
 import { CandidateFitCircleComponent } from './candidate-fit-circle/candidate-fit-circle.component';
 import { FileTypeComponent } from './file-type/file-type.component';
 import { InputPhoneComponent } from './input-phone/input-phone.component';
@@ -68,7 +70,7 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         ListFilterComponent,
         InputPhoneComponent
     ],
-    providers: [AuthService, httpInterceptorProviders, AuthGuard, CookieService],
+    providers: [AuthService, httpInterceptorProviders, AuthGuard, UnauthGuard, RecruiterRoleGuard, CookieService],
     imports: [
         CommonModule,
         ReactiveFormsModule,

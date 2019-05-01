@@ -205,6 +205,6 @@
     </div>
 </div>
 <app-takeover *ngIf="user && user.role === 'superadmin'" [users]="users"></app-takeover>
-<div class="logout-link" pTooltip="Sign out" tooltipPosition="top" routerLink="/signout">
+<div class="logout-link" pTooltip="Sign out" tooltipPosition="top" routerLink="/auth/signout">
     <img src="/assets/images/logout.svg" alt="Logout" width="20" height="20" />
 </div>

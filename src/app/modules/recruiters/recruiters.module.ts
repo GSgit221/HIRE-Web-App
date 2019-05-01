@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { RecruiterRoleGuard } from './guards/recruiter-role.guard';
 
+import { AuthGuard } from './../../guards/auth.guard';
+import { UnauthGuard } from './../../guards/unauth.guard';
 import { SharedModule } from './../shared/shared.module';
 import { ApplicationProgressComponent } from './components/application-progress/application-progress.component';
 import { OnboardingSidebarComponent } from './components/onboarding-sidebar/onboarding-sidebar.component';
@@ -22,6 +25,7 @@ const routes: Routes = [
     {
         path: 'onboarding',
         component: OnboardingComponent,
+        canActivateChild: [AuthGuard, RecruiterRoleGuard],
         children: [
             {
                 path: '',
@@ -35,6 +39,7 @@ const routes: Routes = [
     },
     {
         path: 'auth',
+        canActivateChild: [UnauthGuard],
         component: RecruitersAuthComponent,
         children: [
             {

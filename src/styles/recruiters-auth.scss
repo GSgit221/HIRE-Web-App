@@ -41,6 +41,29 @@
         line-height: 2;
         padding: 7px 15px;
 
+        &::-webkit-input-placeholder {
+            color: $grey;
+            font-size: 15px;
+            line-height: 2;
+        }
+
+        &::-moz-placeholder {
+            color: $grey;
+            font-size: 15px;
+            line-height: 2;
+        }
+
+        &:-ms-input-placeholder {
+            color: $grey;
+            font-size: 15px;
+            line-height: 2;
+        }
+
+        // &:focus {
+        //     border: 2px solid $pink;
+        //     padding: 8px 1px 8px 9px;
+        // }
+
         &.ng-invalid.ng-touched {
             border-color: red;
         }

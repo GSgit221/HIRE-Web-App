@@ -15,10 +15,12 @@ export class UserService {
     apiURL: string = environment.apiUrl;
     tenantId = 'undefined';
     baseURL = '';
+
     constructor(private http: HttpClient, private authService: AuthService, private utilities: UtilitiesService) {
         this.tenantId = this.utilities.getTenant();
         this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
     }
+
     getUser(): Observable<User> {
         return this.http.get<User>(`${environment.apiUrl}/me`).pipe(catchError((error: any) => throwError(error)));
     }

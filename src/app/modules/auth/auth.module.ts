@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { UnauthGuard } from './../../guards/unauth.guard';
 import { CompleteSignupComponent } from './complete-signup/complete-signup.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { SetPasswordComponent } from './set-password/set-password.component';
@@ -10,12 +11,12 @@ import { SignupComponent } from './signup/signup.component';
 import { SharedModule } from '../../modules/shared/shared.module';
 
 const routes: Routes = [
-    { path: 'signin', component: SigninComponent },
-    { path: 'signup', component: SignupComponent },
-    { path: 'complete-signup', component: CompleteSignupComponent },
+    { path: 'signin', canActivate: [UnauthGuard], component: SigninComponent },
+    { path: 'signup', canActivate: [UnauthGuard], component: SignupComponent },
+    { path: 'complete-signup', canActivate: [UnauthGuard], component: CompleteSignupComponent },
     { path: 'signout', component: SignoutComponent },
-    { path: 'reset-password', component: ResetPasswordComponent },
-    { path: 'set-password', component: SetPasswordComponent }
+    { path: 'reset-password', canActivate: [UnauthGuard], component: ResetPasswordComponent },
+    { path: 'set-password', canActivate: [UnauthGuard], component: SetPasswordComponent }
 ];
 @NgModule({
     declarations: [
