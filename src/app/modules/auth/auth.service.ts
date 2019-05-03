@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 
-import { environment } from '../../../environments/environment';
-import { UtilitiesService } from './../../services/utilities.service';
+import { environment } from '@env/environment';
+import { UtilitiesService } from './../../core/services/utilities.service';
 
 @Injectable({
     providedIn: 'root'

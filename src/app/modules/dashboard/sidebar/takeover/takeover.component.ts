@@ -3,10 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
-import { User } from './../../../../models/user';
+import { User } from './../../../../core/models/user';
+import { UserService } from './../../../../core/services/user.service';
+import { UtilitiesService } from './../../../../core/services/utilities.service';
 import { AuthService } from './../../../../modules/auth/auth.service';
-import { UserService } from './../../../../services/user.service';
-import { UtilitiesService } from './../../../../services/utilities.service';
 
 @Component({
     selector: 'app-takeover',

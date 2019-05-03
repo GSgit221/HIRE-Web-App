@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import * as fromStore from '../store';
-import { FormHelperService } from './../../../../services/form-helper.service';
-import { QuestionnaireService } from './../../../../services/questionnaire.service';
+import { FormHelperService } from './../../../../core/services/form-helper.service';
+import { QuestionnaireService } from './../../../../core/services/questionnaire.service';
 
 @Component({
     selector: 'app-questionnaire-new',

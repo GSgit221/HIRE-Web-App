@@ -4,8 +4,8 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { User } from './../models/user';
 
-import { environment } from '../../environments/environment';
-import { AuthService } from './../modules/auth/auth.service';
+import { environment } from '@env/environment';
+import { AuthService } from './../../modules/auth/auth.service';
 import { UtilitiesService } from './utilities.service';
 
 @Injectable({

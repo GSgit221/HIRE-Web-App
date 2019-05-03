@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { UtilitiesService } from './utilities.service';
 
-import { environment } from '../../environments/environment';
+import { environment } from '@env/environment';
 
 @Injectable({
     providedIn: 'root'

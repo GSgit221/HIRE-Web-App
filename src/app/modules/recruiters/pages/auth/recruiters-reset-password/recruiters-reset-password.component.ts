@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FormHelperService } from '../../../../../services/form-helper.service';
-import { SiteService } from '../../../../../services/site.service';
-import { UtilitiesService } from '../../../../../services/utilities.service';
+import { FormHelperService } from '../../../../../core/services/form-helper.service';
+import { SiteService } from '../../../../../core/services/site.service';
+import { UtilitiesService } from '../../../../../core/services/utilities.service';
 import { AuthService } from '../../../../auth/auth.service';
 
 @Component({

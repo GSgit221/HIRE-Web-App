@@ -3,12 +3,12 @@ import { ActivatedRoute } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { User } from '../../../../models/user';
+import { User } from '../../../../core/models/user';
 import * as fromStore from '../../../../store';
 import * as fromSelectors from '../../../../store/selectors';
 import { AuthService } from '../../../auth/auth.service';
-import { RecruiterService } from './../../../../services/recruiter.service';
-import { SiteService } from './../../../../services/site.service';
+import { RecruiterService } from './../../../../core/services/recruiter.service';
+import { SiteService } from './../../../../core/services/site.service';
 
 @Component({
     selector: 'app-onboarding-sidebar',

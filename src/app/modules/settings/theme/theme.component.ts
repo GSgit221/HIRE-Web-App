@@ -2,9 +2,9 @@ import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Message } from 'primeng/api';
-import { FormHelperService } from './../../../services/form-helper.service';
-import { ThemeService } from './../../../services/theme.service';
-import { UtilitiesService } from './../../../services/utilities.service';
+import { FormHelperService } from './../../../core/services/form-helper.service';
+import { ThemeService } from './../../../core/services/theme.service';
+import { UtilitiesService } from './../../../core/services/utilities.service';
 
 @Component({
     selector: 'app-theme',

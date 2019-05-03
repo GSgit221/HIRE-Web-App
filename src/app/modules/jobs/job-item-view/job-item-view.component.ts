@@ -4,12 +4,12 @@ import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { SelectItem } from 'primeng/api';
 
-import { Candidate } from '../../../models/candidate';
-import { Job } from '../../../models/job';
-import { Stage } from '../../../models/stage';
-import { User } from '../../../models/user';
-import { JobService } from '../../../services/job.service';
-import { CandidateService } from './../../../services/candidate.service';
+import { Candidate } from '../../../core/models/candidate';
+import { Job } from '../../../core/models/job';
+import { Stage } from '../../../core/models/stage';
+import { User } from '../../../core/models/user';
+import { JobService } from '../../../core/services/job.service';
+import { CandidateService } from './../../../core/services/candidate.service';
 import * as fromStore from './../../../store';
 import * as fromSelectors from './../../../store/selectors';
 

@@ -8,7 +8,7 @@ import { LoadUser } from './../../../store/actions/user.action';
 import * as fromStore from '../../../store';
 import * as fromUserReducer from '../../../store/reducers/user.reducer';
 import * as fromSelectors from '../../../store/selectors/';
-import { User } from './../../../models/user';
+import { User } from './../../../core/models/user';
 
 @Injectable()
 export class RecruiterRoleGuard implements CanActivateChild {

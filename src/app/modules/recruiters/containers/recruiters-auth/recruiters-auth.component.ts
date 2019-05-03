@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { SiteService } from './../../../../services/site.service';
+import { SiteService } from './../../../../core/services/site.service';
 
 @Component({
     selector: 'app-recruiters-auth',

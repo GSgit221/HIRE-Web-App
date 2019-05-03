@@ -4,13 +4,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Message } from 'primeng/components/common/api';
-import { User } from './../../../../models/user';
+import { User } from './../../../../core/models/user';
 
 import * as fromStore from '../../../../store';
 import * as fromSelectors from '../../../../store/selectors';
-import { FormHelperService } from './../../../../services/form-helper.service';
-import { GeoService } from './../../../../services/geo.service';
-import { RecruiterService } from './../../../../services/recruiter.service';
+import { FormHelperService } from './../../../../core/services/form-helper.service';
+import { GeoService } from './../../../../core/services/geo.service';
+import { RecruiterService } from './../../../../core/services/recruiter.service';
 
 @Component({
     selector: 'app-company-details',

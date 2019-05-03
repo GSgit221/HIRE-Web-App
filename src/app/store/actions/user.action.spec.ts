@@ -1,4 +1,4 @@
-import { User } from './../../models/user';
+import { User } from './../../core/models/user';
 import * as fromUser from './user.action';
 
 describe('User Actions', () => {

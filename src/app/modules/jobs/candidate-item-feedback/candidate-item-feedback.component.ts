@@ -2,10 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 
-import { User } from '../../../models/user';
-import { CandidateService } from './../../../services/candidate.service';
-import { UserService } from './../../../services/user.service';
-import { UtilitiesService } from './../../../services/utilities.service';
+import { User } from '../../../core/models/user';
+import { CandidateService } from './../../../core/services/candidate.service';
+import { UserService } from './../../../core/services/user.service';
+import { UtilitiesService } from './../../../core/services/utilities.service';
 import * as fromStore from './../../../store';
 import * as fromSelectors from './../../../store/selectors';
 

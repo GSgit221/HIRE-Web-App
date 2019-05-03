@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
-import { Questionnaire } from '../../../../../models/questionnaire';
+import { Questionnaire } from '../../../../../core/models/questionnaire';
 import * as fromRoot from '../../../../../store';
 import * as fromFeature from '../reducers';
 import * as fromQuestionnaires from '../reducers/questionnaires.reducer';

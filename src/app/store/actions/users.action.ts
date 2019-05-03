@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { User } from '../../models/user';
+import { User } from '../../core/models/user';
 
 export const LOAD_ALL_USERS = '[Dashboard] Load All Users';
 export const LOAD_ALL_USERS_FAIL = '[Dashboard] Load All Users Fail';

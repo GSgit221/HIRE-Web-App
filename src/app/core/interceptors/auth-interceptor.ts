@@ -2,8 +2,8 @@ import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest
 import { Injectable } from '@angular/core';
 import { tap } from 'rxjs/operators';
 
-import { ActivatedRoute, Router } from '../../../node_modules/@angular/router';
-import { AuthService } from '../modules/auth/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../modules/auth/auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

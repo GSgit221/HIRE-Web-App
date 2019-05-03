@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { FormHelperService } from './../../../../../services/form-helper.service';
+import { FormHelperService } from './../../../../../core/services/form-helper.service';
+import { PasswordValidation } from './../../../../../core/validators/password.validator';
 import * as fromStore from './../../../../../store';
-import { PasswordValidation } from './../../../../../validators/password.validator';
 import { AuthService } from './../../../../auth/auth.service';
 
 @Component({

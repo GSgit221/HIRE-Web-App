@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
-import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { AuthGuard } from './guards/auth.guard';
+import { PageNotFoundComponent } from './core/components/page-not-found/page-not-found.component';
+import { AuthGuard } from './core/guards/auth.guard';
 
 const appRoutes: Routes = [
     {

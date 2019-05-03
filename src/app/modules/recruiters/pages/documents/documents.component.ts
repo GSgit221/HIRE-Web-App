@@ -4,10 +4,10 @@ import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { Message } from 'primeng/api';
 
-import { FormHelperService } from './../../../../services/form-helper.service';
-import { GeoService } from './../../../../services/geo.service';
-import { RecruiterService } from './../../../../services/recruiter.service';
-import { UtilitiesService } from './../../../../services/utilities.service';
+import { FormHelperService } from './../../../../core/services/form-helper.service';
+import { GeoService } from './../../../../core/services/geo.service';
+import { RecruiterService } from './../../../../core/services/recruiter.service';
+import { UtilitiesService } from './../../../../core/services/utilities.service';
 
 @Component({
     selector: 'app-documents',

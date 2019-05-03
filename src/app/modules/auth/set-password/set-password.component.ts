@@ -3,9 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 
-import { FormHelperService } from './../../../services/form-helper.service';
-import { UtilitiesService } from './../../../services/utilities.service';
-import { PasswordValidation } from './../../../validators/password.validator';
+import { FormHelperService } from './../../../core/services/form-helper.service';
+import { UtilitiesService } from './../../../core/services/utilities.service';
+import { PasswordValidation } from './../../../core/validators/password.validator';
 import { AuthService } from './../auth.service';
 
 @Component({

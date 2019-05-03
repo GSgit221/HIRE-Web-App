@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { RecruiterService } from './../../../../services/recruiter.service';
-import { SiteService } from './../../../../services/site.service';
+import { RecruiterService } from './../../../../core/services/recruiter.service';
+import { SiteService } from './../../../../core/services/site.service';
 
 @Component({
     selector: 'app-onboarding',

@@ -1,4 +1,4 @@
-import { Questionnaire } from './../../../../../models/questionnaire';
+import { Questionnaire } from './../../../../../core/models/questionnaire';
 import * as fromQuestionnairs from './../actions';
 
 export interface QuestionnairesListState {

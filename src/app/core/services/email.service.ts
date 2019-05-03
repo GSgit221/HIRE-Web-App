@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { environment } from './../../environments/environment';
+import { environment } from '@env/environment';
 import { EmailTemplate } from './../models/email-template';
 import { UtilitiesService } from './utilities.service';
 

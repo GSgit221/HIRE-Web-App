@@ -5,8 +5,8 @@ import * as closest from 'closest';
 import { Observable } from 'rxjs';
 import * as fromStore from '../store';
 
-import { Questionnaire } from './../../../../models/questionnaire';
-import { QuestionnaireService } from './../../../../services/questionnaire.service';
+import { Questionnaire } from './../../../../core/models/questionnaire';
+import { QuestionnaireService } from './../../../../core/services/questionnaire.service';
 
 @Component({
     selector: 'app-questionnaires-list',

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { environment } from '../../environments/environment';
+import { environment } from '@env/environment';
 import { Questionnaire } from './../models/questionnaire';
 import { UtilitiesService } from './utilities.service';
 

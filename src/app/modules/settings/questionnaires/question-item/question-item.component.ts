@@ -3,12 +3,12 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Message } from 'primeng/api';
 
-import { Question } from './../../../../models/question';
-import { Questionnaire } from './../../../../models/questionnaire';
-import { FormHelperService } from './../../../../services/form-helper.service';
-import { QuestionnaireService } from './../../../../services/questionnaire.service';
-import { UtilitiesService } from './../../../../services/utilities.service';
-import { ConditionalValidator } from './../../../../validators/conditional.validator';
+import { Question } from './../../../../core/models/question';
+import { Questionnaire } from './../../../../core/models/questionnaire';
+import { FormHelperService } from './../../../../core/services/form-helper.service';
+import { QuestionnaireService } from './../../../../core/services/questionnaire.service';
+import { UtilitiesService } from './../../../../core/services/utilities.service';
+import { ConditionalValidator } from './../../../../core/validators/conditional.validator';
 
 @Component({
     selector: 'app-question-item',

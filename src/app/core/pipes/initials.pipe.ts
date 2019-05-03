@@ -5,7 +5,6 @@ import { listenToElementOutputs } from '@angular/core/src/view/element';
     name: 'initials'
 })
 export class InitialsPipe implements PipeTransform {
-
     transform(value: any): any {
         let initials = value.first_name.charAt(0).toUpperCase();
         if (value.last_name) {

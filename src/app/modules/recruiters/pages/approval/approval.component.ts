@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RecruiterService } from './../../../../services/recruiter.service';
+import { RecruiterService } from './../../../../core/services/recruiter.service';
 
 @Component({
     selector: 'app-approval',

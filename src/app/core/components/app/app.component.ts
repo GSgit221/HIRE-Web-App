@@ -1,7 +1,9 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AuthService } from './../../modules/auth/auth.service';
-import * as fromStore from './../../store';
+
+import { AuthService } from './../../../modules/auth/auth.service';
+import * as fromStore from './../../../store';
+
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',

@@ -3,10 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Message, SelectItem } from 'primeng/api';
 
 import { select, Store } from '@ngrx/store';
-import { User } from '../../../models/user';
+import { User } from '../../../core/models/user';
+import { FormHelperService } from '../../../core/services/form-helper.service';
+import { UserService } from '../../../core/services/user.service';
 import { AuthService } from '../../../modules/auth/auth.service';
-import { FormHelperService } from '../../../services/form-helper.service';
-import { UserService } from '../../../services/user.service';
 import * as fromStore from './../../../store';
 import * as fromActions from './../../../store/actions/users.action';
 import * as fromSelectors from './../../../store/selectors';

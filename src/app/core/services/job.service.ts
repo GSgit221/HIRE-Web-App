@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
 
-import { environment } from '../../environments/environment';
+import { environment } from '@env/environment';
 import { Job } from './../models/job';
 import { UtilitiesService } from './utilities.service';
 

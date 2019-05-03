@@ -4,12 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Message } from 'primeng/components/common/api';
 
-import { EmailTemplate } from '../../../../models/email-template';
-import { EmailService } from '../../../../services/email.service';
+import { EmailTemplate } from '../../../../core/models/email-template';
+import { EmailService } from '../../../../core/services/email.service';
 import * as fromStore from '../store';
 import * as fromStoreActions from '../store/actions/emails.action';
 import * as fromStoreSelectors from '../store/selectors/emails.selector';
-import { FormHelperService } from './../../../../services/form-helper.service';
+import { FormHelperService } from './../../../../core/services/form-helper.service';
 
 @Component({
     selector: 'app-email-template-item',

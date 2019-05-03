@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { filter } from 'rxjs/operators';
-import { User } from './../../models/user';
+import { User } from './../../core/models/user';
 
 import * as fromStore from '../../store';
 import * as fromSelectors from './../../store/selectors';

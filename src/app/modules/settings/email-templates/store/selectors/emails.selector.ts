@@ -1,5 +1,5 @@
 import { createSelector } from '@ngrx/store';
-import { EmailTemplate } from './../../../../../models/email-template';
+import { EmailTemplate } from './../../../../../core/models/email-template';
 
 import * as fromRoot from '../../../../../store';
 import * as fromFeature from '../reducers';

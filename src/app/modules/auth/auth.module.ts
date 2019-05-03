@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { UnauthGuard } from './../../guards/unauth.guard';
+import { UnauthGuard } from './../../core/guards/unauth.guard';
 import { CompleteSignupComponent } from './complete-signup/complete-signup.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { SetPasswordComponent } from './set-password/set-password.component';
