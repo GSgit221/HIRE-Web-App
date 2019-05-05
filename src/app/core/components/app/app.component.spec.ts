@@ -2,11 +2,11 @@ import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { combineReducers, Store, StoreModule } from '@ngrx/store';
-import * as fromRoot from '../../store';
-import * as fromActions from '../../store/actions';
-import * as fromReducers from '../../store/reducers';
-import { AuthService } from './../../modules/auth/auth.service';
-import { SharedModule } from './../../modules/shared/shared.module';
+import * as fromRoot from '../../../store';
+import * as fromActions from '../../../store/actions';
+import * as fromReducers from '../../../store/reducers';
+import { AuthService } from './../../../modules/auth/auth.service';
+import { SharedModule } from './../../../modules/shared/shared.module';
 import { PageNotFoundComponent } from './../page-not-found/page-not-found.component';
 
 import { AppComponent } from './app.component';
