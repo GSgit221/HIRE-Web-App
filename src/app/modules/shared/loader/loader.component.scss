@@ -16,6 +16,10 @@ $zoom: 1.8;
     display: flex;
     z-index: 1100;
 
+    &.solid-bg {
+        background-color: #f1f5f9;
+    }
+
     .loader {
         position: relative;
         margin: 0 auto;
