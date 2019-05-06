@@ -33,6 +33,7 @@ export class OnboardingSidebarComponent implements OnInit, OnDestroy {
     ) {
         this.siteService.getTheme().subscribe((theme: { color: string; logo_url: string }) => {
             this.logoUrl = theme.logo_url;
+            document.documentElement.style.setProperty('--primary-color', theme.color);
         });
         this.recruiterService.getOnboardingSteps().subscribe((steps) => {
             this.steps = steps;

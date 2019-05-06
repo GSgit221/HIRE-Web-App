@@ -14,7 +14,8 @@
     align-items: center;
     width: 100%;
     border-bottom: 1px solid #e3e7eb;
-    color: $green;
+
+    // color: $green;
     padding: 16px 20px 16px;
     position: relative;
 
@@ -25,7 +26,8 @@
         bottom: -1px;
         width: 72px;
         height: 1px;
-        background: $green;
+
+        // background: $green;
     }
 
     .title {
@@ -47,7 +49,8 @@
         width: 6px;
         height: 6px;
         border-radius: 6px;
-        background: $green;
+
+        // background: $green;
         display: inline-flex;
         margin: 0 3px;
     }
@@ -64,7 +67,7 @@
     }
 
     .btn-colored {
-        background: $green;
+        // background: $green;
         color: #fff;
     }
 
@@ -86,15 +89,15 @@
             }
         }
 
-        a.active {
-            .icon {
-                svg {
-                    g {
-                        fill: #69be28;
-                    }
-                }
-            }
-        }
+        // a.active {
+        //     .icon {
+        //         svg {
+        //             g {
+        //                 fill: #69be28;
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
 
@@ -129,12 +132,12 @@
     }
 
     p-dropdown .ui-dropdown.ui-dropdown-open .ui-dropdown-label {
-        border: 1px solid $green;
+        // border: 1px solid $green;
         padding: 14px 12px 14px 22px;
     }
 
     p-dropdown .ui-dropdown .ui-dropdown-panel .ui-state-highlight {
-        background: $green;
+        // background: $green;
     }
 
     p-dropdown .ui-dropdown .ui-dropdown-trigger .ui-dropdown-trigger-icon {
@@ -188,7 +191,8 @@
             align-items: center;
             padding: 10px;
             justify-content: center;
-            border-color: $green;
+
+            // border-color: $green;
         }
 
         &.invalid {
@@ -210,7 +214,8 @@
 
             span {
                 cursor: pointer;
-                color: $green;
+
+                // color: $green;
             }
         }
 
@@ -226,7 +231,8 @@
 
             // width: 100%;
             height: 7px;
-            background: $green;
+
+            // background: $green;
             border-radius: 0 0 1px 1px;
         }
     }
