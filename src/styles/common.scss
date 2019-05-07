@@ -495,7 +495,7 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
     }
 }
 
-p-selectbutton {
+body p-selectbutton {
     .ui-selectbutton {
         .ui-button {
             border: 0;
@@ -513,6 +513,10 @@ p-selectbutton {
                 color: $white;
                 box-shadow: none !important;
 
+                &:hover {
+                    background: $dark-green;
+                }
+
                 &:focus {
                     box-shadow: none;
                     outline: 0;
@@ -527,6 +531,11 @@ p-selectbutton {
         .ui-button:nth-child(2) {
             &.ui-state-active {
                 background: $orange2;
+
+                &:hover {
+                    background: $orange2 !important;
+                    border-color: $orange2 !important;
+                }
             }
         }
 
@@ -535,6 +544,11 @@ p-selectbutton {
 
             &.ui-state-active {
                 background: $grey;
+
+                &:hover {
+                    background: $grey !important;
+                    border-color: $grey !important;
+                }
             }
         }
     }
@@ -744,6 +758,11 @@ p-selectbutton {
     }
 }
 
+.ui-slider {
+    .ui-slider-handle {
+        border: 0 !important;
+    }
+}
 // Slider candidate-item
 .overall-rating {
     p-slider {
@@ -764,6 +783,7 @@ p-selectbutton {
             border-radius: 50%;
             top: -6px !important;
             cursor: pointer;
+            border: 0 !important;
         }
 
         .ui-slider-range {
@@ -955,4 +975,9 @@ p-chips {
     p {
         margin: 0;
     }
+}
+
+.ui-inputtext.ui-state-focus,
+.ui-inputtext:focus {
+    box-shadow: none;
 }

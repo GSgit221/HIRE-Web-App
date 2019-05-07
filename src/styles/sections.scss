@@ -1,4 +1,4 @@
-@import "variables.scss";
+@import 'variables.scss';
 
 .sections-nav {
     display: flex;
@@ -90,7 +90,7 @@
 
     .content-col-box {
         width: 100%;
-        background: #FFFFFF;
+        background: #ffffff;
         border-radius: 5px;
         box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
         padding: 20px;
@@ -161,7 +161,7 @@
                 background: $light;
                 font-size: 13px;
                 line-height: 16px;
-                padding: 8px 2px 8px 10px;
+                padding: 7px 2px 7px 10px;
             }
 
             .form-input:focus + .right-option {
@@ -228,15 +228,26 @@
     }
 }
 
-.ui-button-text-only .ui-button-text {
-    padding: .10em 1em;
-}
+body {
+    .ui-button.ui-button-text-only .ui-button-text {
+        padding: 0;
+        width: 70px;
+        height: 20px;
+        font-size: 12px;
+        line-height: 20px;
+        text-align: center;
+    }
 
-.predefined-option {
-    padding: .10em 1em;
-    background: $dark-green;
-    outline: 0;
-    color: $white;
-    box-shadow: none;
-    border-radius: 5px;
+    .predefined-option {
+        width: 70px;
+        height: 20px;
+        text-align: center;
+        background: $dark-green;
+        outline: 0;
+        color: $white;
+        box-shadow: none;
+        font-size: 12px;
+        line-height: 20px;
+        border-radius: 5px;
+    }
 }

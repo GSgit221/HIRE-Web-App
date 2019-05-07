@@ -3,78 +3,75 @@
     <div class="content-section">
         <form [formGroup]="usersDetailForm">
             <div class="form-content-section">
-                <div class="form-content-holder">
-                    <div class="form-content-box">
-                        <p-messages [(value)]="msgs"></p-messages>
-                        <div class="form-block">
-                            <label for="" class="form-block-label">Invite a New User</label>
-                            <div class="form-block-columns padding-columns">
-                                <div class="form-block-col flex-30">
-                                    <div class="input-block">
-                                        <input
-                                            type="text"
-                                            class="form-input pl45"
-                                            placeholder="Full Name"
-                                            formControlName="full_name"
-                                        />
-                                        <div
-                                            class="error-message"
-                                            *ngIf="
-                                                !usersDetailForm.get('full_name').valid &&
-                                                usersDetailForm.get('full_name').touched
-                                            "
-                                        >
-                                            Full Name is required
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-block-col flex-30">
-                                    <div class="input-block">
-                                        <input
-                                            type="text"
-                                            class="form-input pl45"
-                                            placeholder="Email Address"
-                                            formControlName="email"
-                                        />
-                                        <div
-                                            class="error-message"
-                                            *ngIf="
-                                                !usersDetailForm.get('email').valid &&
-                                                usersDetailForm.get('email').touched
-                                            "
-                                        >
-                                            Email is required
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-block-col flex-25">
-                                    <div class="input-block">
-                                        <p-dropdown
-                                            [options]="accountTypeOptions"
-                                            formControlName="accountType"
-                                            [style]="{ width: '85%' }"
-                                            placeholder="Account Type"
-                                        ></p-dropdown>
-                                        <div
-                                            class="error-message"
-                                            *ngIf="
-                                                !usersDetailForm.get('accountType').valid &&
-                                                usersDetailForm.get('accountType').touched
-                                            "
-                                        >
-                                            Account Type is required
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex-15">
-                                    <button
-                                        class="btn btn-primary mla btn-add-user-component"
-                                        (click)="onAddUserSubmit()"
-                                        [disabled]="!usersDetailForm.valid"
+                <div class="form-content-box">
+                    <p-messages [(value)]="msgs"></p-messages>
+                    <div class="form-block">
+                        <label for="" class="form-block-label">Invite a New User</label>
+                        <div class="form-block-columns padding-columns">
+                            <div class="form-block-col flex-30">
+                                <div class="input-block">
+                                    <input
+                                        type="text"
+                                        class="form-input pl45"
+                                        placeholder="Full Name"
+                                        formControlName="full_name"
+                                    />
+                                    <div
+                                        class="error-message"
+                                        *ngIf="
+                                            !usersDetailForm.get('full_name').valid &&
+                                            usersDetailForm.get('full_name').touched
+                                        "
                                     >
-                                        Add User
-                                    </button>
+                                        Full Name is required
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="form-block-col flex-30">
+                                <div class="input-block">
+                                    <input
+                                        type="text"
+                                        class="form-input pl45"
+                                        placeholder="Email Address"
+                                        formControlName="email"
+                                    />
+                                    <div
+                                        class="error-message"
+                                        *ngIf="
+                                            !usersDetailForm.get('email').valid && usersDetailForm.get('email').touched
+                                        "
+                                    >
+                                        Email is required
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-block-col flex-25">
+                                <div class="input-block">
+                                    <p-dropdown
+                                        [options]="accountTypeOptions"
+                                        formControlName="accountType"
+                                        [style]="{ width: '85%' }"
+                                        placeholder="Account Type"
+                                    ></p-dropdown>
+                                    <div
+                                        class="error-message"
+                                        *ngIf="
+                                            !usersDetailForm.get('accountType').valid &&
+                                            usersDetailForm.get('accountType').touched
+                                        "
+                                    >
+                                        Account Type is required
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-15">
+                                <button
+                                    class="btn btn-primary mla btn-add-user-component"
+                                    (click)="onAddUserSubmit()"
+                                    [disabled]="!usersDetailForm.valid"
+                                >
+                                    Add User
+                                </button>
                             </div>
                         </div>
                     </div>
