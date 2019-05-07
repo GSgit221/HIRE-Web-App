@@ -3,10 +3,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { JobService } from '../../../services/job.service';
-import { Job } from './../../../models/job';
-import { FormHelperService } from './../../../services/form-helper.service';
-import { UtilitiesService } from './../../../services/utilities.service';
+import { JobService } from '../../../core/services/job.service';
+import { Job } from './../../../core/models/job';
+import { FormHelperService } from './../../../core/services/form-helper.service';
+import { UtilitiesService } from './../../../core/services/utilities.service';
 
 @Component({
     selector: 'app-new-candidate-item',

@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 
-import { UserService } from '../../../services/user.service';
-import { User } from './../../../models/user';
+import { UserService } from '../../../core/services/user.service';
+import { User } from './../../../core/models/user';
 import * as fromStore from './../../../store';
 import * as fromUsersActions from './../../../store/actions/users.action';
 import * as fromSelectors from './../../../store/selectors';
@@ -45,7 +45,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.userSubscription.unsubscribe();
-        this.usersSubscription.unsubscribe();
+        if (this.userSubscription) {
+            this.userSubscription.unsubscribe();
+        }
+        if (this.usersSubscription) {
+            this.usersSubscription.unsubscribe();
+        }
     }
 }

@@ -3,9 +3,9 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { User } from './../../models/user';
+import { User } from './../../core/models/user';
 
-import * as fromServices from '../../services';
+import * as fromServices from '../../core/services';
 import * as usersActions from './../actions/users.action';
 
 @Injectable()

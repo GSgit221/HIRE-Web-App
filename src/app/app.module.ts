@@ -7,10 +7,10 @@ import { MetaReducer, StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { storeFreeze } from 'ngrx-store-freeze';
 
-import { environment } from '../environments/environment';
+import { environment } from '@env/environment';
 import { AppRoutingModule } from './app-routing.module';
-import { PageNotFoundComponent } from './components//page-not-found/page-not-found.component';
-import { AppComponent } from './components/app/app.component';
+import { PageNotFoundComponent } from './core/components//page-not-found/page-not-found.component';
+import { AppComponent } from './core/components/app/app.component';
 import { SharedModule } from './modules/shared/shared.module';
 import { CustomSerializer, effects, reducers } from './store';
 

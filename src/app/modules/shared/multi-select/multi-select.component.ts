@@ -1,10 +1,10 @@
 import { Component, ElementRef, EventEmitter, forwardRef, HostListener, Input, OnInit, Output } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
-import { FormHelperService } from './../../../services/form-helper.service';
+import { FormHelperService } from './../../../core/services/form-helper.service';
 
-import { User } from '../../../models/user';
-import { UserService } from './../../../services/user.service';
+import { User } from '../../../core/models/user';
+import { UserService } from './../../../core/services/user.service';
 import * as fromStore from './../../../store';
 import * as fromActions from './../../../store/actions/users.action';
 import * as fromSelectors from './../../../store/selectors';

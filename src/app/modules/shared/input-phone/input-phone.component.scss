@@ -1,0 +1,76 @@
+@import 'variables.scss';
+
+.phone-block {
+    position: relative;
+}
+
+.form-input.phone-input {
+    padding-left: 97px !important;
+    position: relative;
+    z-index: 3;
+
+    &.pl5 {
+        padding-left: 109px !important;
+    }
+
+    &.pl3 {
+        padding-left: 89px !important;
+    }
+
+    &.pl2 {
+        padding-left: 82px !important;
+    }
+}
+
+.dial-code {
+    position: absolute;
+    left: 49px;
+    top: 15px;
+    z-index: 4;
+    font-size: 15px;
+    line-height: 16px;
+    color: #3d4953;
+    border-right: 1px solid $light;
+    background: #fff;
+    padding: 0 7px 0 0;
+}
+
+:host.ng-touched.ng-invalid input[placeholder] {
+    color: $red;
+}
+
+:host.ng-touched.ng-invalid input::-moz-placeholder {
+    color: $red;
+}
+
+:host.ng-touched.ng-invalid input:-moz-placeholder {
+    color: $red;
+}
+
+:host.ng-touched.ng-invalid input:-ms-input-placeholder {
+    color: $red;
+}
+
+:host.ng-touched.ng-invalid.focus input[placeholder] {
+    color: $green;
+}
+
+:host.ng-touched.ng-invalid.focus input::-moz-placeholder {
+    color: $green;
+}
+
+:host.ng-touched.ng-invalid.focus input:-moz-placeholder {
+    color: $green;
+}
+
+:host.ng-touched.ng-invalid.focus input:-ms-input-placeholder {
+    color: $green;
+}
+
+:host.ng-touched.ng-invalid .form-input {
+    border-color: $red;
+}
+
+:host.ng-touched.focus .form-input {
+    border-color: $green;
+}

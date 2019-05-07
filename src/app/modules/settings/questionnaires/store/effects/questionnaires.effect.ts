@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { LOAD_QUESTIONNAIRES } from './../actions/questionnaires.action';
 
-import * as fromServices from '../../../../../services';
+import * as fromServices from '../../../../../core/services';
 import * as questionnairesActions from './../actions';
 
 @Injectable()

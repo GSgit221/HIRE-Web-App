@@ -2,14 +2,14 @@ import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { CandidateService } from './../../../services/candidate.service';
+import { CandidateService } from './../../../core/services/candidate.service';
 
-import { Candidate } from '../../../models/candidate';
-import { Job } from '../../../models/job';
-import { User } from '../../../models/user';
-import { JobService } from './../../../services/job.service';
-import { QuestionnaireService } from './../../../services/questionnaire.service';
-import { UtilitiesService } from './../../../services/utilities.service';
+import { Candidate } from '../../../core/models/candidate';
+import { Job } from '../../../core/models/job';
+import { User } from '../../../core/models/user';
+import { JobService } from './../../../core/services/job.service';
+import { QuestionnaireService } from './../../../core/services/questionnaire.service';
+import { UtilitiesService } from './../../../core/services/utilities.service';
 import * as fromStore from './../../../store';
 import * as fromSelectors from './../../../store/selectors';
 

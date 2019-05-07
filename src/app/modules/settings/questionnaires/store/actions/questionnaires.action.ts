@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { Questionnaire } from './../../../../../models/questionnaire';
+import { Questionnaire } from './../../../../../core/models/questionnaire';
 
 // load Questionnaires
 export const LOAD_QUESTIONNAIRES = '[Questionnaires] Load Questionnaires';

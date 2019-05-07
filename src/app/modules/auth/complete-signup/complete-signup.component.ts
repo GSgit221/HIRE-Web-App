@@ -4,9 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
 import { Message } from 'primeng/components/common/api';
 
-import { environment } from '../../../../environments/environment';
-import { JobService } from '../../../services/job.service';
-import { UtilitiesService } from '../../../services/utilities.service';
+import { environment } from '@env/environment';
+import { JobService } from '../../../core/services/job.service';
+import { UtilitiesService } from '../../../core/services/utilities.service';
 import { AuthService } from '../auth.service';
 
 @Component({

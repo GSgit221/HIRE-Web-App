@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import * as closest from 'closest';
 
-import { JobService } from '../../../services/job.service';
-import { UtilitiesService } from './../../../services/utilities.service';
+import { JobService } from '../../../core/services/job.service';
+import { UtilitiesService } from './../../../core/services/utilities.service';
 
 @Component({
     selector: 'app-people-list',

@@ -3,11 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import * as closest from 'closest';
 
-import { Questionnaire } from '../../../../models/questionnaire';
+import { Questionnaire } from '../../../../core/models/questionnaire';
 import * as fromStore from '../store';
 import * as fromQuestionnaireSelectors from '../store/selectors/questionnaires.selector';
-import { Question } from './../../../../models/question';
-import { QuestionnaireService } from './../../../../services/questionnaire.service';
+import { Question } from './../../../../core/models/question';
+import { QuestionnaireService } from './../../../../core/services/questionnaire.service';
 
 @Component({
     selector: 'app-questions-list',

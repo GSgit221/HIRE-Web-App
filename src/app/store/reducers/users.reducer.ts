@@ -1,4 +1,4 @@
-import { User } from './../../models/user';
+import { User } from './../../core/models/user';
 import * as fromUsers from './../actions/users.action';
 export interface UsersState {
     entities: User[];

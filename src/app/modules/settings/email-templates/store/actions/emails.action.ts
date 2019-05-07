@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { EmailTemplate } from './../../../../../models/email-template';
+import { EmailTemplate } from './../../../../../core/models/email-template';
 
 // load emails
 export const LOAD_EMAILS = '[Emails] Load Emails';

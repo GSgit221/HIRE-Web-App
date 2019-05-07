@@ -1,0 +1,391 @@
+<div class="form-section-header">
+    <h2 class="form-section-title">Documents</h2>
+    <h4 class="form-section-subtitle">Agency Application Form</h4>
+</div>
+<form [formGroup]="form">
+    <div class="form-content-block mb20">
+        <div class="form-content-header">
+            <strong class="title">BBEEE Certifiate</strong>
+            <div class="note">All fields marked with a <span class="dot"></span> are required</div>
+        </div>
+        <div class="form-content-holder" formGroupName="bbeeeCertificate">
+            <div class="form-row">
+                <div class="form-row-columns">
+                    <div class="form-row-column">
+                        <div class="form-block pr">
+                            <label for="status" class="form-block-label"
+                                ><span class="dot"></span> Which option best describes your BBEEE status</label
+                            >
+                            <div class="radio-btns-group">
+                                <p-radioButton
+                                    name="status"
+                                    value="bbeee"
+                                    formControlName="status"
+                                    label="I am in posession of a valid BBEEE certificate"
+                                ></p-radioButton>
+                                <p-radioButton
+                                    name="status"
+                                    value="swornAffidavit"
+                                    formControlName="status"
+                                    label="My turn over is less than R10 million and I have a swarn affidavit"
+                                ></p-radioButton>
+                            </div>
+                            <div class="error-block">
+                                <p
+                                    *ngIf="
+                                        bbeeeCertificate.get('status').touched &&
+                                        bbeeeCertificate.get('status').errors &&
+                                        bbeeeCertificate.get('status').errors.required === true
+                                    "
+                                >
+                                    Please select BBEEE status
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section-separator mb20" *ngIf="bbeeeCertificate.get('status').value"></div>
+            <div class="form-row" *ngIf="bbeeeCertificate.get('status').value === 'bbeee'">
+                <div class="form-row-columns" formGroupName="bbeee">
+                    <div class="form-row-column">
+                        <div class="form-block">
+                            <label class="form-block-label"><span class="dot"></span> Upload BBEEE Certificate</label>
+                            <input type="hidden" formControlName="file" />
+                            <label
+                                for="bbeeeFile"
+                                class="upload-block"
+                                appDragEnter
+                                (dropFile)="onDropFile($event, 'bbeee', 'bbeeeCertificate')"
+                                [ngClass]="{
+                                    invalid:
+                                        (bbeeeCertificate.get('bbeee').get('file').invalid &&
+                                            bbeeeCertificate.get('bbeee').get('file').touched) ||
+                                        uploadError['bbeee']
+                                }"
+                            >
+                                <div class="upload-progress" [ngStyle]="{ width: uploadProgress['bbeee'] + '%' }"></div>
+                                <span
+                                    class="download-file-name"
+                                    *ngIf="
+                                        uploadFilename['bbeee'] ||
+                                        bbeeeCertificate.get('bbeee').get('file').value.length
+                                    "
+                                >
+                                    {{ uploadFilename['bbeee'] || bbeeeCertificate.get('bbeee').get('file').value }}
+                                </span>
+                                <ng-container
+                                    *ngIf="
+                                        !uploadFilename['bbeee'] &&
+                                        !bbeeeCertificate.get('bbeee').get('file').value.length
+                                    "
+                                >
+                                    <div class="img-block">
+                                        <img src="/assets/images/upload_to_cloud.svg" alt="Upload To Cloud" />
+                                    </div>
+                                    <p>DROP YOUR BBEEE CERTIFICATE HERE OR <span> CLICK TO UPLOAD</span></p>
+                                </ng-container>
+                                <input
+                                    type="file"
+                                    id="bbeeeFile"
+                                    (change)="onDropFile($event, 'bbeee', 'bbeeeCertificate')"
+                                />
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-row-column">
+                        <div class="form-block pr mb10">
+                            <label class="form-block-label"><span class="dot"></span> B-BBEE Level</label>
+                            <p-dropdown
+                                placeholder="Please select a B-BBEE level"
+                                [options]="bbeeeLevelOptions"
+                                formControlName="level"
+                                [style]="{ width: '100%' }"
+                            ></p-dropdown>
+                        </div>
+                        <div class="form-block pr">
+                            <label class="form-block-label"><span class="dot"></span> Expiry Date</label>
+                            <p-calendar
+                                [minDate]="minDateYearAgo"
+                                formControlName="expiry_date"
+                                placeholder="YYYY/MM/DD"
+                                dateFormat="yy/mm/dd"
+                                (keydown)="onDatepickerKeydown($event)"
+                                (keyup)="onDatepickerKeyup($event)"
+                                dataType="string"
+                            >
+                            </p-calendar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row" *ngIf="bbeeeCertificate.get('status').value === 'swornAffidavit'">
+                <div class="form-row-columns" formGroupName="swornAffidavit">
+                    <div class="form-row-column">
+                        <div class="form-block">
+                            <label class="form-block-label"><span class="dot"></span> Upload Sworn Affidavit</label>
+                            <input type="hidden" formControlName="file" />
+                            <label
+                                for="saFile"
+                                class="upload-block"
+                                appDragEnter
+                                (dropFile)="onDropFile($event, 'swornAffidavit', 'bbeeeCertificate')"
+                                [ngClass]="{
+                                    invalid:
+                                        (bbeeeCertificate.get('swornAffidavit').get('file').invalid &&
+                                            bbeeeCertificate.get('swornAffidavit').get('file').touched) ||
+                                        uploadError['swornAffidavit']
+                                }"
+                            >
+                                <div
+                                    class="upload-progress"
+                                    [ngStyle]="{ width: uploadProgress['swornAffidavit'] + '%' }"
+                                ></div>
+                                <span
+                                    class="download-file-name"
+                                    *ngIf="
+                                        uploadFilename['swornAffidavit'] ||
+                                        bbeeeCertificate.get('swornAffidavit').get('file').value.length
+                                    "
+                                >
+                                    {{
+                                        uploadFilename['swornAffidavit'] ||
+                                            bbeeeCertificate.get('swornAffidavit').get('file').value
+                                    }}
+                                </span>
+                                <ng-container
+                                    *ngIf="
+                                        !uploadFilename['swornAffidavit'] &&
+                                        !bbeeeCertificate.get('swornAffidavit').get('file').value.length
+                                    "
+                                >
+                                    <div class="img-block">
+                                        <img src="/assets/images/upload_to_cloud.svg" alt="Upload To Cloud" />
+                                    </div>
+                                    <p>DROP YOUR SWORN AFFIDAVIT HERE OR <span> CLICK TO UPLOAD</span></p>
+                                </ng-container>
+                                <input
+                                    type="file"
+                                    id="saFile"
+                                    (change)="onDropFile($event, 'swornAffidavit', 'bbeeeCertificate')"
+                                />
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-row-column">
+                        <div class="form-block pr">
+                            <label class="form-block-label"><span class="dot"></span> Date Issued</label>
+                            <p-calendar
+                                [minDate]="minDateYearAgo"
+                                [maxDate]="maxDate"
+                                formControlName="date_issued"
+                                placeholder="YYYY/MM/DD"
+                                dateFormat="yy/mm/dd"
+                                (keydown)="onDatepickerKeydown($event)"
+                                (keyup)="onDatepickerKeyup($event)"
+                                dataType="string"
+                            >
+                            </p-calendar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-content-block mb20">
+        <div class="form-content-header"><strong class="title">Tax Clearning Certificate</strong></div>
+        <div class="form-content-holder" formGroupName="taxClearanceCertificate">
+            <div class="form-row">
+                <div class="form-row-columns">
+                    <div class="form-row-column">
+                        <div class="form-block">
+                            <label class="form-block-label"><span class="dot"></span> Tax Clearance Certificate</label>
+                            <input type="hidden" formControlName="file" />
+                            <label
+                                for="taxFile"
+                                class="upload-block"
+                                appDragEnter
+                                (dropFile)="onDropFile($event, 'taxClearanceCertificate')"
+                                [ngClass]="{
+                                    invalid:
+                                        (taxClearanceCertificate.get('file').invalid &&
+                                            taxClearanceCertificate.get('file').touched) ||
+                                        uploadError['taxClearanceCertificate']
+                                }"
+                            >
+                                <div
+                                    class="upload-progress"
+                                    [ngStyle]="{ width: uploadProgress['taxClearanceCertificate'] + '%' }"
+                                ></div>
+                                <span
+                                    class="download-file-name"
+                                    *ngIf="
+                                        uploadFilename['taxClearanceCertificate'] ||
+                                        taxClearanceCertificate.get('file').value.length
+                                    "
+                                >
+                                    {{
+                                        uploadFilename['taxClearanceCertificate'] ||
+                                            taxClearanceCertificate.get('file').value
+                                    }}
+                                </span>
+                                <ng-container
+                                    *ngIf="
+                                        !uploadFilename['taxClearanceCertificate'] &&
+                                        !taxClearanceCertificate.get('file').value.length
+                                    "
+                                >
+                                    <div class="img-block">
+                                        <img src="/assets/images/upload_to_cloud.svg" alt="Upload To Cloud" />
+                                    </div>
+                                    <p>DROP YOUR TAX CLEARANCE CERTIFICATE HERE OR <span> CLICK TO UPLOAD</span></p>
+                                </ng-container>
+                                <input
+                                    type="file"
+                                    id="taxFile"
+                                    (change)="onDropFile($event, 'taxClearanceCertificate')"
+                                />
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-row-column">
+                        <div class="form-block pr mb10">
+                            <label class="form-block-label"><span class="dot"></span> Certificate Number</label>
+                            <input type="text" class="form-input" formControlName="number" />
+                        </div>
+                        <div class="form-block pr">
+                            <label class="form-block-label"><span class="dot"></span> Expiry Date</label>
+                            <p-calendar
+                                [minDate]="minDateYearAgo"
+                                formControlName="expiry_date"
+                                placeholder="YYYY/MM/DD"
+                                dateFormat="yy/mm/dd"
+                                (keydown)="onDatepickerKeydown($event)"
+                                (keyup)="onDatepickerKeyup($event)"
+                                dataType="string"
+                            >
+                            </p-calendar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-content-block mb20">
+        <div class="form-content-header">
+            <strong class="title">Proof of Banking Details</strong>
+            <div class="note">Bank letter must be no older than three months</div>
+        </div>
+        <div class="form-content-holder" formGroupName="proofOfBankingDetails">
+            <div class="form-row">
+                <div class="form-row-columns">
+                    <div class="form-row-column">
+                        <div class="form-block">
+                            <label class="form-block-label"
+                                ><span class="dot"></span> Bank Letter / Cancelled Cheque</label
+                            >
+                            <input type="hidden" formControlName="file" />
+                            <label
+                                for="bankingFile"
+                                class="upload-block"
+                                appDragEnter
+                                (dropFile)="onDropFile($event, 'proofOfBankingDetails')"
+                                [ngClass]="{
+                                    invalid:
+                                        (proofOfBankingDetails.get('file').invalid &&
+                                            proofOfBankingDetails.get('file').touched) ||
+                                        uploadError['proofOfBankingDetails']
+                                }"
+                            >
+                                <div
+                                    class="upload-progress"
+                                    [ngStyle]="{ width: uploadProgress['proofOfBankingDetails'] + '%' }"
+                                ></div>
+                                <span
+                                    class="download-file-name"
+                                    *ngIf="
+                                        uploadFilename['proofOfBankingDetails'] ||
+                                        proofOfBankingDetails.get('file').value.length
+                                    "
+                                >
+                                    {{
+                                        uploadFilename['proofOfBankingDetails'] ||
+                                            proofOfBankingDetails.get('file').value
+                                    }}
+                                </span>
+                                <ng-container
+                                    *ngIf="
+                                        !uploadFilename['proofOfBankingDetails'] &&
+                                        !proofOfBankingDetails.get('file').value.length
+                                    "
+                                >
+                                    <div class="img-block">
+                                        <img src="/assets/images/upload_to_cloud.svg" alt="Upload To Cloud" />
+                                    </div>
+                                    <p>
+                                        DROP YOUR CANCELLED CHEQUE OR BANK LETTER HERE OR <span> CLICK TO UPLOAD</span>
+                                    </p>
+                                </ng-container>
+                                <input
+                                    type="file"
+                                    id="bankingFile"
+                                    (change)="onDropFile($event, 'proofOfBankingDetails')"
+                                />
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-row-column">
+                        <div class="form-block pr">
+                            <label for="status" class="form-block-label"
+                                ><span class="dot"></span> Bank Letter Date Of Issue</label
+                            >
+                            <p-calendar
+                                [minDate]="minDate"
+                                [maxDate]="maxDate"
+                                formControlName="date_issued"
+                                placeholder="YYYY/MM/DD"
+                                dateFormat="yy/mm/dd"
+                                (keydown)="onDatepickerKeydown($event)"
+                                (keyup)="onDatepickerKeyup($event)"
+                                dataType="string"
+                            >
+                            </p-calendar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p-messages [(value)]="msgs"></p-messages>
+    <div class="form-bottom-row fdr aic">
+        <button class="btn btn-dark" (click)="onBackClick($event)">
+            <svg-icon
+                src="/assets/images/left-arrow.svg"
+                [svgStyle]="{ 'width.px': 13, fill: '#ffffff' }"
+                class="mr20"
+            ></svg-icon
+            >Back
+        </button>
+        <div class="form-bottom-row-holder mla">
+            <button class="btn btn-bordered" (click)="onSaveClick($event)">
+                Save
+                <svg-icon
+                    src="/assets/images/save-file-option.svg"
+                    [svgStyle]="{ 'width.px': 13, 'height.px': 13, fill: '#69be28' }"
+                    class="save-file-icon ml20"
+                ></svg-icon>
+            </button>
+            <button class="btn btn-colored ml10" (click)="onNextClick($event)">
+                Next
+                <svg-icon
+                    src="/assets/images/right-arrow.svg"
+                    [svgStyle]="{ 'width.px': 13, fill: '#ffffff' }"
+                    class="ml20"
+                ></svg-icon>
+            </button>
+        </div>
+    </div>
+</form>
+<app-loader *ngIf="contentLoading"></app-loader>

@@ -1,0 +1,365 @@
+<div class="form-section-header">
+    <h2 class="form-section-title">Company Details</h2>
+    <h4 class="form-section-subtitle">Agency Application Form</h4>
+</div>
+<form [formGroup]="form">
+    <div class="form-content-block mb20">
+        <div class="form-content-header">
+            <strong class="title">Company Details</strong>
+            <div class="note">All fields marked with a <span class="dot"></span> are required</div>
+        </div>
+        <div class="form-content-holder" formGroupName="companyDetails">
+            <div class="form-row">
+                <div class="form-row-columns">
+                    <div class="form-row-column">
+                        <div class="form-block">
+                            <label for="name" class="form-block-label"><span class="dot"></span> Company Name</label>
+                            <input type="text" class="form-input" autocomplete="off" formControlName="name" />
+                        </div>
+                        <div
+                            class="error-block"
+                            *ngIf="
+                                companyDetails.get('name').touched &&
+                                companyDetails.get('name').errors &&
+                                companyDetails.get('name').errors.required === true
+                            "
+                        >
+                            Company Name required
+                        </div>
+                    </div>
+                    <div class="form-row-colums-separator"></div>
+                    <div class="form-row-column">
+                        <div class="form-block">
+                            <label for="reg_num" class="form-block-label"
+                                ><span class="dot"></span> Company Registration Number</label
+                            >
+                            <input type="text" class="form-input" autocomplete="off" formControlName="reg_num" />
+                        </div>
+                        <div
+                            class="error-block"
+                            *ngIf="
+                                companyDetails.get('reg_num').touched &&
+                                companyDetails.get('reg_num').errors &&
+                                companyDetails.get('reg_num').errors.required === true
+                            "
+                        >
+                            Company Registration Number required
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-row-columns">
+                    <div class="form-row-column">
+                        <div class="form-block">
+                            <label for="phone" class="form-block-label"
+                                ><span class="dot"></span> Telephone Number</label
+                            >
+                            <app-input-phone formControlName="phone" [country]="initialCountry"></app-input-phone>
+                        </div>
+                        <div class="error-block">
+                            <p
+                                *ngIf="
+                                    companyDetails.get('phone').touched &&
+                                        companyDetails.get('phone').errors &&
+                                        companyDetails.get('phone').errors.required === true;
+                                    else otherPhoneErrors
+                                "
+                            >
+                                Mobile phone required
+                            </p>
+                            <ng-template #otherPhoneErrors>
+                                <p
+                                    *ngIf="
+                                        companyDetails.get('phone').touched &&
+                                        companyDetails.get('phone').errors &&
+                                        companyDetails.get('phone').errors.incorrect_number
+                                    "
+                                >
+                                    Phone number is not valid
+                                </p>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="form-row-colums-separator"></div>
+                    <div class="form-row-column">
+                        <div class="form-block">
+                            <label for="email" class="form-block-label"><span class="dot"></span> Email Address</label>
+                            <input type="email" class="form-input" formControlName="email" />
+                        </div>
+                        <div class="error-block">
+                            <p
+                                *ngIf="
+                                    companyDetails.get('email').touched &&
+                                    companyDetails.get('email').errors &&
+                                    companyDetails.get('email').errors.required === true
+                                "
+                            >
+                                Email required
+                            </p>
+                            <p
+                                *ngIf="
+                                    companyDetails.get('email').touched &&
+                                    companyDetails.get('email').errors &&
+                                    companyDetails.get('email').errors.email
+                                "
+                            >
+                                Email is not valid
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-content-block mb20">
+        <div class="form-content-header">
+            <strong class="title">Postal Address</strong>
+            <div class="note">All fields marked with a <span class="dot"></span> are required</div>
+        </div>
+        <div class="form-content-holder" formGroupName="address">
+            <div class="form-row">
+                <div class="form-row-column">
+                    <div class="form-block">
+                        <label for="address_line_1" class="form-block-label"
+                            ><span class="dot"></span> Postal Address</label
+                        >
+                        <input type="text" class="form-input" formControlName="address_line_1" />
+                    </div>
+                    <div
+                        class="error-block"
+                        *ngIf="
+                            address.get('address_line_1').touched &&
+                            address.get('address_line_1').errors &&
+                            address.get('address_line_1').errors.required === true
+                        "
+                    >
+                        Postal Address required
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-row-columns">
+                    <div class="form-row-column w66p">
+                        <div class="form-block">
+                            <label for="address_line_2" class="form-block-label">Postal Address</label>
+                            <input type="text" class="form-input" formControlName="address_line_2" />
+                        </div>
+                    </div>
+                    <div class="form-row-colums-separator"></div>
+                    <div class="form-row-column">
+                        <div class="form-block">
+                            <label for="city" class="form-block-label">City</label>
+                            <input type="text" class="form-input" formControlName="city" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-row-columns">
+                    <div class="form-row-column">
+                        <div class="form-row-columns">
+                            <div class="form-row-column">
+                                <div class="form-block">
+                                    <label for="state" class="form-block-label"
+                                        ><span class="dot"></span> State / Province</label
+                                    >
+                                    <input type="text" class="form-input" formControlName="state" />
+                                </div>
+                                <div
+                                    class="error-block"
+                                    *ngIf="
+                                        address.get('state').touched &&
+                                        address.get('state').errors &&
+                                        address.get('state').errors.required === true
+                                    "
+                                >
+                                    State / Province required
+                                </div>
+                            </div>
+                            <div class="form-row-colums-separator"></div>
+                            <div class="form-row-column">
+                                <div class="form-block">
+                                    <label for="zip" class="form-block-label"
+                                        ><span class="dot"></span> Zip / Postal Code</label
+                                    >
+                                    <input type="text" class="form-input" formControlName="zip" />
+                                </div>
+                                <div
+                                    class="error-block"
+                                    *ngIf="
+                                        address.get('zip').touched &&
+                                        address.get('zip').errors &&
+                                        address.get('zip').errors.required === true
+                                    "
+                                >
+                                    Zip / Postal Code required
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row-colums-separator"></div>
+                    <div class="form-row-column">
+                        <div class="form-block">
+                            <label for="country" class="form-block-label"><span class="dot"></span> Country</label>
+                            <p-dropdown
+                                [options]="countryTypeOptions"
+                                formControlName="country"
+                                [style]="{ width: '100%' }"
+                            ></p-dropdown>
+                        </div>
+                        <div
+                            class="error-block"
+                            *ngIf="
+                                address.get('country').touched &&
+                                address.get('country').errors &&
+                                address.get('country').errors.required === true
+                            "
+                        >
+                            Country required
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-content-block mb20">
+        <div class="form-content-header">
+            <strong class="title">Primary Contact</strong>
+            <div class="note">All fields marked with a <span class="dot"></span> are required</div>
+        </div>
+        <div class="form-content-holder" formGroupName="primaryContact">
+            <div class="form-row">
+                <div class="form-row-columns">
+                    <div class="form-row-column">
+                        <div class="form-block">
+                            <label for="first_name" class="form-block-label"
+                                ><span class="dot"></span> First Name</label
+                            >
+                            <input type="text" class="form-input" autocomplete="off" formControlName="first_name" />
+                        </div>
+                        <div
+                            class="error-block"
+                            *ngIf="
+                                primaryContact.get('first_name').touched &&
+                                primaryContact.get('first_name').errors &&
+                                primaryContact.get('first_name').errors.required === true
+                            "
+                        >
+                            First Name required
+                        </div>
+                    </div>
+                    <div class="form-row-colums-separator"></div>
+                    <div class="form-row-column">
+                        <div class="form-block">
+                            <label for="last_name" class="form-block-label"><span class="dot"></span> Last Name</label>
+                            <input type="text" class="form-input" autocomplete="off" formControlName="last_name" />
+                        </div>
+                        <div
+                            class="error-block"
+                            *ngIf="
+                                primaryContact.get('last_name').touched &&
+                                primaryContact.get('last_name').errors &&
+                                primaryContact.get('last_name').errors.required === true
+                            "
+                        >
+                            Last Name required
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-row-columns">
+                    <div class="form-row-column">
+                        <div class="form-block">
+                            <label for="phone" class="form-block-label"
+                                ><span class="dot"></span> Telephone Number</label
+                            >
+                            <app-input-phone formControlName="phone" [country]="initialCountry"></app-input-phone>
+                        </div>
+                        <div class="error-block">
+                            <p
+                                *ngIf="
+                                    primaryContact.get('phone').touched &&
+                                        primaryContact.get('phone').errors &&
+                                        primaryContact.get('phone').errors.required === true;
+                                    else otherPhone2Errors
+                                "
+                            >
+                                Mobile phone required
+                            </p>
+                            <ng-template #otherPhone2Errors>
+                                <p
+                                    *ngIf="
+                                        primaryContact.get('phone').touched &&
+                                        primaryContact.get('phone').errors &&
+                                        primaryContact.get('phone').errors.incorrect_number
+                                    "
+                                >
+                                    Phone number is not valid
+                                </p>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="form-row-colums-separator"></div>
+                    <div class="form-row-column">
+                        <div class="form-block">
+                            <label for="email" class="form-block-label"><span class="dot"></span> Email Address</label>
+                            <input type="email" class="form-input" formControlName="email" />
+                        </div>
+                        <div class="error-block">
+                            <p
+                                *ngIf="
+                                    primaryContact.get('email').touched &&
+                                    primaryContact.get('email').errors &&
+                                    primaryContact.get('email').errors.required === true
+                                "
+                            >
+                                Email required
+                            </p>
+                            <p
+                                *ngIf="
+                                    primaryContact.get('email').touched &&
+                                    primaryContact.get('email').errors &&
+                                    primaryContact.get('email').errors.email
+                                "
+                            >
+                                Email is not valid
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p-messages [(value)]="msgs"></p-messages>
+    <div class="form-bottom-row fdr aic">
+        <!-- <button class="btn btn-dark" (click)="onBackClick($event)">
+            <svg-icon
+                src="/assets/images/left-arrow.svg"
+                [svgStyle]="{ 'width.px': 13, fill: '#ffffff' }"
+                class="mr20"
+            ></svg-icon
+            >Back
+        </button> -->
+        <div class="form-bottom-row-holder mla">
+            <button class="btn btn-bordered" (click)="onSaveClick($event)">
+                Save
+                <svg-icon
+                    src="/assets/images/save-file-option.svg"
+                    [svgStyle]="{ 'width.px': 13, 'height.px': 13, fill: '#69be28' }"
+                    class="save-file-icon ml20"
+                ></svg-icon>
+            </button>
+            <button class="btn btn-colored ml10" (click)="onNextClick($event)">
+                Next
+                <svg-icon
+                    src="/assets/images/right-arrow.svg"
+                    [svgStyle]="{ 'width.px': 13, fill: '#ffffff' }"
+                    class="ml20"
+                ></svg-icon>
+            </button>
+        </div>
+    </div>
+</form>
+<app-loader *ngIf="contentLoading"></app-loader>

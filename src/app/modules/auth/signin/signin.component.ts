@@ -4,10 +4,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 
-import { environment } from '../../../../environments/environment';
-import { FormHelperService } from '../../../services/form-helper.service';
+import { environment } from '@env/environment';
+import { FormHelperService } from '../../../core/services/form-helper.service';
 import { AuthService } from '../auth.service';
-import { UtilitiesService } from './../../../services/utilities.service';
+import { UtilitiesService } from './../../../core/services/utilities.service';
 
 @Component({
     selector: 'app-signin',

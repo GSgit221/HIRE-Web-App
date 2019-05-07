@@ -1,0 +1,191 @@
+:root {
+    // --primary-color: #69be28;
+    --primary-color: cornflowerblue;
+}
+
+// Sidebar
+.user-pic {
+    background: var(--primary-color);
+}
+
+.progress-block {
+    background: var(--primary-color);
+}
+
+.sidebar-nav {
+    .sidebar-nav-link {
+        a {
+            &:hover,
+            &.completed,
+            &.active {
+                &:after {
+                    background: var(--primary-color);
+                }
+            }
+        }
+    }
+}
+
+.sidebar-nav {
+    .sidebar-nav-link {
+        a.active {
+            .icon {
+                svg {
+                    g {
+                        fill: var(--primary-color);
+                    }
+                }
+            }
+        }
+    }
+}
+
+.sidebar-nav {
+    .sidebar-nav-link {
+        a {
+            &:hover,
+            &.completed,
+            &.active {
+                &:before {
+                    background: var(--primary-color) !important;
+                    opacity: 0.1;
+                }
+            }
+        }
+    }
+}
+
+// Recruiter Auth
+.auth-header-block {
+    &:before {
+        background: var(--primary-color);
+    }
+
+    h2 {
+        color: var(--primary-color);
+    }
+}
+
+.auth-block-content {
+    .forgot {
+        color: var(--primary-color);
+    }
+
+    .btn.sign-in {
+        background: var(--primary-color);
+    }
+}
+
+.checkbox-block {
+    .checkmark:after {
+        border: solid var(--primary-color);
+    }
+}
+
+// Onboarding
+.form-content-header {
+    color: var(--primary-color);
+
+    &:after {
+        background: var(--primary-color);
+    }
+
+    .dot {
+        background: var(--primary-color);
+    }
+}
+
+.form-bottom-row {
+    .btn-colored {
+        background: var(--primary-color);
+    }
+}
+
+.onboarding-content {
+    p-dropdown .ui-dropdown.ui-dropdown-open .ui-dropdown-label {
+        border: 1px solid var(--primary-color);
+    }
+
+    p-dropdown .ui-dropdown .ui-dropdown-panel .ui-state-highlight {
+        background: var(--primary-color);
+    }
+
+    .upload-block {
+        &.exist {
+            border-color: var(--primary-color);
+        }
+
+        p {
+            span {
+                color: var(--primary-color);
+            }
+        }
+
+        .upload-progress {
+            background: var(--primary-color);
+        }
+    }
+
+    .form-row .dot {
+        background: var(--primary-color);
+    }
+
+    .form-bottom-row .btn.btn-bordered {
+        color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+    }
+
+    .form-row {
+        .form-block {
+            .form-input {
+                &:focus,
+                &:active {
+                    border-color: var(--primary-color);
+                }
+            }
+        }
+    }
+
+    app-input-phone.ng-touched.ng-invalid.focus input[placeholder] {
+        color: var(--primary-color) !important;
+    }
+
+    app-input-phone.ng-touched.ng-invalid.focus input::-moz-placeholder {
+        color: var(--primary-color) !important;
+    }
+
+    app-input-phone.ng-touched.ng-invalid.focus input:-moz-placeholder {
+        color: var(--primary-color) !important;
+    }
+
+    app-input-phone.ng-touched.ng-invalid.focus input:-ms-input-placeholder {
+        color: var(--primary-color) !important;
+    }
+
+    app-input-phone.ng-touched.focus .form-input {
+        border-color: var(--primary-color) !important;
+    }
+
+    .save-file-icon {
+        svg {
+            fill: var(--primary-color) !important;
+        }
+    }
+
+    .radio-btns-group {
+        .ui-radiobutton .ui-radiobutton-box.ui-state-active {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+        }
+
+        .ui-radiobutton .ui-radiobutton-box.ui-state-active:not(.ui-state-disabled):hover {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+        }
+
+        .ui-radiobutton .ui-radiobutton-box.ui-state-active.ui-state-focus {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+        }
+    }
+}

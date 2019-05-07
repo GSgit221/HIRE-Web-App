@@ -6,7 +6,7 @@ import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 
 import * as fromStore from '../store';
 import * as fromEmailsSelectors from '../store/selectors/emails.selector';
-import { EmailTemplate } from './../../../../models/email-template';
+import { EmailTemplate } from './../../../../core/models/email-template';
 
 @Injectable()
 export class EmailExistsGuard implements CanActivate {

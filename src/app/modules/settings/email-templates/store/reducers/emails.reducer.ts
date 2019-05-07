@@ -1,4 +1,4 @@
-import { EmailTemplate } from './../../../../../models/email-template';
+import { EmailTemplate } from './../../../../../core/models/email-template';
 
 import * as fromEmailsActions from '../actions/emails.action';
 

@@ -6,7 +6,7 @@ import * as closest from 'closest';
 import * as fromStore from '../store';
 import * as fromStoreActions from '../store/actions/emails.action';
 import * as fromStoreSelectors from '../store/selectors/emails.selector';
-import { EmailTemplate } from './../../../../models/email-template';
+import { EmailTemplate } from './../../../../core/models/email-template';
 
 @Component({
     selector: 'app-email-templates-list',

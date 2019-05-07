@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
 
-import * as fromStore from '../../store';
+import { User } from './../../core/models/user';
 
 @Component({
     selector: 'app-dashboard',
@@ -9,8 +8,7 @@ import * as fromStore from '../../store';
     styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-    constructor(private store: Store<fromStore.State>) {
-        this.store.dispatch(new fromStore.LoadUser());
-    }
+    user: User;
+    constructor() {}
     ngOnInit() {}
 }

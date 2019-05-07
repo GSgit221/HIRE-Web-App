@@ -2,13 +2,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Slider } from 'primeng/slider';
-import { Questionnaire } from './../../../../models/questionnaire';
-import { QuestionnaireService } from './../../../../services/questionnaire.service';
+import { Questionnaire } from './../../../../core/models/questionnaire';
+import { QuestionnaireService } from './../../../../core/services/questionnaire.service';
 
-import { Job } from '../../../../models/job';
-import { Stage } from '../../../../models/stage';
-import { FormHelperService } from './../../../../services/form-helper.service';
-import { JobService } from './../../../../services/job.service';
+import { Job } from '../../../../core/models/job';
+import { Stage } from '../../../../core/models/stage';
+import { FormHelperService } from './../../../../core/services/form-helper.service';
+import { JobService } from './../../../../core/services/job.service';
 
 @Component({
     selector: 'app-stage-settings',

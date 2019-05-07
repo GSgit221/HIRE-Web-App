@@ -27,13 +27,17 @@
                         "tsConfig": "src/tsconfig.app.json",
                         "assets": ["src/favicon.ico", "src/assets"],
                         "styles": [
-                            "src/styles.scss",
                             "node_modules/primeicons/primeicons.css",
                             "node_modules/primeng/resources/themes/omega/theme.css",
                             "node_modules/primeng/resources/primeng.min.css",
                             "node_modules/quill/dist/quill.core.css",
-                            "node_modules/quill/dist/quill.snow.css"
+                            "node_modules/quill/dist/quill.snow.css",
+                            "node_modules/intl-tel-input/build/css/intlTelInput.css",
+                            "src/styles.scss"
                         ],
+                        "stylePreprocessorOptions": {
+                            "includePaths": ["src/styles"]
+                        },
                         "scripts": ["node_modules/quill/dist/quill.js"]
                     },
                     "configurations": {
@@ -82,9 +86,20 @@
                         "polyfills": "src/polyfills.ts",
                         "tsConfig": "src/tsconfig.spec.json",
                         "karmaConfig": "src/karma.conf.js",
-                        "styles": ["src/styles.scss"],
-                        "scripts": [],
-                        "assets": ["src/favicon.ico", "src/assets"]
+                        "assets": ["src/favicon.ico", "src/assets"],
+                        "styles": [
+                            "node_modules/primeicons/primeicons.css",
+                            "node_modules/primeng/resources/themes/omega/theme.css",
+                            "node_modules/primeng/resources/primeng.min.css",
+                            "node_modules/quill/dist/quill.core.css",
+                            "node_modules/quill/dist/quill.snow.css",
+                            "node_modules/intl-tel-input/build/css/intlTelInput.css",
+                            "src/styles.scss"
+                        ],
+                        "stylePreprocessorOptions": {
+                            "includePaths": ["src/styles"]
+                        },
+                        "scripts": ["node_modules/quill/dist/quill.js"]
                     }
                 },
                 "lint": {

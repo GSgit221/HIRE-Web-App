@@ -3,9 +3,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { FormHelperService } from './../../../services/form-helper.service';
-import { JobService } from './../../../services/job.service';
-import { UtilitiesService } from './../../../services/utilities.service';
+import { FormHelperService } from './../../../core/services/form-helper.service';
+import { JobService } from './../../../core/services/job.service';
+import { UtilitiesService } from './../../../core/services/utilities.service';
 
 @Component({
     selector: 'app-job-item-new',

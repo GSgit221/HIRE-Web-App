@@ -1,0 +1,51 @@
+@import 'variables.scss';
+
+.circle {
+    display: inline-flex;
+    position: relative;
+}
+
+.result {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 22px;
+    letter-spacing: 0.4px;
+    font-weight: 300;
+    display: flex;
+    align-items: center;
+
+    span {
+        font-size: 12px;
+        position: relative;
+        top: 3px;
+    }
+}
+
+.progress-meter {
+    stroke: rgba(255, 255, 255, 0.4);
+}
+
+.progress-value {
+    stroke-linecap: round;
+
+    span {
+        font-size: 20px;
+    }
+}
+
+.progress {
+    transform: rotate(-90deg);
+    margin: 0 0 0 -5px;
+}
+
+.progress-meter,
+.progress-value {
+    fill: none;
+}
+
+.full-loader {
+    position: fixed;
+    width: 100%;
+}

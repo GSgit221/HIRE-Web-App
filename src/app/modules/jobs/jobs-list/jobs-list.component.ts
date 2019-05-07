@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import * as closest from 'closest';
 import { SelectItem } from 'primeng/api';
-import { UtilitiesService } from './../../../services/utilities.service';
+import { UtilitiesService } from './../../../core/services/utilities.service';
 
 import { Router } from '@angular/router';
-import { User } from '../../../models/user';
-import { Job } from './../../../models/job';
-import { JobService } from './../../../services/job.service';
+import { User } from '../../../core/models/user';
+import { Job } from './../../../core/models/job';
+import { JobService } from './../../../core/services/job.service';
 
 @Component({
     selector: 'app-jobs-list',

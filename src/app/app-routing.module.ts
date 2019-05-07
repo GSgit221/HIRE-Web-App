@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { UserLoadedGuard } from './core/guards/user-loaded.guard';
 
-import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { AuthGuard } from './guards/auth.guard';
+import { PageNotFoundComponent } from './core/components/page-not-found/page-not-found.component';
+import { AuthGuard } from './core/guards/auth.guard';
 
 const appRoutes: Routes = [
     {
@@ -18,6 +19,10 @@ const appRoutes: Routes = [
         path: 'dashboard',
         canActivateChild: [AuthGuard],
         loadChildren: './modules/dashboard/dashboard.module#DashboardModule'
+    },
+    {
+        path: 'recruiters',
+        loadChildren: './modules/recruiters/recruiters.module#RecruitersModule'
     },
     { path: 'not-found', component: PageNotFoundComponent },
     { path: '**', redirectTo: 'not-found' }

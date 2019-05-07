@@ -5,13 +5,13 @@ import { select, Store } from '@ngrx/store';
 import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
 import { Message, SelectItem } from 'primeng/api';
 
-import { Job } from '../../../models/job';
-import { User } from '../../../models/user';
-import { FormHelperService } from '../../../services/form-helper.service';
-import { JobService } from '../../../services/job.service';
-import { ConditionalValidator } from '../../../validators/conditional.validator';
-import { Questionnaire } from './../../../models/questionnaire';
-import { QuestionnaireService } from './../../../services/questionnaire.service';
+import { Job } from '../../../core/models/job';
+import { User } from '../../../core/models/user';
+import { FormHelperService } from '../../../core/services/form-helper.service';
+import { JobService } from '../../../core/services/job.service';
+import { ConditionalValidator } from '../../../core/validators/conditional.validator';
+import { Questionnaire } from './../../../core/models/questionnaire';
+import { QuestionnaireService } from './../../../core/services/questionnaire.service';
 import * as fromStore from './../../../store';
 import * as fromSelectors from './../../../store/selectors';
 
