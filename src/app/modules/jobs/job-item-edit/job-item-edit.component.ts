@@ -34,10 +34,10 @@ export class JobItemEditComponent implements OnInit {
 
     user: User;
     users: User[];
-    recruiters: User[] = [];
-    unprivilegedUsers: User[] = [];
-
     accountOwners: SelectItem[] = [];
+    recruiters: User[] = [];
+    // hiringManagers: SelectItem[] = [];
+    // unprivilegedUsers: User[] = [];
 
     jobTypeOptions: SelectItem[];
     educationOptions: SelectItem[];
@@ -162,14 +162,13 @@ export class JobItemEditComponent implements OnInit {
         // Get list of usersn
         this.store.pipe(select(fromSelectors.getUsersEntities)).subscribe((users: User[]) => {
             this.users = users.map((u) => ({ ...u }));
+            this.accountOwners = [];
             this.users.forEach((user) => {
-                if (user.role && ['superadmin', 'admin', 'account_owner', 'recruiter'].indexOf(user.role) !== -1) {
+                if (user.role && ['user', 'account_owner'].indexOf(user.role) !== -1) {
                     this.accountOwners.push({
                         label: `${user.first_name} ${user.last_name}`,
                         value: user.id
                     });
-                } else {
-                    this.unprivilegedUsers.push(user);
                 }
 
                 if (user.role && user.role === 'recruiter') {
