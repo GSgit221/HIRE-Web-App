@@ -18,7 +18,7 @@ const appRoutes: Routes = [
     },
     {
         path: 'dashboard',
-        canActivateChild: [AuthGuard, UserLoadedGuard, UserHasAccessGuard],
+        canActivateChild: [AuthGuard, UserHasAccessGuard],
         loadChildren: './modules/dashboard/dashboard.module#DashboardModule'
     },
     {
