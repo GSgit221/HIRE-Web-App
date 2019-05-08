@@ -25,6 +25,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { SliderModule } from 'primeng/slider';
 import { TooltipModule } from 'primeng/tooltip';
+import { UserHasAccessGuard } from './../../core/guards/user-has-access.guard';
 import { UserLoadedGuard } from './../../core/guards/user-loaded.guard';
 
 import { GetFirstLetterPipe } from '../../core/pipes/get-first-letter.pipe';
@@ -71,15 +72,7 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         ListFilterComponent,
         InputPhoneComponent
     ],
-    providers: [
-        AuthService,
-        httpInterceptorProviders,
-        AuthGuard,
-        UnauthGuard,
-        RecruiterRoleGuard,
-        UserLoadedGuard,
-        CookieService
-    ],
+    providers: [AuthService, httpInterceptorProviders, CookieService],
     imports: [
         CommonModule,
         ReactiveFormsModule,

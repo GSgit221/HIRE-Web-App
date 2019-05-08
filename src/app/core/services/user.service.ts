@@ -22,7 +22,9 @@ export class UserService {
     }
 
     getUser(): Observable<User> {
-        return this.http.get<User>(`${environment.apiUrl}/me`).pipe(catchError((error: any) => throwError(error)));
+        return this.http
+            .get<User>(`${environment.apiUrl}/me?tenantId=${this.tenantId}`)
+            .pipe(catchError((error: any) => throwError(error)));
     }
 
     create(data): Observable<User> {

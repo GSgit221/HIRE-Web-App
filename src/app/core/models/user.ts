@@ -13,6 +13,7 @@ export class User {
     icon_url?: string;
     icon_url_small?: string;
     role?: string;
+    roles?: any;
     displayRole?: string;
     isVisible?: boolean;
     selected?: boolean;
