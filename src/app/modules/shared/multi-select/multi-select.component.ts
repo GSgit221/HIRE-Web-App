@@ -28,6 +28,7 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
     selectedItems = [];
     contentLoading = false;
     newUserForm: FormGroup;
+    _users: User[] = [];
     _items: any[] = [];
     @Input() inviteUsers: boolean;
     @Input() userType: string;
@@ -62,12 +63,11 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
         });
         this.store.pipe(select(fromSelectors.getUsersEntities)).subscribe((users: User[]) => {
             this.selectedItems = [];
-            if (this._items.length && this._items.length !== users.length) {
+            if (this._items.length && users.length && this._items.length !== users.length) {
                 this.newItemMode = false;
                 const existingIds = this._items.map((u) => u.id);
                 const newItems = users.filter((u) => existingIds.indexOf(u.id) === -1);
                 this.newUserForm.reset();
-
                 newItems.forEach((user) => {
                     const u = { ...user };
                     if (!this._items.find((userItem) => userItem.id === u.id) && u.role && this.userType === u.role) {
@@ -142,8 +142,8 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
             return;
         }
         this.contentLoading = true;
-        const data = form.value;
-        data.role = 'user';
+        const data = form.getRawValue();
+        data.role = this.userType || 'user';
         this.store.dispatch(new fromActions.CreateUser(data));
     }
 
