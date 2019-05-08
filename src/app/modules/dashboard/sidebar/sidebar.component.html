@@ -46,7 +46,7 @@
                         <span class="text">Users</span>
                     </a>
                 </div>
-                <div class="sidebar-nav-link" *ngIf="user && user.role === 'superadmin'">
+                <div class="sidebar-nav-link" *ngIf="user && user.type === 'superadmin'">
                     <a href="#" routerLink="/dashboard/settings/agencies" routerLinkActive="active">
                         <span class="icon"
                             ><img src="/assets/images/users.svg" alt="Users icon" width="14" height="13"
@@ -121,7 +121,7 @@
         </div>
     </div>
 </div>
-<app-takeover *ngIf="user && user.role === 'superadmin'" [users]="users"></app-takeover>
+<app-takeover *ngIf="user && user.type === 'superadmin'" [users]="users"></app-takeover>
 <div class="logout-link" pTooltip="Sign out" tooltipPosition="top" routerLink="/auth/signout">
     <img src="/assets/images/logout.svg" alt="Logout" width="20" height="20" />
 </div>
