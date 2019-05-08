@@ -422,7 +422,7 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
     align-items: center;
     justify-content: center;
     line-height: 30px;
-    background: $pink;
+    background: #525f7f;
     padding: 0;
 
     img {
@@ -432,7 +432,7 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
 
     &:hover {
         cursor: pointer;
-        background: darken($pink, 10%);
+        background: darken(#525f7f, 10%);
     }
 
     &:active {

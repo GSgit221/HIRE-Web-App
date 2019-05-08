@@ -534,7 +534,7 @@
             <div class="form-content-section" *ngIf="isJobOwner">
                 <div class="description">
                     <strong class="title">Job Owner</strong>
-                    <p>This is the person creating the job or someone that they select.</p>
+                    <p>You can allocate job ownership to a user on your team.</p>
                 </div>
                 <div class="form-content-holder">
                     <div class="form-content-box">
@@ -552,24 +552,12 @@
             <div class="section-separator mb20 mt20" *ngIf="isJobOwner"></div>
             <div class="form-content-section">
                 <div class="description">
-                    <strong class="title">Recruiters</strong>
-                    <p>This can be any USER of type [Recruiter / Account Owner], except the job owner.</p>
-                </div>
-                <div class="form-content-holder">
-                    <div class="form-content-box">
-                        <label for="" class="form-block-label">Recruiters</label>
-                        <app-multi-select userType="recruiter" formControlName="recruiters"></app-multi-select>
-                    </div>
-                </div>
-            </div>
-            <div class="section-separator mb20 mt20"></div>
-            <div class="form-content-section">
-                <div class="description">
                     <strong class="title">Hiring Managers</strong>
-                    <p>This is can be any USER of type [ Hiring Manager ].</p>
+                    <p>Hiring Managers are able to view and progress candidates for this position.</p>
                 </div>
                 <div class="form-content-holder">
                     <div class="form-content-box">
+                        <label for="" class="form-block-label">Hiring Managers</label>
                         <app-multi-select
                             userType="user"
                             [inviteUsers]="true"
@@ -581,8 +569,24 @@
             <div class="section-separator mb20 mt20"></div>
             <div class="form-content-section">
                 <div class="description">
+                    <strong class="title">Recruitment Agencies</strong>
+                    <p>
+                        External Recruitment Agencies are able to add candidates to a position. Agencies only have view
+                        of thier candidates.
+                    </p>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <label for="" class="form-block-label">Recruitment Agencies</label>
+                        <app-multi-select userType="recruiter" formControlName="recruiters"></app-multi-select>
+                    </div>
+                </div>
+            </div>
+            <div class="section-separator mb20 mt20"></div>
+            <div class="form-content-section">
+                <div class="description">
                     <strong class="title">Default Email</strong>
-                    <p>This can be any Recruitment Agency.</p>
+                    <p>Who should automated emails triggered by the system for this job be sent from?</p>
                 </div>
                 <div class="form-content-holder">
                     <div class="form-content-box">
