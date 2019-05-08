@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { environment } from '@env/environment';
 import { select, Store } from '@ngrx/store';
 import { SelectItem } from 'primeng/api';
 
@@ -42,6 +43,7 @@ export class JobItemViewComponent implements OnInit {
     resumeThreshold = 60;
     candidateIsDragged = false;
     draggedStage: any;
+    href: any;
 
     constructor(
         private router: Router,
@@ -94,10 +96,25 @@ export class JobItemViewComponent implements OnInit {
             this.setAppliedCanidates(this.candidates);
         });
         this.resumeThreshold = this.getJobResumeMatchingThreshold();
+        this.href = environment.appUrl + this.router.url;
     }
 
     onJobStatusChange(item) {
         this.jobService.updateJob(item.id, { status: item.status }).subscribe(() => console.log('updated'));
+    }
+
+    copyURL(val: string) {
+        const selBox = document.createElement('textarea');
+        selBox.style.position = 'fixed';
+        selBox.style.left = '0';
+        selBox.style.top = '0';
+        selBox.style.opacity = '0';
+        selBox.value = val;
+        document.body.appendChild(selBox);
+        selBox.focus();
+        selBox.select();
+        document.execCommand('copy');
+        document.body.removeChild(selBox);
     }
 
     stageCandidates(stageName: string) {
