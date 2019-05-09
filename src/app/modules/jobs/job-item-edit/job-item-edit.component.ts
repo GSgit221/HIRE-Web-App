@@ -35,6 +35,7 @@ export class JobItemEditComponent implements OnInit {
     user: User;
     users: User[];
     accountOwners: SelectItem[] = [];
+    recruitersDefaults: SelectItem[] = [];
     recruiters: User[] = [];
     // hiringManagers: SelectItem[] = [];
     // unprivilegedUsers: User[] = [];
@@ -153,9 +154,10 @@ export class JobItemEditComponent implements OnInit {
         this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
             this.user = { ...user };
             if (this.job.owner === user.id || user.role === 'admin') {
+                console.log(user);
                 this.isJobOwner = true;
                 this.jobOwner = `${user.first_name} ${user.last_name}`;
-                this.hiringForm.patchValue({ default_email_name: this.jobOwner, owner: user.id });
+                this.hiringForm.patchValue({ default_email_name: this.job.default_email_name, owner: user.id });
             }
         });
 
@@ -173,6 +175,10 @@ export class JobItemEditComponent implements OnInit {
 
                 if (user.role && user.role === 'recruiter') {
                     this.recruiters.push(user);
+                    this.recruitersDefaults.push({
+                        label: `${user.first_name} ${user.last_name}`,
+                        value: user.id
+                    });
                 }
             });
         });
@@ -182,8 +188,9 @@ export class JobItemEditComponent implements OnInit {
 
     onChangeUser(event) {
         const user = this.users.filter((x) => x.id === event.value);
+        console.log(user);
         this.jobOwner = `${user[0].first_name} ${user[0].last_name}`;
-        this.hiringForm.patchValue({ default_email_name: this.jobOwner });
+        this.hiringForm.patchValue({ default_email_name: user[0].id });
     }
 
     // TEMPORARY (till Quill fixes it)
@@ -234,7 +241,7 @@ export class JobItemEditComponent implements OnInit {
             owner: [''],
             recruiters: [''],
             hiring_managers: [''],
-            default_email_name: this.jobOwner
+            default_email_name: ['']
         });
 
         this.editorAutofocusFix();
@@ -282,7 +289,7 @@ export class JobItemEditComponent implements OnInit {
             owner: [this.user ? this.user.id : ''],
             hiring_managers: [this.job.hiring_managers],
             recruiters: [this.job.recruiters],
-            default_email_name: this.jobOwner
+            default_email_name: this.job.default_email_name
         });
         this.editorAutofocusFix();
 
