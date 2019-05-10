@@ -6,6 +6,7 @@ import { QuestionnaireService } from './questionnaire.service';
 import { ThemeService } from './theme.service';
 import { UserService } from './user.service';
 import { UtilitiesService } from './utilities.service';
+import { XLSXService } from './xlsx.service';
 
 export const services: any[] = [
     UserService,
@@ -15,7 +16,8 @@ export const services: any[] = [
     QuestionnaireService,
     FormHelperService,
     EmailService,
-    ThemeService
+    ThemeService,
+    XLSXService
 ];
 
 export * from './questionnaire.service';
@@ -26,3 +28,4 @@ export * from './user.service';
 export * from './utilities.service';
 export * from './email.service';
 export * from './theme.service';
+export * from './xlsx.service';

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EffectsModule } from '@ngrx/effects';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
 import { MetaReducer, StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -32,7 +33,8 @@ export const metaReducers: Array<MetaReducer<any>> = !environment.production ? [
         {
             provide: RouterStateSerializer,
             useClass: CustomSerializer
-        }
+        },
+        { provide: AngularFirestore }
     ],
     bootstrap: [AppComponent]
 })
