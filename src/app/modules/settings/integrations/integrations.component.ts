@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
 import * as XLSX from 'xlsx';
 import { XLSXService } from './../../../core/services/xlsx.service';
 
@@ -21,12 +21,12 @@ export class IntegrationsComponent implements OnInit {
     }
 
     uploadDocument(file) {
-        let fileReader = new FileReader();
+        const fileReader = new FileReader();
         fileReader.onload = (e) => {
-            var filedata = fileReader.result;
-            var workbook = XLSX.read(filedata, { type: 'binary' });
-            var wsname = workbook.SheetNames[0];
-            var rowObject = XLSX.utils.sheet_to_json(workbook.Sheets[wsname]);
+            const filedata = fileReader.result;
+            const workbook = XLSX.read(filedata, { type: 'binary' });
+            const wsname = workbook.SheetNames[0];
+            const rowObject = XLSX.utils.sheet_to_json(workbook.Sheets[wsname]);
             console.log(rowObject);
             this.xlsxService.create(rowObject[0]).subscribe(
                 (response: any) => {
