@@ -4,6 +4,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as XLSX from 'xlsx';
 import { XLSXService } from './../../../core/services/xlsx.service';
+// import { AngularFirestore } from 'angularfire2/firestore';
 
 @Component({
     selector: 'app-integrations',
@@ -12,7 +13,11 @@ import { XLSXService } from './../../../core/services/xlsx.service';
 })
 export class IntegrationsComponent implements OnInit {
     file: any;
-    constructor(public http: HttpClient, private xlsxService: XLSXService) {}
+    public items: Observable<any[]>;
+
+    constructor(public http: HttpClient, private xlsxService: XLSXService) {
+        // this.items = db.collection('/items').valueChanges();
+    }
 
     ngOnInit() {}
 

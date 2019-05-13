@@ -7,6 +7,7 @@ import { JobCatalogue } from './../models/job_catalogue';
 import { environment } from '@env/environment';
 import { AuthService } from './../../modules/auth/auth.service';
 import { UtilitiesService } from './utilities.service';
+// import * as firebase from 'firebase/app';
 
 @Injectable({
     providedIn: 'root'
@@ -24,7 +25,11 @@ export class XLSXService {
     create(data): Observable<JobCatalogue> {
         console.log(data);
         return this.http
-            .post<JobCatalogue>(`${environment.apiUrl}/job_catalogue`, data)
+            .post<JobCatalogue>(
+                `${environment.apiUrl}/job_catalogue/job_catalogues
+`,
+                data
+            )
             .pipe(catchError((error: any) => throwError(error)));
     }
 }
