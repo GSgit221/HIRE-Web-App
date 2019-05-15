@@ -22,7 +22,7 @@ export class IntegrationsComponent implements OnInit {
         this.file = e.target.files[0];
     }
 
-    uploadDocument(file) {
+    uploadDocument() {
         const fileReader = new FileReader();
         fileReader.onload = (e) => {
             const filedata = fileReader.result;
@@ -30,8 +30,7 @@ export class IntegrationsComponent implements OnInit {
             const wsname = workbook.SheetNames[0];
             const rowObject = XLSX.utils.sheet_to_json(workbook.Sheets[wsname]);
             console.log(rowObject);
-            for (const i = rowObject.length - 1; i >= 0; i--) {
-                // rowObject[i]
+            for (let i = rowObject.length - 1; i >= 0; i--) {
                 this.xlsxService.create(rowObject[i]).subscribe(
                     (response: any) => {
                         console.log('success');
