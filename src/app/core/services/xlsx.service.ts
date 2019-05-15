@@ -22,14 +22,7 @@ export class XLSXService {
         this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
     }
 
-    create(data): Observable<JobCatalogue> {
-        console.log(data);
-        return this.http
-            .post<JobCatalogue>(
-                `${environment.apiUrl}/job_catalogue/job_catalogues
-`,
-                data
-            )
-            .pipe(catchError((error: any) => throwError(error)));
+    create(data: any) {
+        return this.http.post(`https://us-central1-hire-by-hellocrowd.cloudfunctions.net/api/job_catalogue`, data);
     }
 }

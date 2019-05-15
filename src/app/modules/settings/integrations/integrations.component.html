@@ -1,6 +1,4 @@
 <h1>Integrations</h1>
 <input type="file" id="file" (change)="fileChanged($event)" name="file" />
 <button type="button" class="btn btn-primary" (click)="uploadDocument()">Upload File</button>
-
 <h4 *ngIf="showMessage">{{ message }}</h4>
-<script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
