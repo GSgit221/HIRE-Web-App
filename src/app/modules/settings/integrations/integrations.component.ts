@@ -14,6 +14,7 @@ import { XLSXService } from './../../../core/services/xlsx.service';
 export class IntegrationsComponent implements OnInit {
     file: any;
     public items: Observable<any[]>;
+    showMessage = false;
 
     constructor(public http: HttpClient, private xlsxService: XLSXService) {
         // this.items = db.collection('/items').valueChanges();
