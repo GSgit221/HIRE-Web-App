@@ -6,12 +6,14 @@ import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
 import { Message, SelectItem } from 'primeng/api';
 
 import { Job } from '../../../core/models/job';
+import { JobCatalogue } from '../../../core/models/job_catalogue';
 import { User } from '../../../core/models/user';
 import { FormHelperService } from '../../../core/services/form-helper.service';
 import { JobService } from '../../../core/services/job.service';
 import { ConditionalValidator } from '../../../core/validators/conditional.validator';
 import { Questionnaire } from './../../../core/models/questionnaire';
 import { QuestionnaireService } from './../../../core/services/questionnaire.service';
+import { XLSXService } from './../../../core/services/xlsx.service';
 import * as fromStore from './../../../store';
 import * as fromSelectors from './../../../store/selectors';
 
@@ -34,9 +36,11 @@ export class JobItemEditComponent implements OnInit {
 
     user: User;
     users: User[];
+    jobdescriptions: JobCatalogue[];
     accountOwners: SelectItem[] = [];
     recruitersDefaults: SelectItem[] = [];
     recruiters: User[] = [];
+    descriptions = [];
     // hiringManagers: SelectItem[] = [];
     // unprivilegedUsers: User[] = [];
 
@@ -49,6 +53,7 @@ export class JobItemEditComponent implements OnInit {
     questionnaireOptions: SelectItem[];
     applicationFieldsOptions: SelectItem[];
     hiringManagersOptions: SelectItem[];
+    JobDescriptionOptions: SelectItem[];
 
     activeSection = 'job-details';
     // activeSection = 'hiring-team';
@@ -69,7 +74,8 @@ export class JobItemEditComponent implements OnInit {
         private questionnaireService: QuestionnaireService,
         private fb: FormBuilder,
         private router: Router,
-        private formHelper: FormHelperService
+        private formHelper: FormHelperService,
+        private xlsxService: XLSXService
     ) {
         this.route.paramMap.subscribe((params: ParamMap) => {
             const section = this.route.snapshot.queryParamMap.get('section');
@@ -129,6 +135,13 @@ export class JobItemEditComponent implements OnInit {
         this.questionnaireOptions = [];
         this.questionnaireService.getAll().subscribe((questionnaires: Questionnaire[]) => {
             questionnaires.forEach((q) => this.questionnaireOptions.push({ label: q.title, value: q.id }));
+        });
+
+        this.JobDescriptionOptions = [];
+        this.xlsxService.getJobCatalogues().subscribe((descriptions: JobCatalogue[]) => {
+            this.descriptions = descriptions;
+            console.log(this.descriptions);
+            descriptions.forEach((q) => this.JobDescriptionOptions.push({ label: q.Role, value: q.id }));
         });
 
         this.applicationFieldsOptions = [
@@ -193,6 +206,14 @@ export class JobItemEditComponent implements OnInit {
         this.hiringForm.patchValue({ default_email_name: user[0].id });
     }
 
+    onChangeJob(event) {
+        const job_des = this.descriptions.filter((x) => x.id === event.value);
+        const description = `${job_des[0].Overview}  ${job_des[0].Description}  ${job_des[0].Responsibilities}`;
+        this.jobDetailsForm.patchValue({ description: `${description}` });
+        this.jobDetailsForm.patchValue({ requirements: job_des[0].Responsibilities });
+        console.log(job_des);
+    }
+
     // TEMPORARY (till Quill fixes it)
     private editorAutofocusFix() {
         setTimeout(() => {
@@ -220,7 +241,8 @@ export class JobItemEditComponent implements OnInit {
             salary_period: [''],
             hide_salary: [''],
             description: [''],
-            requirements: ['']
+            requirements: [''],
+            job_role: ['']
         });
         this.applicationsForm = this.fb.group({
             job_listing: ['default'],
@@ -267,7 +289,8 @@ export class JobItemEditComponent implements OnInit {
             salary_period: [this.job.salary_period],
             hide_salary: [this.job.hide_salary || false],
             description: [this.job.description],
-            requirements: [this.job.requirements]
+            requirements: [this.job.requirements],
+            job_role: ['test']
         });
         this.inputAddress = this.job.location;
         this.applicationsForm = this.fb.group({

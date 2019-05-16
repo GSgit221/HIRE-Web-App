@@ -16,6 +16,7 @@ export class Job {
     hide_salary: boolean;
     description: string;
     requirements: string;
+    job_role: string;
     job_listing: string;
     resume_upload_required: boolean;
     email_missing_info: boolean;

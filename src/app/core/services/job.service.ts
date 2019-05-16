@@ -38,6 +38,7 @@ export class JobService {
                 salary_to: null,
                 salary_period: 'yearly',
                 hide_salary: false,
+                job_role: '',
                 description: '',
                 requirements: '',
                 job_listing: 'default',

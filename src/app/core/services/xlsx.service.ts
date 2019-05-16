@@ -23,6 +23,10 @@ export class XLSXService {
     }
 
     create(data: any) {
-        return this.http.post(`https://us-central1-hire-by-hellocrowd.cloudfunctions.net/api/job_catalogue`, data);
+        return this.http.post(`${environment.apiUrl}/job_catalogue`, data);
+    }
+
+    getJobCatalogues() {
+        return this.http.get(`${environment.apiUrl}/job_descriptions`);
     }
 }

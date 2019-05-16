@@ -295,8 +295,10 @@
                                         </span>
                                         <span class="ql-formats job_desc">
                                             <p-dropdown
-                                                [options]="salaryOptions"
+                                                [options]="JobDescriptionOptions"
+                                                formControlName="job_role"
                                                 placeholder="Find a job description"
+                                                (onChange)="onChangeJob($event)"
                                                 [style]="{ width: '100%' }"
                                             ></p-dropdown>
                                         </span>
@@ -333,8 +335,10 @@
                                         </span>
                                         <span class="ql-formats job_desc">
                                             <p-dropdown
-                                                [options]="salaryOptions"
+                                                [options]="JobDescriptionOptions"
+                                                formControlName="job_role"
                                                 placeholder="Find a job description"
+                                                (onChange)="onChangeJob($event)"
                                                 [style]="{ width: '100%' }"
                                             ></p-dropdown>
                                         </span>

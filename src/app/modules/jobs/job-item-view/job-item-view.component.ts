@@ -104,6 +104,7 @@ export class JobItemViewComponent implements OnInit {
     }
 
     copyURL(val: string) {
+        console.log(val);
         const selBox = document.createElement('textarea');
         selBox.style.position = 'fixed';
         selBox.style.left = '0';
