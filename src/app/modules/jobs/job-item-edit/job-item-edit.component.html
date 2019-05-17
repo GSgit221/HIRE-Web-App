@@ -300,6 +300,9 @@
                                                 placeholder="Find a job description"
                                                 (onChange)="onChangeJob($event)"
                                                 [style]="{ width: '100%' }"
+                                                [filter]="true"
+                                                filterBy="label,value.role"
+                                                [disabled]="disableDropdown"
                                             ></p-dropdown>
                                         </span>
                                     </p-header>
@@ -340,6 +343,9 @@
                                                 placeholder="Find a job description"
                                                 (onChange)="onChangeJob($event)"
                                                 [style]="{ width: '100%' }"
+                                                [filter]="true"
+                                                filterBy="label,value.role"
+                                                [disabled]="disableDropdown"
                                             ></p-dropdown>
                                         </span>
                                     </p-header>

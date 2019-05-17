@@ -59,6 +59,7 @@ export class JobItemEditComponent implements OnInit {
     // activeSection = 'hiring-team';
     sections = ['job-details', 'applications', 'hiring-team'];
     contentLoading = false;
+    disableDropdown = false;
     jobOwner = '';
 
     place: any;
@@ -66,6 +67,7 @@ export class JobItemEditComponent implements OnInit {
     locationOptions: any;
     isJobOwner = false;
     msgs: Message[] = [];
+    str_array = [];
 
     constructor(
         private route: ActivatedRoute,
@@ -140,7 +142,6 @@ export class JobItemEditComponent implements OnInit {
         this.JobDescriptionOptions = [];
         this.xlsxService.getJobCatalogues().subscribe((descriptions: JobCatalogue[]) => {
             this.descriptions = descriptions;
-            console.log(this.descriptions);
             descriptions.forEach((q) => this.JobDescriptionOptions.push({ label: q.Role, value: q.id }));
         });
 
@@ -162,6 +163,9 @@ export class JobItemEditComponent implements OnInit {
 
     ngOnInit() {
         console.log('📓 JOB', this.job);
+        if (this.job.description && this.job.requirements) {
+            this.disableDropdown = true;
+        }
         this.initForms();
         // Get current user
         this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
@@ -207,10 +211,18 @@ export class JobItemEditComponent implements OnInit {
     }
 
     onChangeJob(event) {
+        this.str_array = [];
         const job_des = this.descriptions.filter((x) => x.id === event.value);
-        const description = `${job_des[0].Overview}  ${job_des[0].Description}  ${job_des[0].Responsibilities}`;
+        const a = job_des[0].Responsibilities.split('.');
+        for (let i of a) {
+            this.str_array.push('<p>' + i + '.</p>');
+        }
+        const str_array = this.str_array.toString();
+        const regex = new RegExp(',', 'g');
+        const st_array = str_array.replace(regex, '');
+        const description = `${job_des[0].Overview}  ${job_des[0].Description}  ${st_array}`;
         this.jobDetailsForm.patchValue({ description: `${description}` });
-        this.jobDetailsForm.patchValue({ requirements: job_des[0].Responsibilities });
+        this.jobDetailsForm.patchValue({ requirements: `${st_array}` });
         console.log(job_des);
     }
 
@@ -290,7 +302,7 @@ export class JobItemEditComponent implements OnInit {
             hide_salary: [this.job.hide_salary || false],
             description: [this.job.description],
             requirements: [this.job.requirements],
-            job_role: ['test']
+            job_role: [this.job.job_role]
         });
         this.inputAddress = this.job.location;
         this.applicationsForm = this.fb.group({
