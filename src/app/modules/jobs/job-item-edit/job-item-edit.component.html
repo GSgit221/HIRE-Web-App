@@ -293,7 +293,7 @@
                                         <span class="ql-formats">
                                             <button aria-label="Remove Styles" class="ql-clean" type="button"></button>
                                         </span>
-                                        <!-- <span class="ql-formats job_desc">
+                                        <span class="ql-formats job_desc">
                                             <p-dropdown
                                                 [options]="JobDescriptionOptions"
                                                 formControlName="job_role"
@@ -302,9 +302,10 @@
                                                 [style]="{ width: '100%' }"
                                                 [filter]="true"
                                                 filterBy="label,value.role"
+                                                [editable]="true"
                                                 [disabled]="disableDropdown"
                                             ></p-dropdown>
-                                        </span> -->
+                                        </span>
                                     </p-header>
                                     2
                                 </app-editor>
@@ -336,7 +337,7 @@
                                         <span class="ql-formats">
                                             <button aria-label="Remove Styles" class="ql-clean" type="button"></button>
                                         </span>
-                                        <span class="job_desc">
+                                        <span class="ql-formats job_desc">
                                             <p-dropdown
                                                 [options]="JobDescriptionOptions"
                                                 formControlName="job_role"

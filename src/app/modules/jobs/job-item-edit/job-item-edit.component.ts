@@ -214,7 +214,8 @@ export class JobItemEditComponent implements OnInit {
     onChangeJob(event) {
         this.str_array = [];
         this.req_str_array = [];
-        const job_des = this.descriptions.filter((x) => x.id === event.value);
+        const job_des = this.descriptions.filter((x) => x.Role === event.value);
+        console.log(job_des);
         const res = job_des[0].Responsibilities.split('.');
         const req = job_des[0].Requirements.split('.');
         for (let i of res) {
