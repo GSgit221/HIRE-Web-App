@@ -68,6 +68,7 @@ export class JobItemEditComponent implements OnInit {
     isJobOwner = false;
     msgs: Message[] = [];
     str_array = [];
+    req_str_array = [];
 
     constructor(
         private route: ActivatedRoute,
@@ -142,7 +143,7 @@ export class JobItemEditComponent implements OnInit {
         this.JobDescriptionOptions = [];
         this.xlsxService.getJobCatalogues().subscribe((descriptions: JobCatalogue[]) => {
             this.descriptions = descriptions;
-            descriptions.forEach((q) => this.JobDescriptionOptions.push({ label: q.Role, value: q.id }));
+            descriptions.forEach((q) => this.JobDescriptionOptions.push({ label: q.Role, value: q.Role }));
         });
 
         this.applicationFieldsOptions = [
@@ -212,18 +213,25 @@ export class JobItemEditComponent implements OnInit {
 
     onChangeJob(event) {
         this.str_array = [];
+        this.req_str_array = [];
         const job_des = this.descriptions.filter((x) => x.id === event.value);
-        const a = job_des[0].Responsibilities.split('.');
-        for (let i of a) {
+        const res = job_des[0].Responsibilities.split('.');
+        const req = job_des[0].Requirements.split('.');
+        for (let i of res) {
             this.str_array.push('<p>' + i + '.</p>');
         }
+        for (let i of req) {
+            this.req_str_array.push('<p>' + i + '.</p>');
+        }
         const str_array = this.str_array.toString();
+        const req_str_array = this.req_str_array.toString();
         const regex = new RegExp(',', 'g');
         const st_array = str_array.replace(regex, '');
+        const req_st_array = req_str_array.replace(regex, '');
         const description = `${job_des[0].Overview}  ${job_des[0].Description}  ${st_array}`;
         this.jobDetailsForm.patchValue({ description: `${description}` });
-        this.jobDetailsForm.patchValue({ requirements: `${st_array}` });
-        console.log(job_des);
+        this.jobDetailsForm.patchValue({ requirements: `${req_st_array}` });
+        // console.log(job_des);
     }
 
     // TEMPORARY (till Quill fixes it)

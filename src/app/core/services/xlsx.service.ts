@@ -27,6 +27,9 @@ export class XLSXService {
     }
 
     getJobCatalogues() {
-        return this.http.get(`${environment.apiUrl}/job_descriptions`);
+        // return this.http.get(`${environment.apiUrl}/job_descriptions`);
+        return this.http
+            .get<JobCatalogue[]>(`${environment.apiUrl}/job_descriptions`)
+            .pipe(catchError((error: any) => throwError(error)));
     }
 }

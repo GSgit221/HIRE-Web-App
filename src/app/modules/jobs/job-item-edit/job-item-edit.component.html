@@ -266,7 +266,7 @@
                         <div class="form-block">
                             <div class="editors-container">
                                 <strong class="editor-title">Description</strong>
-                                <app-editor formControlName="description" [style]="{ height: '150px' }">
+                                <app-editor formControlName="description">
                                     <p-header>
                                         <span class="ql-formats">
                                             <select class="ql-size">
@@ -293,7 +293,7 @@
                                         <span class="ql-formats">
                                             <button aria-label="Remove Styles" class="ql-clean" type="button"></button>
                                         </span>
-                                        <span class="ql-formats job_desc">
+                                        <!-- <span class="ql-formats job_desc">
                                             <p-dropdown
                                                 [options]="JobDescriptionOptions"
                                                 formControlName="job_role"
@@ -304,12 +304,12 @@
                                                 filterBy="label,value.role"
                                                 [disabled]="disableDropdown"
                                             ></p-dropdown>
-                                        </span>
+                                        </span> -->
                                     </p-header>
                                     2
                                 </app-editor>
                                 <strong class="editor-title">Requirements</strong>
-                                <app-editor formControlName="requirements" [style]="{ height: '150px' }">
+                                <app-editor formControlName="requirements">
                                     <p-header>
                                         <span class="ql-formats">
                                             <select class="ql-size">
@@ -336,7 +336,7 @@
                                         <span class="ql-formats">
                                             <button aria-label="Remove Styles" class="ql-clean" type="button"></button>
                                         </span>
-                                        <span class="ql-formats job_desc">
+                                        <span class="job_desc">
                                             <p-dropdown
                                                 [options]="JobDescriptionOptions"
                                                 formControlName="job_role"
@@ -345,6 +345,7 @@
                                                 [style]="{ width: '100%' }"
                                                 [filter]="true"
                                                 filterBy="label,value.role"
+                                                [editable]="true"
                                                 [disabled]="disableDropdown"
                                             ></p-dropdown>
                                         </span>
