@@ -276,7 +276,7 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
 // Buttons
 .btn {
     display: inline-block;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.846;
     font-weight: 300;
     padding: 5px;
@@ -857,7 +857,7 @@ p-chips {
         min-height: 36px;
         border-radius: 2px;
         color: $main-blue;
-        font-size: 13px;
+        font-size: 14px;
         line-height: 16px;
         padding: 2px 2px 2px 4px;
         border-radius: 3px;
@@ -878,7 +878,7 @@ p-chips {
         margin-bottom: 1px;
 
         &.ui-state-highlight {
-            font-size: 13px;
+            font-size: 14px;
             color: $black;
             background: $light-grey;
         }
@@ -938,7 +938,7 @@ p-chips {
 
     .editor-title {
         display: block;
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 700;
         color: $main-blue;
         padding: 10px;
@@ -954,6 +954,7 @@ p-chips {
     .ql-toolbar.ql-snow + .ql-container.ql-snow {
         border: 0;
         min-height: 150px !important;
+        font-size: 14px;
     }
 }
 
