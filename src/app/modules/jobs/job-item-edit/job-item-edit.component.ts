@@ -60,6 +60,7 @@ export class JobItemEditComponent implements OnInit {
     sections = ['job-details', 'applications', 'hiring-team'];
     contentLoading = false;
     disableDropdown = false;
+    disableEdit = false;
     jobOwner = '';
 
     place: any;
@@ -164,8 +165,9 @@ export class JobItemEditComponent implements OnInit {
 
     ngOnInit() {
         console.log('📓 JOB', this.job);
-        if (this.job.description && this.job.requirements) {
+        if (this.job.description && this.job.requirements && this.job.job_role) {
             this.disableDropdown = true;
+            this.disableEdit = true;
         }
         this.initForms();
         // Get current user
@@ -219,10 +221,10 @@ export class JobItemEditComponent implements OnInit {
         const res = job_des[0].Responsibilities.split('.');
         const req = job_des[0].Requirements.split('.');
         for (let i of res) {
-            this.str_array.push('<p>' + i + '.</p>');
+            this.str_array.push('<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + i + '.</p>');
         }
         for (let i of req) {
-            this.req_str_array.push('<p>' + i + '.</p>');
+            this.req_str_array.push('<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + i + '.</p>');
         }
         const str_array = this.str_array.toString();
         const req_str_array = this.req_str_array.toString();

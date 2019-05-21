@@ -161,7 +161,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-block">
+                        <!-- <div class="form-block">
                             <div class="form-block-columns">
                                 <div class="form-block-col">
                                     <div class="input-block">
@@ -187,7 +187,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -302,12 +302,11 @@
                                                 [style]="{ width: '100%' }"
                                                 [filter]="true"
                                                 filterBy="label,value.role"
-                                                [editable]="true"
+                                                [editable]="disableEdit"
                                                 [disabled]="disableDropdown"
                                             ></p-dropdown>
                                         </span>
                                     </p-header>
-                                    2
                                 </app-editor>
                                 <strong class="editor-title">Requirements</strong>
                                 <app-editor formControlName="requirements">
@@ -346,7 +345,7 @@
                                                 [style]="{ width: '100%' }"
                                                 [filter]="true"
                                                 filterBy="label,value.role"
-                                                [editable]="true"
+                                                [editable]="disableEdit"
                                                 [disabled]="disableDropdown"
                                             ></p-dropdown>
                                         </span>
