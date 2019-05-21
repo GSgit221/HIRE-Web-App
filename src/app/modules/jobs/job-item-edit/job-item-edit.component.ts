@@ -65,6 +65,7 @@ export class JobItemEditComponent implements OnInit {
 
     place: any;
     inputAddress: string;
+    selectedJob: string;
     locationOptions: any;
     isJobOwner = false;
     msgs: Message[] = [];
@@ -168,6 +169,7 @@ export class JobItemEditComponent implements OnInit {
         if (this.job.description && this.job.requirements && this.job.job_role) {
             this.disableDropdown = true;
             this.disableEdit = true;
+            this.selectedJob = this.job.job_role;
         }
         this.initForms();
         // Get current user
@@ -216,6 +218,7 @@ export class JobItemEditComponent implements OnInit {
     onChangeJob(event) {
         this.str_array = [];
         this.req_str_array = [];
+        this.selectedJob = event.value;
         const job_des = this.descriptions.filter((x) => x.Role === event.value);
         console.log(job_des);
         const res = job_des[0].Responsibilities.split('.');

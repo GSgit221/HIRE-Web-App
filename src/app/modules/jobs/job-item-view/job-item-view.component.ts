@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { environment } from '@env/environment';
 import { select, Store } from '@ngrx/store';
+import { ToastrService } from 'ngx-toastr';
 import { SelectItem } from 'primeng/api';
 
 import { Candidate } from '../../../core/models/candidate';
@@ -44,12 +45,14 @@ export class JobItemViewComponent implements OnInit {
     candidateIsDragged = false;
     draggedStage: any;
     href: any;
+    showTick = false;
 
     constructor(
         private router: Router,
         private fb: FormBuilder,
         private jobService: JobService,
         private candidateService: CandidateService,
+        private toastr: ToastrService,
         private store: Store<fromStore.State>
     ) {
         this.statusOptions = [{ label: 'LIVE', value: 'LIVE' }, { label: 'BUILD', value: 'BUILD' }];
@@ -96,7 +99,8 @@ export class JobItemViewComponent implements OnInit {
             this.setAppliedCanidates(this.candidates);
         });
         this.resumeThreshold = this.getJobResumeMatchingThreshold();
-        this.href = environment.appUrl + this.router.url;
+        // this.href = environment.appUrl + this.router.url;
+        this.href = 'https://' + environment.tenant + '.apply.hire.science/applications/' + this.job.id;
     }
 
     onJobStatusChange(item) {
@@ -105,6 +109,7 @@ export class JobItemViewComponent implements OnInit {
 
     copyURL(val: string) {
         console.log(val);
+        this.showTick = true;
         const selBox = document.createElement('textarea');
         selBox.style.position = 'fixed';
         selBox.style.left = '0';
@@ -116,6 +121,7 @@ export class JobItemViewComponent implements OnInit {
         selBox.select();
         document.execCommand('copy');
         document.body.removeChild(selBox);
+        this.toastr.success('The link has been copied to the dashboard.');
     }
 
     stageCandidates(stageName: string) {

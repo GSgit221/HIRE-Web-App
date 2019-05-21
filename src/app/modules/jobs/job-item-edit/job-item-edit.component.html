@@ -301,6 +301,7 @@
                                                 (onChange)="onChangeJob($event)"
                                                 [style]="{ width: '100%' }"
                                                 [filter]="true"
+                                                [(ngModel)]="selectedJob"
                                                 filterBy="label,value.role"
                                                 [editable]="disableEdit"
                                                 [disabled]="disableDropdown"
@@ -345,6 +346,7 @@
                                                 [style]="{ width: '100%' }"
                                                 [filter]="true"
                                                 filterBy="label,value.role"
+                                                [(ngModel)]="selectedJob"
                                                 [editable]="disableEdit"
                                                 [disabled]="disableDropdown"
                                             ></p-dropdown>

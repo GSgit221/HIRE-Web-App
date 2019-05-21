@@ -7,6 +7,7 @@ import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router
 import { MetaReducer, StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { storeFreeze } from 'ngrx-store-freeze';
+import { ToastrModule } from 'ngx-toastr';
 
 import { environment } from '@env/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -26,6 +27,7 @@ export const metaReducers: Array<MetaReducer<any>> = !environment.production ? [
         BrowserAnimationsModule,
         StoreModule.forRoot(reducers, { metaReducers }),
         StoreRouterConnectingModule,
+        ToastrModule.forRoot(),
         EffectsModule.forRoot(effects),
         !environment.production ? StoreDevtoolsModule.instrument() : []
     ],
