@@ -508,13 +508,13 @@ body p-selectbutton {
             }
 
             &.ui-state-active {
-                background: $dark-green;
+                background: $light-green;
                 outline: 0;
                 color: $white;
                 box-shadow: none !important;
 
                 &:hover {
-                    background: $dark-green;
+                    background: $light-green;
                 }
 
                 &:focus {
@@ -530,11 +530,11 @@ body p-selectbutton {
 
         .ui-button:nth-child(2) {
             &.ui-state-active {
-                background: $orange2;
+                background: $orange;
 
                 &:hover {
-                    background: $orange2 !important;
-                    border-color: $orange2 !important;
+                    background: $orange !important;
+                    border-color: $orange !important;
                 }
             }
         }
@@ -543,11 +543,11 @@ body p-selectbutton {
             border-radius: 0 5px 5px 0;
 
             &.ui-state-active {
-                background: $grey;
+                background: $red;
 
                 &:hover {
-                    background: $grey !important;
-                    border-color: $grey !important;
+                    background: $red !important;
+                    border-color: $red !important;
                 }
             }
         }
