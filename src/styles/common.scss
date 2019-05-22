@@ -763,6 +763,7 @@ body p-selectbutton {
         border: 0 !important;
     }
 }
+
 // Slider candidate-item
 .overall-rating {
     p-slider {
@@ -981,6 +982,10 @@ p-chips {
 .ui-inputtext.ui-state-focus,
 .ui-inputtext:focus {
     box-shadow: none;
+}
+
+.ui-chkbox .ui-chkbox-icon {
+    padding: 2px 0 0;
 }
 
 .job_desc {
