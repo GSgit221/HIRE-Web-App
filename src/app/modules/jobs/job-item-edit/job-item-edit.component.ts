@@ -259,8 +259,6 @@ export class JobItemEditComponent implements OnInit {
             is_remote: [''],
             job_type: [''],
             number_of_hires: [''],
-            education: [''],
-            experience: [''],
             salary: [''],
             salary_from: [''],
             salary_to: [''],
@@ -307,8 +305,6 @@ export class JobItemEditComponent implements OnInit {
             is_remote: [this.job.is_remote || false],
             job_type: [this.job.job_type, Validators.required],
             number_of_hires: [this.job.number_of_hires, Validators.required],
-            education: [this.job.education, Validators.required],
-            experience: [this.job.experience, Validators.required],
             salary_from: [this.job.salary_from],
             salary_to: [this.job.salary_to],
             // ConditionalValidator.validate(() => !this.job.single_salary, Validators.required)
