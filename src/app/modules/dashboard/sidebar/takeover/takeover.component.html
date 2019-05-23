@@ -1,7 +1,7 @@
 <div class="takeover" pTooltip="Takeover">
-    <span class="takeover-link" (click)="onToggle($event)"
+    <!-- <span class="takeover-link" (click)="onToggle($event)"
         ><img src="/assets/images/takeover.svg" alt="Takeover" width="20" height="20"
-    /></span>
+    /></span> -->
     <form class="search-block" [formGroup]="form" *ngIf="showList">
         <input type="text" class="form-input" (keyup)="onKeyup($event)" formControlName="search" #inputRef />
         <div class="users-list" *ngIf="_filteredUsers && _filteredUsers.length">

@@ -2,6 +2,38 @@
     <div class="logo" routerLink="/dashboard">
         <img src="/assets/images/hire-logo.svg" alt="HelloCrowd" width="67" height="26" />
     </div>
+    <a href="javascript:void(0);" style="margin-left: 85px;" (click)="myFunction()">&#9662;</a>
+    <li class="dropdown">
+        <div class="dropdown-content myDropdown" *ngIf="ShowMenu">
+            <a href="javascript:void(0);"
+                ><img
+                    src="/assets/images/Usersettings.svg"
+                    alt="Usersettings"
+                    width="40"
+                    height="15"
+                    style="margin-left: -10px;"
+                />User Settings</a
+            >
+            <a href="javascript:void(0)" routerLink="/auth/signout"
+                ><img
+                    src="/assets/images/Logout.svg"
+                    alt="Logout"
+                    width="40"
+                    height="15"
+                    style="margin-left: -10px;"
+                />Logout</a
+            >
+            <a href="javascript:void(0)" (click)="ShowTakeover = true"
+                ><img
+                    src="/assets/images/Takeover.svg"
+                    alt="Takeover"
+                    width="40"
+                    height="15"
+                    style="margin-left: -10px;"
+                />Takeover</a
+            >
+        </div>
+    </li>
     <div class="user-pic" *ngIf="user">
         <img [src]="user.icon_url_small" *ngIf="user.icon_url_small" alt="" />
         <span *ngIf="!user.icon_url_small">{{ user | initials }}</span>
@@ -121,7 +153,8 @@
         </div>
     </div>
 </div>
-<app-takeover *ngIf="user && user.type === 'superadmin'" [users]="users"></app-takeover>
-<div class="logout-link" pTooltip="Sign out" tooltipPosition="top" routerLink="/auth/signout">
+<app-takeover *ngIf="user && user.type === 'superadmin'" [users]="users" [enable]="ShowTakeover"></app-takeover>
+<!-- <app-takeover *ngIf="user && user.type === 'superadmin'" [users]="users"></app-takeover> -->
+<!-- <div class="logout-link" pTooltip="Sign out" tooltipPosition="top" routerLink="/auth/signout">
     <img src="/assets/images/logout.svg" alt="Logout" width="20" height="20" />
-</div>
+</div> -->

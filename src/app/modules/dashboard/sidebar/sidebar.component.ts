@@ -19,7 +19,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
     user: User;
     users: User[];
     settingsOpened = true;
-
+    ShowMenu: boolean = false;
+    ShowTakeover: boolean = false;
     constructor(private userService: UserService, private store: Store<fromStore.State>) {
         this.store.dispatch(new fromUsersActions.LoadUsers());
     }
@@ -50,6 +51,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
         }
         if (this.usersSubscription) {
             this.usersSubscription.unsubscribe();
+        }
+    }
+
+    myFunction(el) {
+        if (this.ShowMenu) {
+            this.ShowMenu = false;
+        } else {
+            this.ShowMenu = true;
         }
     }
 }

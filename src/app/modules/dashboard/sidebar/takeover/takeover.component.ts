@@ -31,7 +31,10 @@ export class TakeoverComponent implements OnInit {
         }
     }
     showList = false;
-
+    @Input('enable')
+    set _enable(value: boolean) {
+        this.showList = value;
+    }
     constructor(
         private elRef: ElementRef,
         private fb: FormBuilder,
