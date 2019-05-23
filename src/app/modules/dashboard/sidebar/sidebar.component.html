@@ -2,10 +2,10 @@
     <div class="logo" routerLink="/dashboard">
         <img src="/assets/images/hire-logo.svg" alt="HelloCrowd" width="67" height="26" />
     </div>
-    <a href="javascript:void(0);" style="margin-left: 85px;" (click)="myFunction()">&#9662;</a>
+    <div style="margin-left: 85px; cursor: pointer;" (click)="onToggleDropdown()">&#9662;</div>
     <li class="dropdown">
-        <div class="dropdown-content myDropdown" *ngIf="ShowMenu">
-            <a href="javascript:void(0);"
+        <div class="dropdown-content myDropdown" *ngIf="showMenu">
+            <a href="#"
                 ><img
                     src="/assets/images/Usersettings.svg"
                     alt="Usersettings"
@@ -14,7 +14,7 @@
                     style="margin-left: -10px;"
                 />User Settings</a
             >
-            <a href="javascript:void(0)" routerLink="/auth/signout"
+            <a href="#" routerLink="/auth/signout"
                 ><img
                     src="/assets/images/Logout.svg"
                     alt="Logout"
@@ -23,7 +23,7 @@
                     style="margin-left: -10px;"
                 />Logout</a
             >
-            <a href="javascript:void(0)" (click)="ShowTakeover = true"
+            <a href="#" (click)="showTakeover = true"
                 ><img
                     src="/assets/images/Takeover.svg"
                     alt="Takeover"
@@ -153,7 +153,7 @@
         </div>
     </div>
 </div>
-<app-takeover *ngIf="user && user.type === 'superadmin'" [users]="users" [enable]="ShowTakeover"></app-takeover>
+<app-takeover  *ngIf="user && user.type === 'superadmin'"  [users]="users" [enable]="showTakeover"></app-takeover>
 <!-- <app-takeover *ngIf="user && user.type === 'superadmin'" [users]="users"></app-takeover> -->
 <!-- <div class="logout-link" pTooltip="Sign out" tooltipPosition="top" routerLink="/auth/signout">
     <img src="/assets/images/logout.svg" alt="Logout" width="20" height="20" />
