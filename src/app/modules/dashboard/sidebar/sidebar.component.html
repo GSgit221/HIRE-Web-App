@@ -2,38 +2,19 @@
     <div class="logo" routerLink="/dashboard">
         <img src="/assets/images/hire-logo.svg" alt="HelloCrowd" width="67" height="26" />
     </div>
-    <div style="margin-left: 85px; cursor: pointer;" (click)="onToggleDropdown()">&#9662;</div>
-    <li class="dropdown">
-        <div class="dropdown-content myDropdown" *ngIf="showMenu">
-            <a href="#"
-                ><img
-                    src="/assets/images/Usersettings.svg"
-                    alt="Usersettings"
-                    width="40"
-                    height="15"
-                    style="margin-left: -10px;"
-                />User Settings</a
-            >
-            <a href="#" routerLink="/auth/signout"
-                ><img
-                    src="/assets/images/Logout.svg"
-                    alt="Logout"
-                    width="40"
-                    height="15"
-                    style="margin-left: -10px;"
-                />Logout</a
-            >
-            <a href="#" (click)="showTakeover = true"
-                ><img
-                    src="/assets/images/Takeover.svg"
-                    alt="Takeover"
-                    width="40"
-                    height="15"
-                    style="margin-left: -10px;"
-                />Takeover</a
-            >
-        </div>
-    </li>
+    <button class="triangle-btn" #toggleButton (click)="onToggleDropdown()">&#9662;</button>
+    <div class="dropdown-content myDropdown" *ngIf="showMenu">
+        <a
+            ><img src="/assets/images/Usersettings.svg" alt="Usersettings" width="40" height="15" class="svg-img" />User
+            Settings</a
+        >
+        <a routerLink="/auth/signout"
+            ><img src="/assets/images/Logout.svg" alt="Logout" width="40" height="15" class="svg-img" />Logout</a
+        >
+        <a (click)="showTakeover = true"
+            ><img src="/assets/images/Takeover.svg" alt="Takeover" width="40" height="15" class="svg-img" />Takeover</a
+        >
+    </div>
     <div class="user-pic" *ngIf="user">
         <img [src]="user.icon_url_small" *ngIf="user.icon_url_small" alt="" />
         <span *ngIf="!user.icon_url_small">{{ user | initials }}</span>
@@ -153,7 +134,7 @@
         </div>
     </div>
 </div>
-<app-takeover  *ngIf="user && user.type === 'superadmin'"  [users]="users" [enable]="showTakeover"></app-takeover>
+<app-takeover *ngIf="user && user.type === 'superadmin'" [users]="users" [enable]="showTakeover"></app-takeover>
 <!-- <app-takeover *ngIf="user && user.type === 'superadmin'" [users]="users"></app-takeover> -->
 <!-- <div class="logout-link" pTooltip="Sign out" tooltipPosition="top" routerLink="/auth/signout">
     <img src="/assets/images/logout.svg" alt="Logout" width="20" height="20" />

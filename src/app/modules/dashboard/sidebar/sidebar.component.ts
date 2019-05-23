@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 
@@ -21,11 +21,18 @@ export class SidebarComponent implements OnInit, OnDestroy {
     settingsOpened = true;
     showMenu: boolean = false;
     showTakeover: boolean = false;
-    constructor(private userService: UserService, private store: Store<fromStore.State>) {
+    @ViewChild('toggleButton') toggleButton: ElementRef;
+    @ViewChild('myDropdown') menu: ElementRef;
+    constructor(private userService: UserService, private store: Store<fromStore.State>, private renderer: Renderer2) {
         this.store.dispatch(new fromUsersActions.LoadUsers());
     }
 
     ngOnInit() {
+        this.renderer.listen('window', 'click', (e: Event) => {
+            if (e.target !== this.toggleButton.nativeElement) {
+                this.showMenu = false;
+            }
+        });
         this.userSubscription = this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
             this.user = user;
             if (this.user) {
@@ -55,10 +62,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
 
     onToggleDropdown() {
-        if (this.showMenu) {
-            this.showMenu = false;
-        } else {
-            this.showMenu = true;
-        }
+        this.showMenu = !this.showMenu;
     }
 }
