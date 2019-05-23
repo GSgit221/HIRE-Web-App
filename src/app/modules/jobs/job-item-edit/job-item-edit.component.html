@@ -209,7 +209,14 @@
                                         <label for="" class="form-block-label" *ngIf="!job?.single_salary">From</label>
                                         <label for="" class="form-block-label" *ngIf="job?.single_salary">Salary</label>
                                         <div class="input-block">
-                                            <input type="text" class="form-input pl30" formControlName="salary_from" />
+                                            <input
+                                                type="text"
+                                                class="form-input pl30"
+                                                currencyMask
+                                                formControlName="salary_from"
+                                                maxlength="20"
+                                                [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                                            />
                                             <div class="currency-symbol">R</div>
                                         </div>
                                     </div>
@@ -218,7 +225,14 @@
                                     <div class="input-block">
                                         <label for="" class="form-block-label">To</label>
                                         <div class="input-block">
-                                            <input type="text" class="form-input pl30" formControlName="salary_to" />
+                                            <input
+                                                type="text"
+                                                class="form-input pl30"
+                                                currencyMask
+                                                formControlName="salary_to"
+                                                [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                                                maxlength="20"
+                                            />
                                             <div class="currency-symbol">R</div>
                                         </div>
                                     </div>

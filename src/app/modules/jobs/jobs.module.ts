@@ -12,6 +12,7 @@ import { JobItemComponent } from './job-item/job-item.component';
 import { JobsListComponent } from './jobs-list/jobs-list.component';
 import { NewCandidateItemComponent } from './new-candidate-item/new-candidate-item.component';
 import { StageSettingsComponent } from './stages/stage-settings/stage-settings.component';
+import { NgxCurrencyModule } from 'ngx-currency';
 
 const routes: Routes = [
     {
@@ -44,7 +45,7 @@ const routes: Routes = [
         CandidateItemFeedbackComponent,
         CandidateItemTimelineComponent
     ],
-    imports: [SharedModule, RouterModule.forChild(routes)],
+    imports: [SharedModule, RouterModule.forChild(routes), NgxCurrencyModule],
     exports: [RouterModule]
 })
 export class JobsModule {}
