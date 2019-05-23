@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgxCurrencyModule } from 'ngx-currency';
 
 import { SharedModule } from '../shared/shared.module';
 import { CandidateItemFeedbackComponent } from './candidate-item-feedback/candidate-item-feedback.component';
@@ -12,7 +13,6 @@ import { JobItemComponent } from './job-item/job-item.component';
 import { JobsListComponent } from './jobs-list/jobs-list.component';
 import { NewCandidateItemComponent } from './new-candidate-item/new-candidate-item.component';
 import { StageSettingsComponent } from './stages/stage-settings/stage-settings.component';
-import { NgxCurrencyModule } from 'ngx-currency';
 
 const routes: Routes = [
     {
