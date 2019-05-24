@@ -161,6 +161,7 @@ export class StageSettingsComponent implements OnInit {
         this.jobService.removeStage(this.jobId, this.stageId).subscribe(
             () => {
                 this.contentLoading = false;
+                this.router.navigateByUrl('dashboard/jobs/' + this.jobId);
             },
             (error) => {
                 console.log(error);
