@@ -640,6 +640,7 @@
                                     placeholder="Add to this position"
                                     (onChange)="onChangeUser($event)"
                                     [style]="{ width: '100%' }"
+                                    [(ngModel)]="selectedOwner"
                                 ></p-dropdown>
                             </div>
                             <div class="input-block" *ngIf="!recruitersDefaults.length">
