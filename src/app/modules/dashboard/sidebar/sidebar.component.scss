@@ -37,30 +37,6 @@ a {
     &:hover {
         cursor: pointer;
     }
-
-    // .hc-logo {
-    //     display: block;
-    //     width: 30px;
-    //     height: 30px;
-    //     margin: 0;
-    // }
-
-    // .separator {
-    //     display: block;
-    //     font-size: 20px;
-    //     line-height: 30px;
-    //     font-weight: 500;
-    //     color: $pink;
-    //     margin: 0 5px;
-    // }
-
-    // .text-logo {
-    //     display: block;
-    //     font-size: 20px;
-    //     line-height: 30px;
-    //     font-weight: 500;
-    //     margin: 0;
-    // }
 }
 
 .user-pic {
@@ -68,7 +44,6 @@ a {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    margin-left: auto;
     overflow: hidden;
 
     img {
@@ -244,13 +219,6 @@ a {
         cursor: pointer;
     }
 }
-li {
-    float: left;
-}
-
-li.dropdown {
-    display: block;
-}
 
 .dropdown-content {
     display: block;
@@ -263,16 +231,19 @@ li.dropdown {
     margin-top: 75px;
     border-radius: 3px;
     z-index: 9;
+
     a {
         color: black;
         padding: 7.1px 12px 8px;
         text-decoration: none;
         display: block;
         text-align: left;
+
         &:hover {
             background-color: #ff2d55;
             color: #ffffff;
             border-radius: 3px;
+
             img {
                 filter: brightness(0) invert(1);
             }
@@ -287,13 +258,15 @@ li.dropdown {
 .dropdown-width {
     height: 70px !important;
 }
+
 .triangle-btn {
-    margin-left: 82px;
+    margin-left: auto;
     background: transparent;
     color: #ffffff;
     border: none;
     outline: none !important;
 }
+
 .svg-img {
     margin-left: -10px;
 }

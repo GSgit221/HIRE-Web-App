@@ -3,7 +3,6 @@ import { CanActivateChild } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { catchError, filter, switchMap, take, tap } from 'rxjs/operators';
-import { UtilitiesService } from './../services/utilities.service';
 
 import * as fromStore from '../../store';
 import * as fromUserReducer from '../../store/reducers/user.reducer';
@@ -29,7 +28,7 @@ export class UserHasAccessGuard implements CanActivateChild {
                         return of(false);
                     }
                 } else {
-                    console.log('User has access to this route');
+                    // console.log('User has access to this route');
                     return of(true);
                 }
             }),

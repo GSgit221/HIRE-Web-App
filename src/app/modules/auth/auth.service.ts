@@ -106,6 +106,7 @@ export class AuthService {
     logout() {
         const tenant = this.utilities.getTenant();
         this.cookie.delete(`${tenant}_access_token`, '/', environment.cookieDomain);
+        // this.cookie.delete(`${tenant}_access_token`, '/', environment.applyCookieDomain);
     }
 
     isLoggedIn() {
