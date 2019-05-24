@@ -307,6 +307,20 @@ p-slider {
         .ui-slider-range {
             background: $pink;
             box-shadow: none;
+            position: relative;
+
+            &:after {
+                content: '';
+                display: block;
+                width: 4px;
+                height: 4px;
+                background: $pink;
+                position: absolute;
+                border-radius: 50%;
+                left: 100%;
+                top: 0;
+                margin: -1px 0 0 -2px;
+            }
         }
 
         .ui-slider-handle {
