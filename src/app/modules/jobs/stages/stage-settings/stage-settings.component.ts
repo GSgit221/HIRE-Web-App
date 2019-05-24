@@ -34,6 +34,10 @@ export class StageSettingsComponent implements OnInit {
         { label: '14 days', value: 14 },
         { label: '30 days', value: 30 }
     ];
+    assessmentTypeOptions = [
+        { label: 'Personality Assessment', value: 'assessment' },
+        { label: 'One Way Video Interview', value: 'video-interview' }
+    ];
 
     constructor(
         private jobService: JobService,
@@ -72,6 +76,7 @@ export class StageSettingsComponent implements OnInit {
                     }
                     this.stageSettingsForm = this.fb.group({
                         title: [this.stage.title, Validators.required],
+                        assessment: this.fb.array([this.initAssessmentGroup()]),
                         acceptance_criteria: [this.stage.acceptance_criteria],
                         automatically_progress_meeting_criteria: [
                             this.stage.automatically_progress_meeting_criteria || false
@@ -150,6 +155,20 @@ export class StageSettingsComponent implements OnInit {
         );
     }
 
+    onDelete() {
+        console.log('onDelete');
+        this.contentLoading = true;
+        this.jobService.removeStage(this.jobId, this.stageId).subscribe(
+            () => {
+                this.contentLoading = false;
+            },
+            (error) => {
+                console.log(error);
+                this.contentLoading = false;
+            }
+        );
+    }
+
     get actions(): FormArray {
         return this.stageSettingsForm && (this.stageSettingsForm.controls.actions as FormArray);
     }
@@ -190,5 +209,19 @@ export class StageSettingsComponent implements OnInit {
 
     onBackClick() {
         this.router.navigateByUrl(`dashboard/jobs/${this.jobId}`);
+    }
+
+    initAssessmentGroup() {
+        return this.fb.group({
+            type: ['', Validators.required]
+        });
+    }
+    onAddAssessment() {
+        if (this.stageSettingsForm.get('assessment').valid) {
+            const control = this.stageSettingsForm.controls['assessment'] as FormArray;
+            control.push(this.initAssessmentGroup());
+        } else {
+            this.formHelper.markFormGroupTouched(this.stageSettingsForm);
+        }
     }
 }
