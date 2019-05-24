@@ -33,6 +33,11 @@
         padding: 5px 0;
     }
 }
+.form-content-holder.assessment-holder {
+    .form-content-box {
+        margin-bottom: 20px;
+    }
+}
 .form-content-box.add-assessment {
     display: flex;
     align-items: center;

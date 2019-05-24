@@ -7,4 +7,5 @@ export class Stage {
     automatically_progress_meeting_criteria: boolean;
     order?: number;
     actions?: any;
+    assessment?: any[];
 }

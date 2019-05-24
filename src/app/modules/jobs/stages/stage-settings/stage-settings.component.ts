@@ -56,6 +56,7 @@ export class StageSettingsComponent implements OnInit {
             (stage: Stage) => {
                 this.contentLoading = false;
                 this.stage = stage;
+                console.log(this.stage);
                 if (this.stage.id === 'applied') {
                     this.stageSettingsForm = this.fb.group({
                         resume_matching_threshold: [this.stage.resume_matching_threshold],
@@ -76,13 +77,14 @@ export class StageSettingsComponent implements OnInit {
                     }
                     this.stageSettingsForm = this.fb.group({
                         title: [this.stage.title, Validators.required],
-                        assessment: this.fb.array([this.initAssessmentGroup()]),
+                        assessment: this.fb.array([]),
                         acceptance_criteria: [this.stage.acceptance_criteria],
                         automatically_progress_meeting_criteria: [
                             this.stage.automatically_progress_meeting_criteria || false
                         ],
                         actions: this.fb.array(actions)
                     });
+                    this.stage.assessment ? this.populateAssessment(this.stage.assessment) : this.initAssessmentGroup();
                     this.questionnaireService.getAll().subscribe(
                         (response: Questionnaire[]) => {
                             this.contentLoading = false;
@@ -213,14 +215,27 @@ export class StageSettingsComponent implements OnInit {
     }
 
     initAssessmentGroup() {
-        return this.fb.group({
-            type: ['', Validators.required]
+        const control = this.stageSettingsForm.controls['assessment'] as FormArray;
+        control.push(
+            this.fb.group({
+                type: ['', Validators.required]
+            })
+        );
+    }
+
+    populateAssessment(assessment) {
+        const control = this.stageSettingsForm.controls['assessment'] as FormArray;
+        assessment.forEach((c) => {
+            control.push(
+                this.fb.group({
+                    type: [c.type, Validators.required]
+                })
+            );
         });
     }
     onAddAssessment() {
         if (this.stageSettingsForm.get('assessment').valid) {
-            const control = this.stageSettingsForm.controls['assessment'] as FormArray;
-            control.push(this.initAssessmentGroup());
+            this.initAssessmentGroup();
         } else {
             this.formHelper.markFormGroupTouched(this.stageSettingsForm);
         }

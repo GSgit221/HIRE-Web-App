@@ -96,7 +96,7 @@
                     <strong class="title">Select an Assessment</strong>
                     <p>Select from the list of assessments that the candidate should complete at this stage.</p>
                 </div>
-                <div class="form-content-holder" formArrayName="assessment">
+                <div class="form-content-holder assessment-holder" formArrayName="assessment">
                     <div
                         class="form-content-box"
                         *ngFor="let language of stageSettingsForm.controls.assessment.controls; let i = index"
