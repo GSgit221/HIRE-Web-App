@@ -35,7 +35,7 @@ export class StageSettingsComponent implements OnInit {
         { label: '30 days', value: 30 }
     ];
     assessmentTypeOptions = [
-        { label: 'Personality Assessment', value: 'assessment' },
+        { label: 'Personality Assessment', value: 'personality' },
         { label: 'One Way Video Interview', value: 'video-interview' }
     ];
 

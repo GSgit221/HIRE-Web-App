@@ -45,14 +45,22 @@ export class CandidateItemFeedbackComponent implements OnInit {
         private utilities: UtilitiesService
     ) {
         // Get users
-        this.userService.getUsers().subscribe((users: User[]) => {
-            this.users = users;
-        });
+        this.contentLoading = true;
+        this.userService.getUsers().subscribe(
+            (users: User[]) => {
+                this.users = users;
+                this.contentLoading = false;
+            },
+            (err) => {
+                this.contentLoading = false;
+            }
+        );
     }
 
     ngOnInit() {
         this.initForm();
         if (this.feedback && this.feedback[this.jobId]) {
+            this.view = 'results';
             this.positionSpecificCategories = this.feedback[this.jobId].position_rating;
         }
         this.showPositionRating = this.job.show_position_rating ? true : false;
@@ -152,10 +160,12 @@ export class CandidateItemFeedbackComponent implements OnInit {
         // console.log(this.positionSpecificCategories);
     }
     getUserData(id, field) {
-        const userData: any = this.users.find((c) => {
-            return c.id === id;
-        });
-        return userData[field];
+        if (this.users) {
+            const userData: any = this.users.find((c) => {
+                return c.id === id;
+            });
+            return userData[field];
+        }
     }
     calculateOverallRating(mark) {
         const length = Object.keys(this.feedback[this.jobId].rating).length;
