@@ -45,7 +45,8 @@ export class JobItemViewComponent implements OnInit {
     candidateIsDragged = false;
     draggedStage: any;
     href: any;
-    showTick = false;
+    showTick: boolean = false;
+    showCopyBoard: boolean = true;
 
     constructor(
         private router: Router,
@@ -110,6 +111,11 @@ export class JobItemViewComponent implements OnInit {
     copyURL(val: string) {
         console.log(val);
         this.showTick = true;
+        this.showCopyBoard = false;
+        setTimeout(() => {
+            this.showCopyBoard = true;
+            this.showTick = false;
+        }, 1500);
         const selBox = document.createElement('textarea');
         selBox.style.position = 'fixed';
         selBox.style.left = '0';

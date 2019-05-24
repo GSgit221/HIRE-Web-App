@@ -1,7 +1,7 @@
 <div class="container fixed-width-container mh500">
     <div class="title-block">
         <h1 class="page-title">Jobs</h1>
-        <div class="controls-block">
+        <div class="controls-block" *ngIf="list.length">
             <app-list-filter
                 allItemsText="My Jobs"
                 [filter]="filter"

@@ -5,14 +5,20 @@
     <button class="triangle-btn" #toggleButton (click)="onToggleDropdown()">&#9662;</button>
     <div class="dropdown-content myDropdown" *ngIf="showMenu">
         <a
-            ><img src="/assets/images/Usersettings.svg" alt="Usersettings" width="40" height="15" class="svg-img" />User
+            ><img src="/assets/images/usersettings.svg" alt="Usersettings" width="40" height="15" class="svg-img" />User
             Settings</a
         >
         <a routerLink="/auth/signout"
-            ><img src="/assets/images/Logout.svg" alt="Logout" width="40" height="15" class="svg-img" />Logout</a
+            ><img src="/assets/images/logout-icon.svg" alt="Logout" width="40" height="15" class="svg-img" />Logout</a
         >
         <a (click)="showTakeover = true"
-            ><img src="/assets/images/Takeover.svg" alt="Takeover" width="40" height="15" class="svg-img" />Takeover</a
+            ><img
+                src="/assets/images/takeover-icon.svg"
+                alt="Takeover"
+                width="40"
+                height="15"
+                class="svg-img"
+            />Takeover</a
         >
     </div>
     <div class="user-pic" *ngIf="user">
