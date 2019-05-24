@@ -71,6 +71,7 @@ export class JobItemEditComponent implements OnInit {
     msgs: Message[] = [];
     str_array = [];
     req_str_array = [];
+    selectedOwner: any;
 
     constructor(
         private route: ActivatedRoute,
@@ -182,6 +183,15 @@ export class JobItemEditComponent implements OnInit {
                 this.hiringForm.patchValue({ default_email_name: this.job.default_email_name, owner: user.id });
             }
         });
+
+        //default selected job owner
+        this.selectedOwner = this.job.default_email_name == this.jobOwner ? this.user.id : this.job.default_email_name;
+
+        this.recruitersDefaults.push({
+            label: `${this.user.first_name} ${this.user.last_name}`,
+            value: `${this.user.id}`
+        });
+        this.hiringForm.patchValue({ default_email_name: this.user.id });
 
         // Get list of users
         this.store.pipe(select(fromSelectors.getUsersEntities)).subscribe((users: User[]) => {
