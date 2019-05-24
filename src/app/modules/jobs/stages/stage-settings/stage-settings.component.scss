@@ -33,7 +33,20 @@
         padding: 5px 0;
     }
 }
-
+.form-content-box.add-assessment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0 0;
+    padding: 9px;
+    cursor: pointer;
+    span {
+        margin: 0 10px 0 0;
+        font-size: 23px;
+        font-weight: 300;
+        display: inline-block;
+    }
+}
 .list-searching {
     display: flex;
     flex-wrap: wrap;
@@ -106,5 +119,18 @@
         img {
             display: block;
         }
+    }
+}
+.btn-remove {
+    width: 36px;
+    height: 36px;
+    border-radius: 3px;
+    background-color: #d8d8d8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+        width: 11px;
+        height: 13px;
     }
 }

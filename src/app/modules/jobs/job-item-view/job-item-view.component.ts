@@ -277,7 +277,11 @@ export class JobItemViewComponent implements OnInit {
         this.candidateIsDragged = false;
         const candidate = event.dragData;
         const candidateIndex = this.candidates.findIndex((c) => c.id === candidate.id);
+        if (!this.candidates[candidateIndex].stage) {
+            this.candidates[candidateIndex].stage = { [this.job.id]: 'applied' };
+        }
         const stageFromId = this.candidates[candidateIndex].stage[this.job.id] || 'applied';
+
         const stageToId = stageId;
 
         if (stageFromId !== stageToId) {

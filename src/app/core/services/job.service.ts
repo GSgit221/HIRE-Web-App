@@ -142,6 +142,10 @@ export class JobService {
         return this.http.put(`${this.baseURL}/jobs/${jobId}/stages/${stageId}`, { data });
     }
 
+    removeStage(jobId: string, stageId: string) {
+        return this.http.delete(`${this.baseURL}/jobs/${jobId}/stages/${stageId}`);
+    }
+
     updateStages(jobId: string, data) {
         return this.http.put(`${this.baseURL}/jobs/${jobId}/stages/`, { data });
     }
