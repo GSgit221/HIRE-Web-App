@@ -12,6 +12,7 @@ import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { CalendarModule } from 'primeng/calendar';
+import { ChartModule } from 'primeng/chart';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ChipsModule } from 'primeng/chips';
 import { DropdownModule } from 'primeng/dropdown';
@@ -100,7 +101,8 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         Ng2TelInputModule,
         AutoCompleteModule,
         RadioButtonModule,
-        CalendarModule
+        CalendarModule,
+        ChartModule
     ],
     exports: [
         LoaderComponent,
@@ -146,7 +148,8 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         Ng2TelInputModule,
         AutoCompleteModule,
         RadioButtonModule,
-        CalendarModule
+        CalendarModule,
+        ChartModule
     ]
 })
 export class SharedModule {}

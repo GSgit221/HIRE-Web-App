@@ -140,6 +140,9 @@
             background: $red;
             position: relative;
             z-index: 2;
+            &.grey-bg {
+                background: #a8abad;
+            }
         }
 
         &:after {
@@ -530,5 +533,161 @@
 
     p {
         margin: 0;
+    }
+}
+
+.personality-profile-holder {
+    display: flex;
+    margin: 20px 0 20px;
+    .personality-profile-graph {
+        flex: 1;
+    }
+    .personality-profile-scores {
+        flex: 0 0 150px;
+    }
+    .score-chart {
+        margin: 0 0px 5px 0;
+    }
+    .score-name {
+        margin: 0 0 7px 0;
+        font-size: 16px;
+    }
+    .score-item {
+        display: block;
+    }
+}
+.interview-holder {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    .item {
+        flex: 0 0 30%;
+        margin: 0 0 20px 0;
+        background: #000000;
+        color: $white;
+        height: 129px;
+        position: relative;
+        font-size: 15px;
+        &:hover {
+            .btn-view {
+                z-index: 1;
+                opacity: 1;
+            }
+        }
+    }
+    .btn-view {
+        width: 130px;
+        height: 36px;
+        border-radius: 3px;
+        background-color: #ffffff;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        color: $pink;
+        font-weight: normal;
+        font-size: 13px;
+        opacity: 0;
+        z-index: -1;
+        transition: 0.25s;
+    }
+    .interview-question {
+        position: absolute;
+        font-weight: bold;
+        left: 12px;
+        bottom: 9px;
+    }
+    .interview-rate {
+        position: absolute;
+        left: 54px;
+        bottom: 9px;
+        svg {
+            margin: 0 4px 0 0;
+        }
+    }
+}
+
+.backdrop {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 5;
+}
+.video-score-modal {
+    width: 1106px;
+    height: 435px;
+    border-radius: 3px;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    font-size: 15px;
+    position: absolute;
+    z-index: 6;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    .btn-close {
+        position: absolute;
+        right: 17px;
+        top: 17px;
+    }
+    .inner {
+        display: flex;
+        justify-content: space-between;
+        padding: 60px 50px 60px 44px;
+    }
+    .left-col {
+        flex: 0 0 47%;
+    }
+    .question {
+        margin: 0;
+        min-height: 100px;
+    }
+    .right-col {
+        flex: 0 0 48%;
+    }
+    h4 {
+        font-size: 16px;
+        margin: 0 0 20px;
+    }
+    .evaluate-question {
+        margin: 0 0 55px;
+        display: flex;
+        .star {
+            margin: 0 5px 0 0;
+            cursor: pointer;
+            &:hover {
+                svg g {
+                    fill: #455565;
+                }
+            }
+            &.active svg g {
+                fill: #455565;
+            }
+        }
+    }
+    .next-question {
+        width: 137px;
+        height: 36px;
+        border-radius: 3px;
+        background-color: $pink;
+        text-align: center;
+        font-weight: normal;
+        font-size: 13px;
+        color: $white;
+        margin: 0 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        svg {
+            margin: 0 5px 0 15px;
+        }
+    }
+    .video-block {
+        border: solid 1px #979797;
+        background-color: #d8d8d8;
+        height: 100%;
     }
 }

@@ -141,6 +141,101 @@
                             </ng-container>
                         </div>
                     </div>
+                    <h3>Personality Profile</h3>
+                    <div class="personality-profile-holder">
+                        <div class="personality-profile-graph">
+                            <p-chart type="radar" [options]="radar_chart_options" [data]="radar_chart_data"></p-chart>
+                        </div>
+                        <div class="personality-profile-scores scores">
+                            <div class="score-item" *ngFor="let score of personalityProfileScores">
+                                <div class="score-name">{{ score.title }}</div>
+                                <div class="score-chart">
+                                    <div
+                                        class="line"
+                                        [ngStyle]="{ width: score.value + '%' }"
+                                        [ngClass]="{
+                                            'green-bg': score.value >= 60,
+                                            'orange-bg': score.value >= 50 && score.value < 60,
+                                            'red-bg': score.value < 50
+                                        }"
+                                    ></div>
+                                </div>
+                                <div class="score-chart">
+                                    <div class="line grey-bg" [ngStyle]="{ width: score.value + '%' }"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>One Way Interview</h3>
+                    <div class="interview-holder">
+                        <div class="item">
+                            <button class="btn btn-view" (click)="onViewAndRate()">View and Rate</button>
+                            <div class="interview-question">Q1</div>
+                            <div class="interview-rate">
+                                <svg
+                                    width="14px"
+                                    height="14px"
+                                    viewBox="0 0 14 14"
+                                    version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                                >
+                                    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <g id="4.5-star" transform="translate(-40.000000, 0.000000)" fill="#4CD964">
+                                            <polygon
+                                                id="Path"
+                                                points="47 0 44.972656 4.804688 40 5.347656 43.71875 8.859375 42.671875 14 47 11.363281 51.328125 14 50.28125 8.859375 54 5.347656 49.027344 4.804688"
+                                            ></polygon>
+                                        </g>
+                                    </g>
+                                </svg>
+                                <svg
+                                    width="14px"
+                                    height="14px"
+                                    viewBox="0 0 14 14"
+                                    version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                                >
+                                    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <g id="4.5-star" transform="translate(-40.000000, 0.000000)" fill="#ff3b30">
+                                            <polygon
+                                                id="Path"
+                                                points="47 0 44.972656 4.804688 40 5.347656 43.71875 8.859375 42.671875 14 47 11.363281 51.328125 14 50.28125 8.859375 54 5.347656 49.027344 4.804688"
+                                            ></polygon>
+                                        </g>
+                                    </g>
+                                </svg>
+                                <svg
+                                    width="14px"
+                                    height="14px"
+                                    viewBox="0 0 14 15"
+                                    version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                                >
+                                    <g id="Symbols" stroke="none" stroke-width="0.5" fill="none" fill-rule="evenodd">
+                                        <g id="3.5-star" transform="translate(-40.000000, 0.000000)" stroke="#D8D8D8">
+                                            <polygon
+                                                id="Path"
+                                                points="47 0 44.972656 4.804688 40 5.347656 43.71875 8.859375 42.671875 14 47 11.363281 51.328125 14 50.28125 8.859375 54 5.347656 49.027344 4.804688"
+                                            ></polygon>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <button class="btn btn-view" (click)="onViewAndRate()">View and Rate</button>
+                            <div class="interview-question">Q2</div>
+                            <div class="interview-rate"></div>
+                        </div>
+                        <div class="item">
+                            <button class="btn btn-view" (click)="onViewAndRate()">View and Rate</button>
+                            <div class="interview-question">Q3</div>
+                            <div class="interview-rate"></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="content-section" *ngIf="activeSection === 'details'">
                     <div class="wrap-block" *ngIf="candidate.executive_summary">
@@ -425,3 +520,103 @@
         </div>
     </div>
 </div>
+
+<ng-container *ngIf="showVideoScore">
+    <div class="video-score-modal">
+        <button class="btn btn-close" (click)="onCloseModal()">
+            <svg
+                width="20px"
+                height="20px"
+                viewBox="0 0 12 12"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+            >
+                <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g
+                        id="Add-Job---Team"
+                        transform="translate(-870.000000, -485.000000)"
+                        fill="#455565"
+                        fill-rule="nonzero"
+                    >
+                        <g id="icons8-delete_sign" transform="translate(870.000000, 485.000000)">
+                            <polygon
+                                id="Shape"
+                                points="0.75 0.042969 0.042969 0.75 0.398438 1.101563 5.292969 6 0.042969 11.25 0.75 11.957031 6 6.707031 10.894531 11.605469 11.25 11.957031 11.957031 11.25 11.605469 10.894531 6.707031 6 11.957031 0.75 11.25 0.042969 6 5.292969 1.101563 0.398438"
+                            ></polygon>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </button>
+        <div class="inner">
+            <div class="left-col">
+                <ng-container *ngFor="let question of listofQuestions">
+                    <ng-container *ngIf="question.current">
+                        <h4>Question {{ question.index + 1 }}</h4>
+                        <div class="question">{{ question.question }}</div>
+                        <h4>My Rating</h4>
+                        <div class="evaluate-question">
+                            <div
+                                class="star"
+                                *ngFor="let star of stars; let i = index"
+                                (mouseenter)="onHoverStars(i)"
+                                (mouseleave)="onClearStars()"
+                                (click)="onEvaluateQuestion(i)"
+                                [ngClass]="{ active: star.active || star.hover }"
+                            >
+                                <svg
+                                    width="39px"
+                                    height="37px"
+                                    viewBox="0 0 14 15"
+                                    version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                                >
+                                    <g id="Symbols" stroke="none" stroke-width="0.5" fill="none" fill-rule="evenodd">
+                                        <g id="3.5-star" transform="translate(-40.000000, 0.000000)" stroke="#455565">
+                                            <polygon
+                                                id="Path"
+                                                points="47 0 44.972656 4.804688 40 5.347656 43.71875 8.859375 42.671875 14 47 11.363281 51.328125 14 50.28125 8.859375 54 5.347656 49.027344 4.804688"
+                                            ></polygon>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                        </div>
+                        <button class="btn next-question" (click)="onNextQuestion(question.index)">
+                            Next question<svg
+                                width="8px"
+                                height="13px"
+                                viewBox="0 0 8 13"
+                                version="1.1"
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlns:xlink="http://www.w3.org/1999/xlink"
+                            >
+                                <g id="Vendor" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g
+                                        id="Signup---Enter-Email-Address-(Vendor)"
+                                        transform="translate(-182.000000, -609.000000)"
+                                        fill="#FFFFFF"
+                                    >
+                                        <g
+                                            id="icons8-expand2"
+                                            transform="translate(186.000000, 615.500000) rotate(-90.000000) translate(-186.000000, -615.500000) translate(179.500000, 611.500000)"
+                                        >
+                                            <polygon
+                                                id="Path"
+                                                points="0.726563 0.015625 0.023438 0.734375 6.5 7.074219 12.972656 0.734375 12.277344 0.015625 6.5 5.675781"
+                                            ></polygon>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </button>
+                    </ng-container>
+                </ng-container>
+            </div>
+            <div class="right-col"><div class="video-block"></div></div>
+        </div>
+    </div>
+    <div class="backdrop" (click)="onCloseModal()"></div>
+</ng-container>

@@ -33,6 +33,36 @@ export class CandidateItemComponent implements OnInit {
         CERTIFICATIONS: 'Certifications',
         MANAGEMENT_LEVEL: 'Management Level'
     };
+    personalityProfileScores = [
+        { title: 'Extroversion', value: 26, average: 40 },
+        { title: 'Agreeableness', value: 36, average: 50 },
+        { title: 'Openness', value: 46, average: 40 },
+        { title: 'Conscientiousness', value: 56, average: 40 },
+        { title: 'Neuroticism', value: 76, average: 40 }
+    ];
+    radar_chart_data: any;
+    radar_chart_options: any;
+    showVideoScore = false;
+    stars: any[] = [{ index: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
+    listofQuestions = [
+        {
+            question:
+                'What exites you about working for Dimension Data and it’s products and Services. What value will you be able to add?',
+            index: 0,
+            current: true
+        },
+        {
+            question:
+                '2What exites you about working for Dimension Data and it’s products and Services. What value will you be able to add?',
+            index: 1
+        },
+        {
+            question:
+                '3What exites you about working for Dimension Data and it’s products and Services. What value will you be able to add?',
+            index: 2
+        }
+    ];
+
     contentLoading = true;
     uploadQueue: any[] = [];
     uploadError: string;
@@ -93,6 +123,65 @@ export class CandidateItemComponent implements OnInit {
             'application/vnd.oasis.opendocument.text',
             'text/rtf'
         ];
+        this.radar_chart_data = {
+            labels: ['Extroversion', 'Agreeableness', 'Conscientiousness', 'Neuroticism', 'Openness'],
+            datasets: [
+                {
+                    label: 'Second Dataset',
+                    data: [28, 48, 40, 19, 86],
+                    fill: true,
+                    backgroundColor: 'rgba(76, 217, 100, 0.3)',
+                    borderColor: '#4cd964',
+                    borderWidth: 1,
+                    pointRadius: 0,
+                    pointHoverRadius: 0
+                },
+                {
+                    label: 'First Dataset',
+                    data: [50, 49, 50, 51, 50],
+                    fill: true,
+                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                    borderColor: '#e5e5ea',
+                    borderWidth: 1,
+                    pointRadius: 0,
+                    pointHoverRadius: 0
+                }
+            ]
+        };
+        this.radar_chart_options = {
+            scale: {
+                pointLabels: {
+                    fontSize: 15,
+                    fontColor: '#000000'
+                },
+                ticks: {
+                    beginAtZero: true,
+                    min: 0,
+                    fontColor: '#525f7f',
+                    backdropColor: 'transparent',
+                    userCallback: (label, index, labels) => {
+                        // if (Math.floor(label) === label) {
+                        //     return '3333dd';
+                        // }
+                        if (index === 1) {
+                            return 'LOW';
+                        } else if (index === 3) {
+                            return 'NEUTRAL';
+                        } else if (index === 5) {
+                            return 'HIGH';
+                        } else {
+                            return '';
+                        }
+                    }
+                }
+            },
+            legend: {
+                display: false,
+                labels: {
+                    fontColor: 'rgb(255, 99, 132)'
+                }
+            }
+        };
     }
 
     ngOnInit() {}
@@ -281,5 +370,41 @@ export class CandidateItemComponent implements OnInit {
                 console.error(error);
                 console.error('Error reading uploaded file');
             });
+    }
+
+    onViewAndRate() {
+        this.showVideoScore = true;
+    }
+    onCloseModal() {
+        this.showVideoScore = false;
+    }
+    onEvaluateQuestion(index) {
+        this.stars.forEach((s) => (s.active = false));
+        for (let i = 0; i <= index; i++) {
+            this.stars[i].active = true;
+        }
+    }
+    onNextQuestion(index) {
+        if (this.listofQuestions.length - 1 === index) {
+            this.onCloseModal();
+            this.listofQuestions.forEach((s) => (s.current = false));
+            this.listofQuestions[0].current = true;
+            this.stars.forEach((s) => (s.active = false));
+            return false;
+        }
+
+        this.listofQuestions[index].current = false;
+        this.listofQuestions[index + 1].current = true;
+
+        this.stars.forEach((s) => (s.active = false));
+    }
+    onHoverStars(index) {
+        this.stars.forEach((s) => (s.hover = false));
+        for (let i = 0; i <= index; i++) {
+            this.stars[i].hover = true;
+        }
+    }
+    onClearStars() {
+        this.stars.forEach((s) => (s.hover = false));
     }
 }
