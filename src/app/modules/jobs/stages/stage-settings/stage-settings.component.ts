@@ -39,6 +39,8 @@ export class StageSettingsComponent implements OnInit {
         { label: 'One Way Video Interview', value: 'video-interview' }
     ];
 
+    assessmentBenchmarkOptions = [{ label: 'Systems Engineer (JF5593)', value: 'system_engeneer' }];
+
     constructor(
         private jobService: JobService,
         private router: Router,
@@ -84,7 +86,7 @@ export class StageSettingsComponent implements OnInit {
                         ],
                         actions: this.fb.array(actions)
                     });
-                    this.stage.assessment ? this.populateAssessment(this.stage.assessment) : this.initAssessmentGroup();
+                    this.stage.assessment ? this.populateAssessment(this.stage.assessment) : this.addAssessmentGroup();
                     this.questionnaireService.getAll().subscribe(
                         (response: Questionnaire[]) => {
                             this.contentLoading = false;
@@ -214,28 +216,32 @@ export class StageSettingsComponent implements OnInit {
         this.router.navigateByUrl(`dashboard/jobs/${this.jobId}`);
     }
 
-    initAssessmentGroup() {
-        const control = this.stageSettingsForm.controls['assessment'] as FormArray;
-        control.push(
+    get assessment(): FormArray {
+        return this.stageSettingsForm && (this.stageSettingsForm.controls['assessment'] as FormArray);
+    }
+
+    addAssessmentGroup() {
+        this.assessment.push(
             this.fb.group({
-                type: ['', Validators.required]
+                type: ['', Validators.required],
+                option: ['', Validators.required]
             })
         );
     }
 
     populateAssessment(assessment) {
-        const control = this.stageSettingsForm.controls['assessment'] as FormArray;
         assessment.forEach((c) => {
-            control.push(
+            this.assessment.push(
                 this.fb.group({
-                    type: [c.type, Validators.required]
+                    type: [c.type, Validators.required],
+                    option: [c.option, Validators.required]
                 })
             );
         });
     }
     onAddAssessment() {
         if (this.stageSettingsForm.get('assessment').valid) {
-            this.initAssessmentGroup();
+            this.addAssessmentGroup();
         } else {
             this.formHelper.markFormGroupTouched(this.stageSettingsForm);
         }

@@ -99,10 +99,10 @@
                 <div class="form-content-holder assessment-holder" formArrayName="assessment">
                     <div
                         class="form-content-box"
-                        *ngFor="let language of stageSettingsForm.controls.assessment.controls; let i = index"
+                        *ngFor="let ass of stageSettingsForm.controls.assessment.controls; let i = index"
                     >
-                        <div class="form-block" [formGroupName]="i">
-                            <div class="input-block">
+                        <div class="form-block fdr" [formGroupName]="i">
+                            <div class="input-block flex50p">
                                 <label class="form-block-label">Assessment Type</label>
                                 <div class="input-holder">
                                     <p-dropdown
@@ -110,6 +110,29 @@
                                         formControlName="type"
                                         [style]="{ width: '100%' }"
                                         placeholder="Please select assessment type"
+                                    ></p-dropdown>
+                                </div>
+                            </div>
+                            <div class="separator20"></div>
+                            <div class="input-block flex50p" *ngIf="ass.get('type').value === 'personality'">
+                                <label class="form-block-label">Assessment Benchmark</label>
+                                <div class="input-holder">
+                                    <p-dropdown
+                                        [options]="assessmentBenchmarkOptions"
+                                        formControlName="option"
+                                        [style]="{ width: '100%' }"
+                                        placeholder="Please select assessment benchmark"
+                                    ></p-dropdown>
+                                </div>
+                            </div>
+                            <div class="input-block flex50p" *ngIf="ass.get('type').value === 'video-interview'">
+                                <label class="form-block-label">Questionnaire</label>
+                                <div class="input-holder">
+                                    <p-dropdown
+                                        [options]="questionnaireOptions"
+                                        formControlName="option"
+                                        [style]="{ width: '100%' }"
+                                        placeholder="Please select questionnaire"
                                     ></p-dropdown>
                                 </div>
                             </div>
