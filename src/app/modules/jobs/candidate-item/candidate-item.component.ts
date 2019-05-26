@@ -34,34 +34,16 @@ export class CandidateItemComponent implements OnInit {
         MANAGEMENT_LEVEL: 'Management Level'
     };
     personalityProfileScores = [
-        { title: 'Extroversion', value: 26, average: 40 },
+        { title: 'Extroversion', value: 26, average: 50 },
         { title: 'Agreeableness', value: 36, average: 50 },
-        { title: 'Openness', value: 46, average: 40 },
-        { title: 'Conscientiousness', value: 56, average: 40 },
-        { title: 'Neuroticism', value: 76, average: 40 }
+        { title: 'Openness', value: 46, average: 50 },
+        { title: 'Conscientiousness', value: 56, average: 50 },
+        { title: 'Neuroticism', value: 76, average: 50 }
     ];
     radar_chart_data: any;
     radar_chart_options: any;
     showVideoScore = false;
     stars: any[] = [{ index: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
-    listofQuestions = [
-        {
-            question:
-                'What exites you about working for Dimension Data and it’s products and Services. What value will you be able to add?',
-            index: 0,
-            current: true
-        },
-        {
-            question:
-                '2What exites you about working for Dimension Data and it’s products and Services. What value will you be able to add?',
-            index: 1
-        },
-        {
-            question:
-                '3What exites you about working for Dimension Data and it’s products and Services. What value will you be able to add?',
-            index: 2
-        }
-    ];
 
     contentLoading = true;
     uploadQueue: any[] = [];
@@ -99,8 +81,48 @@ export class CandidateItemComponent implements OnInit {
         });
         this.jobService.getCandidate(this.jobId, this.candidateId).subscribe((candidate: Candidate) => {
             this.candidate = candidate;
+            // console.log(this.candidate);
             setTimeout(() => (this.contentLoading = false), 200);
             // console.log(' ⚡️ FROM ROUTE  --- JOB:', this.jobId, this.candidateId);
+            if (
+                this.candidate.stages_data &&
+                this.candidate.stages_data[this.jobId] &&
+                this.candidate.stages_data[this.jobId].Videorwfv1em3 &&
+                this.candidate.stages_data[this.jobId].Videorwfv1em3.links
+            ) {
+                setTimeout(() => {
+                    this.candidate.stages_data[this.jobId].Videorwfv1em3.video = [];
+                    let video = this.candidate.stages_data[this.jobId].Videorwfv1em3.video;
+                    let links = this.candidate.stages_data[this.jobId].Videorwfv1em3.links;
+                    let index = 0;
+                    for (var prop in links) {
+                        if (!links.hasOwnProperty(prop)) continue;
+                        video.push({ link: links[prop], id: prop, question: this.questions[index].text });
+                        index++;
+                    }
+                }, 1000);
+            }
+            if (
+                this.candidate.stages_data &&
+                this.candidate.stages_data[this.jobId] &&
+                this.candidate.stages_data[this.jobId].Videorwfv1em3 &&
+                this.personality_assessment
+            ) {
+                let assessment = this.personality_assessment;
+                this.personalityProfileScores[0].value = assessment[1].score;
+                this.personalityProfileScores[1].value = assessment[3].score;
+                this.personalityProfileScores[2].value = assessment[2].score;
+                this.personalityProfileScores[3].value = assessment[4].score;
+                this.personalityProfileScores[4].value = assessment[0].score;
+
+                this.radar_chart_data.datasets[0].data = [
+                    assessment[1].score,
+                    assessment[3].score,
+                    assessment[4].score,
+                    assessment[0].score,
+                    assessment[2].score
+                ];
+            }
             if (!this.candidate.resume_file && this.candidate.source !== 'application') {
                 this.activeSection = 'attachments';
             }
@@ -128,7 +150,7 @@ export class CandidateItemComponent implements OnInit {
             datasets: [
                 {
                     label: 'Second Dataset',
-                    data: [28, 48, 40, 19, 86],
+                    data: [30, 60, 90, 120, 60],
                     fill: true,
                     backgroundColor: 'rgba(76, 217, 100, 0.3)',
                     borderColor: '#4cd964',
@@ -137,8 +159,8 @@ export class CandidateItemComponent implements OnInit {
                     pointHoverRadius: 0
                 },
                 {
-                    label: 'First Dataset',
-                    data: [50, 49, 50, 51, 50],
+                    label: 'Avarage Dataset',
+                    data: [60, 60, 60, 60, 60],
                     fill: true,
                     backgroundColor: 'rgba(0, 0, 0, 0.3)',
                     borderColor: '#e5e5ea',
@@ -157,17 +179,18 @@ export class CandidateItemComponent implements OnInit {
                 ticks: {
                     beginAtZero: true,
                     min: 0,
+                    max: 120,
+                    stepSize: 40,
                     fontColor: '#525f7f',
+                    fontStyle: 'bold',
+                    padding: 100,
                     backdropColor: 'transparent',
                     userCallback: (label, index, labels) => {
-                        // if (Math.floor(label) === label) {
-                        //     return '3333dd';
-                        // }
                         if (index === 1) {
                             return 'LOW';
-                        } else if (index === 3) {
+                        } else if (index === 2) {
                             return 'NEUTRAL';
-                        } else if (index === 5) {
+                        } else if (index === 3) {
                             return 'HIGH';
                         } else {
                             return '';
@@ -372,30 +395,36 @@ export class CandidateItemComponent implements OnInit {
             });
     }
 
-    onViewAndRate() {
+    onViewAndRate(i) {
         this.showVideoScore = true;
+        this.arrayOfVideos[i].current = true;
     }
     onCloseModal() {
+        this.arrayOfVideos.forEach((s) => (s.current = false));
+        this.stars.forEach((s) => (s.active = false));
         this.showVideoScore = false;
     }
-    onEvaluateQuestion(index) {
+    get arrayOfVideos() {
+        return this.candidate.stages_data[this.jobId].Videorwfv1em3.video;
+    }
+    get personality_assessment() {
+        return this.candidate.stages_data[this.jobId].Videorwfv1em3.personality_assessment;
+    }
+    onEvaluateAnswer(index, questionId) {
         this.stars.forEach((s) => (s.active = false));
         for (let i = 0; i <= index; i++) {
             this.stars[i].active = true;
         }
+        console.log('[EVALUATE ANSWER', questionId);
     }
     onNextQuestion(index) {
-        if (this.listofQuestions.length - 1 === index) {
+        if (this.arrayOfVideos.length - 1 === index) {
             this.onCloseModal();
-            this.listofQuestions.forEach((s) => (s.current = false));
-            this.listofQuestions[0].current = true;
-            this.stars.forEach((s) => (s.active = false));
             return false;
         }
 
-        this.listofQuestions[index].current = false;
-        this.listofQuestions[index + 1].current = true;
-
+        this.arrayOfVideos[index].current = false;
+        this.arrayOfVideos[index + 1].current = true;
         this.stars.forEach((s) => (s.active = false));
     }
     onHoverStars(index) {

@@ -535,12 +535,26 @@
         margin: 0;
     }
 }
-
+.candidate-content {
+    .personality-profile-title {
+        margin: 50px 0 34px;
+    }
+    .interview-title {
+        margin: 0 0 34px;
+    }
+}
+.candidate-content .personality-profile-title {
+    margin: 50px 0 34px;
+}
 .personality-profile-holder {
     display: flex;
     margin: 20px 0 20px;
     .personality-profile-graph {
         flex: 1;
+        p-chart {
+            position: relative;
+            left: -15px;
+        }
     }
     .personality-profile-scores {
         flex: 0 0 150px;
@@ -559,21 +573,30 @@
 .interview-holder {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: flex-start;
+    margin: 42px 0 20px 0;
     .item {
         flex: 0 0 30%;
-        margin: 0 0 20px 0;
+        margin: 0 5% 20px 0;
         background: #000000;
         color: $white;
         height: 129px;
         position: relative;
         font-size: 15px;
+        &:nth-child(3n) {
+            margin-right: 0%;
+        }
         &:hover {
             .btn-view {
                 z-index: 1;
                 opacity: 1;
             }
         }
+    }
+    video {
+        position: absolute;
+        width: 100%;
+        height: 100%;
     }
     .btn-view {
         width: 130px;
@@ -623,7 +646,7 @@
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
     font-size: 15px;
-    position: absolute;
+    position: fixed;
     z-index: 6;
     left: 50%;
     top: 50%;
@@ -647,6 +670,7 @@
     }
     .right-col {
         flex: 0 0 48%;
+        text-align: right;
     }
     h4 {
         font-size: 16px;
@@ -689,5 +713,26 @@
         border: solid 1px #979797;
         background-color: #d8d8d8;
         height: 100%;
+        display: inline-flex;
+    }
+    video {
+        outline: none;
+        height: 100%;
+    }
+}
+
+.candidate-attention {
+    height: 71px;
+    border-radius: 5px;
+    border: dotted 2px #d7dbdf;
+    background-color: #ffffff;
+    padding: 26px 20px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    margin: 0 0 50px;
+    img {
+        margin: 0 19px 0 0;
+        width: 29px;
     }
 }
