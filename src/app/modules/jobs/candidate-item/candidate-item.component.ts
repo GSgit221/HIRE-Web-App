@@ -34,11 +34,11 @@ export class CandidateItemComponent implements OnInit {
         MANAGEMENT_LEVEL: 'Management Level'
     };
     personalityProfileScores = [
-        { title: 'Extroversion', value: 26, average: 50 },
-        { title: 'Agreeableness', value: 36, average: 50 },
-        { title: 'Openness', value: 46, average: 50 },
-        { title: 'Conscientiousness', value: 56, average: 50 },
-        { title: 'Neuroticism', value: 76, average: 50 }
+        { title: 'Extroversion', value: 0, average: 50 },
+        { title: 'Agreeableness', value: 0, average: 50 },
+        { title: 'Openness', value: 0, average: 50 },
+        { title: 'Conscientiousness', value: 0, average: 50 },
+        { title: 'Neuroticism', value: 0, average: 50 }
     ];
     radar_chart_data: any;
     radar_chart_options: any;
@@ -81,7 +81,7 @@ export class CandidateItemComponent implements OnInit {
         });
         this.jobService.getCandidate(this.jobId, this.candidateId).subscribe((candidate: Candidate) => {
             this.candidate = candidate;
-            // console.log(this.candidate);
+            console.log(this.candidate);
             setTimeout(() => (this.contentLoading = false), 200);
             // console.log(' ⚡️ FROM ROUTE  --- JOB:', this.jobId, this.candidateId);
             if (
@@ -150,7 +150,7 @@ export class CandidateItemComponent implements OnInit {
             datasets: [
                 {
                     label: 'Second Dataset',
-                    data: [30, 60, 90, 120, 60],
+                    data: [0, 0, 0, 0, 0],
                     fill: true,
                     backgroundColor: 'rgba(76, 217, 100, 0.3)',
                     borderColor: '#4cd964',
@@ -206,8 +206,31 @@ export class CandidateItemComponent implements OnInit {
             }
         };
     }
+    get arrayOfVideos() {
+        if (
+            this.candidate &&
+            this.candidate.stages_data &&
+            this.candidate.stages_data[this.jobId] &&
+            this.candidate.stages_data[this.jobId].Videorwfv1em3 &&
+            this.candidate.stages_data[this.jobId].Videorwfv1em3.video
+        ) {
+            return this.candidate.stages_data[this.jobId].Videorwfv1em3.video;
+        }
+    }
+    get personality_assessment() {
+        if (
+            this.candidate &&
+            this.candidate.stages_data &&
+            this.candidate.stages_data[this.jobId] &&
+            this.candidate.stages_data[this.jobId].Videorwfv1em3 &&
+            this.candidate.stages_data[this.jobId].Videorwfv1em3.personality_assessment
+        ) {
+            return this.candidate.stages_data[this.jobId].Videorwfv1em3.personality_assessment;
+        }
+    }
 
     ngOnInit() {}
+
     allowShowFeedback() {
         if (this.job && this.candidate) {
             this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
@@ -404,12 +427,7 @@ export class CandidateItemComponent implements OnInit {
         this.stars.forEach((s) => (s.active = false));
         this.showVideoScore = false;
     }
-    get arrayOfVideos() {
-        return this.candidate.stages_data[this.jobId].Videorwfv1em3.video;
-    }
-    get personality_assessment() {
-        return this.candidate.stages_data[this.jobId].Videorwfv1em3.personality_assessment;
-    }
+
     onEvaluateAnswer(index, questionId) {
         this.stars.forEach((s) => (s.active = false));
         for (let i = 0; i <= index; i++) {

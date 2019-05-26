@@ -170,21 +170,15 @@
                     </div>
                     <ng-template #waitingForPersonalityData>
                         <div class="candidate-attention">
-                            <img src="/assets/images/attention-sign-png--2400.png" alt="" />
+                            <img alt="warning" class="icon" height="20" src="/assets/images/warning.svg" width="23" />
                             <span>Waiting for the candidate to submit their Personality Profile</span>
                         </div>
                     </ng-template>
                     <h3 class="interview-title">One Way Interview</h3>
-                    <div
-                        class="interview-holder"
-                        *ngIf="(candidate?.stages_data)[this.jobId]?.Videorwfv1em3?.video; else waitingForInterviewData"
-                    >
+                    <div class="interview-holder" *ngIf="arrayOfVideos; else waitingForInterviewData">
                         <div
                             class="item"
-                            *ngFor="
-                                let video of (candidate?.stages_data)[this.jobId]?.Videorwfv1em3?.video;
-                                let i = index
-                            "
+                            *ngFor="let video of (candidate?.stages_data)[jobId]?.Videorwfv1em3?.video; let i = index"
                         >
                             <video>
                                 <source [src]="video.link" type="video/mp4" />
@@ -220,7 +214,7 @@
                     </div>
                     <ng-template #waitingForInterviewData>
                         <div class="candidate-attention">
-                            <img src="/assets/images/attention-sign-png--2400.png" alt="" />
+                            <img alt="warning" class="icon" height="20" src="/assets/images/warning.svg" width="23" />
                             <span>Waiting for the candidate to submit their One Way Video Interview</span>
                         </div>
                     </ng-template>
