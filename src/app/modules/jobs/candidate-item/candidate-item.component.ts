@@ -161,6 +161,7 @@ export class CandidateItemComponent implements OnInit {
                 }
 
                 this.candidate = candidate;
+                console.log(this.candidate);
                 this.stageId = this.candidate.stage[this.jobId];
                 const stageSettings = this.job.stages.find((s) => s.id === this.stageId);
                 if (
@@ -209,38 +210,52 @@ export class CandidateItemComponent implements OnInit {
             ) {
                 const videos = this.candidate.stages_data[this.jobId][this.stageId].videos.links;
                 this.videoInterviewQuestions.forEach((q) => {
+                    console.log(q);
                     if (videos[q.id]) {
                         const video = videos[q.id];
                         video.id = q.id;
                         video.question = q.text;
+                        if (video.rating) {
+                            video.ratings = [];
+                            for (let i = 0; i < 5; i++) {
+                                i < video.rating ? video.ratings.push(video.rating) : video.ratings.push(0);
+                            }
+                        }
                         this.videos.push(video);
                     }
                 });
             }
 
-            // Personal Profile
             if (
                 this.candidate.stages_data &&
                 this.candidate.stages_data[this.jobId] &&
                 this.candidate.stages_data[this.jobId][this.stageId] &&
-                this.candidate.stages_data[this.jobId][this.stageId].personality_assessment
-            ) {
-                const assessment = this.candidate.stages_data[this.jobId][this.stageId].personality_assessment;
-                this.personalityProfileScores[0].value = assessment[1].score;
-                this.personalityProfileScores[1].value = assessment[3].score;
-                this.personalityProfileScores[2].value = assessment[2].score;
-                this.personalityProfileScores[3].value = assessment[4].score;
-                this.personalityProfileScores[4].value = assessment[0].score;
+                this.candidate.stages_data[this.jobId][this.stageId].videos &&
+                this.candidate.stages_data[this.jobId][this.stageId].videos.links
+            )
+                if (
+                    this.candidate.stages_data &&
+                    this.candidate.stages_data[this.jobId] &&
+                    this.candidate.stages_data[this.jobId][this.stageId] &&
+                    this.candidate.stages_data[this.jobId][this.stageId].personality_assessment
+                ) {
+                    // Personal Profile
+                    const assessment = this.candidate.stages_data[this.jobId][this.stageId].personality_assessment;
+                    this.personalityProfileScores[0].value = assessment[1].score;
+                    this.personalityProfileScores[1].value = assessment[3].score;
+                    this.personalityProfileScores[2].value = assessment[2].score;
+                    this.personalityProfileScores[3].value = assessment[4].score;
+                    this.personalityProfileScores[4].value = assessment[0].score;
 
-                this.radar_chart_data.datasets[0].data = [
-                    assessment[1].score,
-                    assessment[3].score,
-                    assessment[4].score,
-                    assessment[0].score,
-                    assessment[2].score
-                ];
-                this.chart.refresh();
-            }
+                    this.radar_chart_data.datasets[0].data = [
+                        assessment[1].score,
+                        assessment[3].score,
+                        assessment[4].score,
+                        assessment[0].score,
+                        assessment[2].score
+                    ];
+                    this.chart.refresh();
+                }
         });
     }
 
@@ -478,7 +493,17 @@ export class CandidateItemComponent implements OnInit {
             })
             .subscribe((response: any) => {
                 // DONE
-                console.log(this.videos);
+                console.log(this.videos, questionId, index);
+                let video = this.videos.find((c) => {
+                    if (c.id === questionId) {
+                        return c;
+                    }
+                });
+                video.rating = index + 1;
+                video.ratings = [];
+                for (let i = 0; i < 5; i++) {
+                    i < video.rating ? video.ratings.push(video.rating) : video.ratings.push(0);
+                }
             });
     }
     onNextQuestion(index) {
