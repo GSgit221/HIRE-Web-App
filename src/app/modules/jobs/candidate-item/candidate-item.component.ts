@@ -155,13 +155,13 @@ export class CandidateItemComponent implements OnInit {
             switchMap((response: any) => {
                 const questions = response[0];
                 const candidate: any = response[1];
+                this.candidate = candidate;
+
                 if (questions) {
                     this.questions = questions;
                     this.prepareQuestionsAnswers();
                 }
 
-                this.candidate = candidate;
-                console.log(this.candidate);
                 this.stageId = this.candidate.stage[this.jobId];
                 const stageSettings = this.job.stages.find((s) => s.id === this.stageId);
                 if (
@@ -325,21 +325,6 @@ export class CandidateItemComponent implements OnInit {
             this.questionsAnswers = questionsAnswers.slice(0);
         }
     }
-
-    // processMatching() {
-    //     if (this.candidate && this.candidate.matching && this.candidate.matching[this.jobId] && this.candidate.matching[this.jobId].UnweightedCategoryScores && this.candidate.skills) {
-    //         const matching = this.candidate.matching[this.jobId];
-    //         const scores = matching.UnweightedCategoryScores;
-    //         scores.forEach(s => {
-    //             s.TermsFound.forEach(t => {
-    //                 const skill = this.candidate.skills.find(sk => sk.title === t);
-    //                 if (skill) {
-    //                     skill.found_in_matching = true;
-    //                 }
-    //             });
-    //         });
-    //     }
-    // }
 
     onChangeSection(section: string) {
         this.activeSection = section;
