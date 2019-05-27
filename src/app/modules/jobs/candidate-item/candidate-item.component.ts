@@ -37,11 +37,11 @@ export class CandidateItemComponent implements OnInit {
         MANAGEMENT_LEVEL: 'Management Level'
     };
     personalityProfileScores = [
-        { title: 'Extroversion', value: 0, average: 50 },
-        { title: 'Agreeableness', value: 0, average: 50 },
-        { title: 'Openness', value: 0, average: 50 },
-        { title: 'Conscientiousness', value: 0, average: 50 },
-        { title: 'Neuroticism', value: 0, average: 50 }
+        { title: 'Extroversion', value: 0, average: 50, scoreText: '' },
+        { title: 'Agreeableness', value: 0, average: 50, scoreText: '' },
+        { title: 'Openness', value: 0, average: 50, scoreText: '' },
+        { title: 'Conscientiousness', value: 0, average: 50, scoreText: '' },
+        { title: 'Neuroticism', value: 0, average: 50, scoreText: '' }
     ];
     radar_chart_data: any;
     radar_chart_options: any;
@@ -95,7 +95,7 @@ export class CandidateItemComponent implements OnInit {
                 },
                 {
                     label: 'Avarage Dataset',
-                    data: [60, 60, 60, 60, 60],
+                    data: [72, 72, 72, 72, 72],
                     fill: true,
                     backgroundColor: 'rgba(0, 0, 0, 0.3)',
                     borderColor: '#e5e5ea',
@@ -210,7 +210,6 @@ export class CandidateItemComponent implements OnInit {
             ) {
                 const videos = this.candidate.stages_data[this.jobId][this.stageId].videos.links;
                 this.videoInterviewQuestions.forEach((q) => {
-                    console.log(q);
                     if (videos[q.id]) {
                         const video = videos[q.id];
                         video.id = q.id;
@@ -230,32 +229,33 @@ export class CandidateItemComponent implements OnInit {
                 this.candidate.stages_data &&
                 this.candidate.stages_data[this.jobId] &&
                 this.candidate.stages_data[this.jobId][this.stageId] &&
-                this.candidate.stages_data[this.jobId][this.stageId].videos &&
-                this.candidate.stages_data[this.jobId][this.stageId].videos.links
-            )
-                if (
-                    this.candidate.stages_data &&
-                    this.candidate.stages_data[this.jobId] &&
-                    this.candidate.stages_data[this.jobId][this.stageId] &&
-                    this.candidate.stages_data[this.jobId][this.stageId].personality_assessment
-                ) {
-                    // Personal Profile
-                    const assessment = this.candidate.stages_data[this.jobId][this.stageId].personality_assessment;
-                    this.personalityProfileScores[0].value = assessment[1].score;
-                    this.personalityProfileScores[1].value = assessment[3].score;
-                    this.personalityProfileScores[2].value = assessment[2].score;
-                    this.personalityProfileScores[3].value = assessment[4].score;
-                    this.personalityProfileScores[4].value = assessment[0].score;
+                this.candidate.stages_data[this.jobId][this.stageId].personality_assessment
+            ) {
+                // Personal Profile
 
-                    this.radar_chart_data.datasets[0].data = [
-                        assessment[1].score,
-                        assessment[3].score,
-                        assessment[4].score,
-                        assessment[0].score,
-                        assessment[2].score
-                    ];
-                    this.chart.refresh();
-                }
+                const assessment = this.candidate.stages_data[this.jobId][this.stageId].personality_assessment;
+                // console.log('personal assessment', assessment);
+                this.personalityProfileScores[0].value = assessment[1].score;
+                this.personalityProfileScores[1].value = assessment[3].score;
+                this.personalityProfileScores[2].value = assessment[2].score;
+                this.personalityProfileScores[3].value = assessment[4].score;
+                this.personalityProfileScores[4].value = assessment[0].score;
+                this.personalityProfileScores[0].scoreText = assessment[1].scoreText;
+                this.personalityProfileScores[1].scoreText = assessment[3].scoreText;
+                this.personalityProfileScores[2].scoreText = assessment[2].scoreText;
+                this.personalityProfileScores[3].scoreText = assessment[4].scoreText;
+                this.personalityProfileScores[4].scoreText = assessment[0].scoreText;
+
+                this.radar_chart_data.datasets[0].data = [
+                    assessment[1].score,
+                    assessment[3].score,
+                    assessment[4].score,
+                    assessment[0].score,
+                    assessment[2].score
+                ];
+                this.chart.refresh();
+                console.log(this.personalityProfileScores);
+            }
         });
     }
 
