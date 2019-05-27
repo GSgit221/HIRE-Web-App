@@ -37,11 +37,11 @@ export class CandidateItemComponent implements OnInit {
         MANAGEMENT_LEVEL: 'Management Level'
     };
     personalityProfileScores = [
-        { title: 'Extroversion', value: 0, average: 50, scoreText: '' },
-        { title: 'Agreeableness', value: 0, average: 50, scoreText: '' },
-        { title: 'Openness', value: 0, average: 50, scoreText: '' },
-        { title: 'Conscientiousness', value: 0, average: 50, scoreText: '' },
-        { title: 'Neuroticism', value: 0, average: 50, scoreText: '' }
+        { title: 'Extroversion', value: 0, average: 60, scoreText: '' },
+        { title: 'Agreeableness', value: 0, average: 60, scoreText: '' },
+        { title: 'Openness', value: 0, average: 60, scoreText: '' },
+        { title: 'Conscientiousness', value: 0, average: 60, scoreText: '' },
+        { title: 'Neuroticism', value: 0, average: 60, scoreText: '' }
     ];
     radar_chart_data: any;
     radar_chart_options: any;
