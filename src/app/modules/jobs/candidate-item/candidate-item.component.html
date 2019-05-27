@@ -147,7 +147,12 @@
                         *ngIf="personality_assessment; else waitingForPersonalityData"
                     >
                         <div class="personality-profile-graph">
-                            <p-chart type="radar" [options]="radar_chart_options" [data]="radar_chart_data"></p-chart>
+                            <p-chart
+                                #chart
+                                type="radar"
+                                [options]="radar_chart_options"
+                                [data]="radar_chart_data"
+                            ></p-chart>
                         </div>
                         <div class="personality-profile-scores scores">
                             <div class="score-item" *ngFor="let score of personalityProfileScores">
@@ -175,16 +180,12 @@
                         </div>
                     </ng-template>
                     <h3 class="interview-title">One Way Interview</h3>
-                    <div class="interview-holder" *ngIf="arrayOfVideos; else waitingForInterviewData">
-                        <div
-                            class="item"
-                            *ngFor="let video of (candidate?.stages_data)[jobId]?.Videorwfv1em3?.video; let i = index"
-                        >
-                            <video>
-                                <source [src]="video.link" type="video/mp4" />
-                                <source src="movie.ogg" type="video/ogg" />
-                                Your browser does not support the video tag.
-                            </video>
+                    <div class="interview-holder" *ngIf="videos && videos.length; else waitingForInterviewData">
+                        <div class="item" *ngFor="let video of videos; let i = index">
+                            <div
+                                class="placeholder"
+                                [ngStyle]="{ background: 'url(https:' + video.thumbnail_url + ') no-repeat 50% 50%' }"
+                            ></div>
                             <button class="btn btn-view" (click)="onViewAndRate(i)">View and Rate</button>
                             <div class="interview-question">Q{{ i + 1 }}</div>
                             <!-- <div class="interview-rate">
@@ -532,7 +533,7 @@
             </svg>
         </button>
         <div class="inner">
-            <ng-container *ngFor="let question of arrayOfVideos; let i = index">
+            <ng-container *ngFor="let question of videos; let i = index">
                 <ng-container *ngIf="question.current">
                     <div class="left-col">
                         <h4>Question {{ i + 1 }}</h4>
@@ -564,9 +565,6 @@
                                         </g>
                                     </g>
                                 </svg>
-                                <!-- <svg xmlns="http://www.w3.org/2000/svg" width="40" height="38" viewBox="0 0 40 38">
-                                    <path fill="#455565" fill-rule="nonzero" d="M20.042 0a.792.792 0 0 0-.738.506L14.423 13.09 1 13.775a.792.792 0 0 0-.46 1.404l10.45 8.545L7.56 36.689a.792.792 0 0 0 1.194.869l11.289-7.246 11.289 7.246a.792.792 0 0 0 1.193-.87l-3.432-12.964 10.45-8.545a.792.792 0 0 0-.46-1.404L25.66 13.09 20.779.506A.792.792 0 0 0 20.042 0zm0 2.98l4.328 11.16a.792.792 0 0 0 .698.504l11.883.608-9.256 7.569a.792.792 0 0 0-.264.815l3.041 11.49-10.002-6.422a.792.792 0 0 0-.857 0L9.611 35.126l3.041-11.49a.792.792 0 0 0-.264-.815l-9.256-7.569 11.883-.608a.792.792 0 0 0 .699-.504l4.328-11.16z" />
-                                </svg> -->
                             </div>
                         </div>
                         <button class="btn next-question" (click)="onNextQuestion(i)">
@@ -601,7 +599,7 @@
                     <div class="right-col">
                         <div class="video-block">
                             <video controls>
-                                <source [src]="question.link" type="video/mp4" />
+                                <source [src]="question.video_url" type="video/mp4" />
                                 <source src="movie.ogg" type="video/ogg" />
                                 Your browser does not support the video tag.
                             </video>
@@ -613,3 +611,4 @@
     </div>
     <div class="backdrop" (click)="onCloseModal()"></div>
 </ng-container>
+<app-loader *ngIf="contentLoading"></app-loader>

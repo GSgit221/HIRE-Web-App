@@ -1,9 +1,12 @@
 import { HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
+import { switchMap } from 'rxjs/operators';
 import { CandidateService } from './../../../core/services/candidate.service';
 
+import { UIChart } from 'primeng/chart';
+import { forkJoin, of } from 'rxjs';
 import { Candidate } from '../../../core/models/candidate';
 import { Job } from '../../../core/models/job';
 import { User } from '../../../core/models/user';
@@ -54,6 +57,11 @@ export class CandidateItemComponent implements OnInit {
     questions: any[];
     questionsAnswers: any[] = [];
 
+    stageId: string = '';
+    videos: any[] = [];
+    videoInterviewQuestions: any[] = [];
+    @ViewChild('chart') chart: UIChart;
+
     constructor(
         private jobService: JobService,
         private candidateService: CandidateService,
@@ -61,83 +69,9 @@ export class CandidateItemComponent implements OnInit {
         private router: Router,
         private utilities: UtilitiesService,
         private questionnaireService: QuestionnaireService,
-        private store: Store<fromStore.State>
+        private store: Store<fromStore.State>,
+        private cd: ChangeDetectorRef
     ) {
-        this.jobId = this.route.snapshot.paramMap.get('jobId');
-        this.candidateId = this.route.snapshot.paramMap.get('candidateId');
-        this.jobService.getJob(this.jobId).subscribe((job: Job) => {
-            this.allowShowFeedback();
-            this.job = job;
-            if (this.job.questionnaire) {
-                this.sections.splice(2, 0, 'questions');
-                this.questionnaireService.getQuestions(this.job.questionnaire).subscribe(
-                    (response: any) => {
-                        this.questions = response;
-                        this.prepareQuestionsAnswers();
-                    },
-                    (errorResponse) => console.error(errorResponse)
-                );
-            }
-        });
-        this.jobService.getCandidate(this.jobId, this.candidateId).subscribe((candidate: Candidate) => {
-            this.candidate = candidate;
-            console.log(this.candidate);
-            setTimeout(() => (this.contentLoading = false), 200);
-            // console.log(' ⚡️ FROM ROUTE  --- JOB:', this.jobId, this.candidateId);
-            if (
-                this.candidate.stages_data &&
-                this.candidate.stages_data[this.jobId] &&
-                this.candidate.stages_data[this.jobId].Videorwfv1em3 &&
-                this.candidate.stages_data[this.jobId].Videorwfv1em3.links
-            ) {
-                setTimeout(() => {
-                    this.candidate.stages_data[this.jobId].Videorwfv1em3.video = [];
-                    let video = this.candidate.stages_data[this.jobId].Videorwfv1em3.video;
-                    let links = this.candidate.stages_data[this.jobId].Videorwfv1em3.links;
-                    let index = 0;
-                    for (var prop in links) {
-                        if (!links.hasOwnProperty(prop)) continue;
-                        video.push({ link: links[prop], id: prop, question: this.questions[index].text });
-                        index++;
-                    }
-                }, 1000);
-            }
-            if (
-                this.candidate.stages_data &&
-                this.candidate.stages_data[this.jobId] &&
-                this.candidate.stages_data[this.jobId].Videorwfv1em3 &&
-                this.personality_assessment
-            ) {
-                let assessment = this.personality_assessment;
-                this.personalityProfileScores[0].value = assessment[1].score;
-                this.personalityProfileScores[1].value = assessment[3].score;
-                this.personalityProfileScores[2].value = assessment[2].score;
-                this.personalityProfileScores[3].value = assessment[4].score;
-                this.personalityProfileScores[4].value = assessment[0].score;
-
-                this.radar_chart_data.datasets[0].data = [
-                    assessment[1].score,
-                    assessment[3].score,
-                    assessment[4].score,
-                    assessment[0].score,
-                    assessment[2].score
-                ];
-            }
-            if (!this.candidate.resume_file && this.candidate.source !== 'application') {
-                this.activeSection = 'attachments';
-            }
-            if (this.candidate.resume_file && this.candidate.resume_file.length) {
-                this.candidateService
-                    .getResumeLink(this.candidate.resume_file)
-                    .subscribe(
-                        (response: string) => (this.candidate.resume_link = response),
-                        (errorResponse) => console.error(errorResponse)
-                    );
-            }
-            this.allowShowFeedback();
-            this.prepareQuestionsAnswers();
-        });
-
         this.supportedFileTypes = [
             'application/pdf',
             'application/msword',
@@ -145,6 +79,7 @@ export class CandidateItemComponent implements OnInit {
             'application/vnd.oasis.opendocument.text',
             'text/rtf'
         ];
+
         this.radar_chart_data = {
             labels: ['Extroversion', 'Agreeableness', 'Conscientiousness', 'Neuroticism', 'Openness'],
             datasets: [
@@ -170,12 +105,10 @@ export class CandidateItemComponent implements OnInit {
                 }
             ]
         };
+
         this.radar_chart_options = {
             scale: {
-                pointLabels: {
-                    fontSize: 15,
-                    fontColor: '#000000'
-                },
+                pointLabels: { fontSize: 15, fontColor: '#000000' },
                 ticks: {
                     beginAtZero: true,
                     min: 0,
@@ -198,34 +131,128 @@ export class CandidateItemComponent implements OnInit {
                     }
                 }
             },
-            legend: {
-                display: false,
-                labels: {
-                    fontColor: 'rgb(255, 99, 132)'
-                }
-            }
+            legend: { display: false, labels: { fontColor: 'rgb(255, 99, 132)' } }
         };
+
+        this.jobId = this.route.snapshot.paramMap.get('jobId');
+        this.candidateId = this.route.snapshot.paramMap.get('candidateId');
+
+        // Get job
+        const jobRequest = this.jobService.getJob(this.jobId).pipe(
+            switchMap((job: Job) => {
+                this.allowShowFeedback();
+                this.job = job;
+                if (this.job.questionnaire) {
+                    this.sections.splice(2, 0, 'questions');
+                    return this.questionnaireService.getQuestions(this.job.questionnaire);
+                } else {
+                    return of(false);
+                }
+            })
+        );
+        const candidateRequest = this.jobService.getCandidate(this.jobId, this.candidateId);
+        const getAllData = forkJoin(jobRequest, candidateRequest).pipe(
+            switchMap((response: any) => {
+                const questions = response[0];
+                const candidate: any = response[1];
+                if (questions) {
+                    this.questions = questions;
+                    this.prepareQuestionsAnswers();
+                }
+
+                this.candidate = candidate;
+                this.stageId = this.candidate.stage[this.jobId];
+                const stageSettings = this.job.stages.find((s) => s.id === this.stageId);
+                if (
+                    stageSettings &&
+                    stageSettings.assessment &&
+                    stageSettings.assessment.find((ass) => ass.type === 'video-interview')
+                ) {
+                    const assessment = stageSettings.assessment.find((ass) => ass.type === 'video-interview');
+                    const questionnaireId = assessment.option;
+                    if (questionnaireId) {
+                        return this.questionnaireService.getQuestions(questionnaireId);
+                    } else {
+                        return of(false);
+                    }
+                } else {
+                    return of(false);
+                }
+            })
+        );
+        getAllData.subscribe((videoInterviewQuestions: any) => {
+            setTimeout(() => (this.contentLoading = false), 200);
+            if (videoInterviewQuestions) {
+                this.videoInterviewQuestions = videoInterviewQuestions;
+            }
+
+            // After all data is loaded
+            // Attachments
+            if (!this.candidate.resume_file && this.candidate.source !== 'application') {
+                this.activeSection = 'attachments';
+            }
+            if (this.candidate.resume_file && this.candidate.resume_file.length) {
+                this.candidateService
+                    .getResumeLink(this.candidate.resume_file)
+                    .subscribe(
+                        (response: string) => (this.candidate.resume_link = response),
+                        (errorResponse) => console.error(errorResponse)
+                    );
+            }
+            // Video
+            if (
+                this.candidate.stages_data &&
+                this.candidate.stages_data[this.jobId] &&
+                this.candidate.stages_data[this.jobId][this.stageId] &&
+                this.candidate.stages_data[this.jobId][this.stageId].videos &&
+                this.candidate.stages_data[this.jobId][this.stageId].videos.links
+            ) {
+                const videos = this.candidate.stages_data[this.jobId][this.stageId].videos.links;
+                this.videoInterviewQuestions.forEach((q) => {
+                    if (videos[q.id]) {
+                        const video = videos[q.id];
+                        video.id = q.id;
+                        video.question = q.text;
+                        this.videos.push(video);
+                    }
+                });
+            }
+
+            // Personal Profile
+            if (
+                this.candidate.stages_data &&
+                this.candidate.stages_data[this.jobId] &&
+                this.candidate.stages_data[this.jobId][this.stageId] &&
+                this.candidate.stages_data[this.jobId][this.stageId].personality_assessment
+            ) {
+                const assessment = this.candidate.stages_data[this.jobId][this.stageId].personality_assessment;
+                this.personalityProfileScores[0].value = assessment[1].score;
+                this.personalityProfileScores[1].value = assessment[3].score;
+                this.personalityProfileScores[2].value = assessment[2].score;
+                this.personalityProfileScores[3].value = assessment[4].score;
+                this.personalityProfileScores[4].value = assessment[0].score;
+
+                this.radar_chart_data.datasets[0].data = [
+                    assessment[1].score,
+                    assessment[3].score,
+                    assessment[4].score,
+                    assessment[0].score,
+                    assessment[2].score
+                ];
+                this.chart.refresh();
+            }
+        });
     }
-    get arrayOfVideos() {
-        if (
-            this.candidate &&
-            this.candidate.stages_data &&
-            this.candidate.stages_data[this.jobId] &&
-            this.candidate.stages_data[this.jobId].Videorwfv1em3 &&
-            this.candidate.stages_data[this.jobId].Videorwfv1em3.video
-        ) {
-            return this.candidate.stages_data[this.jobId].Videorwfv1em3.video;
-        }
-    }
+
     get personality_assessment() {
         if (
             this.candidate &&
             this.candidate.stages_data &&
             this.candidate.stages_data[this.jobId] &&
-            this.candidate.stages_data[this.jobId].Videorwfv1em3 &&
-            this.candidate.stages_data[this.jobId].Videorwfv1em3.personality_assessment
+            this.candidate.stages_data[this.jobId][this.stageId] &&
+            this.candidate.stages_data[this.jobId][this.stageId].personality_assessment
         ) {
-            return this.candidate.stages_data[this.jobId].Videorwfv1em3.personality_assessment;
+            return this.candidate.stages_data[this.jobId][this.stageId].personality_assessment;
         }
     }
 
@@ -418,12 +445,19 @@ export class CandidateItemComponent implements OnInit {
             });
     }
 
-    onViewAndRate(i) {
+    onViewAndRate(index) {
         this.showVideoScore = true;
-        this.arrayOfVideos[i].current = true;
+        this.videos[index].current = true;
+
+        this.stars.forEach((s) => (s.active = false));
+        if (this.videos[index].rating) {
+            for (let i = 0; i <= this.videos[index].rating - 1; i++) {
+                this.stars[i].active = true;
+            }
+        }
     }
     onCloseModal() {
-        this.arrayOfVideos.forEach((s) => (s.current = false));
+        this.videos.forEach((s) => (s.current = false));
         this.stars.forEach((s) => (s.active = false));
         this.showVideoScore = false;
     }
@@ -433,17 +467,34 @@ export class CandidateItemComponent implements OnInit {
         for (let i = 0; i <= index; i++) {
             this.stars[i].active = true;
         }
-        console.log('[EVALUATE ANSWER', questionId);
+        const video = this.videos.find((v) => v.id === questionId);
+        if (video) {
+            video.rating = index + 1;
+        }
+        this.jobService
+            .evaluateCandidateVideoAnswer(this.jobId, this.candidateId, this.stageId, {
+                id: questionId,
+                rating: index + 1
+            })
+            .subscribe((response: any) => {
+                // DONE
+                console.log(this.videos);
+            });
     }
     onNextQuestion(index) {
-        if (this.arrayOfVideos.length - 1 === index) {
+        if (this.videos.length - 1 === index) {
             this.onCloseModal();
             return false;
         }
 
-        this.arrayOfVideos[index].current = false;
-        this.arrayOfVideos[index + 1].current = true;
+        this.videos[index].current = false;
+        this.videos[index + 1].current = true;
         this.stars.forEach((s) => (s.active = false));
+        if (this.videos[index + 1].rating) {
+            for (let i = 0; i <= this.videos[index + 1].rating - 1; i++) {
+                this.stars[i].active = true;
+            }
+        }
     }
     onHoverStars(index) {
         this.stars.forEach((s) => (s.hover = false));

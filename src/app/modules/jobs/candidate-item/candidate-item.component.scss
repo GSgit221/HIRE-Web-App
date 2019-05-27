@@ -140,6 +140,7 @@
             background: $red;
             position: relative;
             z-index: 2;
+
             &.grey-bg {
                 background: #a8abad;
             }
@@ -535,46 +536,58 @@
         margin: 0;
     }
 }
+
 .candidate-content {
     .personality-profile-title {
         margin: 50px 0 34px;
     }
+
     .interview-title {
         margin: 0 0 34px;
     }
 }
+
 .candidate-content .personality-profile-title {
     margin: 50px 0 34px;
 }
+
 .personality-profile-holder {
     display: flex;
     margin: 20px 0 20px;
+
     .personality-profile-graph {
         flex: 1;
+
         p-chart {
             position: relative;
             left: -15px;
         }
     }
+
     .personality-profile-scores {
         flex: 0 0 150px;
     }
+
     .score-chart {
         margin: 0 0px 5px 0;
     }
+
     .score-name {
         margin: 0 0 7px 0;
         font-size: 16px;
     }
+
     .score-item {
         display: block;
     }
 }
+
 .interview-holder {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
     margin: 42px 0 20px 0;
+
     .item {
         flex: 0 0 30%;
         margin: 0 5% 20px 0;
@@ -583,9 +596,11 @@
         height: 129px;
         position: relative;
         font-size: 15px;
+
         &:nth-child(3n) {
             margin-right: 0%;
         }
+
         &:hover {
             .btn-view {
                 z-index: 1;
@@ -593,11 +608,20 @@
             }
         }
     }
+
+    .placeholder {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-size: contain !important;
+    }
+
     video {
         position: absolute;
         width: 100%;
         height: 100%;
     }
+
     .btn-view {
         width: 130px;
         height: 36px;
@@ -614,16 +638,19 @@
         z-index: -1;
         transition: 0.25s;
     }
+
     .interview-question {
         position: absolute;
         font-weight: bold;
         left: 12px;
         bottom: 9px;
     }
+
     .interview-rate {
         position: absolute;
         left: 54px;
         bottom: 9px;
+
         svg {
             margin: 0 4px 0 0;
         }
@@ -639,6 +666,7 @@
     background: rgba(0, 0, 0, 0.4);
     z-index: 5;
 }
+
 .video-score-modal {
     width: 1106px;
     height: 435px;
@@ -651,47 +679,58 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+
     .btn-close {
         position: absolute;
         right: 17px;
         top: 17px;
     }
+
     .inner {
         display: flex;
         justify-content: space-between;
         padding: 60px 50px 60px 44px;
     }
+
     .left-col {
         flex: 0 0 47%;
     }
+
     .question {
         margin: 0;
         min-height: 100px;
     }
+
     .right-col {
         flex: 0 0 48%;
         text-align: right;
     }
+
     h4 {
         font-size: 16px;
         margin: 0 0 20px;
     }
+
     .evaluate-question {
         margin: 0 0 55px;
         display: flex;
+
         .star {
             margin: 0 5px 0 0;
             cursor: pointer;
+
             &:hover {
                 svg g {
                     fill: #455565;
                 }
             }
+
             &.active svg g {
                 fill: #455565;
             }
         }
     }
+
     .next-question {
         width: 137px;
         height: 36px;
@@ -705,16 +744,20 @@
         display: flex;
         align-items: center;
         justify-content: flex-end;
+
         svg {
             margin: 0 5px 0 15px;
         }
     }
+
     .video-block {
         border: solid 1px #979797;
         background-color: #d8d8d8;
         height: 100%;
+        max-width: 100%;
         display: inline-flex;
     }
+
     video {
         outline: none;
         height: 100%;
@@ -731,6 +774,7 @@
     display: flex;
     align-items: center;
     margin: 0 0 50px;
+
     img {
         margin: 0 19px 0 0;
         width: 29px;

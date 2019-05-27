@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { environment } from '@env/environment';
+import { Candidate } from '../models/candidate';
 import { Job } from './../models/job';
 import { UtilitiesService } from './utilities.service';
 
@@ -154,11 +155,11 @@ export class JobService {
         return this.http.get(`${this.baseURL}/jobs/${jobId}/candidates`);
     }
 
-    getCandidate(jobId: string, candidateId) {
+    getCandidate(jobId: string, candidateId): Observable<any> {
         if (jobId === 'new') {
             return of({ title: '' });
         } else {
-            return this.http.get(`${this.baseURL}/jobs/${jobId}/candidates/${candidateId}`);
+            return this.http.get<any>(`${this.baseURL}/jobs/${jobId}/candidates/${candidateId}`);
         }
     }
 
@@ -192,5 +193,12 @@ export class JobService {
 
     updateCandidateStage(jobId: string, candidateId: string, stage: any) {
         return this.http.put(`${this.baseURL}/jobs/${jobId}/candidates/${candidateId}/stage`, { data: { stage } });
+    }
+
+    evaluateCandidateVideoAnswer(jobId: string, candidateId: string, stageId: string, data: any) {
+        return this.http.put(
+            `${this.baseURL}/jobs/${jobId}/candidates/${candidateId}/stages/${stageId}/evaluate-video`,
+            data
+        );
     }
 }
