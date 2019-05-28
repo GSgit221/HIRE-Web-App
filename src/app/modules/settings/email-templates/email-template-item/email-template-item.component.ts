@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { Message } from 'primeng/components/common/api';
+import { Message, SelectItem } from 'primeng/components/common/api';
 
 import { EmailTemplate } from '../../../../core/models/email-template';
 import { EmailService } from '../../../../core/services/email.service';
@@ -23,6 +23,7 @@ export class EmailTemplateItemComponent implements OnInit {
     emailTemplateId: string;
     itemForm: FormGroup;
     msgs: Message[] = [];
+    InsertPlaceholders: SelectItem[];
     fromOptions = [
         { label: 'Job Owner Email', value: 'owner' },
         { label: 'Recruiter Initiating Email', value: 'recruiter' }
@@ -48,7 +49,8 @@ export class EmailTemplateItemComponent implements OnInit {
             subject: ['', Validators.required],
             from: ['owner', Validators.required],
             delayed: ['none', Validators.required],
-            content: ['', Validators.required]
+            content: ['', Validators.required],
+            emailplaceholder: ['']
         });
         this.store.pipe(select(fromStoreSelectors.getSelectedEmail)).subscribe(
             (emailTemplate: EmailTemplate) => {
@@ -65,6 +67,15 @@ export class EmailTemplateItemComponent implements OnInit {
                 this.initialLoad = false;
             }
         });
+
+        this.InsertPlaceholders = [
+            { label: 'candidate_name', value: '{{ candidate_name }}' },
+            { label: 'missing_fields', value: '{{ missing_fields }}' },
+            { label: 'sender_email', value: '{{ sender_email }}' },
+            { label: 'sender_name', value: '{{ sender_name }}' },
+            { label: 'job_title', value: '{{ job_title }}' },
+            { label: 'sender_company', value: '{{ sender_company }}' }
+        ];
     }
 
     ngOnInit() {}
@@ -75,7 +86,8 @@ export class EmailTemplateItemComponent implements OnInit {
             subject: [item.subject || '', Validators.required],
             from: [item.from || 'owner', Validators.required],
             delayed: [item.delayed || 'none', Validators.required],
-            content: [item.content || '', Validators.required]
+            content: [item.content || '', Validators.required],
+            emailplaceholder: [item.emailplaceholder || '']
         });
     }
 
@@ -110,5 +122,9 @@ export class EmailTemplateItemComponent implements OnInit {
             //     }
             // );
         }
+    }
+
+    onChangePlaceholder(event) {
+        console.log(event);
     }
 }
