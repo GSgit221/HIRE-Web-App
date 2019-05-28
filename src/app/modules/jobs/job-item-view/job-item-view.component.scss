@@ -429,6 +429,14 @@
             }
         }
 
+        &.alert {
+            .warning-block-holder {
+                &:before {
+                    background: $red;
+                }
+            }
+        }
+
         span {
             position: absolute;
             left: 7px;

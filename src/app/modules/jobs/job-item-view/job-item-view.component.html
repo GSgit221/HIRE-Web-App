@@ -109,7 +109,17 @@
                             (onDragEnd)="onCandidateDragEnd()"
                             [ngClass]="{ dd: candidate.isDdEmployee }"
                         >
-                            <div class="warning-block" *ngIf="!candidate.resume_file">
+                            <div class="warning-block" *ngIf="candidate && !candidate.resume_file">
+                                <div class="warning-block-holder"><span>!</span></div>
+                            </div>
+                            <div
+                                class="warning-block alert"
+                                *ngIf="
+                                    candidate &&
+                                    candidate.markedAsUnsuccessful &&
+                                    candidate.markedAsUnsuccessful[job.id]
+                                "
+                            >
                                 <div class="warning-block-holder"><span>!</span></div>
                             </div>
                             <div
@@ -121,8 +131,21 @@
                                         candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold,
                                     red: candidate.score < resumeThreshold - 15
                                 }"
+                                [hidden]="
+                                    candidate &&
+                                    candidate.markedAsUnsuccessful &&
+                                    candidate.markedAsUnsuccessful[job.id]
+                                "
                             ></div>
-                            <span class="complience-value">{{ candidate.score }}%</span>
+                            <span
+                                class="complience-value"
+                                [hidden]="
+                                    candidate &&
+                                    candidate.markedAsUnsuccessful &&
+                                    candidate.markedAsUnsuccessful[job.id]
+                                "
+                                >{{ candidate.score }}%</span
+                            >
                             <div class="ava-column">
                                 <div class="ava">
                                     <img
@@ -251,8 +274,21 @@
                                         candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold,
                                     red: candidate.score < resumeThreshold - 15
                                 }"
+                                [hidden]="
+                                    candidate &&
+                                    candidate.markedAsUnsuccessful &&
+                                    candidate.markedAsUnsuccessful[job.id]
+                                "
                             ></div>
-                            <span class="complience-value">{{ candidate.score }}%</span>
+                            <span
+                                class="complience-value"
+                                [hidden]="
+                                    candidate &&
+                                    candidate.markedAsUnsuccessful &&
+                                    candidate.markedAsUnsuccessful[job.id]
+                                "
+                                >{{ candidate.score }}%</span
+                            >
                             <div class="ava-column">
                                 <div class="ava">
                                     <img
