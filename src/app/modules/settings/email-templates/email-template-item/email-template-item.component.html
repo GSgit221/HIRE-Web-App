@@ -103,6 +103,15 @@
                                 <span class="ql-formats">
                                     <button aria-label="Remove Styles" class="ql-clean" type="button"></button>
                                 </span>
+                                <span class="ql-formats job_desc">
+                                    <p-dropdown
+                                        formControlName="emailplaceholder"
+                                        [options]="InsertPlaceholders"
+                                        placeholder="Insert placeholder"
+                                        (onChange)="onChangePlaceholder($event)"
+                                        [style]="{ width: '100%' }"
+                                    ></p-dropdown>
+                                </span>
                             </p-header>
                         </p-editor>
                     </div>
