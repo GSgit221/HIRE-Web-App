@@ -97,9 +97,9 @@ export class NewCandidateItemComponent implements OnInit {
 
     onFinishClicked(event) {
         event.preventDefault();
-        if (this.form.value.send_email && this.emails.length) {
+        if (this.emails.length) {
             this.jobService
-                .sendEmailsToCandidates(this.jobId, this.emails)
+                .setCandidatesEmailNotifications(this.jobId, this.emails, this.form.value.send_email)
                 .subscribe((response) => console.log(response), (error) => console.error(error));
             this.uploadQueue = [];
             this.emails = [];
@@ -112,6 +112,7 @@ export class NewCandidateItemComponent implements OnInit {
     }
 
     processFiles(files) {
+        console.log(files);
         for (let i = 0, file; (file = files[i]); i++) {
             console.log(file);
             if (this.validateFileType(file, this.supportedFileTypes)) {
@@ -145,14 +146,19 @@ export class NewCandidateItemComponent implements OnInit {
     }
 
     processQueue() {
-        this.uploadQueue.forEach((item) => {
+        this.uploadQueue.forEach((item, index) => {
             if (!item.uploadStarted && !item.uploadFinished) {
-                this.uploadFile(item);
+                setTimeout(() => {
+                    this.uploadFile(item);
+                }, index * 1000);
             }
         });
     }
 
     uploadFile(item) {
+        if (item.success) {
+            return;
+        }
         this.utilities
             .readFile(item.file)
             .then((fileValue: any) => {
@@ -181,21 +187,27 @@ export class NewCandidateItemComponent implements OnInit {
                         clearInterval(uploadProgressInterval);
                         this.emails.push(resp.candidate.email);
 
-                        setTimeout(() => {
-                            item.fadeout = true;
-                        }, 2000);
+                        // setTimeout(() => {
+                        //     item.fadeout = true;
+                        // }, 2000);
 
                         // Remove from upload queue
-                        setTimeout(() => {
-                            const itemIndex = this.uploadQueue.findIndex((ui) => ui.id === item.id);
-                            if (itemIndex !== -1) {
-                                this.uploadQueue.splice(itemIndex, 1);
-                            }
-                        }, 3000);
+                        // setTimeout(() => {
+                        //     const itemIndex = this.uploadQueue.findIndex((ui) => ui.id === item.id);
+                        //     if (itemIndex !== -1) {
+                        //         this.uploadQueue.splice(itemIndex, 1);
+                        //     }
+                        // }, 3000);
                     },
                     (response: HttpErrorResponse) => {
                         console.error(response);
-                        item.text = response && response.error && response.error.error ? response.error.error : 'Error';
+                        item.text =
+                            response &&
+                            response.error &&
+                            response.error.error &&
+                            Object.keys(response.error.error).length
+                                ? response.error.error
+                                : 'Error';
                         if (item.text === 'Email address not found in resume. Please enter a valid email address') {
                             item.missingEmail = true;
                             item.email = '';
