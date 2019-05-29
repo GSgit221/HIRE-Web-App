@@ -109,7 +109,17 @@
                             (onDragEnd)="onCandidateDragEnd()"
                             [ngClass]="{ dd: candidate.isDdEmployee }"
                         >
-                            <div class="warning-block" *ngIf="!candidate.resume_file">
+                            <div class="warning-block" *ngIf="candidate && !candidate.resume_file">
+                                <div class="warning-block-holder"><span>!</span></div>
+                            </div>
+                            <div
+                                class="warning-block alert"
+                                *ngIf="
+                                    candidate &&
+                                    candidate.markedAsUnsuccessful &&
+                                    candidate.markedAsUnsuccessful[job.id]
+                                "
+                            >
                                 <div class="warning-block-holder"><span>!</span></div>
                             </div>
                             <div
@@ -121,8 +131,21 @@
                                         candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold,
                                     red: candidate.score < resumeThreshold - 15
                                 }"
+                                [hidden]="
+                                    candidate &&
+                                    candidate.markedAsUnsuccessful &&
+                                    candidate.markedAsUnsuccessful[job.id]
+                                "
                             ></div>
-                            <span class="complience-value">{{ candidate.score }}%</span>
+                            <span
+                                class="complience-value"
+                                [hidden]="
+                                    candidate &&
+                                    candidate.markedAsUnsuccessful &&
+                                    candidate.markedAsUnsuccessful[job.id]
+                                "
+                                >{{ candidate.score }}%</span
+                            >
                             <div class="ava-column">
                                 <div class="ava">
                                     <img
@@ -136,10 +159,15 @@
                                 </div>
                             </div>
                             <div class="block-content">
-                                <strong class="title"
+                                <strong
+                                    class="title"
+                                    *ngIf="candidate.first_name || candidate.last_name; else noFirstName"
                                     >{{ candidate.first_name | titlecase }}
                                     {{ candidate.last_name | titlecase }}</strong
                                 >
+                                <ng-template #noFirstName>
+                                    <strong class="title">{{ candidate.email }}</strong>
+                                </ng-template>
                                 <span class="position" *ngIf="candidate.employment_history"
                                     >{{ candidate.employment_history[0].title | titlecase }} @
                                     {{ candidate.employment_history[0].company | titlecase }}</span
@@ -251,8 +279,21 @@
                                         candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold,
                                     red: candidate.score < resumeThreshold - 15
                                 }"
+                                [hidden]="
+                                    candidate &&
+                                    candidate.markedAsUnsuccessful &&
+                                    candidate.markedAsUnsuccessful[job.id]
+                                "
                             ></div>
-                            <span class="complience-value">{{ candidate.score }}%</span>
+                            <span
+                                class="complience-value"
+                                [hidden]="
+                                    candidate &&
+                                    candidate.markedAsUnsuccessful &&
+                                    candidate.markedAsUnsuccessful[job.id]
+                                "
+                                >{{ candidate.score }}%</span
+                            >
                             <div class="ava-column">
                                 <div class="ava">
                                     <img
@@ -260,16 +301,21 @@
                                         alt="profile image"
                                         *ngIf="candidate.profile_image"
                                     />
-                                    <div class="ava-placeholder" *ngIf="!candidate.profile_image">
+                                    <div class="ava-placeholder" *ngIf="!candidate.profile_image && candidate">
                                         {{ candidate | initials }}
                                     </div>
                                 </div>
                             </div>
                             <div class="block-content">
-                                <strong class="title"
+                                <strong
+                                    class="title"
+                                    *ngIf="candidate.first_name || candidate.last_name; else noFirstName"
                                     >{{ candidate.first_name | titlecase }}
                                     {{ candidate.last_name | titlecase }}</strong
                                 >
+                                <ng-template #noFirstName>
+                                    <strong class="title">{{ candidate.email }}</strong>
+                                </ng-template>
                                 <span class="position" *ngIf="candidate.employment_history"
                                     >{{ candidate.employment_history[0].title | titlecase }} @
                                     {{ candidate.employment_history[0].company | titlecase }}</span

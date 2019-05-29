@@ -183,8 +183,11 @@ export class JobService {
         return this.http.delete(`${this.baseURL}/jobs/${jobId}/candidates/${candidateId}`);
     }
 
-    sendEmailsToCandidates(jobId: string, emails: string[]) {
-        return this.http.post(`${this.baseURL}/jobs/${jobId}/candidates/send-emails`, { emails });
+    setCandidatesEmailNotifications(jobId: string, emails: string[], send_emails: boolean) {
+        return this.http.post(`${this.baseURL}/jobs/${jobId}/candidates/set-email-notifications`, {
+            emails,
+            send_emails
+        });
     }
 
     createJobFromCv(formData: object) {
