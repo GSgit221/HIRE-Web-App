@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
@@ -25,7 +25,6 @@ export class EmailTemplateItemComponent implements OnInit {
     initialLoad = true;
     emailTemplateId: string;
     cursorPosition: any;
-    textContent: any;
     itemForm: FormGroup;
     msgs: Message[] = [];
     InsertPlaceholders: SelectItem[];
@@ -86,97 +85,24 @@ export class EmailTemplateItemComponent implements OnInit {
             { label: 'job_owner', value: '{{job_owner}}' }
         ];
     }
-    @Input() get readonly(): boolean {
-        return this._readonly;
-    }
 
-    set readonly(val: boolean) {
-        this._readonly = val;
-
-        if (this.quill) {
-            if (this._readonly) {
-                this.quill.disable();
-            } else {
-                this.quill.enable();
-            }
-        }
-    }
-
-    @Output() onTextChange: EventEmitter<any> = new EventEmitter();
-
-    @Output() onSelectionChange: EventEmitter<any> = new EventEmitter();
-
-    @Input() placeholder: string;
-
-    @Input() formats: string[];
-
-    @Input() modules: any;
-
-    @Input() bounds: Element;
-
-    @Input() scrollingContainer: Element;
-
-    @Input() debug: string;
-
-    @Output() onInit: EventEmitter<any> = new EventEmitter();
+    @ViewChild('pEditor') pEditor: any;
 
     value: string;
-
-    _readonly: boolean;
 
     quill: any;
 
     ngOnInit() {}
 
     ngAfterViewInit() {
-        const editorElement = DomHandler.findSingle(this.el.nativeElement, 'div.ui-editor-content');
-        const toolbarElement = DomHandler.findSingle(this.el.nativeElement, 'div.ui-editor-toolbar');
-        const defaultModule = { toolbar: toolbarElement };
-        const modules = this.modules ? { ...defaultModule, ...this.modules } : defaultModule;
-
-        this.quill = new Quill(editorElement, {
-            modules,
-            placeholder: this.placeholder,
-            readOnly: this.readonly,
-            formats: this.formats,
-            bounds: this.bounds,
-            debug: this.debug,
-            scrollingContainer: this.scrollingContainer
-        });
+        this.quill = this.pEditor.quill;
 
         if (this.value) {
             this.quill.pasteHTML(this.value);
         }
 
-        this.quill.on('text-change', (delta, oldContents, source) => {
-            this.textContent = oldContents;
-            if (source === 'user') {
-                let html = editorElement.children[0].innerHTML;
-                const text = this.quill.getText().trim();
-                if (html === '<p><br></p>') {
-                    html = null;
-                }
-
-                this.onTextChange.emit({
-                    htmlValue: html,
-                    textValue: text,
-                    delta,
-                    source
-                });
-            }
-        });
-
         this.quill.on('selection-change', (range, oldRange, source) => {
             this.cursorPosition = oldRange;
-            this.onSelectionChange.emit({
-                range,
-                oldRange,
-                source
-            });
-        });
-
-        this.onInit.emit({
-            editor: this.quill
         });
     }
 
@@ -210,27 +136,17 @@ export class EmailTemplateItemComponent implements OnInit {
                 this.item = { ...this.item, ...form.value };
                 this.contentLoading = false;
             }, 1000);
-
-            // this.emailService.update(this.item.id, form.value).subscribe(
-            //     (emailTemplate: EmailTemplate) => {
-            //         this.contentLoading = false;
-            //     },
-            //     (errorResponse) => {
-            //         console.error(errorResponse);
-            //         this.msgs = [{ severity: 'error', detail: errorResponse.error.error || 'Error' }];
-            //         this.contentLoading = false;
-            //     }
-            // );
         }
     }
 
     onChangePlaceholder(event) {
-        const inset = this.textContent ? this.textContent.ops[0].insert : '';
-        const index = this.cursorPosition ? this.cursorPosition.index : 0;
-        const editor_content = [inset.slice(0, index), event.value, inset.slice(index)].join('');
-        this.quill.setContents({
-            ops: [{ insert: editor_content }]
+        let index: number = this.cursorPosition ? this.cursorPosition.index : 0;
+
+        this.quill.insertText(index, event.value, {
+            color: '#8e8e93'
         });
-        // this.itemForm.controls['content'].setValue(a);
+        this.quill.insertText(index + event.value.length, ' ');
+        this.quill.removeFormat(index + event.value.length, index + event.value.length + 1);
+        //this.cursorPosition = this.quill.getLength()
     }
 }
