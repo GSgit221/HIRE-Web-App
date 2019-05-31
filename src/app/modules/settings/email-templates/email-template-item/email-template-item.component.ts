@@ -1,16 +1,16 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Message, SelectItem } from 'primeng/components/common/api';
 
+import { FindVariables } from 'app/libs/util';
 import { EmailTemplate } from '../../../../core/models/email-template';
 import { EmailService } from '../../../../core/services/email.service';
 import * as fromStore from '../store';
 import * as fromStoreActions from '../store/actions/emails.action';
 import * as fromStoreSelectors from '../store/selectors/emails.selector';
 import { FormHelperService } from './../../../../core/services/form-helper.service';
-import { DomHandler } from './../../../../libs/editor/domhandler';
 
 declare var Quill: any;
 
@@ -45,8 +45,7 @@ export class EmailTemplateItemComponent implements OnInit {
         private route: ActivatedRoute,
         private fb: FormBuilder,
         private formHelper: FormHelperService,
-        private store: Store<fromStore.EmailsState>,
-        public el: ElementRef
+        private store: Store<fromStore.EmailsState>
     ) {
         this.emailTemplateId = this.route.snapshot.url[0].path;
         this.itemForm = this.fb.group({
@@ -101,6 +100,10 @@ export class EmailTemplateItemComponent implements OnInit {
             this.quill.pasteHTML(this.value);
         }
 
+        this.quill.on('text-change', (delta, oldContents, source) => {
+            this.formateQuillTest();
+        });
+
         this.quill.on('selection-change', (range, oldRange, source) => {
             this.cursorPosition = oldRange;
         });
@@ -119,6 +122,7 @@ export class EmailTemplateItemComponent implements OnInit {
 
     onSave() {
         const form = this.itemForm;
+        console.log(form);
         if (!form.valid) {
             this.formHelper.markFormGroupTouched(form);
             console.log('FORM IS INVALID:', form);
@@ -141,12 +145,34 @@ export class EmailTemplateItemComponent implements OnInit {
 
     onChangePlaceholder(event) {
         let index: number = this.cursorPosition ? this.cursorPosition.index : 0;
+        this.quill.insertText(index, event.value, {}, 'user');
+        this.quill.insertText(index + event.value.length, ' ', 'user');
+        //function of format {{}} variables
+        this.formateQuillTest();
+    }
 
-        this.quill.insertText(index, event.value, {
-            color: '#8e8e93'
-        });
-        this.quill.insertText(index + event.value.length, ' ');
-        this.quill.removeFormat(index + event.value.length, index + event.value.length + 1);
-        //this.cursorPosition = this.quill.getLength()
+    formateQuillTest() {
+        const inset = this.quill.getText();
+        let variables = FindVariables(inset);
+
+        for (let variable of variables) {
+            this.quill.formatText(
+                variable.index,
+                variable.index + variable.name.length,
+                {
+                    color: '#8e8e93'
+                },
+                'silent'
+            );
+
+            this.quill.formatText(
+                variable.index + variable.name.length,
+                variable.index + variable.name.length + 1,
+                {
+                    color: '#000'
+                },
+                'silent'
+            );
+        }
     }
 }
