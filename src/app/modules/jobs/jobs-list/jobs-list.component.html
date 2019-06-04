@@ -8,7 +8,7 @@
                 (filterChange)="onFilterChanges($event)"
                 [availableFilters]="['city', 'country']"
             ></app-list-filter>
-            <button class="btn btn-primary w140 mla" routerLink="/dashboard/jobs/new">Add Job</button>
+            <button class="btn btn-primary w140 mla btn-align" routerLink="/dashboard/jobs/new">Add Job</button>
         </div>
     </div>
     <div class="job-list-container" appDragEnter (dropFile)="onDropFile($event)">

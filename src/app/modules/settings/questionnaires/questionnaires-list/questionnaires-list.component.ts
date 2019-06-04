@@ -28,7 +28,10 @@ export class QuestionnairesListComponent implements OnInit {
         // Get questionnaires from store
         this.store.pipe(select(fromStore.getAllQuestionnaires)).subscribe((questionnaires: Questionnaire[]) => {
             if (questionnaires) {
-                this.list = questionnaires;
+                this.list = questionnaires.map((item) => ({
+                    ...item,
+                    selected: false
+                }));
             }
         });
         // Get loading state from stroe

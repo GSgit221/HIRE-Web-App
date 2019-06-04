@@ -233,6 +233,8 @@ export class JobItemEditComponent implements OnInit {
         console.log(job_des);
         const res = job_des[0].Responsibilities.split('.');
         const req = job_des[0].Requirements.split('.');
+        res.pop();
+        req.pop();
         for (let i of res) {
             this.str_array.push('<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + i + '.</p>');
         }
@@ -241,7 +243,7 @@ export class JobItemEditComponent implements OnInit {
         }
         const str_array = this.str_array.toString();
         const req_str_array = this.req_str_array.toString();
-        const regex = new RegExp(',', 'g');
+        const regex = new RegExp('</p>,', 'g');
         const st_array = str_array.replace(regex, '');
         const req_st_array = req_str_array.replace(regex, '');
         const description = `${job_des[0].Overview}  ${job_des[0].Description}  ${st_array}`;
