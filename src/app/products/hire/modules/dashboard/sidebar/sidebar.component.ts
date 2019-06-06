@@ -32,7 +32,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
         private utilities: UtilitiesService
     ) {
         this.baseUrl = `/tenant/${this.utilities.getTenant()}/hire`;
-        console.log(this.baseUrl);
         this.store.dispatch(new fromUsersActions.LoadUsers());
     }
 

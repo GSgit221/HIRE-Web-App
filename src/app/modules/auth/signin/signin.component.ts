@@ -35,38 +35,7 @@ export class SigninComponent implements OnInit {
         this.googleSigninLink = this.authService.getGoogleSigninLink();
     }
 
-    ngOnInit() {
-        // const urlParts = decodeURIComponent(this.location.path())
-        //     .replace('#', '&')
-        //     .split('&');
-        // const idTokenPart = urlParts.find((p) => p.indexOf('id_token=') !== -1);
-        // const statePart = urlParts.find((p) => p.indexOf('state=') !== -1);
-        // if (idTokenPart && statePart) {
-        //     const token = idTokenPart.replace('id_token=', '');
-        //     const state = statePart.replace('state=', '');
-        //     const stateParts = state.split('-');
-        //     const type = stateParts[0];
-        //     const tenantId = stateParts[1];
-        //     // console.log(tenantId, type);
-        //     // console.log(token);
-        //     // console.log('redirect');
-        //     // if (type === 'signin') {
-        //     //     // this.onSignInWithGoogle(token, tenantId);
-        //     // }
-        //     // if (type === 'signup') {
-        //     //     this.router.navigateByUrl(
-        //     //         this.router.createUrlTree(['complete-signup'], { queryParams: { tenantId, token } })
-        //     //     );
-        //     // }
-        // } else {
-        //     // Check if app
-        //     const tenant = this.utilities.getTenant();
-        //     console.log(tenant);
-        //     if (tenant === 'app') {
-        //         this.router.navigateByUrl('/auth/signup');
-        //     }
-        // }
-    }
+    ngOnInit() {}
 
     onGoogleSigninClick(event) {
         event.preventDefault();
@@ -82,6 +51,7 @@ export class SigninComponent implements OnInit {
                         this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
                     },
                     (response) => {
+                        this.contentLoading = false;
                         this.msgs = [];
                         this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
                     }
@@ -94,29 +64,6 @@ export class SigninComponent implements OnInit {
             });
     }
 
-    // onSignInWithGoogle(idToken, tenant) {
-    //     this.contentLoading = true;
-    //     this.authService
-    //         .getUserData()
-    //         .then((userData) => {
-    //             this.authService.signInWithGoogle(idToken, userData, tenant).subscribe(
-    //                 (response) => {
-    //                     this.contentLoading = false;
-    //                     this.msgs = [];
-    //                     this.authService.setSession(response, tenant);
-    //                     const url = environment.appUrl.replace('subdomain', tenant);
-    //                     console.log('REDIRECTING:', url);
-    //                     window.location.href = url;
-    //                 },
-    //                 (response) => {
-    //                     this.msgs = [];
-    //                     this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
-    //                 }
-    //             );
-    //         })
-    //         .catch((error) => console.log(error));
-    // }
-
     onSignIn(event) {
         event.preventDefault();
         if (!this.signinForm.valid) {
@@ -126,11 +73,11 @@ export class SigninComponent implements OnInit {
         this.contentLoading = true;
         const val = this.signinForm.value;
         this.authService.signin(val.email, val.password).subscribe(
-            (response) => {
+            (response: any) => {
                 this.contentLoading = false;
                 this.msgs = [];
                 this.authService.setSession(response);
-                this.router.navigateByUrl('/');
+                this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
             },
             (response) => {
                 this.contentLoading = false;

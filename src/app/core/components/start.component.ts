@@ -14,6 +14,7 @@ import { User } from './../models/user';
 })
 export class StartComponent {
     constructor(private store: Store<fromStore.State>, private authService: AuthService, private router: Router) {
+        console.log('START');
         this.store
             .pipe(
                 select(fromSelectors.getUserEntity),

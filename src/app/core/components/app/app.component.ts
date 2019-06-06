@@ -17,6 +17,7 @@ export class AppComponent {
     contentLoading = false;
     constructor(private authService: AuthService, private store: Store<fromStore.State>, private router: Router) {
         if (authService.isLoggedIn()) {
+            console.log('LOGGED IN USER');
             this.contentLoading = true;
             this.store.dispatch(new fromStore.LoadUser());
             this.store

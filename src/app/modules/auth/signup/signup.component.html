@@ -17,7 +17,7 @@
                         <app-loader *ngIf="contentLoading"></app-loader>
                         <div class="inner-block">
                             <ng-container *ngIf="step === 'first'">
-                                <a class="signin-btn" [href]="googleSigninLink">
+                                <span class="signin-btn" (click)="onGoogleSignup()">
                                     <span class="abcRioButtonIcon" style="padding:6px">
                                         <span
                                             style="width:18px;height:18px;"
@@ -32,7 +32,7 @@
                                         </span>
                                     </span>
                                     <span class="text">Sign up with Google</span>
-                                </a>
+                                </span>
                                 <div class="separator"><span class="separator-text">OR</span></div>
                                 <form [formGroup]="credentialsForm" autocomplete="off">
                                     <p-messages [(value)]="msgs"></p-messages>

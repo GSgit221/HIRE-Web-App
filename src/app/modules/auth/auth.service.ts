@@ -57,8 +57,11 @@ export class AuthService {
         return this.http.post(`${environment.apiUrl}/auth/oauth/google`, authData);
     }
 
-    signUpWithGoogle(token, geo_data = {}, tenant) {
-        return this.http.post(`${environment.apiUrl}/auth/signup-google`, { token, geo_data, source: 'jobs', tenant });
+    signUpWithGoogle(data) {
+        return this.http.post(`${environment.apiUrl}/auth/oauth/signup-google`, {
+            ...data,
+            source: 'jobs'
+        });
     }
 
     completeSignUpWithGoogle(token, data, tenant) {
@@ -114,14 +117,15 @@ export class AuthService {
         //     tenant = this.utilities.getTenant();
         // }
         // this.cookie.set(`${tenant}_access_token`, authResult.access_token, 12, '/', environment.cookieDomain);
-        this.cookie.set('access_token', authResult.access_token, 12);
+        this.cookie.set('access_token', authResult.access_token, 12, '/');
     }
 
     logout() {
         // const tenant = this.utilities.getTenant();
         // this.cookie.delete(`${tenant}_access_token`, '/', environment.cookieDomain);
         // this.cookie.delete(`${tenant}_access_token`, '/', environment.applyCookieDomain);
-        this.cookie.delete('access_token');
+        this.socialAuthService.signOut();
+        this.cookie.delete('access_token', '/');
     }
 
     isLoggedIn() {
