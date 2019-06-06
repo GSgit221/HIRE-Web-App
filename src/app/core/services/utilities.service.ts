@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ActivatedRoute, UrlSegment } from '@angular/router';
 import * as moment from 'moment';
 
 import { environment } from '@env/environment';
@@ -8,7 +9,7 @@ import { environment } from '@env/environment';
     providedIn: 'root'
 })
 export class UtilitiesService {
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private route: ActivatedRoute) {}
 
     readFile(file): Promise<{ name: string; size: number; mimetype: string; data: string }> {
         return new Promise((resolve, reject) => {
@@ -81,13 +82,12 @@ export class UtilitiesService {
     }
 
     getTenant() {
-        const url = window.location.hostname.split('.hire');
-        let tenant = url[0] && url[0].indexOf('.') === -1 ? url[0] : 'undefined';
-        // TEMPORARY
-        if (tenant === 'dev' || tenant === 'undefined') {
-            tenant = 'dimensiondata';
-        }
-        return tenant;
+        const tenant = window.location.pathname.split('/')[2];
+        return tenant || 'undefined';
+    }
+
+    getHireBaseUrl() {
+        return `/tenant/${this.getTenant()}/hire`;
     }
 
     isLocalDevelopment() {

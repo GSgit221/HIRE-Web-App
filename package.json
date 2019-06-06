@@ -33,6 +33,7 @@
         "angular-cc-library": "^1.2.4",
         "angular-svg-icon": "^7.2.0",
         "angularfire2": "^5.1.3",
+        "angularx-social-login": "^1.2.6",
         "animate.css": "^3.7.0",
         "chart.js": "^2.8.0",
         "closest": "0.0.1",

@@ -13,7 +13,7 @@ import { UtilitiesService } from './utilities.service';
 export class EmailService {
     apiURL: string = environment.apiUrl;
     tenantId = 'undefined';
-    baseURL = '';
+    baseUrl = '';
     newItem = {
         title: '',
         subject: '',
@@ -28,11 +28,11 @@ export class EmailService {
 
     constructor(private http: HttpClient, private utilities: UtilitiesService) {
         this.tenantId = this.utilities.getTenant();
-        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}/settings/email-templates`;
+        this.baseUrl = `${this.apiURL}/tenants/${this.tenantId}/settings/email-templates`;
     }
 
     findAll() {
-        return this.http.get<EmailTemplate[]>(`${this.baseURL}`).pipe(
+        return this.http.get<EmailTemplate[]>(`${this.baseUrl}`).pipe(
             map((emailTemplates: EmailTemplate[]) => emailTemplates.sort((a, b) => a.created_at - b.created_at)),
             catchError((error: any) => throwError(error))
         );
@@ -40,7 +40,7 @@ export class EmailService {
 
     create(data: any) {
         return this.http
-            .post<EmailTemplate>(`${this.baseURL}`, { data })
+            .post<EmailTemplate>(`${this.baseUrl}`, { data })
             .pipe(catchError((error: any) => throwError(error)));
     }
 
@@ -49,24 +49,24 @@ export class EmailService {
             return of(this.newItem);
         } else {
             return this.http
-                .get<EmailTemplate>(`${this.baseURL}/${id}`)
+                .get<EmailTemplate>(`${this.baseUrl}/${id}`)
                 .pipe(catchError((error: any) => throwError(error)));
         }
     }
 
     update(id: string, data: any) {
         return this.http
-            .put<EmailTemplate>(`${this.baseURL}/${id}`, { data })
+            .put<EmailTemplate>(`${this.baseUrl}/${id}`, { data })
             .pipe(catchError((error: any) => throwError(error)));
     }
 
     delete(id: string) {
-        return this.http.delete(`${this.baseURL}/${id}`).pipe(catchError((error: any) => throwError(error)));
+        return this.http.delete(`${this.baseUrl}/${id}`).pipe(catchError((error: any) => throwError(error)));
     }
 
     bulkDelete(ids: string[]) {
         return this.http
-            .post(`${this.baseURL}/bulk-delete`, { items: ids })
+            .post(`${this.baseUrl}/bulk-delete`, { items: ids })
             .pipe(catchError((error: any) => throwError(error)));
     }
 }

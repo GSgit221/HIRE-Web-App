@@ -85,7 +85,7 @@ export class CompleteSignupComponent implements OnInit {
                         this.contentLoading = false;
                         console.log(response);
                         this.msgs = [];
-                        this.authService.setSession(response, tenant);
+                        this.authService.setSession(response);
                         const url = environment.appUrl.replace('subdomain', tenant);
                         console.log('REDIRECTING:', url);
                         window.location.href = url;
@@ -162,7 +162,7 @@ export class CompleteSignupComponent implements OnInit {
                     (response: any) => {
                         this.contentLoading = false;
                         this.msgs = [];
-                        this.authService.setSession(response, response.tenant_id);
+                        this.authService.setSession(response);
                         const url = environment.appUrl.replace('subdomain', response.tenant_id);
                         console.log('REDIRECTING:', url);
                         window.location.href = url;

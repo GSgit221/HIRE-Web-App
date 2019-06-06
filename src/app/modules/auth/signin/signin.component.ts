@@ -36,51 +36,50 @@ export class SigninComponent implements OnInit {
     }
 
     ngOnInit() {
-        const urlParts = decodeURIComponent(this.location.path())
-            .replace('#', '&')
-            .split('&');
-        const idTokenPart = urlParts.find((p) => p.indexOf('id_token=') !== -1);
-        const statePart = urlParts.find((p) => p.indexOf('state=') !== -1);
-        if (idTokenPart && statePart) {
-            const token = idTokenPart.replace('id_token=', '');
-            const state = statePart.replace('state=', '');
-            const stateParts = state.split('-');
-            const type = stateParts[0];
-            const tenantId = stateParts[1];
-            console.log(tenantId, type);
-            console.log(token);
-            console.log('redirect');
-            if (type === 'signin') {
-                this.onSignInWithGoogle(token, tenantId);
-            }
-            if (type === 'signup') {
-                this.router.navigateByUrl(
-                    this.router.createUrlTree(['complete-signup'], { queryParams: { tenantId, token } })
-                );
-            }
-        } else {
-            // Check if app
-            const tenant = this.utilities.getTenant();
-            console.log(tenant);
-            if (tenant === 'app') {
-                this.router.navigateByUrl('/auth/signup');
-            }
-        }
+        // const urlParts = decodeURIComponent(this.location.path())
+        //     .replace('#', '&')
+        //     .split('&');
+        // const idTokenPart = urlParts.find((p) => p.indexOf('id_token=') !== -1);
+        // const statePart = urlParts.find((p) => p.indexOf('state=') !== -1);
+        // if (idTokenPart && statePart) {
+        //     const token = idTokenPart.replace('id_token=', '');
+        //     const state = statePart.replace('state=', '');
+        //     const stateParts = state.split('-');
+        //     const type = stateParts[0];
+        //     const tenantId = stateParts[1];
+        //     // console.log(tenantId, type);
+        //     // console.log(token);
+        //     // console.log('redirect');
+        //     // if (type === 'signin') {
+        //     //     // this.onSignInWithGoogle(token, tenantId);
+        //     // }
+        //     // if (type === 'signup') {
+        //     //     this.router.navigateByUrl(
+        //     //         this.router.createUrlTree(['complete-signup'], { queryParams: { tenantId, token } })
+        //     //     );
+        //     // }
+        // } else {
+        //     // Check if app
+        //     const tenant = this.utilities.getTenant();
+        //     console.log(tenant);
+        //     if (tenant === 'app') {
+        //         this.router.navigateByUrl('/auth/signup');
+        //     }
+        // }
     }
 
-    onSignInWithGoogle(idToken, tenant) {
+    onGoogleSigninClick(event) {
+        event.preventDefault();
         this.contentLoading = true;
         this.authService
-            .getUserData()
-            .then((userData) => {
-                this.authService.signInWithGoogle(idToken, userData, tenant).subscribe(
-                    (response) => {
+            .onGoogleSignin()
+            .then((response) => {
+                this.authService.signInWithGoogle(response).subscribe(
+                    (response: any) => {
                         this.contentLoading = false;
                         this.msgs = [];
-                        this.authService.setSession(response, tenant);
-                        const url = environment.appUrl.replace('subdomain', tenant);
-                        console.log('REDIRECTING:', url);
-                        window.location.href = url;
+                        this.authService.setSession(response);
+                        this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
                     },
                     (response) => {
                         this.msgs = [];
@@ -88,8 +87,35 @@ export class SigninComponent implements OnInit {
                     }
                 );
             })
-            .catch((error) => console.log(error));
+            .catch((errorResponse) => {
+                this.contentLoading = false;
+                this.msgs = [];
+                this.msgs.push({ severity: 'error', detail: errorResponse.error || 'Error' });
+            });
     }
+
+    // onSignInWithGoogle(idToken, tenant) {
+    //     this.contentLoading = true;
+    //     this.authService
+    //         .getUserData()
+    //         .then((userData) => {
+    //             this.authService.signInWithGoogle(idToken, userData, tenant).subscribe(
+    //                 (response) => {
+    //                     this.contentLoading = false;
+    //                     this.msgs = [];
+    //                     this.authService.setSession(response, tenant);
+    //                     const url = environment.appUrl.replace('subdomain', tenant);
+    //                     console.log('REDIRECTING:', url);
+    //                     window.location.href = url;
+    //                 },
+    //                 (response) => {
+    //                     this.msgs = [];
+    //                     this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
+    //                 }
+    //             );
+    //         })
+    //         .catch((error) => console.log(error));
+    // }
 
     onSignIn(event) {
         event.preventDefault();

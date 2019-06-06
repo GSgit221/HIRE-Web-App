@@ -1,0 +1,422 @@
+<ng-container *ngIf="view === 'default'">
+    <div class="light-overlay" *ngIf="contentLoading"></div>
+    <div
+        class="form"
+        [formGroup]="feedbackForm"
+        [ngClass]="{
+            'owner-disabled': jobOwner && !alreadySelectedPositionRating,
+            'not-rating-disabled': jobOwner && positionSpecificCategories.length === 0 && showPositionRating
+        }"
+    >
+        <h3>Overall Candidate Thoughts?</h3>
+        <textarea formControlName="comments"></textarea>
+        <h3>Overall Rating?</h3>
+        <div class="overall-rating">
+            <div class="slider-wrap">
+                <p-slider
+                    formControlName="rating"
+                    [step]="25"
+                    [styleClass]="wert"
+                    [style]="{ width: '100%' }"
+                ></p-slider>
+                <div class="bar">
+                    <div class="bar-step w25"></div>
+                    <div class="bar-step w50"></div>
+                    <div class="bar-step w75"></div>
+                    <div class="bar-step w100"></div>
+                </div>
+            </div>
+            <div class="img-icons">
+                <img src="/assets/images/sad-icon.svg" alt="Sad icon" />
+                <img src="/assets/images/neutral-icon.svg" alt="Neutral icon" />
+                <img src="/assets/images/happy-icon.svg" alt="Happy icon" />
+            </div>
+        </div>
+        <div *ngIf="jobOwner && !alreadySelectedPositionRating" class="question-block">
+            <div class="wrap"><h3>Position Specific Rating</h3></div>
+            <div class="wrap">
+                <p>Will you be adding position specific ratings?</p>
+                <div class="question-btns">
+                    <button class="btn-add btn" (click)="selectSpecificRatingVisability(true)">Yes</button>
+                    <button class="btn-add btn" (click)="selectSpecificRatingVisability(false)">No</button>
+                </div>
+            </div>
+        </div>
+        <div
+            class="position-rating"
+            [ngClass]="{ edit: editMarks }"
+            *ngIf="showPositionRating && (jobOwner || positionSpecificCategories.length > 0)"
+        >
+            <div class="wrap">
+                <h3>Position Specific Rating</h3>
+                <ng-container *ngIf="!addPositionSpecificCategory && !editMarks && jobOwner">
+                    <button
+                        class="btn-add btn"
+                        (click)="addPositionSpecificCategory = true"
+                        *ngIf="!this.positionSpecificCategories.length"
+                    >
+                        Add
+                    </button>
+                    <button
+                        class="btn btn-edit"
+                        (click)="addPositionSpecificCategory = true"
+                        *ngIf="this.positionSpecificCategories.length"
+                    >
+                        Edit
+                    </button>
+                </ng-container>
+            </div>
+            <div class="list-abilities" [ngClass]="{ 'not-edit': !addPositionSpecificCategory }">
+                <div
+                    class="item"
+                    *ngFor="let category of positionSpecificCategories | sortByOrder: 'order'; let ind = index"
+                >
+                    <p>{{ category.title }}</p>
+                    <ng-container *ngIf="addPositionSpecificCategory">
+                        <button
+                            class="btn"
+                            (click)="moveUp(ind)"
+                            [ngClass]="{ disabled: ind == 0 }"
+                            [disabled]="ind == 0"
+                        >
+                            <img src="/assets/images/arrow-up.svg" alt="Arrow icon" />
+                        </button>
+                        <button
+                            class="btn"
+                            (click)="moveDown(ind)"
+                            [ngClass]="{ disabled: ind == positionSpecificCategories.length - 1 }"
+                            [disabled]="ind == positionSpecificCategories.length - 1"
+                        >
+                            <img src="/assets/images/arrow-down.svg" alt="Arrow icon" />
+                        </button>
+                        <button
+                            class="btn"
+                            (click)="onRemovePositionSpecificCategory(ind)"
+                            [ngClass]="{ hide: positionSpecificCategories.length === 1 }"
+                        >
+                            <img src="/assets/images/close.svg" alt="Arrow icon" />
+                        </button>
+                    </ng-container>
+                    <ng-container *ngIf="!addPositionSpecificCategory">
+                        <div class="img-icons">
+                            <div
+                                class="img-block"
+                                [ngClass]="{ pink: category.value === 1 }"
+                                (click)="onEvaluateCategory(ind, 1, category)"
+                            >
+                                <svg
+                                    width="20px"
+                                    height="20px"
+                                    viewBox="0 0 20 20"
+                                    version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                                >
+                                    <g
+                                        id="Recruit-Setup"
+                                        stroke="none"
+                                        stroke-width="1"
+                                        fill="none"
+                                        fill-rule="evenodd"
+                                    >
+                                        <g
+                                            id="Scorecard---Default"
+                                            transform="translate(-855.000000, -526.000000)"
+                                            fill="#FE7F7F"
+                                            fill-rule="nonzero"
+                                        >
+                                            <g id="icons8-sad" transform="translate(855.000000, 526.000000)">
+                                                <path
+                                                    d="M10,0 C4.487023,0 0,4.487023 0,10 C0,15.5129767 4.487023,20 10,20 C15.5129767,20 20,15.5129767 20,10 C20,4.487023 15.5129767,0 10,0 Z M10,1.66666667 C14.6122433,1.66666667 18.3333333,5.38775658 18.3333333,10 C18.3333333,14.6122433 14.6122433,18.3333333 10,18.3333333 C5.38775658,18.3333333 1.66666667,14.6122433 1.66666667,10 C1.66666667,5.38775658 5.38775658,1.66666667 10,1.66666667 Z M6.25,8.33333333 C5.55964406,8.33333333 5,8.8929774 5,9.58333333 C5,10.2736893 5.55964406,10.8333333 6.25,10.8333333 C6.94035594,10.8333333 7.5,10.2736893 7.5,9.58333333 C7.5,8.8929774 6.94035594,8.33333333 6.25,8.33333333 Z M13.75,8.33333333 C13.0596441,8.33333333 12.5,8.8929774 12.5,9.58333333 C12.5,10.2736893 13.0596441,10.8333333 13.75,10.8333333 C14.4403559,10.8333333 15,10.2736893 15,9.58333333 C15,8.8929774 14.4403559,8.33333333 13.75,8.33333333 Z M10,12.5 C8.73611083,12.5 7.73204333,13.0053067 7.06217417,13.4928383 C6.69019569,13.7639134 6.60831994,14.2851735 6.87927895,14.6572365 C7.15023796,15.0292995 7.67147245,15.1113379 8.04362,14.840495 C8.51875083,14.4946933 9.18055583,14.1666667 10,14.1666667 C10.8194442,14.1666667 11.4812492,14.4946933 11.95638,14.840495 C12.197111,15.015925 12.5131577,15.0495685 12.7854249,14.9287477 C13.0576922,14.8079268 13.2447982,14.5510052 13.2762363,14.2547979 C13.3076744,13.9585906 13.1786663,13.6681181 12.9378258,13.4928383 C12.2679567,13.0053067 11.2638892,12.5 10,12.5 Z"
+                                                    id="Shape"
+                                                ></path>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div
+                                class="img-block"
+                                [ngClass]="{ yellow: category.value === 2 }"
+                                (click)="onEvaluateCategory(ind, 2, category)"
+                            >
+                                <svg
+                                    width="20px"
+                                    height="20px"
+                                    viewBox="0 0 20 20"
+                                    version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                                >
+                                    <g
+                                        id="Recruit-Setup"
+                                        stroke="none"
+                                        stroke-width="1"
+                                        fill="none"
+                                        fill-rule="evenodd"
+                                    >
+                                        <g
+                                            id="Scorecard---Default"
+                                            transform="translate(-1010.000000, -526.000000)"
+                                            fill="#FEBA8B"
+                                            fill-rule="nonzero"
+                                        >
+                                            <g id="icons8-sad" transform="translate(1010.000000, 526.000000)">
+                                                <path
+                                                    d="M10,0 C4.487023,0 0,4.487023 0,10 C0,15.5129767 4.487023,20 10,20 C15.5129767,20 20,15.5129767 20,10 C20,4.487023 15.5129767,0 10,0 Z M10,1.66666667 C14.6122433,1.66666667 18.3333333,5.38775658 18.3333333,10 C18.3333333,14.6122433 14.6122433,18.3333333 10,18.3333333 C5.38775658,18.3333333 1.66666667,14.6122433 1.66666667,10 C1.66666667,5.38775658 5.38775658,1.66666667 10,1.66666667 Z M6.25,8.33333333 C5.55964406,8.33333333 5,8.8929774 5,9.58333333 C5,10.2736893 5.55964406,10.8333333 6.25,10.8333333 C6.94035594,10.8333333 7.5,10.2736893 7.5,9.58333333 C7.5,8.8929774 6.94035594,8.33333333 6.25,8.33333333 Z M13.75,8.33333333 C13.0596441,8.33333333 12.5,8.8929774 12.5,9.58333333 C12.5,10.2736893 13.0596441,10.8333333 13.75,10.8333333 C14.4403559,10.8333333 15,10.2736893 15,9.58333333 C15,8.8929774 14.4403559,8.33333333 13.75,8.33333333 Z M7.08333333,13.3333333 L12.9166667,13.3333333 C13.376904,13.3333333 13.75,13.7064294 13.75,14.1666667 L13.75,14.1666667 C13.75,14.626904 13.376904,15 12.9166667,15 L7.08333333,15 C6.62309604,15 6.25,14.626904 6.25,14.1666667 L6.25,14.1666667 C6.25,13.7064294 6.62309604,13.3333333 7.08333333,13.3333333 Z"
+                                                    id="Shape"
+                                                ></path>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div
+                                class="img-block"
+                                [ngClass]="{ green: category.value === 3 }"
+                                (click)="onEvaluateCategory(ind, 3, category)"
+                            >
+                                <svg
+                                    width="20px"
+                                    height="20px"
+                                    viewBox="0 0 20 20"
+                                    version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                                >
+                                    <g
+                                        id="Recruit-Setup"
+                                        stroke="none"
+                                        stroke-width="1"
+                                        fill="none"
+                                        fill-rule="evenodd"
+                                    >
+                                        <g
+                                            id="Scorecard---Default"
+                                            transform="translate(-1165.000000, -526.000000)"
+                                            fill="#65B7A9"
+                                            fill-rule="nonzero"
+                                        >
+                                            <g id="icons8-happy" transform="translate(1165.000000, 526.000000)">
+                                                <path
+                                                    d="M10,0 C4.487023,0 0,4.487023 0,10 C0,15.5129767 4.487023,20 10,20 C15.5129767,20 20,15.5129767 20,10 C20,4.487023 15.5129767,0 10,0 Z M10,1.66666667 C14.6122433,1.66666667 18.3333333,5.38775658 18.3333333,10 C18.3333333,14.6122433 14.6122433,18.3333333 10,18.3333333 C5.38775658,18.3333333 1.66666667,14.6122433 1.66666667,10 C1.66666667,5.38775658 5.38775658,1.66666667 10,1.66666667 Z M6.25,8.33333333 C5.55964406,8.33333333 5,8.8929774 5,9.58333333 C5,10.2736893 5.55964406,10.8333333 6.25,10.8333333 C6.94035594,10.8333333 7.5,10.2736893 7.5,9.58333333 C7.5,8.8929774 6.94035594,8.33333333 6.25,8.33333333 Z M13.75,8.33333333 C13.0596441,8.33333333 12.5,8.8929774 12.5,9.58333333 C12.5,10.2736893 13.0596441,10.8333333 13.75,10.8333333 C14.4403559,10.8333333 15,10.2736893 15,9.58333333 C15,8.8929774 14.4403559,8.33333333 13.75,8.33333333 Z M7.4951175,13.3268233 C7.14089758,13.3467012 6.83809009,13.5886467 6.74052826,13.9297457 C6.64296644,14.2708448 6.77203904,14.6363174 7.06217417,14.840495 C7.73243,15.3275992 8.73611083,15.8333333 10,15.8333333 C11.2638892,15.8333333 12.2679567,15.3280267 12.9378258,14.840495 C13.1786663,14.6652152 13.3076744,14.3747427 13.2762363,14.0785354 C13.2447982,13.7823281 13.0576922,13.5254065 12.7854249,13.4045857 C12.5131577,13.2837649 12.197111,13.3174083 11.95638,13.4928383 C11.4812492,13.83864 10.8194442,14.1666667 10,14.1666667 C9.18055583,14.1666667 8.51840333,13.8390675 8.0419925,13.4928383 C7.90763394,13.3920171 7.74594478,13.3341496 7.578125,13.3268233 C7.55047301,13.3254446 7.52276949,13.3254446 7.4951175,13.3268233 Z"
+                                                    id="Shape"
+                                                ></path>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+                <div [ngClass]="{ hidden: !addPositionSpecificCategory }">
+                    <input
+                        class="add-abilities"
+                        (keyup.enter)="onAddPositionSpecificCategory(input)"
+                        type="text"
+                        #input
+                        [placeholder]="positionSpecificCategories.length ? 'Add annother' : 'Add position rating
+'"
+                    />
+                </div>
+            </div>
+            <button
+                class="save btn btn-primary"
+                *ngIf="addPositionSpecificCategory"
+                (click)="onUpdateFeedbackPositionRatingCategories(input)"
+            >
+                Save
+            </button>
+            <input type="hidden" formControlName="positionRating" />
+        </div>
+        <div class="wrap-btn">
+            <button
+                class="save-results btn btn-primary"
+                *ngIf="formIsDirty && !addPositionSpecificCategory"
+                (click)="onSaveFeedback()"
+            >
+                Save
+            </button>
+        </div>
+    </div>
+</ng-container>
+<ng-container *ngIf="view === 'results'">
+    <div class="light-overlay" *ngIf="contentLoading"></div>
+    <div class="result">
+        <div class="submitted-users">
+            <div class="number">
+                <span>{{ this.feedback[this.jobId].comments.length }}</span>
+            </div>
+            <div class="avatars-block">
+                <h4>Submitted by</h4>
+                <div class="wrap">
+                    <div class="avatar" *ngFor="let item of feedback[jobId].comments">
+                        <img
+                            *ngIf="getUserData(item.user_id, 'icon_url')"
+                            [src]="getUserData(item.user_id, 'icon_url')"
+                            [alt]="getUserData(item.user_id, 'first_name')"
+                            width="30"
+                            height="30"
+                        />
+                        <div *ngIf="!getUserData(item.user_id, 'icon_url')" class="initial">
+                            {{ getUserData(item.user_id, 'first_name') | getFirstLetter | titlecase }}
+                            {{ getUserData(item.user_id, 'last_name') | getFirstLetter | titlecase }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="overal-rating">
+            <h3>Overall Rating</h3>
+            <div class="table">
+                <div class="item">
+                    <div class="title">Excellent</div>
+                    <div class="count">{{ mapAmountProp(feedback[jobId].rating, 'value')[5] || 0 }}</div>
+                    <div class="rating-bar"><span [ngStyle]="calculateOverallRating(5)"></span></div>
+                </div>
+                <div class="item">
+                    <div class="title">Good</div>
+                    <div class="count">{{ mapAmountProp(feedback[jobId].rating, 'value')[4] || 0 }}</div>
+                    <div class="rating-bar"><span [ngStyle]="calculateOverallRating(4)"></span></div>
+                </div>
+                <div class="item">
+                    <div class="title">Average</div>
+                    <div class="count">{{ mapAmountProp(feedback[jobId].rating, 'value')[3] || 0 }}</div>
+                    <div class="rating-bar"><span [ngStyle]="calculateOverallRating(3)"></span></div>
+                </div>
+                <div class="item">
+                    <div class="title">Poor</div>
+                    <div class="count">{{ mapAmountProp(feedback[jobId].rating, 'value')[2] || 0 }}</div>
+                    <div class="rating-bar"><span [ngStyle]="calculateOverallRating(2)"></span></div>
+                </div>
+                <div class="item">
+                    <div class="title">Very Poor</div>
+                    <div class="count">{{ mapAmountProp(feedback[jobId].rating, 'value')[1] || 0 }}</div>
+                    <div class="rating-bar"><span [ngStyle]="calculateOverallRating(1)"></span></div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap" *ngIf="showPositionRating">
+            <h3>Position Specific Rating</h3>
+            <button class="btn btn-edit" (click)="onEdit()">Edit</button>
+        </div>
+        <div class="list-abilities" *ngIf="showPositionRating">
+            <div class="item" *ngFor="let category of positionSpecificCategories; let ind = index">
+                <p>{{ category.title }}</p>
+                <ng-container>
+                    <div class="img-icons">
+                        <div class="img-block" *ngFor="let vote of category.votes">
+                            <svg
+                                *ngIf="vote.value === 1"
+                                width="20px"
+                                height="20px"
+                                viewBox="0 0 20 20"
+                                version="1.1"
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlns:xlink="http://www.w3.org/1999/xlink"
+                            >
+                                <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g
+                                        id="Scorecard---Default"
+                                        transform="translate(-855.000000, -526.000000)"
+                                        fill="#FE7F7F"
+                                        fill-rule="nonzero"
+                                    >
+                                        <g id="icons8-sad" transform="translate(855.000000, 526.000000)">
+                                            <path
+                                                d="M10,0 C4.487023,0 0,4.487023 0,10 C0,15.5129767 4.487023,20 10,20 C15.5129767,20 20,15.5129767 20,10 C20,4.487023 15.5129767,0 10,0 Z M10,1.66666667 C14.6122433,1.66666667 18.3333333,5.38775658 18.3333333,10 C18.3333333,14.6122433 14.6122433,18.3333333 10,18.3333333 C5.38775658,18.3333333 1.66666667,14.6122433 1.66666667,10 C1.66666667,5.38775658 5.38775658,1.66666667 10,1.66666667 Z M6.25,8.33333333 C5.55964406,8.33333333 5,8.8929774 5,9.58333333 C5,10.2736893 5.55964406,10.8333333 6.25,10.8333333 C6.94035594,10.8333333 7.5,10.2736893 7.5,9.58333333 C7.5,8.8929774 6.94035594,8.33333333 6.25,8.33333333 Z M13.75,8.33333333 C13.0596441,8.33333333 12.5,8.8929774 12.5,9.58333333 C12.5,10.2736893 13.0596441,10.8333333 13.75,10.8333333 C14.4403559,10.8333333 15,10.2736893 15,9.58333333 C15,8.8929774 14.4403559,8.33333333 13.75,8.33333333 Z M10,12.5 C8.73611083,12.5 7.73204333,13.0053067 7.06217417,13.4928383 C6.69019569,13.7639134 6.60831994,14.2851735 6.87927895,14.6572365 C7.15023796,15.0292995 7.67147245,15.1113379 8.04362,14.840495 C8.51875083,14.4946933 9.18055583,14.1666667 10,14.1666667 C10.8194442,14.1666667 11.4812492,14.4946933 11.95638,14.840495 C12.197111,15.015925 12.5131577,15.0495685 12.7854249,14.9287477 C13.0576922,14.8079268 13.2447982,14.5510052 13.2762363,14.2547979 C13.3076744,13.9585906 13.1786663,13.6681181 12.9378258,13.4928383 C12.2679567,13.0053067 11.2638892,12.5 10,12.5 Z"
+                                                id="Shape"
+                                            ></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                            <svg
+                                *ngIf="vote.value === 2"
+                                width="20px"
+                                height="20px"
+                                viewBox="0 0 20 20"
+                                version="1.1"
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlns:xlink="http://www.w3.org/1999/xlink"
+                            >
+                                <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g
+                                        id="Scorecard---Default"
+                                        transform="translate(-1010.000000, -526.000000)"
+                                        fill="#FEBA8B"
+                                        fill-rule="nonzero"
+                                    >
+                                        <g id="icons8-sad" transform="translate(1010.000000, 526.000000)">
+                                            <path
+                                                d="M10,0 C4.487023,0 0,4.487023 0,10 C0,15.5129767 4.487023,20 10,20 C15.5129767,20 20,15.5129767 20,10 C20,4.487023 15.5129767,0 10,0 Z M10,1.66666667 C14.6122433,1.66666667 18.3333333,5.38775658 18.3333333,10 C18.3333333,14.6122433 14.6122433,18.3333333 10,18.3333333 C5.38775658,18.3333333 1.66666667,14.6122433 1.66666667,10 C1.66666667,5.38775658 5.38775658,1.66666667 10,1.66666667 Z M6.25,8.33333333 C5.55964406,8.33333333 5,8.8929774 5,9.58333333 C5,10.2736893 5.55964406,10.8333333 6.25,10.8333333 C6.94035594,10.8333333 7.5,10.2736893 7.5,9.58333333 C7.5,8.8929774 6.94035594,8.33333333 6.25,8.33333333 Z M13.75,8.33333333 C13.0596441,8.33333333 12.5,8.8929774 12.5,9.58333333 C12.5,10.2736893 13.0596441,10.8333333 13.75,10.8333333 C14.4403559,10.8333333 15,10.2736893 15,9.58333333 C15,8.8929774 14.4403559,8.33333333 13.75,8.33333333 Z M7.08333333,13.3333333 L12.9166667,13.3333333 C13.376904,13.3333333 13.75,13.7064294 13.75,14.1666667 L13.75,14.1666667 C13.75,14.626904 13.376904,15 12.9166667,15 L7.08333333,15 C6.62309604,15 6.25,14.626904 6.25,14.1666667 L6.25,14.1666667 C6.25,13.7064294 6.62309604,13.3333333 7.08333333,13.3333333 Z"
+                                                id="Shape"
+                                            ></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                            <svg
+                                *ngIf="vote.value === 3"
+                                width="20px"
+                                height="20px"
+                                viewBox="0 0 20 20"
+                                version="1.1"
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlns:xlink="http://www.w3.org/1999/xlink"
+                            >
+                                <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g
+                                        id="Scorecard---Default"
+                                        transform="translate(-1165.000000, -526.000000)"
+                                        fill="#65B7A9"
+                                        fill-rule="nonzero"
+                                    >
+                                        <g id="icons8-happy" transform="translate(1165.000000, 526.000000)">
+                                            <path
+                                                d="M10,0 C4.487023,0 0,4.487023 0,10 C0,15.5129767 4.487023,20 10,20 C15.5129767,20 20,15.5129767 20,10 C20,4.487023 15.5129767,0 10,0 Z M10,1.66666667 C14.6122433,1.66666667 18.3333333,5.38775658 18.3333333,10 C18.3333333,14.6122433 14.6122433,18.3333333 10,18.3333333 C5.38775658,18.3333333 1.66666667,14.6122433 1.66666667,10 C1.66666667,5.38775658 5.38775658,1.66666667 10,1.66666667 Z M6.25,8.33333333 C5.55964406,8.33333333 5,8.8929774 5,9.58333333 C5,10.2736893 5.55964406,10.8333333 6.25,10.8333333 C6.94035594,10.8333333 7.5,10.2736893 7.5,9.58333333 C7.5,8.8929774 6.94035594,8.33333333 6.25,8.33333333 Z M13.75,8.33333333 C13.0596441,8.33333333 12.5,8.8929774 12.5,9.58333333 C12.5,10.2736893 13.0596441,10.8333333 13.75,10.8333333 C14.4403559,10.8333333 15,10.2736893 15,9.58333333 C15,8.8929774 14.4403559,8.33333333 13.75,8.33333333 Z M7.4951175,13.3268233 C7.14089758,13.3467012 6.83809009,13.5886467 6.74052826,13.9297457 C6.64296644,14.2708448 6.77203904,14.6363174 7.06217417,14.840495 C7.73243,15.3275992 8.73611083,15.8333333 10,15.8333333 C11.2638892,15.8333333 12.2679567,15.3280267 12.9378258,14.840495 C13.1786663,14.6652152 13.3076744,14.3747427 13.2762363,14.0785354 C13.2447982,13.7823281 13.0576922,13.5254065 12.7854249,13.4045857 C12.5131577,13.2837649 12.197111,13.3174083 11.95638,13.4928383 C11.4812492,13.83864 10.8194442,14.1666667 10,14.1666667 C9.18055583,14.1666667 8.51840333,13.8390675 8.0419925,13.4928383 C7.90763394,13.3920171 7.74594478,13.3341496 7.578125,13.3268233 C7.55047301,13.3254446 7.52276949,13.3254446 7.4951175,13.3268233 Z"
+                                                id="Shape"
+                                            ></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <div class="candidate-thoughts">
+            <h3 *ngIf="commentsExist()">Overall Candidate Thoughts</h3>
+            <div class="list-thoughts">
+                <div class="item" *ngFor="let item of feedback[jobId].comments">
+                    <ng-container *ngIf="item.value.trim().length > 0">
+                        <div class="img-block">
+                            <img
+                                *ngIf="getUserData(item.user_id, 'icon_url')"
+                                [src]="getUserData(item.user_id, 'icon_url')"
+                                [alt]="getUserData(item.user_id, 'last_name')"
+                                width="23"
+                                height="23"
+                            />
+                            <div *ngIf="!getUserData(item.user_id, 'icon_url')" class="initial">
+                                {{ getUserData(item.user_id, 'first_name') | getFirstLetter | titlecase }}
+                                {{ getUserData(item.user_id, 'last_name') | getFirstLetter | titlecase }}
+                            </div>
+                        </div>
+                        <div class="item-content">
+                            <h5>
+                                {{ getUserData(item.user_id, 'first_name') }}
+                                {{ getUserData(item.user_id, 'last_name') }}
+                            </h5>
+                            <div class="comment-block">
+                                <div class="comment-text">{{ item.value }}</div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

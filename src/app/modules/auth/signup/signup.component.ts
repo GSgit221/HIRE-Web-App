@@ -188,7 +188,7 @@ export class SignupComponent implements OnInit {
                     (response: any) => {
                         this.contentLoading = false;
                         this.msgs = [];
-                        this.authService.setSession(response, response.tenant_id);
+                        this.authService.setSession(response);
                         const url = environment.appUrl.replace('subdomain', response.tenant_id);
                         console.log('REDIRECTING:', url);
                         window.location.href = url;
