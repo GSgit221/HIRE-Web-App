@@ -1,13 +1,10 @@
-import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 
-import { environment } from '@env/environment';
 import { FormHelperService } from '../../../core/services/form-helper.service';
 import { AuthService } from '../auth.service';
-import { UtilitiesService } from './../../../core/services/utilities.service';
 
 @Component({
     selector: 'app-signin',
@@ -18,21 +15,17 @@ export class SigninComponent implements OnInit {
     signinForm: FormGroup;
     msgs: Message[] = [];
     contentLoading = false;
-    googleSigninLink = '';
 
     constructor(
-        private location: Location,
         private authService: AuthService,
         private fb: FormBuilder,
         private router: Router,
-        private formHelper: FormHelperService,
-        private utilities: UtilitiesService
+        private formHelper: FormHelperService
     ) {
         this.signinForm = this.fb.group({
             email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
             password: ['', Validators.required]
         });
-        this.googleSigninLink = this.authService.getGoogleSigninLink();
     }
 
     ngOnInit() {}

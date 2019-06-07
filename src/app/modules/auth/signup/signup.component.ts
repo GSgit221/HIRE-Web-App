@@ -38,13 +38,6 @@ export class SignupComponent implements OnInit {
         private router: Router,
         private store: Store<fromStore.State>
     ) {
-        // // Check if app
-        // const tenant = this.utilities.getTenant();
-        // console.log(tenant);
-
-        // // Google link
-        // this.googleSigninLink = this.authService.getGoogleSignupLink();
-        // // OPTIONS
         this.utilities.getCountries().subscribe((countries: Array<{ name: string; code: string }>) => {
             countries
                 .sort((a, b) => {
@@ -74,15 +67,7 @@ export class SignupComponent implements OnInit {
         this.initForms();
     }
 
-    ngOnInit() {
-        // this.credentialsForm.valueChanges.subscribe((a) => {
-        //     console.log(a.email);
-        //     // a.email.toUpperCase();
-        //     this.credentialsForm.setValue({
-        //         email: a.email.toUpperCase()
-        //     });
-        // });
-    }
+    ngOnInit() {}
 
     onGoogleSignup() {
         this.contentLoading = true;

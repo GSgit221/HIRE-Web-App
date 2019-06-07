@@ -42,7 +42,7 @@ export class UsersComponent implements OnInit {
                     return { ...u, isVisible: false };
                 })
                 .filter((u) => {
-                    return u.role && ['superadmin', 'admin', 'account_owner', 'recruiter'].indexOf(u.role) !== -1;
+                    return u.role && ['superadmin', 'admin', 'account_owner', 'hiring_manager'].indexOf(u.role) !== -1;
                 })
                 .sort((a, b) => (a.first_name > b.first_name ? 1 : b.first_name > a.first_name ? -1 : 0));
 
@@ -61,7 +61,7 @@ export class UsersComponent implements OnInit {
         this.accountTypeOptions = [
             { label: 'Account Owner', value: 'account_owner' },
             { label: 'Admin', value: 'admin' },
-            { label: 'Recruiter', value: 'recruiter' }
+            { label: 'Hiring Manager', value: 'hiring_manager' }
         ];
 
         this.usersDetailForm = this.fb.group({
