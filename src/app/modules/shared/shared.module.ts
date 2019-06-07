@@ -12,6 +12,7 @@ import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { CalendarModule } from 'primeng/calendar';
+import { ChartModule } from 'primeng/chart';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ChipsModule } from 'primeng/chips';
 import { DropdownModule } from 'primeng/dropdown';
@@ -25,15 +26,12 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { SliderModule } from 'primeng/slider';
 import { TooltipModule } from 'primeng/tooltip';
-import { UserLoadedGuard } from './../../core/guards/user-loaded.guard';
 
 import { GetFirstLetterPipe } from '../../core/pipes/get-first-letter.pipe';
 import { HireEditorModule } from '../../libs/editor/editor.module';
 import { DisableControlDirective } from './../../core/directives/disable-control.directive';
 import { DragEnterDirective } from './../../core/directives/drag-enter.directive';
 import { ToggleDetailsDirective } from './../../core/directives/toggle-details.directive';
-import { AuthGuard } from './../../core/guards/auth.guard';
-import { UnauthGuard } from './../../core/guards/unauth.guard';
 import { httpInterceptorProviders } from './../../core/interceptors';
 import { AccountTypePipe } from './../../core/pipes/account-type.pipe';
 import { InitialsPipe } from './../../core/pipes/initials.pipe';
@@ -41,7 +39,6 @@ import { SortByDatePipe } from './../../core/pipes/sort-by-date.pipe';
 import { SortByOrderPipe } from './../../core/pipes/sort-by-order.pipe';
 import { UploadFileNamePipe } from './../../core/pipes/upload-file-name.pipe';
 import { AuthService } from './../auth/auth.service';
-import { RecruiterRoleGuard } from './../recruiters/guards/recruiter-role.guard';
 import { CandidateFitCircleComponent } from './candidate-fit-circle/candidate-fit-circle.component';
 import { FileTypeComponent } from './file-type/file-type.component';
 import { InputPhoneComponent } from './input-phone/input-phone.component';
@@ -71,15 +68,7 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         ListFilterComponent,
         InputPhoneComponent
     ],
-    providers: [
-        AuthService,
-        httpInterceptorProviders,
-        AuthGuard,
-        UnauthGuard,
-        RecruiterRoleGuard,
-        UserLoadedGuard,
-        CookieService
-    ],
+    providers: [AuthService, httpInterceptorProviders, CookieService],
     imports: [
         CommonModule,
         ReactiveFormsModule,
@@ -107,7 +96,8 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         Ng2TelInputModule,
         AutoCompleteModule,
         RadioButtonModule,
-        CalendarModule
+        CalendarModule,
+        ChartModule
     ],
     exports: [
         LoaderComponent,
@@ -153,7 +143,8 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         Ng2TelInputModule,
         AutoCompleteModule,
         RadioButtonModule,
-        CalendarModule
+        CalendarModule,
+        ChartModule
     ]
 })
 export class SharedModule {}

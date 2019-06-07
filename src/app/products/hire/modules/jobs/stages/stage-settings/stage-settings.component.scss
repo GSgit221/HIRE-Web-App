@@ -1,0 +1,147 @@
+@import 'variables';
+
+.hc-slider-block {
+    padding: 40px 0 0;
+
+    .slider-values {
+        padding: 6px 0 0;
+    }
+}
+
+.form-content-box.top-position {
+    margin: 0 0 20px;
+}
+
+.form-content-box-top-holder {
+    background: $light;
+    margin: -20px -20px 25px;
+    width: calc(100% + 40px);
+    padding: 15px 20px;
+    border-radius: 5px 5px 0 0;
+
+    .form-block {
+        display: flex;
+        align-items: center;
+    }
+
+    input {
+        border: none;
+        background: transparent;
+        margin: 0 0 0 17px;
+        width: 220px;
+        outline: none;
+        padding: 5px 0;
+    }
+}
+
+.form-content-holder.assessment-holder {
+    .form-content-box {
+        margin-bottom: 20px;
+    }
+}
+
+.form-content-box.add-assessment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0 0;
+    padding: 9px;
+    cursor: pointer;
+
+    span {
+        margin: 0 10px 0 0;
+        font-size: 23px;
+        font-weight: 300;
+        display: inline-block;
+    }
+}
+
+.list-searching {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 0 0 0 20px;
+
+    .item {
+        position: relative;
+        margin: 0 30px 0 0;
+        text-align: center;
+
+        &.selected {
+            .img-block {
+                border: 1px solid $green;
+            }
+
+            &:before {
+                content: '';
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: $green;
+            }
+        }
+    }
+
+    .img-block {
+        border: 1px solid $grey-border;
+        border-radius: 10px;
+        padding: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 54px;
+        min-height: 54px;
+        margin: 0 0 9px;
+    }
+
+    img {
+        border-radius: 2px;
+    }
+
+    p {
+        color: $grey;
+        font-size: 13px;
+        margin: 0;
+    }
+}
+
+.selected-integration {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .title {
+        margin: 0 auto 0 20px;
+        font-size: 16px;
+    }
+
+    .remove {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        outline: none;
+        cursor: pointer;
+
+        img {
+            display: block;
+        }
+    }
+}
+
+.btn-remove {
+    width: 36px;
+    height: 36px;
+    border-radius: 3px;
+    background-color: #d8d8d8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+        width: 11px;
+        height: 13px;
+    }
+}

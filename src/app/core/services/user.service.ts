@@ -16,10 +16,7 @@ export class UserService {
     tenantId = 'undefined';
     baseURL = '';
 
-    constructor(private http: HttpClient, private authService: AuthService, private utilities: UtilitiesService) {
-        this.tenantId = this.utilities.getTenant();
-        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
-    }
+    constructor(private http: HttpClient, private authService: AuthService, private utilities: UtilitiesService) {}
 
     getUser(): Observable<User> {
         return this.http.get<User>(`${environment.apiUrl}/me`).pipe(catchError((error: any) => throwError(error)));
@@ -27,23 +24,27 @@ export class UserService {
 
     create(data): Observable<User> {
         return this.http
-            .post<User>(`${this.baseURL}/users`, { data })
+            .post<User>(`${this.apiURL}/tenants/${this.utilities.getTenant()}/users`, { data })
             .pipe(catchError((error: any) => throwError(error)));
     }
 
     resendInvitation(userId: string) {
-        return this.http.post(`${this.baseURL}/users/resend-invitation`, { user_id: userId });
+        return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/users/resend-invitation`, {
+            user_id: userId
+        });
     }
 
     getUsers(): Observable<User[]> {
-        return this.http.get<User[]>(`${this.baseURL}/users`).pipe(catchError((error: any) => throwError(error)));
+        return this.http
+            .get<User[]>(`${this.apiURL}/tenants/${this.utilities.getTenant()}/users`)
+            .pipe(catchError((error: any) => throwError(error)));
     }
 
     takeover(email) {
-        return this.http.post(`${this.baseURL}/users/takeover`, { email });
+        return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/users/takeover`, { email });
     }
 
     bulkDeleteUsers(ids) {
-        return this.http.post(`${this.baseURL}/users/bulk-delete`, { items: ids });
+        return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/users/bulk-delete`, { items: ids });
     }
 }

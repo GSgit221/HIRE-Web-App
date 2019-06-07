@@ -40,10 +40,14 @@ export class RecruiterService {
     }
 
     getOnboarding() {
+        this.tenantId = this.utilities.getTenant();
+        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
         return this.http.get(`${this.baseURL}/onboarding`);
     }
 
     updateOnboarding(data) {
+        this.tenantId = this.utilities.getTenant();
+        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
         return this.http.put(`${this.baseURL}/onboarding`, data);
     }
 
@@ -72,10 +76,14 @@ export class RecruiterService {
     }
 
     loadOnboardingStepsFromApi() {
+        this.tenantId = this.utilities.getTenant();
+        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
         return this.http.get(`${this.baseURL}/onboarding/steps`);
     }
 
     saveSteps(steps) {
+        this.tenantId = this.utilities.getTenant();
+        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
         return this.http.put(`${this.baseURL}/onboarding/steps`, steps);
     }
 
@@ -97,6 +105,8 @@ export class RecruiterService {
     }
 
     uploadDocument(data) {
+        this.tenantId = this.utilities.getTenant();
+        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
         return this.http.post(`${this.baseURL}/onboarding/documents`, data);
     }
 }

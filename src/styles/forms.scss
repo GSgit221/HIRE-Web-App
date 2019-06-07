@@ -8,7 +8,7 @@
     border-radius: 2px;
     color: $main-blue;
     border: 1px solid $grey-border;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 16px;
     padding: 9px 2px 9px 10px;
     box-shadow: none;
@@ -16,19 +16,19 @@
 
     &::-webkit-input-placeholder {
         color: $grey;
-        font-size: 13px;
+        font-size: 14px;
         line-height: 16px;
     }
 
     &::-moz-placeholder {
         color: $grey;
-        font-size: 13px;
+        font-size: 14px;
         line-height: 16px;
     }
 
     &:-ms-input-placeholder {
         color: $grey;
-        font-size: 13px;
+        font-size: 14px;
         line-height: 16px;
     }
 
@@ -60,7 +60,7 @@
     border-radius: 2px;
     color: $grey;
     border: 1px solid $grey-border;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 16px;
     padding: 9px 2px 9px 10px;
     box-shadow: none;
@@ -69,19 +69,19 @@
 
     &::-webkit-input-placeholder {
         color: $grey;
-        font-size: 13px;
+        font-size: 14px;
         line-height: 16px;
     }
 
     &::-moz-placeholder {
         color: $grey;
-        font-size: 13px;
+        font-size: 14px;
         line-height: 16px;
     }
 
     &:-ms-input-placeholder {
         color: $grey;
-        font-size: 13px;
+        font-size: 14px;
         line-height: 16px;
     }
 
@@ -104,7 +104,7 @@ body .ui-dropdown .ui-dropdown-trigger .ui-dropdown-trigger-icon:before {
 }
 
 p-dropdown .ui-dropdown .ui-dropdown-trigger .ui-dropdown-trigger-icon {
-    left: 70%;
+    left: 50%;
 }
 
 p-dropdown {
@@ -131,7 +131,7 @@ p-dropdown {
                 margin: 0;
                 border-radius: 0;
                 font-weight: 400;
-                font-size: 13px;
+                font-size: 14px;
             }
 
             .ui-state-highlight {
@@ -161,7 +161,7 @@ p-dropdown {
             border-radius: 2px;
             color: $dark-blue;
             border: 1px solid $grey-border;
-            font-size: 13px;
+            font-size: 14px;
             line-height: 16px;
             padding: 9px 12px 9px 10px;
         }
@@ -307,6 +307,20 @@ p-slider {
         .ui-slider-range {
             background: $pink;
             box-shadow: none;
+            position: relative;
+
+            &:after {
+                content: '';
+                display: block;
+                width: 4px;
+                height: 4px;
+                background: $pink;
+                position: absolute;
+                border-radius: 50%;
+                left: 100%;
+                top: 0;
+                margin: -1px 0 0 -2px;
+            }
         }
 
         .ui-slider-handle {

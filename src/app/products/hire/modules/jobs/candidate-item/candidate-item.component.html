@@ -1,0 +1,619 @@
+<div class="container fixed-width-container">
+    <div class="candidate-holder">
+        <div class="pages-nav">
+            <button class="back-btn" (click)="onBackClick()">
+                <span class="icon"><img src="assets/images/left.svg" height="16px" alt="Left icon"/></span>
+                <span class="text">{{ job?.title }}</span>
+            </button>
+            <!--
+                <div class="prev-next-nav">
+                    <button class="prev-btn"><img src="assets/images/left.svg" height="16px" alt="Left icon"></button>
+                    <button class="next-btn"><img src="assets/images/right.svg" height="16px" alt="Right icon"></button>
+                </div>
+            -->
+        </div>
+        <div *ngIf="candidate">
+            <div class="candidate-header">
+                <div class="img-block">
+                    <img [src]="candidate.profile_image" alt="profile image" *ngIf="candidate.profile_image" />
+                    <span *ngIf="!candidate.profile_image">{{ candidate | initials }}</span>
+                </div>
+                <div class="information-block">
+                    <div class="name">{{ candidate.first_name | titlecase }} {{ candidate.last_name | titlecase }}</div>
+                    <div class="information-block-row">
+                        <div class="detail-information">
+                            <img src="assets/images/email-send.svg" height="13px" alt="Email icon" />
+                            <p>
+                                <a href="mailto:{{ candidate.email }}">{{ candidate.email }}</a>
+                            </p>
+                        </div>
+                        <div class="detail-information">
+                            <img src="assets/images/phone.svg" height="13px" alt="Phone icon" />
+                            <p class="text">{{ candidate.phone || 'Add a phone number' }}</p>
+                        </div>
+                        <ul class="social-links">
+                            <li *ngIf="candidate.facebook_url">
+                                <a href="{{ candidate.facebook_url }}"
+                                    ><img src="assets/images/facebook.svg" alt="Facebook icon"
+                                /></a>
+                            </li>
+                            <li *ngIf="candidate.instagram_url">
+                                <a href="{{ candidate.instagram_url }}"
+                                    ><img src="assets/images/instagram_new.svg" alt="Instagram icon"
+                                /></a>
+                            </li>
+                            <li *ngIf="candidate.github_url">
+                                <a href="{{ candidate.github_url }}"
+                                    ><img src="assets/images/github.svg" alt="Github icon"
+                                /></a>
+                            </li>
+                            <li *ngIf="candidate.linkedin_url">
+                                <a href="{{ candidate.linkedin_url }}"
+                                    ><img src="assets/images/linkedin.svg" alt="Linkedin icon"
+                                /></a>
+                            </li>
+                            <li *ngIf="candidate.twitter_url">
+                                <a href="{{ candidate.twitter_url }}"
+                                    ><img src="assets/images/twitter.svg" alt="Twitter icon"
+                                /></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="information-block-row">
+                        <div class="detail-information">
+                            <img src="assets/images/location.svg" height="14px" alt="Location icon" />
+                            <p>{{ candidate.location || 'Unknown Location' }}</p>
+                        </div>
+                    </div>
+                    <div class="information-block-row">
+                        <div class="detail-information" *ngIf="candidate.website_url">
+                            <img src="assets/images/web.svg" height="13px" width="13px" alt="web icon" />
+                            <p class="text">
+                                <a href="{{ candidate.website_url }}">{{ candidate.website_url }}</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sections-nav">
+                <div
+                    class="section-nav-link"
+                    *ngFor="let section of sections"
+                    (click)="onChangeSection(section)"
+                    [ngClass]="{ active: activeSection === section }"
+                >
+                    {{ section | titlecase }}
+                </div>
+            </div>
+            <div class="section-separator mb20"></div>
+            <div class="candidate-content">
+                <div class="content-section" *ngIf="activeSection === 'overview'">
+                    <ng-container *ngIf="candidate.summary">
+                        <h3>Our Summary</h3>
+                        <p>{{ candidate.summary }}</p>
+                    </ng-container>
+                    <div *ngIf="candidate.matching && candidate.matching[jobId]">
+                        <h3>AI Matching</h3>
+                        <div class="matching-candidate">
+                            <div class="candidate-wrapper">
+                                <app-candidate-fit-circle
+                                    [value]="candidate.matching[jobId].WeightedScore"
+                                    [title]="'Candidate Fit'"
+                                ></app-candidate-fit-circle>
+                            </div>
+                            <div class="candidate-wrapper">
+                                <app-candidate-fit-circle
+                                    [value]="candidate.matching[jobId].ReverseCompatibilityScore"
+                                    [title]="'Job Fit'"
+                                ></app-candidate-fit-circle>
+                            </div>
+                        </div>
+                        <h4>Predictive Job Index</h4>
+                        <div class="chart-job-index">
+                            <div class="indicator">
+                                <div
+                                    class="indicator-icon"
+                                    [ngStyle]="{ left: candidate.matching[jobId].WeightedScore + '%' }"
+                                ></div>
+                            </div>
+                            <div class="chart-values">
+                                <span>temp / contractor</span> <span>full-time / direct-hire</span>
+                            </div>
+                        </div>
+                        <h3 class="title">Unweighted Scores</h3>
+                        <div class="scores">
+                            <ng-container *ngFor="let item of candidate.matching[jobId].UnweightedCategoryScores">
+                                <div class="score-item" *ngIf="matchingMap[item.Category]">
+                                    <div class="score-name">{{ matchingMap[item.Category] }}</div>
+                                    <div class="score-chart">
+                                        <div
+                                            class="line"
+                                            [ngStyle]="{ width: item.UnweightedScore + '%' }"
+                                            [ngClass]="{
+                                                'green-bg': item.UnweightedScore >= 60,
+                                                'orange-bg': item.UnweightedScore >= 50 && item.UnweightedScore < 60,
+                                                'red-bg': item.UnweightedScore < 50
+                                            }"
+                                        ></div>
+                                    </div>
+                                    <div class="score-result">{{ item.UnweightedScore }}%</div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="candidate?.stage && (candidate?.stage)[jobId] !== 'applied'">
+                        <h3 class="personality-profile-title">Personality Profile</h3>
+                        <div
+                            class="personality-profile-holder"
+                            *ngIf="personality_assessment; else waitingForPersonalityData"
+                        >
+                            <div class="personality-profile-graph">
+                                <p-chart
+                                    #chart
+                                    type="radar"
+                                    [options]="radar_chart_options"
+                                    [data]="radar_chart_data"
+                                ></p-chart>
+                            </div>
+                            <div class="personality-profile-scores scores">
+                                <div class="score-item" *ngFor="let score of personalityProfileScores">
+                                    <div class="score-name">{{ score.title }}</div>
+                                    <div class="score-chart">
+                                        <div
+                                            class="line"
+                                            [ngStyle]="{ width: (score.value / 120) * 100 + '%' }"
+                                            [ngClass]="{
+                                                'green-bg': score?.scoreText === 'neutral',
+                                                'orange-bg': score?.scoreText === 'low' || score?.scoreText === 'high'
+                                            }"
+                                        ></div>
+                                    </div>
+                                    <div class="score-chart">
+                                        <div class="line grey-bg" [ngStyle]="{ width: score.average + '%' }"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ng-template #waitingForPersonalityData>
+                            <div class="candidate-attention">
+                                <img
+                                    alt="warning"
+                                    class="icon"
+                                    height="20"
+                                    src="/assets/images/warning.svg"
+                                    width="23"
+                                />
+                                <span>Waiting for the candidate to submit their Personality Profile</span>
+                            </div>
+                        </ng-template>
+                        <h3 class="interview-title">One Way Interview</h3>
+                        <div class="interview-holder" *ngIf="videos && videos.length; else waitingForInterviewData">
+                            <div class="item" *ngFor="let video of videos; let i = index">
+                                <div
+                                    class="placeholder"
+                                    [ngStyle]="{
+                                        background: 'url(https:' + video.thumbnail_url + ') no-repeat 50% 50%'
+                                    }"
+                                ></div>
+                                <button class="btn btn-view" (click)="onViewAndRate(i)">View and Rate</button>
+                                <div class="interview-question">Q{{ i + 1 }}</div>
+                                <div class="interview-rate" *ngIf="video.ratings">
+                                    <ng-container *ngFor="let rate of video.ratings; let i = index">
+                                        <img
+                                            *ngIf="rate === 1 || rate === 2 || rate === 3"
+                                            src="/assets/images/star-red.svg"
+                                            alt="Red"
+                                        />
+                                        <img *ngIf="rate === 5" src="/assets/images/star-green.svg" alt="Green" />
+                                        <img *ngIf="rate === 4" src="/assets/images/star-yellow.svg" alt="Yellow" />
+                                        <img *ngIf="rate === 0" src="/assets/images/star-empty.svg" alt="" />
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+                        <ng-template #waitingForInterviewData>
+                            <div class="candidate-attention">
+                                <img
+                                    alt="warning"
+                                    class="icon"
+                                    height="20"
+                                    src="/assets/images/warning.svg"
+                                    width="23"
+                                />
+                                <span>Waiting for the candidate to submit their One Way Video Interview</span>
+                            </div>
+                        </ng-template>
+                    </ng-container>
+                </div>
+                <div class="content-section" *ngIf="activeSection === 'details'">
+                    <div class="wrap-block" *ngIf="candidate.executive_summary">
+                        <div class="wrap-title">
+                            <h3>Summary</h3>
+                            <button class="hide-btn" appToggleDetails></button>
+                        </div>
+                        <p class="content-text content-summary">{{ candidate.executive_summary }}</p>
+                    </div>
+                    <div *ngIf="candidate.skills && candidate.skills.length">
+                        <h3>Skills</h3>
+                        <div class="skills-list">
+                            <div
+                                class="skill-name"
+                                *ngFor="let skill of candidate.skills"
+                                [ngClass]="{
+                                    'green-bg': skill.percent_of_parent_taxonomy > 30,
+                                    'orange-bg':
+                                        skill.percent_of_parent_taxonomy >= 15 && skill.percent_of_parent_taxonomy < 30
+                                }"
+                            >
+                                {{ skill.title }}
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="candidate.employment_history && candidate.employment_history.length">
+                        <div class="wrap-block">
+                            <div class="wrap-title">
+                                <h3>Work Experience</h3>
+                                <button class="hide-btn" appToggleDetails></button>
+                            </div>
+                            <div class="content-text experience">
+                                <div class="item" *ngFor="let work of candidate.employment_history">
+                                    <div class="detail">
+                                        <div class="position">{{ work.title | titlecase }}</div>
+                                        <span>-</span>
+                                        <div class="company">{{ work.company | titlecase }}</div>
+                                        <em class="date"
+                                            >{{ work.start_date || 'Unknown' }} - {{ work.end_date || 'Unknown' }}</em
+                                        >
+                                    </div>
+                                    <div class="description">{{ work.description }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="candidate.education_history && candidate.education_history.length">
+                        <div class="wrap-block">
+                            <div class="wrap-title">
+                                <h3>Education</h3>
+                                <button class="hide-btn" appToggleDetails></button>
+                            </div>
+                            <div class="content-text education">
+                                <div class="item" *ngFor="let edu of candidate.education_history">
+                                    <div class="institution">{{ edu.school || 'Unknown school' }}</div>
+                                    <div class="degree" *ngIf="edu.degree">
+                                        <strong>{{ edu.area_of_study }}</strong> ({{ edu.degree }})
+                                    </div>
+                                    <div class="degree" *ngIf="!edu.degree">Unknown Degree</div>
+                                    <em class="date" *ngIf="edu.start_date"
+                                        >{{ edu.start_date || 'Unknown' }} - {{ edu.end_date || 'Unknown' }}</em
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-section" *ngIf="activeSection === 'questions'">
+                    <ng-container *ngIf="questionsAnswers">
+                        <div class="question-block" *ngFor="let question of questionsAnswers">
+                            <h3>{{ question.text }}</h3>
+                            <ng-container *ngFor="let answer of question.answers">
+                                <p>{{ answer }}</p>
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="content-section" *ngIf="activeSection === 'attachments'">
+                    <div class="no-resume-block" *ngIf="!candidate.resume_file">
+                        <h3>Resume</h3>
+                        <div
+                            class="file-block-wrapper"
+                            *ngFor="let uploadItem of uploadQueue"
+                            [ngClass]="{ fadeout: uploadItem.fadeout }"
+                        >
+                            <div class="file-block">
+                                <app-resume-file-type [type]="uploadItem.file.type"></app-resume-file-type>
+                                <div class="file-block-holder">
+                                    <strong class="title">{{ uploadItem.text }}</strong>
+                                    <p *ngIf="uploadItem.file && uploadItem.file.size">
+                                        {{ uploadItem.file.size / 1000000 | number: '1.2-2' }} MB
+                                    </p>
+                                </div>
+                                <app-progress-circle
+                                    class="mla"
+                                    [progress]="uploadItem.progress"
+                                    *ngIf="uploadItem.uploadStarted && !uploadItem.uploadFinished"
+                                ></app-progress-circle>
+                                <div
+                                    class="status-circle mla"
+                                    [ngClass]="{
+                                        success: uploadItem.uploadFinished && uploadItem.success,
+                                        warning: uploadItem.uploadFinished && !uploadItem.success
+                                    }"
+                                >
+                                    <img
+                                        class="success-img"
+                                        src="/assets/images/check.svg"
+                                        alt=""
+                                        width="18"
+                                        height="14"
+                                    />
+                                    <img
+                                        class="warning-img"
+                                        src="/assets/images/exclamation-mark.svg"
+                                        alt=""
+                                        width="6"
+                                        height="17"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="upload-block">
+                            <div
+                                class="drop-block"
+                                appDragEnter
+                                (dropFile)="onDropFile($event)"
+                                droppable
+                                [dragOverClass]="'over'"
+                                (onDrop)="onDropFromFiles($event)"
+                            >
+                                <img
+                                    src="/assets/images/warning.svg"
+                                    class="icon"
+                                    width="30"
+                                    height="26"
+                                    alt="warning"
+                                />
+                                <div class="upload-block-holder">
+                                    <strong class="title">No Resume Found.</strong>
+                                    <p *ngIf="candidate.files && candidate.files.length">
+                                        Either drag the correct document from the list below or
+                                        <span class="hc-link">click to upload.</span>
+                                    </p>
+                                    <p *ngIf="!candidate.files || !candidate.files.length">
+                                        Drop the correct document or <span class="hc-link">click to upload.</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="error-message" *ngIf="uploadError">{{ uploadError }}</div>
+                        </div>
+                        <div *ngIf="candidate.files && candidate.files.length">
+                            <h3>Other Documents</h3>
+                            <div class="file-block" *ngFor="let file of candidate.files" draggable [dragData]="file">
+                                <ng-container *ngIf="file && file.file_name">
+                                    <app-resume-file-type [type]="file.mimetype"></app-resume-file-type>
+                                    <div class="file-block-holder">
+                                        <strong class="title">{{ file.file_name }}</strong>
+                                        <p *ngIf="file.size">{{ file.size / 1000000 | number: '1.2-2' }} MB</p>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="no-resume-block" *ngIf="candidate.resume_file">
+                        <h3>Resume</h3>
+                        <div class="file-block">
+                            <div class="file-block-frame">
+                                <a
+                                    *ngIf="candidate.resume_link"
+                                    [href]="candidate.resume_link"
+                                    [title]="candidate.resume_file"
+                                    class="resume-link"
+                                    target="_blank"
+                                ></a>
+                                <app-resume-file-type [name]="candidate.resume_file"></app-resume-file-type>
+                                <div class="file-block-holder">
+                                    <strong class="title">{{ candidate.resume_file }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="interactivity">
+                    <div class="interactivity-nav">
+                        <div
+                            class="interactivity-nav-link"
+                            (click)="onChangeInteractivity('chat')"
+                            [ngClass]="{ active: activeInteractivity === 'chat' }"
+                        >
+                            <svg
+                                width="14px"
+                                height="13px"
+                                viewBox="0 0 14 13"
+                                version="1.1"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <g id="Recruit-Setup1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g
+                                        id="Candidate-View---Default1"
+                                        transform="translate(-865.000000, -274.000000)"
+                                        fill="#505F6E"
+                                        fill-rule="nonzero"
+                                    >
+                                        <g id="icons8-filled_chat" transform="translate(865.000000, 274.000000)">
+                                            <path
+                                                d="M1.5,0 C0.675781,0 0,0.675781 0,1.5 L0,6.5 C0,7.324219 0.675781,8 1.5,8 L2.992188,8 L2.992188,10 L5.664063,8 L8.5,8 C9.324219,8 10,7.324219 10,6.5 L10,1.5 C10,0.675781 9.324219,0 8.5,0 L1.5,0 Z M1.5,1 L8.5,1 C8.78125,1 9,1.21875 9,1.5 L9,6.5 C9,6.78125 8.78125,7 8.5,7 L5.328125,7 L3.992188,8 L3.992188,7 L1.5,7 C1.21875,7 1,6.78125 1,6.5 L1,1.5 C1,1.21875 1.21875,1 1.5,1 Z M11,3 L11,6.5 C11,7.878906 9.878906,9 8.5,9 L7.1875,9 L7.183594,9.003906 C6.683594,9.003906 6.246094,9.003906 5.988281,9.003906 L4.242188,10.3125 C4.511719,10.726563 4.972656,11 5.5,11 L8.335938,11 L11.003906,13 L11.003906,11 L12.5,11 C13.328125,11 14,10.328125 14,9.5 L14,4.5 C14,3.671875 13.328125,3 12.5,3 L11,3 Z"
+                                                id="Shape1"
+                                            ></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <!--
+                            <div class="interactivity-nav-link" (click)="onChangeInteractivity('calendar')" [ngClass]="{'active': activeInteractivity === 'calendar'}">
+                                <svg width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                    <g id="Recruit-Setup2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <g id="Candidate-View---Default2" transform="translate(-916.000000, -274.000000)"
+                                            fill="#505F6E" fill-rule="nonzero">
+                                            <g id="icons8-calendar" transform="translate(916.000000, 274.000000)">
+                                                <path d="M2,0 L2,1 L1.5,1 C0.675781,1 0,1.675781 0,2.5 L0,11.5 C0,12.324219 0.675781,13 1.5,13 L11.5,13 C12.324219,13 13,12.324219 13,11.5 L13,2.5 C13,1.675781 12.324219,1 11.5,1 L11,1 L11,0 L10,0 L10,1 L3,1 L3,0 L2,0 Z M1.5,2 L2,2 L2,3 L3,3 L3,2 L10,2 L10,3 L11,3 L11,2 L11.5,2 C11.78125,2 12,2.21875 12,2.5 L12,4 L1,4 L1,2.5 C1,2.21875 1.21875,2 1.5,2 Z M1,5 L12,5 L12,11.5 C12,11.78125 11.78125,12 11.5,12 L1.5,12 C1.21875,12 1,11.78125 1,11.5 L1,5 Z M4,6 L4,7 L5,7 L5,6 L4,6 Z M6,6 L6,7 L7,7 L7,6 L6,6 Z M8,6 L8,7 L9,7 L9,6 L8,6 Z M10,6 L10,7 L11,7 L11,6 L10,6 Z M2,8 L2,9 L3,9 L3,8 L2,8 Z M4,8 L4,9 L5,9 L5,8 L4,8 Z M6,8 L6,9 L7,9 L7,8 L6,8 Z M8,8 L8,9 L9,9 L9,8 L8,8 Z M10,8 L10,9 L11,9 L11,8 L10,8 Z M2,10 L2,11 L3,11 L3,10 L2,10 Z M4,10 L4,11 L5,11 L5,10 L4,10 Z M6,10 L6,11 L7,11 L7,10 L6,10 Z"
+                                                    id="Shape2"></path>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                        -->
+                        <div
+                            class="interactivity-nav-link"
+                            *ngIf="showFeedback"
+                            (click)="onChangeInteractivity('report')"
+                            [ngClass]="{ active: activeInteractivity === 'report' }"
+                        >
+                            <svg
+                                width="14px"
+                                height="12px"
+                                viewBox="0 0 14 12"
+                                version="1.1"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <g id="Recruit-Setup3" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g
+                                        id="Candidate-View---Default3"
+                                        transform="translate(-965.000000, -275.000000)"
+                                        fill="#505F6E"
+                                        fill-rule="nonzero"
+                                    >
+                                        <g id="icons8-report_card" transform="translate(965.000000, 275.000000)">
+                                            <path
+                                                d="M1.5,0 C0.675781,0 0,0.675781 0,1.5 L0,10.5 C0,11.324219 0.675781,12 1.5,12 L12.5,12 C13.324219,12 14,11.324219 14,10.5 L14,1.5 C14,0.675781 13.324219,0 12.5,0 L1.5,0 Z M1.5,1 L12.5,1 C12.78125,1 13,1.21875 13,1.5 L13,10.5 C13,10.78125 12.78125,11 12.5,11 L1.5,11 C1.21875,11 1,10.78125 1,10.5 L1,1.5 C1,1.21875 1.21875,1 1.5,1 Z M11.269531,3.023438 L9.5,4.792969 L8.726563,4.023438 L8.023438,4.726563 L9.144531,5.851563 C9.339844,6.046875 9.660156,6.046875 9.855469,5.851563 L11.980469,3.726563 L11.269531,3.023438 Z M3,4 L3,5 L7,5 L7,4 L3,4 Z M11.269531,6.023438 L9.5,7.792969 L8.726563,7.023438 L8.023438,7.726563 L9.144531,8.855469 C9.339844,9.046875 9.660156,9.046875 9.855469,8.855469 L11.980469,6.726563 L11.269531,6.023438 Z M3,7 L3,8 L7,8 L7,7 L3,7 Z"
+                                                id="Shape3"
+                                            ></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="interactivity-content" id="chat" *ngIf="activeInteractivity === 'chat'">
+                        <app-candidate-item-timeline
+                            *ngIf="job && candidate"
+                            [job]="job"
+                            [candidate]="candidate"
+                        ></app-candidate-item-timeline>
+                    </div>
+                    <!--
+                        <div class="interactivity-content" *ngIf="activeInteractivity === 'calendar'">calendar</div>
+                    -->
+                    <div class="interactivity-content" *ngIf="activeInteractivity === 'report' && showFeedback">
+                        <app-candidate-item-feedback
+                            [feedback]="candidate.feedback"
+                            (feedbackUpdate)="candidate.feedback = $event"
+                            [job]="job"
+                            [jobId]="jobId"
+                            [candidateId]="candidate.id"
+                        ></app-candidate-item-feedback>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-container *ngIf="showVideoScore">
+    <div class="video-score-modal">
+        <button class="btn btn-close" (click)="onCloseModal()">
+            <svg
+                width="20px"
+                height="20px"
+                viewBox="0 0 12 12"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+            >
+                <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g
+                        id="Add-Job---Team"
+                        transform="translate(-870.000000, -485.000000)"
+                        fill="#455565"
+                        fill-rule="nonzero"
+                    >
+                        <g id="icons8-delete_sign" transform="translate(870.000000, 485.000000)">
+                            <polygon
+                                id="Shape"
+                                points="0.75 0.042969 0.042969 0.75 0.398438 1.101563 5.292969 6 0.042969 11.25 0.75 11.957031 6 6.707031 10.894531 11.605469 11.25 11.957031 11.957031 11.25 11.605469 10.894531 6.707031 6 11.957031 0.75 11.25 0.042969 6 5.292969 1.101563 0.398438"
+                            ></polygon>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </button>
+        <div class="inner">
+            <ng-container *ngFor="let question of videos; let i = index">
+                <ng-container *ngIf="question.current">
+                    <div class="left-col">
+                        <h4>Question {{ i + 1 }}</h4>
+                        <div class="question">{{ question.question }}</div>
+                        <h4>My Rating</h4>
+                        <div class="evaluate-question">
+                            <div
+                                class="star"
+                                *ngFor="let star of stars; let i = index"
+                                (mouseenter)="onHoverStars(i)"
+                                (mouseleave)="onClearStars()"
+                                (click)="onEvaluateAnswer(i, question.id)"
+                                [ngClass]="{ active: star.active || star.hover }"
+                            >
+                                <svg
+                                    width="39px"
+                                    height="37px"
+                                    viewBox="0 0 14 15"
+                                    version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                                >
+                                    <g id="Symbols" stroke="none" stroke-width="0.5" fill="none" fill-rule="evenodd">
+                                        <g id="3.5-star" transform="translate(-40.000000, 0.000000)" stroke="#455565">
+                                            <polygon
+                                                id="Path"
+                                                points="47 0 44.972656 4.804688 40 5.347656 43.71875 8.859375 42.671875 14 47 11.363281 51.328125 14 50.28125 8.859375 54 5.347656 49.027344 4.804688"
+                                            ></polygon>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                        </div>
+                        <button class="btn next-question" (click)="onNextQuestion(i)">
+                            Next question<svg
+                                width="8px"
+                                height="13px"
+                                viewBox="0 0 8 13"
+                                version="1.1"
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlns:xlink="http://www.w3.org/1999/xlink"
+                            >
+                                <g id="Vendor" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g
+                                        id="Signup---Enter-Email-Address-(Vendor)"
+                                        transform="translate(-182.000000, -609.000000)"
+                                        fill="#FFFFFF"
+                                    >
+                                        <g
+                                            id="icons8-expand2"
+                                            transform="translate(186.000000, 615.500000) rotate(-90.000000) translate(-186.000000, -615.500000) translate(179.500000, 611.500000)"
+                                        >
+                                            <polygon
+                                                id="Path"
+                                                points="0.726563 0.015625 0.023438 0.734375 6.5 7.074219 12.972656 0.734375 12.277344 0.015625 6.5 5.675781"
+                                            ></polygon>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="right-col">
+                        <div class="video-block">
+                            <video controls>
+                                <source [src]="question.video_url" type="video/mp4" />
+                                <source src="movie.ogg" type="video/ogg" />
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+    <div class="backdrop" (click)="onCloseModal()"></div>
+</ng-container>
+<app-loader *ngIf="contentLoading"></app-loader>

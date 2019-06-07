@@ -16,4 +16,5 @@ export class Candidate {
     employment_history?: any;
     audit?: any;
     created_at?: number;
+    stages_data?: any;
 }

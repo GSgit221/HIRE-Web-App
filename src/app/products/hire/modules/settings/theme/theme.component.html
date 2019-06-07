@@ -1,0 +1,111 @@
+<div class="container fixed-width-container">
+    <div class="title-block">
+        <h1 class="page-title">Theme</h1>
+        <div class="buttons-holder"><button class="btn btn-primary ml20 w140" (click)="onSave()">Save</button></div>
+    </div>
+    <div class="section-separator mb20"></div>
+    <div class="content-section">
+        <form [formGroup]="themeForm">
+            <div class="form-content-section">
+                <div class="description">
+                    <strong class="title">Candidate Portals</strong>
+                    <p>
+                        Candidate protals are any candidate facing websites like the Application Portal or your Careers
+                        Portal.
+                    </p>
+                    <p>Find out more about <a href="#">Themes here</a></p>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <div class="form-block">
+                            <div class="input-block">
+                                <label for="color" class="form-block-label">Primary Color</label>
+                                <div class="input-holder colorpicker">
+                                    <div class="color-indicator" [style.background]="color"></div>
+                                    <input
+                                        id="color"
+                                        type="text"
+                                        class="form-input"
+                                        formControlName="color"
+                                        [(colorPicker)]="color"
+                                        cpPosition="top"
+                                        cpOutputFormat="hex"
+                                        cpAlphaChannel="disabled"
+                                    />
+                                </div>
+                                <div class="color-switcher-block">
+                                    <div class="colors-switcher">
+                                        <div class="colors-switcher-holder">
+                                            <div
+                                                class="color-item"
+                                                *ngFor="let c of colors"
+                                                [ngClass]="{ selected: c === color }"
+                                                (click)="color = c"
+                                            >
+                                                <div class="color-frame">
+                                                    <div class="color-block" [style.background]="c"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-block">
+                            <label for="uploader" class="form-block-label">Company Logo</label>
+                            <div class="logo-upload-block fdr">
+                                <div class="image-block">
+                                    <input type="hidden" formControlName="logo_url" />
+                                    <div class="upload-block fdr aic jcc" appDragEnter (dropFile)="onDropFile($event)">
+                                        <div class="upload-block-holder" *ngIf="!logoUrl">
+                                            <img src="/assets/images/image-upload.svg" width="66" height="50" alt="" />
+                                            <p>Drop logo or <label for="uploader">click to upload</label></p>
+                                        </div>
+                                        <input
+                                            class="file"
+                                            type="file"
+                                            name=""
+                                            id="uploader"
+                                            (change)="onDropFile($event)"
+                                        />
+                                        <div class="upload-overlay fdr aic jcc" *ngIf="uploadItem">
+                                            <app-progress-circle
+                                                [progress]="uploadItem.progress"
+                                                *ngIf="uploadItem.uploadStarted && !uploadItem.uploadFinished"
+                                            ></app-progress-circle>
+                                            <div
+                                                class="status-circle success"
+                                                *ngIf="uploadItem.uploadFinished && uploadItem.success"
+                                            >
+                                                <img
+                                                    class="success-img"
+                                                    src="/assets/images/check.svg"
+                                                    alt=""
+                                                    width="18"
+                                                    height="14"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="image-holder fdr aic jcc" *ngIf="logoUrl && !uploadItem">
+                                            <img class="logo" [src]="logoUrl" alt="logo" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="outer"><div class="inner"></div></div> -->
+                                <div class="text">
+                                    <p>
+                                        For the best results you should upoad a <strong>transparrent png</strong> with
+                                        an ideal <strong>aspect ratio of 5:1</strong>
+                                    </p>
+                                    <p>Found out more about <a href="#">Themes and logos</a></p>
+                                </div>
+                            </div>
+                            <div class="error-message" *ngIf="uploadError">{{ uploadError }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<app-loader *ngIf="contentLoading"></app-loader>

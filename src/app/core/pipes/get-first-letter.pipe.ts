@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class GetFirstLetterPipe implements PipeTransform {
     transform(value: string, args: any[]): string | boolean {
-        if (value === null) {
+        if (value === undefined || value === null) {
             return '';
         }
         const firstWords = [];

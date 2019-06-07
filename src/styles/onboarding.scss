@@ -1,82 +1,5 @@
 @import 'variables.scss';
 
-.form-content-block {
-    width: 100%;
-    border-radius: 3px;
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
-    background-color: #ffffff;
-    position: relative;
-}
-
-.form-content-header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: 100%;
-    border-bottom: 1px solid #e3e7eb;
-
-    // color: $green;
-    padding: 16px 20px 16px;
-    position: relative;
-
-    &:after {
-        content: '';
-        position: absolute;
-        left: 20px;
-        bottom: -1px;
-        width: 72px;
-        height: 1px;
-
-        // background: $green;
-    }
-
-    .title {
-        display: block;
-        font-size: 20px;
-        line-height: 1.1;
-        font-weight: bold;
-        margin: 0;
-    }
-
-    .note {
-        margin-left: auto;
-        color: #9aa8af;
-        font-size: 12px;
-        line-height: 1.2;
-    }
-
-    .dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 6px;
-
-        // background: $green;
-        display: inline-flex;
-        margin: 0 3px;
-    }
-}
-
-.form-content-holder {
-    width: 100%;
-    padding: 20px;
-}
-
-.form-bottom-row {
-    a {
-        text-decoration: none;
-    }
-
-    .btn-colored {
-        // background: $green;
-        color: #fff;
-    }
-
-    .btn {
-        padding-left: 15px !important;
-        padding-right: 15px !important;
-    }
-}
-
 .sidebar-nav {
     .sidebar-nav-link {
         a {
@@ -88,40 +11,107 @@
                 }
             }
         }
-
-        // a.active {
-        //     .icon {
-        //         svg {
-        //             g {
-        //                 fill: #69be28;
-        //             }
-        //         }
-        //     }
-        // }
     }
 }
 
-.form-section-header {
-    margin: 0 0 40px;
-}
-
-.form-section-title {
-    color: #455565;
-    font-size: 28px;
-    line-height: 1.1;
-    font-weight: bold;
-    margin: 0 0 10px;
-}
-
-.form-section-subtitle {
-    color: #9aa8af;
-    font-size: 12px;
-    line-height: 1.1;
-    font-weight: normal;
-    margin: 0;
-}
-
 .onboarding-content {
+    .form-content-block {
+        width: 100%;
+        border-radius: 3px;
+        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+        position: relative;
+    }
+
+    .form-content-header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        border-bottom: 1px solid #e3e7eb;
+
+        // color: $green;
+        padding: 16px 20px 16px;
+        position: relative;
+
+        &:after {
+            content: '';
+            position: absolute;
+            left: 20px;
+            bottom: -1px;
+            width: 72px;
+            height: 1px;
+
+            // background: $green;
+        }
+
+        .title {
+            display: block;
+            font-size: 20px;
+            line-height: 1.1;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .note {
+            margin-left: auto;
+            color: #9aa8af;
+            font-size: 12px;
+            line-height: 1.2;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 6px;
+
+            // background: $green;
+            display: inline-flex;
+            margin: 0 3px;
+        }
+    }
+
+    .form-content-holder {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .form-bottom-row {
+        a {
+            text-decoration: none;
+        }
+
+        .btn-colored {
+            // background: $green;
+            color: #fff;
+        }
+
+        .btn {
+            padding-left: 15px !important;
+            padding-right: 15px !important;
+        }
+    }
+
+    .form-section-header {
+        margin: 0 0 40px;
+    }
+
+    .form-section-title {
+        color: #455565;
+        font-size: 28px;
+        line-height: 1.1;
+        font-weight: bold;
+        margin: 0 0 10px;
+    }
+
+    .form-section-subtitle {
+        color: #9aa8af;
+        font-size: 12px;
+        line-height: 1.1;
+        font-weight: normal;
+        margin: 0;
+    }
+
     p-dropdown.ng-valid .ui-dropdown-label {
         color: #000000;
     }

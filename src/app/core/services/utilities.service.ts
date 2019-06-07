@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ActivatedRoute, UrlSegment } from '@angular/router';
 import * as moment from 'moment';
 
 import { environment } from '@env/environment';
@@ -8,7 +9,8 @@ import { environment } from '@env/environment';
     providedIn: 'root'
 })
 export class UtilitiesService {
-    constructor(private http: HttpClient) {}
+    tenantId = 'undefined';
+    constructor(private http: HttpClient, private route: ActivatedRoute) {}
 
     readFile(file): Promise<{ name: string; size: number; mimetype: string; data: string }> {
         return new Promise((resolve, reject) => {
@@ -80,14 +82,27 @@ export class UtilitiesService {
         return pool1[firstLetterIndex] + shuffled.substring(0, length - 1);
     }
 
+    setTenant(tenantId: string) {
+        this.tenantId = tenantId;
+    }
+
     getTenant() {
-        const url = window.location.hostname.split('.hire');
-        let tenant = url[0] && url[0].indexOf('.') === -1 ? url[0] : 'undefined';
-        // TEMPORARY
-        if (tenant === 'dev' || tenant === 'undefined') {
-            tenant = 'dimensiondata';
+        if (this.tenantId === 'undefined') {
+            const urlPart = window.location.pathname.split('/tenant/')[1];
+            if (urlPart) {
+                this.tenantId = urlPart.split('/')[0];
+            }
         }
-        return tenant;
+        return this.tenantId;
+    }
+
+    // getTenant() {
+    //     const tenant = window.location.pathname.split('/')[2];
+    //     return tenant || 'undefined';
+    // }
+
+    getHireBaseUrl() {
+        return `/tenant/${this.getTenant()}/hire`;
     }
 
     isLocalDevelopment() {

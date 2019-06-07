@@ -1,0 +1,52 @@
+@import 'variables';
+
+.hc-list-row-content:hover .drag-handler {
+    display: flex;
+}
+
+.profile-check-pad-left {
+    padding-left: 7px;
+}
+
+.profile-check-header-pad-left {
+    padding-left: 6px;
+}
+
+.btn-add-user-component {
+    width: 93%;
+}
+
+.nr-list-content {
+    .img-block {
+        border-radius: 50%;
+        overflow: hidden;
+        display: inline-flex;
+        position: absolute;
+        left: 0px;
+        top: 50%;
+        transform: translate(0%, -50%);
+        transition: all 0.25s;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #d7dbdf;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        letter-spacing: -1px;
+        font-size: 12px;
+        text-transform: uppercase;
+    }
+
+    .col1 {
+        position: relative;
+    }
+
+    .col2 p,
+    .col3 p,
+    .col4 p {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+}

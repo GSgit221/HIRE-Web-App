@@ -158,7 +158,7 @@ export class AppEditorComponent implements AfterViewInit, ControlValueAccessor {
 
         this.quill.on('text-change', (delta, oldContents, source) => {
             if (source === 'user') {
-                this.setHeight();
+                // this.setHeight();
                 let html = editorElement.children[0].innerHTML;
                 const text = this.quill.getText().trim();
                 if (html === '<p><br></p>') {
@@ -190,7 +190,7 @@ export class AppEditorComponent implements AfterViewInit, ControlValueAccessor {
         this.onInit.emit({
             editor: this.quill
         });
-        this.setHeight();
+        // this.setHeight();
     }
 
     writeValue(value: any): void {

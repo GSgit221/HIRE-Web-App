@@ -15,7 +15,12 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         if (state.url.indexOf('/recruiters/') !== -1) {
             this.signinURL = '/recruiters/auth/signin';
         }
-        this.router.navigate([this.signinURL], { queryParams: { returnUrl: state.url } });
+        const returnUrl = state.url;
+        const queryParams: any = {};
+        if (returnUrl.length > 1) {
+            queryParams.returnUrl = returnUrl;
+        }
+        this.router.navigate([this.signinURL], queryParams);
         return false;
     }
 
@@ -26,7 +31,12 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         if (state.url.indexOf('/recruiters/') !== -1) {
             this.signinURL = '/recruiters/auth/signin';
         }
-        this.router.navigate([this.signinURL], { queryParams: { returnUrl: state.url } });
+        const returnUrl = state.url;
+        const queryParams: any = {};
+        if (returnUrl.length > 1) {
+            queryParams.returnUrl = returnUrl;
+        }
+        this.router.navigate([this.signinURL], queryParams);
         return false;
     }
 }

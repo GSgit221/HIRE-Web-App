@@ -13,7 +13,7 @@ html {
 body {
     background: $main-background;
     color: $main-blue;
-    font: 13px/1.538 'Roboto', Helvetica, Arial, sans-serif;
+    font: 14px/1.538 'Roboto', Helvetica, Arial, sans-serif;
 }
 
 html,
@@ -61,9 +61,21 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
     color: $pink;
 }
 
+[hidden] {
+    display: none !important;
+}
+
 .fdr {
     display: flex;
     flex-direction: row;
+}
+
+.f1 {
+    flex: 1;
+}
+
+.flex50p {
+    width: 50%;
 }
 
 .fdc {
@@ -77,6 +89,11 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
 
 .jcc {
     justify-content: center;
+}
+
+.separator20 {
+    width: 20px;
+    heigh: 1px;
 }
 
 // Container
@@ -276,7 +293,7 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
 // Buttons
 .btn {
     display: inline-block;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.846;
     font-weight: 300;
     padding: 5px;
@@ -422,7 +439,7 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
     align-items: center;
     justify-content: center;
     line-height: 30px;
-    background: $pink;
+    background: #525f7f;
     padding: 0;
 
     img {
@@ -432,7 +449,7 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
 
     &:hover {
         cursor: pointer;
-        background: darken($pink, 10%);
+        background: darken(#525f7f, 10%);
     }
 
     &:active {
@@ -508,13 +525,13 @@ body p-selectbutton {
             }
 
             &.ui-state-active {
-                background: $dark-green;
+                background: $light-green;
                 outline: 0;
                 color: $white;
                 box-shadow: none !important;
 
                 &:hover {
-                    background: $dark-green;
+                    background: $light-green;
                 }
 
                 &:focus {
@@ -530,11 +547,11 @@ body p-selectbutton {
 
         .ui-button:nth-child(2) {
             &.ui-state-active {
-                background: $orange2;
+                background: $orange;
 
                 &:hover {
-                    background: $orange2 !important;
-                    border-color: $orange2 !important;
+                    background: $orange !important;
+                    border-color: $orange !important;
                 }
             }
         }
@@ -543,11 +560,11 @@ body p-selectbutton {
             border-radius: 0 5px 5px 0;
 
             &.ui-state-active {
-                background: $grey;
+                background: $red;
 
                 &:hover {
-                    background: $grey !important;
-                    border-color: $grey !important;
+                    background: $red !important;
+                    border-color: $red !important;
                 }
             }
         }
@@ -763,6 +780,7 @@ body p-selectbutton {
         border: 0 !important;
     }
 }
+
 // Slider candidate-item
 .overall-rating {
     p-slider {
@@ -857,7 +875,7 @@ p-chips {
         min-height: 36px;
         border-radius: 2px;
         color: $main-blue;
-        font-size: 13px;
+        font-size: 14px;
         line-height: 16px;
         padding: 2px 2px 2px 4px;
         border-radius: 3px;
@@ -878,7 +896,7 @@ p-chips {
         margin-bottom: 1px;
 
         &.ui-state-highlight {
-            font-size: 13px;
+            font-size: 14px;
             color: $black;
             background: $light-grey;
         }
@@ -931,14 +949,14 @@ p-chips {
         left: 0;
         top: 0;
         width: 100%;
-        height: 42px;
+        height: 52px;
         border: 0;
         z-index: 2;
     }
 
     .editor-title {
         display: block;
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 700;
         color: $main-blue;
         padding: 10px;
@@ -954,6 +972,7 @@ p-chips {
     .ql-toolbar.ql-snow + .ql-container.ql-snow {
         border: 0;
         min-height: 150px !important;
+        font-size: 14px;
     }
 }
 
@@ -980,4 +999,38 @@ p-chips {
 .ui-inputtext.ui-state-focus,
 .ui-inputtext:focus {
     box-shadow: none;
+}
+
+.ui-chkbox .ui-chkbox-icon {
+    padding: 2px 0 0;
+}
+
+.job_desc {
+    width: 350px;
+    height: 38px;
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 0 rgba(0, 0, 0, 0.5);
+    border: solid 1px #d8d8d8 !important;
+    background-color: #ffffff;
+    // margin-top: -6px;
+    margin-right: 0px !important;
+    margin-left: 18px;
+    p-dropdown {
+        .ui-dropdown {
+            &.ui-dropdown-open {
+                .ui-dropdown-label {
+                    border: 0px solid #d8d8d8;
+                    padding: 9px 12px 9px 10px;
+                    transition: none;
+                }
+            }
+            .ui-dropdown-label {
+                border: 0px solid $grey-border;
+            }
+        }
+    }
+}
+
+.btn-align {
+    margin-top: -20px;
 }

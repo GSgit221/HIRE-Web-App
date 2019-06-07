@@ -1,0 +1,449 @@
+<div class="container">
+    <div class="header-block">
+        <div class="status-dropdown-block" *ngIf="!job.pool">
+            <p-dropdown
+                [options]="statusOptions"
+                [(ngModel)]="job.status"
+                [style]="{ width: '47px' }"
+                class="status-dd status-dd-no-borders caret-down"
+                (onChange)="onJobStatusChange(job)"
+            >
+                <ng-template let-item pTemplate="selectedItem">
+                    <span class="status" [ngClass]="item.label.toLowerCase()"></span>
+                </ng-template>
+                <ng-template let-status pTemplate="item">
+                    <span class="status" [ngClass]="status.label.toLowerCase()"></span>
+                </ng-template>
+            </p-dropdown>
+        </div>
+        <div class="heading">
+            <div class="job-title-block">
+                <div class="view">
+                    <strong class="title">{{ job.title }}</strong>
+                    <button class="btn btn-round ml20" (click)="onEditJobClick($event)" *ngIf="!job.pool">
+                        <img src="/assets/images/edit.svg" alt="" width="14" height="13" />
+                    </button>
+                    <button class="btn btn-round ml20" (click)="copyURL(href)" *ngIf="!job.pool && showCopyBoard">
+                        <img src="/assets/images/icons-link.svg" alt="" width="14" height="13" />
+                    </button>
+                    <button class="btn btn-round ml20" *ngIf="showTick" style="background-color: #ff2d55;">
+                        <img src="/assets/images/tickmark.svg" alt="" width="14" height="13" />
+                    </button>
+                </div>
+            </div>
+            <div class="address" *ngIf="!job.pool">
+                <img src="/assets/images/location.svg" class="ico" alt="" width="10" height="14" />
+                <span>{{ job.location || 'Unknown Location' }}</span>
+            </div>
+        </div>
+        <!-- <div class="vertical-separator"></div> -->
+        <div class="hiring-managers-block mla">
+            <div class="item" *ngFor="let hm of job.hiring_managers">
+                <img *ngIf="getHm(hm) && getHm(hm).icon_url_small" [src]="getHm(hm).icon_url_small" alt="" />
+                <span *ngIf="getHm(hm) && !getHm(hm).icon_url_small">{{ getHm(hm) | initials }}</span>
+            </div>
+            <button class="btn btn-round btn-grey" (click)="onAddHiringManagerClick($event)" title="Add Hiring Manager">
+                <svg
+                    width="13px"
+                    height="13px"
+                    viewBox="0 0 13 13"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                >
+                    <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <g
+                            id="Job-View---Default"
+                            transform="translate(-503.000000, -144.000000)"
+                            fill="#505F6E"
+                            fill-rule="nonzero"
+                        >
+                            <g id="icons8-plus_math" transform="translate(503.000000, 144.000000)">
+                                <polygon
+                                    id="Shape"
+                                    points="6 0 6 6 0 6 0 7 6 7 6 13 7 13 7 7 13 7 13 6 7 6 7 0"
+                                ></polygon>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+            </button>
+        </div>
+        <!-- <button class="btn btn-primary w140 mla add-btn" (click)="onAddCandidateClick()">Add Candidate</button> -->
+    </div>
+    <div class="blocks-separator mt10 mb10"></div>
+    <div class="stages-section" appDragEnter (dropFile)="onDropFile($event)">
+        <div class="stages-holder">
+            <div class="stage-column">
+                <div class="stage-column-holder">
+                    <div class="stage-header">
+                        <h2 class="title">Applied</h2>
+                        <span class="counter">{{ appliedCandidates.total || '0' }}</span>
+                        <button
+                            class="btn settings-btn mla"
+                            (click)="onSettigsClick('applied')"
+                            [ngStyle]="{ visibility: job.pool ? 'hidden' : 'visible' }"
+                        >
+                            <img src="/assets/images/settings-dots.svg" alt="" width="2" height="10" />
+                        </button>
+                        <button class="btn btn-square ml10" (click)="onAddCandidateClick()">
+                            <img src="/assets/images/plus.svg" alt="" width="13" height="13" />
+                        </button>
+                    </div>
+                    <div
+                        class="stage-content"
+                        droppable
+                        [dropScope]="['candidate']"
+                        [dragOverClass]="'drag-target-border'"
+                        (onDrop)="onCandidateDrop($event, 'applied')"
+                    >
+                        <!-- CANDIDATE BLOCK -->
+                        <div
+                            class="block"
+                            (click)="onCandidateClick(candidate.id)"
+                            *ngFor="let candidate of appliedCandidates.visible"
+                            draggable
+                            [dragScope]="['candidate']"
+                            [dragData]="candidate"
+                            (onDragStart)="onCandidateDragStart()"
+                            (onDragEnd)="onCandidateDragEnd()"
+                            [ngClass]="{ dd: candidate.isDdEmployee }"
+                        >
+                            <div class="warning-block" *ngIf="candidate && !candidate.resume_file">
+                                <div class="warning-block-holder"><span>!</span></div>
+                            </div>
+                            <div
+                                class="warning-block alert"
+                                *ngIf="
+                                    candidate &&
+                                    candidate.markedAsUnsuccessful &&
+                                    candidate.markedAsUnsuccessful[job.id]
+                                "
+                            >
+                                <div class="warning-block-holder"><span>!</span></div>
+                            </div>
+                            <div
+                                class="compliance-rate"
+                                [attr.data-score]="candidate.score"
+                                [ngClass]="{
+                                    green: candidate.score >= resumeThreshold,
+                                    orange:
+                                        candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold,
+                                    red: candidate.score < resumeThreshold - 15
+                                }"
+                                [hidden]="
+                                    candidate &&
+                                    candidate.markedAsUnsuccessful &&
+                                    candidate.markedAsUnsuccessful[job.id]
+                                "
+                            ></div>
+                            <span
+                                class="complience-value"
+                                [hidden]="
+                                    candidate &&
+                                    candidate.markedAsUnsuccessful &&
+                                    candidate.markedAsUnsuccessful[job.id]
+                                "
+                                >{{ candidate.score }}%</span
+                            >
+                            <div class="ava-column">
+                                <div class="ava">
+                                    <img
+                                        [src]="candidate.profile_image"
+                                        alt="profile image"
+                                        *ngIf="candidate.profile_image"
+                                    />
+                                    <div class="ava-placeholder" *ngIf="!candidate.profile_image">
+                                        {{ candidate | initials }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block-content">
+                                <strong
+                                    class="title"
+                                    *ngIf="candidate.first_name || candidate.last_name; else noFirstName"
+                                    >{{ candidate.first_name | titlecase }}
+                                    {{ candidate.last_name | titlecase }}</strong
+                                >
+                                <ng-template #noFirstName>
+                                    <strong class="title">{{ candidate.email }}</strong>
+                                </ng-template>
+                                <span class="position" *ngIf="candidate.employment_history"
+                                    >{{ candidate.employment_history[0].title | titlecase }} @
+                                    {{ candidate.employment_history[0].company | titlecase }}</span
+                                >
+                                <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
+                                <div class="stats-actions-block">
+                                    <div class="text-with-icon flex-row flex-aic" *ngIf="candidate.created_at_rel">
+                                        <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10" />
+                                        <p>{{ candidate.created_at_rel }}</p>
+                                    </div>
+                                    <div class="text-with-icon flex-row flex-aic ml20" *ngIf="candidate.updated_at_rel">
+                                        <img
+                                            src="/assets/images/update.svg"
+                                            class="icon"
+                                            alt=""
+                                            width="12"
+                                            height="13"
+                                        />
+                                        <p>{{ candidate.updated_at_rel }}</p>
+                                    </div>
+                                    <div class="actions mla">
+                                        <!-- <span class="icon-btn">
+                                                            <img src="/assets/images/refresh.svg" alt="" width="10" height="10">
+                                                        </span> -->
+                                        <span
+                                            class="icon-btn ml10"
+                                            (click)="onDeleteCandidateClick($event, candidate.id)"
+                                        >
+                                            <img src="/assets/images/delete.svg" alt="" width="10" height="10" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- NO MATCHES -->
+                        <div
+                            class="no-matches-block"
+                            *ngIf="initialLoad && !appliedCandidates.visible.length && !job.pool"
+                        >
+                            <img src="/assets/images/warning.svg" class="icon" width="23" height="20" alt="warning" />
+                            <p>
+                                No matched cadidates exist for this job. Either adjust your matching threshhold or add
+                                more candidates
+                            </p>
+                        </div>
+
+                        <!-- LOAD MORE -->
+                        <div
+                            class="show-more-block"
+                            *ngIf="initialLoad && appliedCandidates.hidden.length && !job.pool"
+                        >
+                            <div class="show-more-separator tac"><span></span> <span></span> <span></span></div>
+                            <div class="tac">
+                                <span class="load-more" (click)="onLoadMore()"
+                                    >Show more ({{ appliedCandidates.hidden.length }})</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="stage-column"
+                *ngFor="let stage of stages; let i = index"
+                draggable
+                [dragScope]="['stage']"
+                [dragData]="stage"
+                dragClass="is-dragged"
+                (onDragStart)="onStageDragStart(stage)"
+                (onDragEnd)="onStageDragEnd()"
+                droppable
+                [dropScope]="['stage']"
+                [dragOverClass]="'over'"
+                (onDragOver)="onStageDragOver($event, stage.order)"
+            >
+                <div class="stage-column-holder">
+                    <div class="stage-header">
+                        <h2 class="title">{{ stage.title }}</h2>
+                        <span class="counter">{{ stageCandidates(stage.id)?.length || '0' }}</span>
+                        <button class="btn settings-btn mla" (click)="onSettigsClick(stage.id)">
+                            <img src="/assets/images/settings-dots.svg" alt="" width="2" height="10" />
+                        </button>
+                    </div>
+                    <div
+                        class="stage-content"
+                        droppable
+                        [dropScope]="['candidate']"
+                        [dragOverClass]="'drag-target-border'"
+                        (onDrop)="onCandidateDrop($event, stage.id)"
+                    >
+                        <div
+                            class="block"
+                            (click)="onCandidateClick(candidate.id)"
+                            *ngFor="let candidate of stageCandidates(stage.id)"
+                            draggable
+                            [dragScope]="['candidate']"
+                            [dragData]="candidate"
+                            (onDragStart)="onCandidateDragStart()"
+                            (onDragEnd)="onCandidateDragEnd()"
+                            [ngClass]="{ dd: candidate.isDdEmployee }"
+                        >
+                            <div
+                                class="compliance-rate"
+                                [attr.data-score]="candidate.score"
+                                [ngClass]="{
+                                    green: candidate.score >= resumeThreshold,
+                                    orange:
+                                        candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold,
+                                    red: candidate.score < resumeThreshold - 15
+                                }"
+                                [hidden]="
+                                    candidate &&
+                                    candidate.markedAsUnsuccessful &&
+                                    candidate.markedAsUnsuccessful[job.id]
+                                "
+                            ></div>
+                            <span
+                                class="complience-value"
+                                [hidden]="
+                                    candidate &&
+                                    candidate.markedAsUnsuccessful &&
+                                    candidate.markedAsUnsuccessful[job.id]
+                                "
+                                >{{ candidate.score }}%</span
+                            >
+                            <div class="ava-column">
+                                <div class="ava">
+                                    <img
+                                        [src]="candidate.profile_image"
+                                        alt="profile image"
+                                        *ngIf="candidate.profile_image"
+                                    />
+                                    <div class="ava-placeholder" *ngIf="!candidate.profile_image && candidate">
+                                        {{ candidate | initials }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block-content">
+                                <strong
+                                    class="title"
+                                    *ngIf="candidate.first_name || candidate.last_name; else noFirstName"
+                                    >{{ candidate.first_name | titlecase }}
+                                    {{ candidate.last_name | titlecase }}</strong
+                                >
+                                <ng-template #noFirstName>
+                                    <strong class="title">{{ candidate.email }}</strong>
+                                </ng-template>
+                                <span class="position" *ngIf="candidate.employment_history"
+                                    >{{ candidate.employment_history[0].title | titlecase }} @
+                                    {{ candidate.employment_history[0].company | titlecase }}</span
+                                >
+                                <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
+                                <div class="stats-actions-block">
+                                    <div class="text-with-icon flex-row flex-aic" *ngIf="candidate.created_at_rel">
+                                        <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10" />
+                                        <p>{{ candidate.created_at_rel }}</p>
+                                    </div>
+                                    <div class="text-with-icon flex-row flex-aic ml20" *ngIf="candidate.updated_at_rel">
+                                        <img
+                                            src="/assets/images/update.svg"
+                                            class="icon"
+                                            alt=""
+                                            width="12"
+                                            height="13"
+                                        />
+                                        <p>{{ candidate.updated_at_rel }}</p>
+                                    </div>
+                                    <div class="actions mla">
+                                        <!-- <span class="icon-btn">
+                                                                                        <img src="/assets/images/refresh.svg" alt="" width="10" height="10">
+                                                                                    </span> -->
+                                        <span
+                                            class="icon-btn ml10"
+                                            (click)="onDeleteCandidateClick($event, candidate.id)"
+                                        >
+                                            <img src="/assets/images/delete.svg" alt="" width="10" height="10" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="drop-holder"></div>
+                    </div>
+                </div>
+            </div>
+            <form [formGroup]="newJobStageForm" class="stage-column" *ngIf="!job.pool">
+                <div class="light-overlay" *ngIf="stageFormIsSaving"></div>
+                <button
+                    class="btn fw btn-dash-bordered tal mb10"
+                    (click)="createStageMode = true"
+                    *ngIf="!createStageMode"
+                >
+                    <svg
+                        class="ml10 mr10"
+                        width="13px"
+                        height="13px"
+                        viewBox="0 0 13 13"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                    >
+                        <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <g
+                                id="Job-View---Default"
+                                transform="translate(-503.000000, -144.000000)"
+                                fill="#505F6E"
+                                fill-rule="nonzero"
+                            >
+                                <g id="icons8-plus_math" transform="translate(503.000000, 144.000000)">
+                                    <polygon
+                                        id="Shape"
+                                        points="6 0 6 6 0 6 0 7 6 7 6 13 7 13 7 7 13 7 13 6 7 6 7 0"
+                                    ></polygon>
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                    <span class="text">Add Stage</span>
+                </button>
+                <div class="stage-content" *ngIf="createStageMode">
+                    <input
+                        type="text"
+                        class="form-input"
+                        formControlName="title"
+                        (keydown)="onStageNameKeydown($event)"
+                    />
+                </div>
+            </form>
+        </div>
+        <div class="drop-overlay">
+            <div class="drop-holder">
+                <img src="/assets/images/drop.svg" alt="" width="212" height="212" class="img" />
+                <span class="text">Drop to Upload</span>
+            </div>
+        </div>
+    </div>
+    <div class="remove-candidate-block" [ngClass]="{ visible: candidateIsDragged }">
+        <div
+            class="remove-candidate-block-holder"
+            droppable
+            [dropScope]="['candidate']"
+            [dragOverClass]="'drag-over'"
+            (onDrop)="onCandidateDeleteDrop($event)"
+        >
+            <svg
+                width="29px"
+                height="36px"
+                viewBox="0 0 29 36"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+            >
+                <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g
+                        id="Job-View-Default"
+                        transform="translate(-744.000000, -849.000000)"
+                        fill="#FF3B30"
+                        fill-rule="nonzero"
+                    >
+                        <g id="icons8-delete" transform="translate(743.000000, 849.000000)">
+                            <path
+                                d="M11.9534255,0 C10.6656782,0 9.60559946,1.06007909 9.60559946,2.34782609 L9.60559946,3.91304348 L3.46548407,3.91304348 C3.4215419,3.90569861 3.37705285,3.90211903 3.33250163,3.90234373 C3.29458842,3.90316541 3.25678506,3.90674141 3.21939026,3.91304348 L1.7795125,3.91304348 C1.4972757,3.90905195 1.23475317,4.05733719 1.09246994,4.30111788 C0.950186702,4.54489858 0.950186702,4.84640577 1.09246994,5.09018647 C1.23475317,5.33396716 1.4972757,5.4822524 1.7795125,5.47826087 L2.5621212,5.47826087 L2.5621212,33.6521739 C2.5621212,34.9399213 3.62219989,36 4.90994728,36 L25.2577734,36 C26.5455208,36 27.6055995,34.9399213 27.6055995,33.6521739 L27.6055995,5.47826087 L28.3882082,5.47826087 C28.670445,5.4822524 28.9329675,5.33396716 29.0752507,5.09018647 C29.217534,4.84640577 29.217534,4.54489858 29.0752507,4.30111788 C28.9329675,4.05733719 28.670445,3.90905195 28.3882082,3.91304348 L26.9544448,3.91304348 C26.8699297,3.89907466 26.7836948,3.89907466 26.6991797,3.91304348 L20.5621212,3.91304348 L20.5621212,2.34782609 C20.5621212,1.06007909 19.5020425,0 18.2142951,0 L11.9534255,0 Z M11.9534255,1.56521739 L18.2142951,1.56521739 C18.6482869,1.56521739 18.9969038,1.91383396 18.9969038,2.34782609 L18.9969038,3.91304348 L11.1708169,3.91304348 L11.1708169,2.34782609 C11.1708169,1.91383396 11.5194338,1.56521739 11.9534255,1.56521739 Z M4.12733859,5.47826087 L10.2567542,5.47826087 C10.3412692,5.49222969 10.4275042,5.49222969 10.5120192,5.47826087 L19.6480585,5.47826087 C19.7325735,5.49222969 19.8188085,5.49222969 19.9033235,5.47826087 L26.0403821,5.47826087 L26.0403821,33.6521739 C26.0403821,34.0861657 25.6917651,34.4347826 25.2577734,34.4347826 L4.90994728,34.4347826 C4.47595555,34.4347826 4.12733859,34.0861657 4.12733859,33.6521739 L4.12733859,5.47826087 Z M10.3759799,9.38060452 C9.94435852,9.38735145 9.59968863,9.74227941 9.60559946,10.173913 L9.60559946,29.7391304 C9.60160793,30.0213672 9.74989317,30.2838898 9.99367386,30.426173 C10.2374546,30.5684562 10.5389618,30.5684562 10.7827424,30.426173 C11.0265231,30.2838898 11.1748084,30.0213672 11.1708169,29.7391304 L11.1708169,10.173913 C11.1737136,9.96237365 11.0908525,9.75867131 10.9411136,9.60922039 C10.7913748,9.45976947 10.5875133,9.37730056 10.3759799,9.38060452 Z M15.0716321,9.38060452 C14.6400107,9.38735145 14.2953408,9.74227941 14.3012516,10.173913 L14.3012516,29.7391304 C14.2972601,30.0213672 14.4455453,30.2838898 14.689326,30.426173 C14.9331067,30.5684562 15.2346139,30.5684562 15.4783946,30.426173 C15.7221753,30.2838898 15.8704606,30.0213672 15.866469,29.7391304 L15.866469,10.173913 C15.8693658,9.96237365 15.7865047,9.75867131 15.6367658,9.60922039 C15.4870269,9.45976947 15.2831655,9.37730056 15.0716321,9.38060452 Z M19.7672842,9.38060452 C19.3356629,9.38735145 18.990993,9.74227941 18.9969038,10.173913 L18.9969038,29.7391304 C18.9929123,30.0213672 19.1411975,30.2838898 19.3849782,30.426173 C19.6287589,30.5684562 19.9302661,30.5684562 20.1740468,30.426173 C20.4178275,30.2838898 20.5661127,30.0213672 20.5621212,29.7391304 L20.5621212,10.173913 C20.565018,9.96237365 20.4821568,9.75867131 20.332418,9.60922039 C20.1826791,9.45976947 19.9788177,9.37730056 19.7672842,9.38060452 Z"
+                                id="Shape"
+                            ></path>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </div>
+    </div>
+</div>
+<app-new-candidate-item
+    *ngIf="createCandidateMode"
+    [jobId]="job.id"
+    (finishedCadidatesCreation)="onFinishedCandidatesCreation($event)"
+    [droppedFiles]="droppedFiles"
+></app-new-candidate-item>
+<app-loader *ngIf="contentLoading"></app-loader>

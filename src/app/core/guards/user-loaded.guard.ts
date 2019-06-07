@@ -9,7 +9,9 @@ import * as fromUserReducer from '../../store/reducers/user.reducer';
 import * as fromSelectors from '../../store/selectors/';
 import { User } from './../models/user';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class UserLoadedGuard implements CanActivateChild {
     constructor(private store: Store<fromUserReducer.UserState>) {}
 

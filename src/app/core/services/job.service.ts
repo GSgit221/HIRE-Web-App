@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { environment } from '@env/environment';
+import { Candidate } from '../models/candidate';
 import { Job } from './../models/job';
 import { UtilitiesService } from './utilities.service';
 
@@ -13,13 +14,10 @@ export class JobService {
     apiURL: string = environment.apiUrl;
     tenantId = 'undefined';
     baseURL = '';
-    constructor(private http: HttpClient, private utilities: UtilitiesService) {
-        this.tenantId = this.utilities.getTenant();
-        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
-    }
+    constructor(private http: HttpClient, private utilities: UtilitiesService) {}
 
     getAll() {
-        return this.http.get(`${this.baseURL}/jobs`);
+        return this.http.get(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs`);
     }
 
     getJob(id) {
@@ -38,6 +36,7 @@ export class JobService {
                 salary_to: null,
                 salary_period: 'yearly',
                 hide_salary: false,
+                job_role: '',
                 description: '',
                 requirements: '',
                 job_listing: 'default',
@@ -64,21 +63,21 @@ export class JobService {
 
             return of(newJob);
         } else {
-            return this.http.get(`${this.baseURL}/jobs/${id}`);
+            return this.http.get(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${id}`);
         }
     }
 
     saveJob(job, activeSection, next) {
         if (job.id) {
             // Update
-            return this.http.put(`${this.baseURL}/jobs/${job.id}`, {
+            return this.http.put(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${job.id}`, {
                 section: activeSection,
                 data: job,
                 next
             });
         } else {
             // Create
-            return this.http.post(`${this.baseURL}/jobs`, {
+            return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs`, {
                 section: activeSection,
                 data: job
             });
@@ -86,7 +85,7 @@ export class JobService {
     }
 
     updateJob(id, data) {
-        return this.http.put(`${this.baseURL}/jobs/${id}`, {
+        return this.http.put(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${id}`, {
             section: '',
             data,
             next: false
@@ -94,15 +93,15 @@ export class JobService {
     }
 
     deleteJob(id) {
-        return this.http.delete(`${this.baseURL}/jobs/${id}`);
+        return this.http.delete(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${id}`);
     }
 
     bulkDeleteJobs(ids) {
-        return this.http.post(`${this.baseURL}/jobs/bulk-delete`, { items: ids });
+        return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/bulk-delete`, { items: ids });
     }
 
     getUsers() {
-        return this.http.get(`${this.baseURL}/users`);
+        return this.http.get(`${this.apiURL}/tenants/${this.utilities.getTenant()}/users`);
     }
 
     getAllCandidates() {
@@ -126,66 +125,109 @@ export class JobService {
     }
 
     getStages(jobId: string) {
-        return this.http.get(`${this.baseURL}/jobs/${jobId}/stages`);
+        return this.http.get(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/stages`);
     }
 
     getStage(jobId: string, stageId: string) {
-        return this.http.get(`${this.baseURL}/jobs/${jobId}/stages/${stageId}`);
+        this.tenantId = this.utilities.getTenant();
+        return this.http.get(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/stages/${stageId}`);
     }
 
     createStage(jobId: string, data: { title: string }) {
-        return this.http.post(`${this.baseURL}/jobs/${jobId}/stages`, { data });
+        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
+        return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/stages`, { data });
     }
 
     updateStage(jobId: string, stageId: string, data: object) {
-        return this.http.put(`${this.baseURL}/jobs/${jobId}/stages/${stageId}`, { data });
+        return this.http.put(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/stages/${stageId}`, {
+            data
+        });
+    }
+
+    removeStage(jobId: string, stageId: string) {
+        return this.http.delete(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/stages/${stageId}`);
     }
 
     updateStages(jobId: string, data) {
-        return this.http.put(`${this.baseURL}/jobs/${jobId}/stages/`, { data });
+        return this.http.put(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/stages/`, { data });
     }
 
     getCandidates(jobId: string) {
-        return this.http.get(`${this.baseURL}/jobs/${jobId}/candidates`);
+        return this.http.get(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates`);
     }
 
-    getCandidate(jobId: string, candidateId) {
+    getCandidate(jobId: string, candidateId): Observable<any> {
         if (jobId === 'new') {
             return of({ title: '' });
         } else {
-            return this.http.get(`${this.baseURL}/jobs/${jobId}/candidates/${candidateId}`);
+            return this.http.get<any>(
+                `${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/${candidateId}`
+            );
         }
     }
 
     createCandidate(jobId: string, formData: object) {
-        return this.http.post(`${this.baseURL}/jobs/${jobId}/candidates`, formData);
+        return this.http.post(
+            `${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates`,
+            formData
+        );
     }
 
     createCandidateFromEmail(jobId: string, email: string) {
-        return this.http.post(`${this.baseURL}/jobs/${jobId}/candidates/email`, { email });
+        return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/email`, {
+            email
+        });
     }
 
     createCandidateFromCv(jobId: string, formData: object) {
-        return this.http.post(`${this.baseURL}/jobs/${jobId}/candidates/cv`, formData);
+        return this.http.post(
+            `${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/cv`,
+            formData
+        );
     }
 
     updateCandidateWithCv(jobId: string, candidateId: string, formData: object) {
-        return this.http.put(`${this.baseURL}/jobs/${jobId}/candidates/${candidateId}/cv`, formData);
+        return this.http.put(
+            `${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/${candidateId}/cv`,
+            formData
+        );
     }
 
     deleteCandidate(jobId: string, candidateId: string) {
-        return this.http.delete(`${this.baseURL}/jobs/${jobId}/candidates/${candidateId}`);
+        return this.http.delete(
+            `${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/${candidateId}`
+        );
     }
 
-    sendEmailsToCandidates(jobId: string, emails: string[]) {
-        return this.http.post(`${this.baseURL}/jobs/${jobId}/candidates/send-emails`, { emails });
+    setCandidatesEmailNotifications(jobId: string, emails: string[], send_emails: boolean) {
+        return this.http.post(
+            `${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/set-email-notifications`,
+            {
+                emails,
+                send_emails
+            }
+        );
     }
 
     createJobFromCv(formData: object) {
-        return this.http.post(`${this.baseURL}/jobs/spec`, formData);
+        this.tenantId = this.utilities.getTenant();
+        return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/spec`, formData);
     }
 
     updateCandidateStage(jobId: string, candidateId: string, stage: any) {
-        return this.http.put(`${this.baseURL}/jobs/${jobId}/candidates/${candidateId}/stage`, { data: { stage } });
+        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
+        return this.http.put(
+            `${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/${candidateId}/stage`,
+            { data: { stage } }
+        );
+    }
+
+    evaluateCandidateVideoAnswer(jobId: string, candidateId: string, stageId: string, data: any) {
+        return this.http.put(
+            `${
+                this.apiURL
+            }/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/${candidateId}/stages/${stageId}/evaluate-video`,
+            data
+        );
     }
 }

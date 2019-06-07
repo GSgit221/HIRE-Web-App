@@ -12,6 +12,8 @@ export class AccountTypePipe implements PipeTransform {
                     return 'Account Owner';
                 case 'recruiter':
                     return 'Recruiter';
+                case 'hiring_manager':
+                    return 'Hiring Manager';
                 case 'admin':
                     return 'Admin';
                 default:

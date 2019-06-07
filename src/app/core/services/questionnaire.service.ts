@@ -15,53 +15,69 @@ export class QuestionnaireService {
     tenantId = 'undefined';
     baseURL = '';
     constructor(private http: HttpClient, private utilities: UtilitiesService) {
-        this.tenantId = this.utilities.getTenant();
-        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
+        this.baseURL = `${this.apiURL}/tenants/${this.utilities.getTenant()}`;
     }
 
     getAll() {
         return this.http
-            .get<Questionnaire[]>(`${this.baseURL}/questionnaires`)
+            .get<Questionnaire[]>(`${this.apiURL}/tenants/${this.utilities.getTenant()}/questionnaires`)
             .pipe(catchError((error: any) => throwError(error)));
     }
 
     create(data: any) {
-        return this.http.post(`${this.baseURL}/questionnaires`, { data });
+        return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/questionnaires`, { data });
     }
 
     getById(id: string) {
-        return this.http.get(`${this.baseURL}/questionnaires/${id}`);
+        return this.http.get(`${this.apiURL}/tenants/${this.utilities.getTenant()}/questionnaires/${id}`);
     }
 
     deleteById(id: string) {
-        return this.http.delete(`${this.baseURL}/questionnaires/${id}`);
+        return this.http.delete(`${this.apiURL}/tenants/${this.utilities.getTenant()}/questionnaires/${id}`);
     }
 
     bulkDelete(ids: string[]) {
-        return this.http.post(`${this.baseURL}/questionnaires/bulk-delete`, { items: ids });
+        return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/questionnaires/bulk-delete`, {
+            items: ids
+        });
     }
 
     getQuestions(id: string) {
-        return this.http.get(`${this.baseURL}/questionnaires/${id}/questions`);
+        return this.http.get(`${this.apiURL}/tenants/${this.utilities.getTenant()}/questionnaires/${id}/questions`);
     }
 
     getQuestion(questionnaireId: string, questionId: string) {
-        return this.http.get(`${this.baseURL}/questionnaires/${questionnaireId}/questions/${questionId}`);
+        return this.http.get(
+            `${
+                this.apiURL
+            }/tenants/${this.utilities.getTenant()}/questionnaires/${questionnaireId}/questions/${questionId}`
+        );
     }
 
     createQuestion(id: string, data: any) {
-        return this.http.post(`${this.baseURL}/questionnaires/${id}/questions`, { data });
+        return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/questionnaires/${id}/questions`, {
+            data
+        });
     }
 
     updateQuestion(id: string, questionId: string, data: any) {
-        return this.http.put(`${this.baseURL}/questionnaires/${id}/questions/${questionId}`, { data });
+        return this.http.put(
+            `${this.apiURL}/tenants/${this.utilities.getTenant()}/questionnaires/${id}/questions/${questionId}`,
+            { data }
+        );
     }
 
     questionsBulkDelete(id: string, ids: string[]) {
-        return this.http.post(`${this.baseURL}/questionnaires/${id}/questions/bulk-delete`, { items: ids });
+        return this.http.post(
+            `${this.apiURL}/tenants/${this.utilities.getTenant()}/questionnaires/${id}/questions/bulk-delete`,
+            { items: ids }
+        );
     }
 
     updateQuestionsOrder(questionnaireId: string, data) {
-        return this.http.put(`${this.baseURL}/questionnaires/${questionnaireId}/questions`, { data });
+        return this.http.put(
+            `${this.apiURL}/tenants/${this.utilities.getTenant()}/questionnaires/${questionnaireId}/questions`,
+            { data }
+        );
     }
 }
