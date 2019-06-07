@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { select, Store } from '@ngrx/store';
 import { SelectItem } from 'primeng/api';
 import { Message } from 'primeng/components/common/api';
+import * as fromStore from './../../../store';
 
 import { environment } from '@env/environment';
 import { JobService } from '../../../core/services/job.service';
@@ -26,21 +28,16 @@ export class SignupComponent implements OnInit {
     contentLoading = false;
     googleSigninLink = '';
     msgs: Message[] = [];
+    authResponse: any;
 
     constructor(
         private fb: FormBuilder,
         private jobService: JobService,
         private utilities: UtilitiesService,
         private authService: AuthService,
-        private router: Router
+        private router: Router,
+        private store: Store<fromStore.State>
     ) {
-        // Check if app
-        const tenant = this.utilities.getTenant();
-        console.log(tenant);
-
-        // Google link
-        this.googleSigninLink = this.authService.getGoogleSignupLink();
-        // OPTIONS
         this.utilities.getCountries().subscribe((countries: Array<{ name: string; code: string }>) => {
             countries
                 .sort((a, b) => {
@@ -70,15 +67,69 @@ export class SignupComponent implements OnInit {
         this.initForms();
     }
 
-    ngOnInit() {
-        // this.credentialsForm.valueChanges.subscribe((a) => {
-        //     console.log(a.email);
-        //     // a.email.toUpperCase();
-        //     this.credentialsForm.setValue({
-        //         email: a.email.toUpperCase()
-        //     });
-        // });
+    ngOnInit() {}
+
+    onGoogleSignup() {
+        this.contentLoading = true;
+        this.authService
+            .onGoogleSignin()
+            .then((authResponse) => {
+                this.authResponse = authResponse;
+                console.log(authResponse);
+                this.authService.checkUserExists(authResponse.email).subscribe(
+                    (response: any) => {
+                        if (response.user_exists) {
+                            this.contentLoading = false;
+                            this.msgs = [];
+                            this.msgs.push({
+                                severity: 'error',
+                                detail: 'User with this email is already registered. Please sign in.'
+                            });
+                            return;
+                        }
+                        this.authService.getCompanyByEmail(this.authResponse.email).subscribe((data: any) => {
+                            this.contentLoading = false;
+                            if (data) {
+                                this.step = 'third';
+                                let employees = data.metrics.employeesRange;
+                                if (employees) {
+                                    employees = employees.replace(/ /g, '');
+                                }
+                                this.companyForm = this.fb.group({
+                                    company_website_url: [
+                                        data.domain,
+                                        [Validators.required, Validators.pattern(this.websiteReg)]
+                                    ],
+                                    company_name: [
+                                        data.name,
+                                        [Validators.required, Validators.pattern(this.companyNameReg)]
+                                    ],
+                                    country_code: [data.geo.countryCode, Validators.required],
+                                    employees: [employees, Validators.required],
+                                    agreed: [false, Validators.requiredTrue],
+                                    country_name: [data.geo.country]
+                                });
+                                return false;
+                            } else {
+                                this.msgs = [];
+                                this.step = 'second';
+                            }
+                        });
+                    },
+                    (errorResponse) => {
+                        this.authResponse = null;
+                        console.error(errorResponse);
+                    }
+                );
+            })
+            .catch((errorResponse) => {
+                this.contentLoading = false;
+                this.msgs = [];
+                this.msgs.push({ severity: 'error', detail: errorResponse.error || 'Error' });
+                this.authResponse = null;
+            });
     }
+
     onKeyupEmail(event) {
         event.target.value = event.target.value.toLowerCase();
     }
@@ -114,6 +165,7 @@ export class SignupComponent implements OnInit {
     }
 
     onFinishFirstStep() {
+        this.authResponse = null;
         this.contentLoading = true;
         this.msgs = [];
         this.authService.checkUserExists(this.credentialsForm.get('email').value).subscribe((response: any) => {
@@ -173,6 +225,7 @@ export class SignupComponent implements OnInit {
             (error) => {
                 this.contentLoading = false;
                 console.error('error company not found');
+                this.companyForm.get('company_website_url').patchValue(this.websiteForm.value.url);
             }
         );
     }
@@ -184,21 +237,40 @@ export class SignupComponent implements OnInit {
             .getUserData()
             .then((geo_data) => {
                 data.geo_data = geo_data;
-                this.authService.signup(data).subscribe(
-                    (response: any) => {
-                        this.contentLoading = false;
-                        this.msgs = [];
-                        this.authService.setSession(response, response.tenant_id);
-                        const url = environment.appUrl.replace('subdomain', response.tenant_id);
-                        console.log('REDIRECTING:', url);
-                        window.location.href = url;
-                    },
-                    (response) => {
-                        this.contentLoading = false;
-                        this.msgs = [];
-                        this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
-                    }
-                );
+                if (this.authResponse) {
+                    data.authData = this.authResponse;
+                    this.authService.signUpWithGoogle(data).subscribe(
+                        (response: any) => {
+                            this.contentLoading = false;
+                            this.msgs = [];
+                            this.authService.setSession(response);
+                            this.utilities.setTenant(response.tenant_id);
+                            this.store.dispatch(new fromStore.LoadUser());
+                            this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
+                        },
+                        (response) => {
+                            this.contentLoading = false;
+                            this.msgs = [];
+                            this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
+                        }
+                    );
+                } else {
+                    this.authService.signup(data).subscribe(
+                        (response: any) => {
+                            this.contentLoading = false;
+                            this.msgs = [];
+                            this.authService.setSession(response);
+                            this.utilities.setTenant(response.tenant_id);
+                            this.store.dispatch(new fromStore.LoadUser());
+                            this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
+                        },
+                        (response) => {
+                            this.contentLoading = false;
+                            this.msgs = [];
+                            this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
+                        }
+                    );
+                }
             })
             .catch((error) => {
                 console.error(error);

@@ -20,4 +20,5 @@ export class User {
     invitation_code?: string;
     type?: string;
     activated?: boolean;
+    tenant_id?: string;
 }
