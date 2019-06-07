@@ -1,12 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import * as fromUserSelectors from '@app/store/selectors';
+import { select, Store } from '@ngrx/store';
 import * as closest from 'closest';
 import { SelectItem } from 'primeng/api';
-import { UtilitiesService } from './../../../../../core/services/utilities.service';
 
-import { Router } from '@angular/router';
-import { User } from '../../../../../core/models/user';
+import * as fromStore from '../store';
+import * as fromStoreActions from '../store/actions/jobs.action';
+import * as fromStoreSelectors from '../store/selectors/jobs.selector';
 import { Job } from './../../../../../core/models/job';
+import { User } from './../../../../../core/models/user';
 import { JobService } from './../../../../../core/services/job.service';
+import { UtilitiesService } from './../../../../../core/services/utilities.service';
 
 @Component({
     selector: 'app-jobs-list',
@@ -27,27 +32,30 @@ export class JobsListComponent implements OnInit {
     countries: any[] = [];
     baseUrl: string;
 
-    constructor(private router: Router, private jobService: JobService, private utilities: UtilitiesService) {
+    constructor(
+        private router: Router,
+        private jobService: JobService,
+        private utilities: UtilitiesService,
+        private store: Store<fromStore.JobsState>
+    ) {
         this.baseUrl = this.utilities.getHireBaseUrl();
         this.utilities.getCountries().subscribe((countries: Array<{ name: string; code: string }>) => {
             this.countries = countries;
         });
-        this.jobService.getAll().subscribe((jobs: Job[]) => {
-            this.list = jobs.map((job) => {
-                if (job.location && job.location.length) {
-                    job.location_city = job.location.split(',')[0].trim();
-                    job.location_country = job.location
-                        .split(',')
-                        .pop()
-                        .trim();
-                }
-                return job;
-            });
+        this.store.pipe(select(fromStoreSelectors.getAllJobs)).subscribe((jobs: Job[]) => {
+            this.list = jobs.map((item) => ({ ...item }));
+            this.calculateSelectedItems();
             this.filteredList = this.list.slice(0);
             this.contentLoading = false;
         });
+        this.store.pipe(select(fromStoreSelectors.getJobsLoaded)).subscribe((loaded: boolean) => {
+            if (loaded) {
+                this.contentLoading = true;
+                this.store.dispatch(new fromStoreActions.LoadJobs());
+            }
+        });
 
-        this.jobService.getUsers().subscribe((users: User[]) => {
+        this.store.pipe(select(fromUserSelectors.getUsersEntities)).subscribe((users: User[]) => {
             this.users = users || [];
         });
 
@@ -69,7 +77,8 @@ export class JobsListComponent implements OnInit {
     }
 
     onJobStatusChange(item) {
-        this.jobService.updateJob(item.id, { status: item.status }).subscribe(() => console.log('updated'));
+        // this.jobService.updateJob(item.id, { status: item.status }).subscribe(() => console.log('updated'));
+        this.store.dispatch(new fromStoreActions.UpdateJob({ id: item.id, data: item.status }));
     }
 
     onSelectAllChange() {
@@ -99,23 +108,13 @@ export class JobsListComponent implements OnInit {
     onItemsBulkRemove() {
         this.contentLoading = true;
         const itemsToRemove = this.filteredList.filter((item) => item.selected).map((item) => item.id);
-        this.jobService.bulkDeleteJobs(itemsToRemove).subscribe(() => {
-            this.jobService.getAll().subscribe((jobs: Job[]) => {
-                this.list = jobs;
-                this.filteredList = this.list.slice(0);
-                this.contentLoading = false;
-                this.calculateSelectedItems();
-            });
-        });
+        this.store.dispatch(new fromStoreActions.BulkDeleteJobs(itemsToRemove));
+        this.store.dispatch(new fromStoreActions.LoadJobs());
     }
 
     onFinishedJobUpload(event) {
         this.contentLoading = true;
-        this.jobService.getAll().subscribe((jobs: Job[]) => {
-            this.list = jobs;
-            this.filteredList = this.list.slice(0);
-            this.contentLoading = false;
-        });
+        this.store.dispatch(new fromStoreActions.LoadJobs());
         this.uploadJobSpecMode = false;
     }
 

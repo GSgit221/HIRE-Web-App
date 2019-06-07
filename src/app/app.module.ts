@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { UtilitiesService } from '@app/core/services';
 import { environment } from '@env/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
@@ -52,7 +53,8 @@ export function provideConfig() {
             provide: RouterStateSerializer,
             useClass: CustomSerializer
         },
-        { provide: AngularFirestore }
+        { provide: AngularFirestore },
+        UtilitiesService
     ],
     bootstrap: [AppComponent]
 })

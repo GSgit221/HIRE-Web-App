@@ -5,6 +5,7 @@ import { Message } from 'primeng/components/common/api';
 
 import { FormHelperService } from '../../../core/services/form-helper.service';
 import { AuthService } from '../auth.service';
+import { UtilitiesService } from './../../../core/services/utilities.service';
 
 @Component({
     selector: 'app-signin',
@@ -20,7 +21,8 @@ export class SigninComponent implements OnInit {
         private authService: AuthService,
         private fb: FormBuilder,
         private router: Router,
-        private formHelper: FormHelperService
+        private formHelper: FormHelperService,
+        private utilities: UtilitiesService
     ) {
         this.signinForm = this.fb.group({
             email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
@@ -41,6 +43,7 @@ export class SigninComponent implements OnInit {
                         this.contentLoading = false;
                         this.msgs = [];
                         this.authService.setSession(response);
+                        this.utilities.setTenant(response.tenant_id);
                         this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
                     },
                     (response) => {
@@ -70,6 +73,7 @@ export class SigninComponent implements OnInit {
                 this.contentLoading = false;
                 this.msgs = [];
                 this.authService.setSession(response);
+                this.utilities.setTenant(response.tenant_id);
                 this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
             },
             (response) => {

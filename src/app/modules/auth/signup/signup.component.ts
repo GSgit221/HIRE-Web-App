@@ -244,7 +244,7 @@ export class SignupComponent implements OnInit {
                             this.contentLoading = false;
                             this.msgs = [];
                             this.authService.setSession(response);
-                            console.log('RESPONSE', response);
+                            this.utilities.setTenant(response.tenant_id);
                             this.store.dispatch(new fromStore.LoadUser());
                             this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
                         },
@@ -260,6 +260,7 @@ export class SignupComponent implements OnInit {
                             this.contentLoading = false;
                             this.msgs = [];
                             this.authService.setSession(response);
+                            this.utilities.setTenant(response.tenant_id);
                             this.store.dispatch(new fromStore.LoadUser());
                             this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
                         },

@@ -9,6 +9,7 @@ import { environment } from '@env/environment';
     providedIn: 'root'
 })
 export class UtilitiesService {
+    tenantId = 'undefined';
     constructor(private http: HttpClient, private route: ActivatedRoute) {}
 
     readFile(file): Promise<{ name: string; size: number; mimetype: string; data: string }> {
@@ -81,10 +82,24 @@ export class UtilitiesService {
         return pool1[firstLetterIndex] + shuffled.substring(0, length - 1);
     }
 
-    getTenant() {
-        const tenant = window.location.pathname.split('/')[2];
-        return tenant || 'undefined';
+    setTenant(tenantId: string) {
+        this.tenantId = tenantId;
     }
+
+    getTenant() {
+        if (this.tenantId === 'undefined') {
+            const urlPart = window.location.pathname.split('/tenant/')[1];
+            if (urlPart) {
+                this.tenantId = urlPart.split('/')[0];
+            }
+        }
+        return this.tenantId;
+    }
+
+    // getTenant() {
+    //     const tenant = window.location.pathname.split('/')[2];
+    //     return tenant || 'undefined';
+    // }
 
     getHireBaseUrl() {
         return `/tenant/${this.getTenant()}/hire`;

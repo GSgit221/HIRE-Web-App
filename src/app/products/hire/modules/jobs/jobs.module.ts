@@ -1,11 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 import { NgxCurrencyModule } from 'ngx-currency';
 import { SharedModule } from './../../../../modules/shared/shared.module';
 
 import { CandidateItemFeedbackComponent } from './candidate-item-feedback/candidate-item-feedback.component';
 import { CandidateItemTimelineComponent } from './candidate-item-timeline/candidate-item-timeline.component';
 import { CandidateItemComponent } from './candidate-item/candidate-item.component';
+import * as fromGuards from './guards';
 import { JobItemEditComponent } from './job-item-edit/job-item-edit.component';
 import { JobItemNewComponent } from './job-item-new/job-item-new.component';
 import { JobItemViewComponent } from './job-item-view/job-item-view.component';
@@ -13,15 +16,18 @@ import { JobItemComponent } from './job-item/job-item.component';
 import { JobsListComponent } from './jobs-list/jobs-list.component';
 import { NewCandidateItemComponent } from './new-candidate-item/new-candidate-item.component';
 import { StageSettingsComponent } from './stages/stage-settings/stage-settings.component';
+import { effects, reducers } from './store';
 
 const routes: Routes = [
     {
         path: '',
-        component: JobsListComponent
+        component: JobsListComponent,
+        canActivate: [fromGuards.JobsGuard]
     },
     {
         path: ':id',
-        component: JobItemComponent
+        component: JobItemComponent,
+        canActivate: [fromGuards.JobsGuard]
     },
     {
         path: ':jobId/candidate/:candidateId',
@@ -45,7 +51,14 @@ const routes: Routes = [
         CandidateItemFeedbackComponent,
         CandidateItemTimelineComponent
     ],
-    imports: [SharedModule, RouterModule.forChild(routes), NgxCurrencyModule],
+    providers: [...fromGuards.guards],
+    imports: [
+        SharedModule,
+        RouterModule.forChild(routes),
+        NgxCurrencyModule,
+        StoreModule.forFeature('jobs', reducers),
+        EffectsModule.forFeature(effects)
+    ],
     exports: [RouterModule]
 })
 export class JobsModule {}
