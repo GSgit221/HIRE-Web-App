@@ -11,25 +11,3 @@
 @import 'styles/navigation.scss';
 @import 'styles/recruiters-auth.scss';
 @import 'styles/onboarding.scss';
-
-.btn {
-    border-radius: 3px;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 12px 20px;
-    line-height: 1.5em;
-    text-transform: uppercase;
-    .icon {
-        margin-left: 26px;
-        vertical-align: middle;
-    }
-
-    .btn-primary {
-        background-color: #ff2d55;
-        color: #fff;
-        &:disabled {
-            background: #d7dbdf;
-            color: #000;
-        }
-    }
-}

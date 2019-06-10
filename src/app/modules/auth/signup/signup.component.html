@@ -1,88 +1,102 @@
-<div *ngIf="step === 'first'">
-    <h1>Welcome to Clevateam!</h1>
-    <p>Your <b>email address</b></p>
-    <input name="email" class="form-input" type="email" />
-    <p class="term-text">By creating a profile, you agree to our customer terms of service and privacy policy.</p>
-    <button class="btn btn-primary" (click)="onFinishFirstStep()" type="submit">
-        Next
-        <span class="icon icon-right-arrow"></span>
-    </button>
-</div>
+<form [formGroup]="credentialsForm">
+    <p-messages [(value)]="msgs"></p-messages>
+    <div *ngIf="step === 'first'">
+        <h1>Welcome to Clevateam!</h1>
+        <p>Your <b>email address</b></p>
+        <input name="email" class="form-input" type="email" placeholder="Email address" formControlName="email" />
+        <p class="term-text">By creating a profile, you agree to our customer terms of service and privacy policy.</p>
+        <button class="btn btn-primary" (click)="onFinishFirstStep()" type="submit">
+            Next
+            <span class="icon icon-right-arrow"></span>
+        </button>
+    </div>
 
-<div *ngIf="step === 'second'">
-    <h1>Check your email</h1>
-    <p>We’ve just sent a 6-digit code to <b>greg@hellocrowd.net</b>. It will expire shortly so enter it soon.</p>
-    <input
-        type="text"
-        class="form-input pincode"
-        name="first_digit"
-        autocomplete="off"
-        required
-        maxlength="1"
-        autofocus
-        tabindex="1"
-        pattern="\d*"
-        maxlength="1"
-    />
-    <input
-        type="text"
-        class="form-input pincode "
-        name="second_digit"
-        required
-        maxlength="1"
-        autocomplete="off"
-        tabindex="2"
-        pattern="\d*"
-        maxlength="1"
-    />
-    <input
-        type="text"
-        class="form-input pincode"
-        name="third_digit"
-        required
-        maxlength="1"
-        autocomplete="off"
-        tabindex="3"
-        pattern="\d*"
-        maxlength="1"
-    />
-    <div></div>
-    <input
-        type="text"
-        class="form-input pincode"
-        name="fouth_digit"
-        required
-        maxlength="1"
-        autocomplete="off"
-        tabindex="4"
-        pattern="\d*"
-        maxlength="1"
-    />
-    <input
-        type="text"
-        class="form-input pincode"
-        name="fifth_digit"
-        required
-        maxlength="1"
-        autocomplete="off"
-        tabindex="5"
-        pattern="\d*"
-        maxlength="1"
-    />
-    <input
-        type="text"
-        class="form-input pincode"
-        name="sixth_digit"
-        required
-        maxlength="1"
-        autocomplete="off"
-        tabindex="6"
-        pattern="\d*"
-        maxlength="1"
-    />
-    <p>Leave this wondow open while you check. Don’t forget to also check your span folder.</p>
-    <button class="btn btn-primary" [disabled]="!signinForm.valid" (click)="onSignIn($event)" type="submit">
-        Next
-        <span class="icon icon-right-arrow"></span>
-    </button>
-</div>
+    <div *ngIf="step === 'second'">
+        <h1>Check your email</h1>
+        <p>We’ve just sent a 6-digit code to <b>greg@hellocrowd.net</b>. It will expire shortly so enter it soon.</p>
+        <div class="pincode-inputs">
+            <input
+                type="text"
+                class="form-input pincode"
+                name="first_digit"
+                autocomplete="off"
+                required
+                maxlength="1"
+                autofocus
+                tabindex="1"
+                pattern="\d*"
+            />
+            <input
+                type="text"
+                class="form-input pincode "
+                name="second_digit"
+                required
+                maxlength="1"
+                autocomplete="off"
+                tabindex="2"
+                pattern="\d*"
+            />
+            <input
+                type="text"
+                class="form-input pincode"
+                name="third_digit"
+                required
+                maxlength="1"
+                autocomplete="off"
+                tabindex="3"
+                pattern="\d*"
+            />
+            <span class="line"></span>
+            <input
+                type="text"
+                class="form-input pincode"
+                name="fouth_digit"
+                required
+                maxlength="1"
+                autocomplete="off"
+                tabindex="4"
+                pattern="\d*"
+            />
+            <input
+                type="text"
+                class="form-input pincode"
+                name="fifth_digit"
+                required
+                maxlength="1"
+                autocomplete="off"
+                tabindex="5"
+                pattern="\d*"
+            />
+            <input
+                type="text"
+                class="form-input pincode"
+                name="sixth_digit"
+                required
+                maxlength="1"
+                autocomplete="off"
+                tabindex="6"
+                pattern="\d*"
+            />
+        </div>
+        <p class="txt-opacity">Leave this wondow open while you check. Don’t forget to also check your span folder.</p>
+        <button class="btn btn-primary" (click)="onFinishSecondStep()" type="submit">
+            Next
+            <span class="icon icon-right-arrow"></span>
+        </button>
+    </div>
+
+    <div *ngIf="step === 'third'">
+        <h1>Finally, create a password</h1>
+        <input name="password" class="form-input" placeholder="Choose a password" />
+        <input name="confirm password" class="form-input password" placeholder="Retype password" />
+        <button
+            class="btn btn-primary finish"
+            [disabled]="!credentialsForm.valid"
+            (click)="onFinishSecondStep()"
+            type="submit"
+        >
+            Finish
+            <span class="icon icon-right-arrow"></span>
+        </button>
+    </div>
+</form>

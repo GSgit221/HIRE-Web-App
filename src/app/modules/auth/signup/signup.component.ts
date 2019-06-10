@@ -136,12 +136,12 @@ export class SignupComponent implements OnInit {
 
     initForms() {
         this.credentialsForm = this.fb.group({
-            name: [
-                '',
-                [Validators.required, Validators.minLength(2), Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]
-            ],
-            email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
-            password: ['', [Validators.required, Validators.minLength(8)]]
+            // name: [
+            //     '',
+            //     [Validators.required, Validators.minLength(2), Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]
+            // ],
+            email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]]
+            // password: ['', [Validators.required, Validators.minLength(8)]]
         });
 
         this.websiteForm = this.fb.group({
@@ -165,6 +165,8 @@ export class SignupComponent implements OnInit {
     }
 
     onFinishFirstStep() {
+        console.log(this.credentialsForm.get('email').value);
+        // this.step = 'second';
         this.authResponse = null;
         this.contentLoading = true;
         this.msgs = [];
@@ -177,28 +179,35 @@ export class SignupComponent implements OnInit {
                 });
                 return false;
             }
-            this.authService.getCompanyByEmail(this.credentialsForm.get('email').value).subscribe((data: any) => {
-                this.contentLoading = false;
-                if (data) {
-                    this.step = 'third';
-                    let employees = data.metrics.employeesRange;
-                    if (employees) {
-                        employees = employees.replace(/ /g, '');
-                    }
-                    this.companyForm = this.fb.group({
-                        company_website_url: [data.domain, [Validators.required, Validators.pattern(this.websiteReg)]],
-                        company_name: [data.name, [Validators.required, Validators.pattern(this.companyNameReg)]],
-                        country_code: [data.geo.countryCode, Validators.required],
-                        employees: [employees, Validators.required],
-                        agreed: [false, Validators.requiredTrue],
-                        country_name: [data.geo.country]
-                    });
-                    return false;
-                } else {
-                    this.msgs = [];
-                    this.step = 'second';
-                }
-            });
+            // this.authService.usersignup(this.credentialsForm.get('email').value).subscribe((data: any) => {
+            //     this.contentLoading = false;
+            //     console.log('data',data);
+            // });
+            else {
+                this.step = 'second';
+            }
+            // this.authService.getCompanyByEmail(this.credentialsForm.get('email').value).subscribe((data: any) => {
+            //     this.contentLoading = false;
+            //     if (data) {
+            //         this.step = 'third';
+            //         let employees = data.metrics.employeesRange;
+            //         if (employees) {
+            //             employees = employees.replace(/ /g, '');
+            //         }
+            //         this.companyForm = this.fb.group({
+            //             company_website_url: [data.domain, [Validators.required, Validators.pattern(this.websiteReg)]],
+            //             company_name: [data.name, [Validators.required, Validators.pattern(this.companyNameReg)]],
+            //             country_code: [data.geo.countryCode, Validators.required],
+            //             employees: [employees, Validators.required],
+            //             agreed: [false, Validators.requiredTrue],
+            //             country_name: [data.geo.country]
+            //         });
+            //         return false;
+            //     } else {
+            //         this.msgs = [];
+            //         this.step = 'second';
+            //     }
+            // });
         });
     }
 

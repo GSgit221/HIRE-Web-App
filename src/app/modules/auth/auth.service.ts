@@ -48,6 +48,14 @@ export class AuthService {
         });
     }
 
+    // usersignup(data) {
+    //     console.log('data',data);
+    //     return this.http.post(`${environment.apiUrl}/auth/user-signup`, {
+    //         ...data,
+    //         source: 'jobs'
+    //     });
+    // }
+
     resetPassword(email) {
         return this.http.post(`${environment.apiUrl}/auth/reset-password`, {
             email,

@@ -10,6 +10,7 @@ import { SignupComponent } from './signup/signup.component';
 import { SharedModule } from '../../modules/shared/shared.module';
 import { AuthRoutingModule } from './auth-routing.module';
 import { LayoutComponent } from './layout/layout.component';
+import { SSOComponent } from './sso/sso.component';
 
 @NgModule({
     declarations: [
@@ -18,7 +19,8 @@ import { LayoutComponent } from './layout/layout.component';
         SigninComponent,
         SignoutComponent,
         SignupComponent,
-        LayoutComponent
+        LayoutComponent,
+        SSOComponent
     ],
     imports: [SharedModule, AuthRoutingModule],
     exports: [RouterModule]

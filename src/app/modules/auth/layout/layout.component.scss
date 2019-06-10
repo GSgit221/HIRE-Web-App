@@ -122,6 +122,33 @@
                 display: inline-block;
             }
 
+            .btn {
+                border-radius: 3px;
+                height: 46px;
+                font-size: 12px;
+                font-weight: 500;
+                padding: 12px 20px;
+                line-height: 1.5em;
+                text-transform: uppercase;
+                .icon {
+                    margin-left: 26px;
+                    vertical-align: middle;
+                }
+
+                .btn-primary {
+                    background-color: #ff2d55;
+                    color: #fff;
+                    &:disabled {
+                        background: #d7dbdf;
+                        color: #000;
+                    }
+                }
+            }
+
+            .form-input {
+                height: 46px;
+            }
+
             .auth-wrapper {
                 width: 584px;
                 margin: 0 auto;
@@ -133,36 +160,9 @@
                 padding-bottom: 10px;
             }
 
-            .separator {
-                margin: 10px 0;
-                position: relative;
-                color: #a5a6a6;
-                font-size: 12px;
-                font-weight: bold;
-                text-align: center;
-
-                &:before {
-                    content: '';
-                    position: absolute;
-                    left: 0;
-                    top: 50%;
-                    width: 100%;
-                    height: 1px;
-                    background: #a5a6a6;
-                }
-
-                .separator-text {
-                    display: inline-block;
-                    background: #fff;
-                    padding: 1px 15px;
-                    position: relative;
-                    z-index: 2;
-                }
-            }
-
             .hc-form-row {
                 min-height: 35px;
-                margin: 0 0 15px;
+                margin: 0 0 22px;
 
                 .hc-form-control {
                     font-size: 14px;
@@ -177,6 +177,9 @@
                     margin: 0;
                 }
 
+                .fwidth {
+                    width: 100%;
+                }
                 .hc-help-text {
                     color: #545454;
                 }

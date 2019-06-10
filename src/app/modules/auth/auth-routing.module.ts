@@ -8,6 +8,7 @@ import { SetPasswordComponent } from './set-password/set-password.component';
 import { SigninComponent } from './signin/signin.component';
 import { SignoutComponent } from './signout.component';
 import { SignupComponent } from './signup/signup.component';
+import { SSOComponent } from './sso/sso.component';
 
 const routes: Routes = [
     {
@@ -18,7 +19,8 @@ const routes: Routes = [
             { path: 'signin', component: SigninComponent },
             { path: 'signup', component: SignupComponent },
             { path: 'reset-password', component: ResetPasswordComponent },
-            { path: 'set-password', component: SetPasswordComponent }
+            { path: 'set-password', component: SetPasswordComponent },
+            { path: 'signin-sso', component: SSOComponent }
         ]
     },
 

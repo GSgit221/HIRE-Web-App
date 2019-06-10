@@ -2,7 +2,6 @@
 :host {
     .google-button .hc-button-inner button {
         position: relative;
-
         .google-icon {
             position: absolute;
             left: 2px;
@@ -15,7 +14,6 @@
             border-radius: 3px;
         }
     }
-
     .attention {
         font-size: 15px;
         color: #72808d;
@@ -23,63 +21,127 @@
     .checkbox-holder {
         display: flex;
     }
-
     .form-bottom hc-button {
         margin-left: auto;
     }
-
     .form-bottom {
         md-checkbox .md-container {
             margin-top: -8px;
         }
     }
-
     field-errors {
         width: 100%;
-
         p {
             margin: 3px 0 0 16px;
         }
     }
-
-    .signin-btn {
+    .signin-btn-google {
         display: flex;
         flex-direction: row;
         align-items: center;
         width: 100%;
-        height: 35px;
-        padding: 1px;
-        background: $pink;
-        border-radius: 4px;
-        border: 0;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 4px;
+        background: $google;
+        font-family: Roboto;
+        border-radius: 2px;
+        border: none;
         transition: all 0.2s ease;
         outline: none !important;
-
         &:hover {
             cursor: pointer;
-            background: darken($pink, 10%);
+            background: darken($google, 10%);
         }
-
         &:active {
-            background: lighten($pink, 10%);
+            background: lighten($google, 10%);
         }
-
         .abcRioButtonIcon {
-            width: 26px;
-            height: 26px;
-            border-radius: 3px;
-            margin: 1px 0 0 3px;
+            width: 38px;
+            height: 38px;
+            border-radius: 1px;
             padding: 4px !important;
             background: $white;
+            display: flex;
+            img {
+                width: 23px;
+                height: 23px;
+                align-self: center;
+                margin: 0 auto;
+            }
         }
-
         .text {
-            flex: 1;
+            flex-shrink: 1;
+            width: 100%;
             text-align: center;
-            font-size: 14px;
-            line-height: 29px;
             letter-spacing: 1px;
             color: $white;
+        }
+    }
+    .signin-btn {
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 15px;
+        background: $sign-in;
+        font-family: Roboto;
+        border-radius: 2px;
+        border: none;
+        transition: all 0.2s ease;
+        outline: none !important;
+        .text {
+            flex-shrink: 1;
+            width: 100%;
+            text-align: center;
+            letter-spacing: 1px;
+            color: $white;
+        }
+    }
+    .sign-in-sso {
+        font-family: Roboto;
+        font-size: 15px;
+        text-align: center;
+        text-decoration: underline;
+        cursor: pointer;
+        .sso {
+            color: #ffffff;
+        }
+    }
+    .separator {
+        margin: 24px 0;
+        position: relative;
+        color: #ffffff;
+        font-size: 12px;
+        text-align: center;
+
+        &:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #a5a6a6;
+        }
+
+        .separator-text {
+            display: inline-block;
+            padding: 1px 15px;
+            position: relative;
+            background-color: #1a2848;
+        }
+    }
+    .password-row {
+        position: relative;
+        .forgot-pwd {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff2d55;
+            cursor: pointer;
         }
     }
 }
