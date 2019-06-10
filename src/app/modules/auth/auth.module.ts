@@ -8,17 +8,19 @@ import { SignoutComponent } from './signout.component';
 import { SignupComponent } from './signup/signup.component';
 
 import { SharedModule } from '../../modules/shared/shared.module';
+import { AuthRoutingModule } from './auth-routing.module';
+import { LayoutComponent } from './layout/layout.component';
 
-const routes: Routes = [
-    { path: 'signin', canActivate: [UnauthGuard], component: SigninComponent },
-    { path: 'signup', canActivate: [UnauthGuard], component: SignupComponent },
-    { path: 'signout', component: SignoutComponent },
-    { path: 'reset-password', canActivate: [UnauthGuard], component: ResetPasswordComponent },
-    { path: 'set-password', canActivate: [UnauthGuard], component: SetPasswordComponent }
-];
 @NgModule({
-    declarations: [ResetPasswordComponent, SetPasswordComponent, SigninComponent, SignoutComponent, SignupComponent],
-    imports: [SharedModule, RouterModule.forChild(routes)],
+    declarations: [
+        ResetPasswordComponent,
+        SetPasswordComponent,
+        SigninComponent,
+        SignoutComponent,
+        SignupComponent,
+        LayoutComponent
+    ],
+    imports: [SharedModule, AuthRoutingModule],
     exports: [RouterModule]
 })
 export class AuthModule {}
