@@ -10,15 +10,21 @@
             <span class="icon icon-right-arrow"></span>
         </button>
     </div>
+</form>
 
+<form [formGroup]="otpForm">
     <div *ngIf="step === 'second'">
         <h1>Check your email</h1>
-        <p>We’ve just sent a 6-digit code to <b>greg@hellocrowd.net</b>. It will expire shortly so enter it soon.</p>
+        <p>
+            We’ve just sent a 6-digit code to <b>{{ email }}</b
+            >. It will expire shortly so enter it soon.
+        </p>
         <div class="pincode-inputs">
             <input
                 type="text"
                 class="form-input pincode"
                 name="first_digit"
+                formControlName="first_digit"
                 autocomplete="off"
                 required
                 maxlength="1"
@@ -30,6 +36,7 @@
                 type="text"
                 class="form-input pincode "
                 name="second_digit"
+                formControlName="second_digit"
                 required
                 maxlength="1"
                 autocomplete="off"
@@ -40,6 +47,7 @@
                 type="text"
                 class="form-input pincode"
                 name="third_digit"
+                formControlName="third_digit"
                 required
                 maxlength="1"
                 autocomplete="off"
@@ -51,6 +59,7 @@
                 type="text"
                 class="form-input pincode"
                 name="fouth_digit"
+                formControlName="fouth_digit"
                 required
                 maxlength="1"
                 autocomplete="off"
@@ -61,6 +70,7 @@
                 type="text"
                 class="form-input pincode"
                 name="fifth_digit"
+                formControlName="fifth_digit"
                 required
                 maxlength="1"
                 autocomplete="off"
@@ -71,6 +81,7 @@
                 type="text"
                 class="form-input pincode"
                 name="sixth_digit"
+                formControlName="sixth_digit"
                 required
                 maxlength="1"
                 autocomplete="off"
@@ -84,17 +95,35 @@
             <span class="icon icon-right-arrow"></span>
         </button>
     </div>
+</form>
 
+<form [formGroup]="passwordForm">
     <div *ngIf="step === 'third'">
         <h1>Finally, create a password</h1>
-        <input name="password" class="form-input" placeholder="Choose a password" />
-        <input name="confirm password" class="form-input password" placeholder="Retype password" />
-        <button
-            class="btn btn-primary finish"
-            [disabled]="!credentialsForm.valid"
-            (click)="onFinishSecondStep()"
-            type="submit"
+        <input
+            name="password"
+            type="password"
+            class="form-input"
+            placeholder="Choose a password"
+            formControlName="password"
+        />
+        <input
+            name="confirm password"
+            type="password"
+            class="form-input password"
+            placeholder="Retype password"
+            formControlName="confirm_password"
+        />
+        <div
+            class="error-message"
+            *ngIf="
+                passwordForm.controls.confirm_password.errors?.MatchPassword &&
+                passwordForm.controls.confirm_password.touched
+            "
         >
+            Password does not match
+        </div>
+        <button class="btn btn-primary finish" (click)="onFinishThirdStep()" type="submit">
             Finish
             <span class="icon icon-right-arrow"></span>
         </button>

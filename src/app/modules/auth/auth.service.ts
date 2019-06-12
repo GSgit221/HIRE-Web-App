@@ -48,13 +48,22 @@ export class AuthService {
         });
     }
 
-    // usersignup(data) {
-    //     console.log('data',data);
-    //     return this.http.post(`${environment.apiUrl}/auth/user-signup`, {
-    //         ...data,
-    //         source: 'jobs'
-    //     });
-    // }
+    usersignup(email) {
+        console.log('data', email);
+        return this.http.post(`${environment.apiUrl}/auth/send-email`, {
+            email,
+            source: 'jobs'
+        });
+    }
+
+    verifyOtp(email, otp) {
+        console.log('data', email, otp);
+        return this.http.post(`${environment.apiUrl}/auth/user-signup-verify-otp`, {
+            email,
+            otp,
+            source: 'jobs'
+        });
+    }
 
     resetPassword(email) {
         return this.http.post(`${environment.apiUrl}/auth/reset-password`, {

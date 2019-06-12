@@ -10,6 +10,9 @@ import { environment } from '@env/environment';
 import { JobService } from '../../../core/services/job.service';
 import { UtilitiesService } from '../../../core/services/utilities.service';
 import { AuthService } from '../auth.service';
+import { PasswordValidation } from './../../../core/validators/password.validator';
+import { FormHelperService } from './../../../core/services/form-helper.service';
+import { response } from 'express';
 
 @Component({
     selector: 'app-signup',
@@ -18,11 +21,13 @@ import { AuthService } from '../auth.service';
 })
 export class SignupComponent implements OnInit {
     credentialsForm: FormGroup;
-    websiteForm: FormGroup;
-    companyForm: FormGroup;
+    otpForm: FormGroup;
+    passwordForm: FormGroup;
     countryTypeOptions: SelectItem[] = [];
     employeesTypeOptions: SelectItem[] = [];
     step = 'first';
+    email: any;
+    otp: number;
     websiteReg = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
     companyNameReg = '[a-zA-Z0-9 ]+';
     contentLoading = false;
@@ -36,6 +41,7 @@ export class SignupComponent implements OnInit {
         private utilities: UtilitiesService,
         private authService: AuthService,
         private router: Router,
+        private formHelper: FormHelperService,
         private store: Store<fromStore.State>
     ) {
         this.utilities.getCountries().subscribe((countries: Array<{ name: string; code: string }>) => {
@@ -95,20 +101,20 @@ export class SignupComponent implements OnInit {
                                 if (employees) {
                                     employees = employees.replace(/ /g, '');
                                 }
-                                this.companyForm = this.fb.group({
-                                    company_website_url: [
-                                        data.domain,
-                                        [Validators.required, Validators.pattern(this.websiteReg)]
-                                    ],
-                                    company_name: [
-                                        data.name,
-                                        [Validators.required, Validators.pattern(this.companyNameReg)]
-                                    ],
-                                    country_code: [data.geo.countryCode, Validators.required],
-                                    employees: [employees, Validators.required],
-                                    agreed: [false, Validators.requiredTrue],
-                                    country_name: [data.geo.country]
-                                });
+                                // this.passwordForm = this.fb.group({
+                                //     company_website_url: [
+                                //         data.domain,
+                                //         [Validators.required, Validators.pattern(this.websiteReg)]
+                                //     ],
+                                //     company_name: [
+                                //         data.name,
+                                //         [Validators.required, Validators.pattern(this.companyNameReg)]
+                                //     ],
+                                //     country_code: [data.geo.countryCode, Validators.required],
+                                //     employees: [employees, Validators.required],
+                                //     agreed: [false, Validators.requiredTrue],
+                                //     country_name: [data.geo.country]
+                                // });
                                 return false;
                             } else {
                                 this.msgs = [];
@@ -144,142 +150,137 @@ export class SignupComponent implements OnInit {
             // password: ['', [Validators.required, Validators.minLength(8)]]
         });
 
-        this.websiteForm = this.fb.group({
-            url: ['', [Validators.required, Validators.pattern(this.websiteReg)]]
+        this.otpForm = this.fb.group({
+            first_digit: ['', [Validators.required]],
+            second_digit: ['', [Validators.required]],
+            third_digit: ['', [Validators.required]],
+            fouth_digit: ['', [Validators.required]],
+            fifth_digit: ['', [Validators.required]],
+            sixth_digit: ['', [Validators.required]]
         });
-        this.companyForm = this.fb.group({
-            company_website_url: ['', [Validators.required, Validators.pattern(this.websiteReg)]],
-            company_name: ['', [Validators.required, Validators.pattern(this.companyNameReg)]],
-            agreed: [false, Validators.requiredTrue],
-            country_code: ['', Validators.required],
-            employees: ['', Validators.required],
-            country_name: ['']
-        });
+        this.passwordForm = this.fb.group(
+            {
+                password: ['', [Validators.required, Validators.minLength(8)]],
+                confirm_password: ['', [Validators.required, Validators.minLength(8)]]
+            },
+            {
+                validator: PasswordValidation.MatchPassword
+            }
+        );
     }
 
-    onChangeCountry(event) {
-        const countryLabel = this.countryTypeOptions.find((country) => country.value === event.value);
-        this.companyForm.patchValue({
-            country_name: countryLabel.label
-        });
-    }
+    // onChangeCountry(event) {
+    //     const countryLabel = this.countryTypeOptions.find((country) => country.value === event.value);
+    //     this.passwordForm.patchValue({
+    //         country_name: countryLabel.label
+    //     });
+    // }
 
     onFinishFirstStep() {
-        console.log(this.credentialsForm.get('email').value);
-        // this.step = 'second';
         this.authResponse = null;
         this.contentLoading = true;
         this.msgs = [];
-        this.authService.checkUserExists(this.credentialsForm.get('email').value).subscribe((response: any) => {
-            if (response.user_exists) {
-                this.contentLoading = false;
-                this.msgs.push({
-                    severity: 'error',
-                    detail: 'User with this email is already registered. Please sign in.'
-                });
-                return false;
-            }
-            // this.authService.usersignup(this.credentialsForm.get('email').value).subscribe((data: any) => {
-            //     this.contentLoading = false;
-            //     console.log('data',data);
-            // });
-            else {
-                this.step = 'second';
-            }
-            // this.authService.getCompanyByEmail(this.credentialsForm.get('email').value).subscribe((data: any) => {
-            //     this.contentLoading = false;
-            //     if (data) {
-            //         this.step = 'third';
-            //         let employees = data.metrics.employeesRange;
-            //         if (employees) {
-            //             employees = employees.replace(/ /g, '');
-            //         }
-            //         this.companyForm = this.fb.group({
-            //             company_website_url: [data.domain, [Validators.required, Validators.pattern(this.websiteReg)]],
-            //             company_name: [data.name, [Validators.required, Validators.pattern(this.companyNameReg)]],
-            //             country_code: [data.geo.countryCode, Validators.required],
-            //             employees: [employees, Validators.required],
-            //             agreed: [false, Validators.requiredTrue],
-            //             country_name: [data.geo.country]
-            //         });
-            //         return false;
-            //     } else {
-            //         this.msgs = [];
-            //         this.step = 'second';
-            //     }
-            // });
-        });
-    }
-
-    onFinishSecondStep() {
-        this.contentLoading = true;
-        this.step = 'third';
-
-        this.jobService.getDataCompany(this.websiteForm.value.url).subscribe(
-            (data: any) => {
-                this.contentLoading = false;
-                let employees = data.metrics.employeesRange;
-                if (employees) {
-                    employees = employees.replace(/ /g, '');
-                }
-                this.companyForm = this.fb.group({
-                    company_website_url: [data.domain, [Validators.required, Validators.pattern(this.websiteReg)]],
-                    company_name: [data.name, [Validators.required, Validators.pattern(this.companyNameReg)]],
-                    country_code: [data.geo.countryCode, Validators.required],
-                    employees: [employees, Validators.required],
-                    agreed: [false, Validators.requiredTrue],
-                    country_name: [data.geo.country]
+        this.authService.checkUserExists(this.credentialsForm.get('email').value).subscribe(
+            (response: any) => {
+                console.log(response);
+                // if (response.user_exists) {
+                //     this.contentLoading = false;
+                //     this.msgs.push({
+                //         severity: 'error',
+                //         detail: 'User with this email is already registered. Please sign in.'
+                //     });
+                //     return false;
+                // }
+                this.authService.usersignup(this.credentialsForm.value.email).subscribe((response: any) => {
+                    this.otp = response.otp;
+                    this.contentLoading = false;
+                    this.email = this.credentialsForm.value.email;
+                    this.step = 'second';
                 });
             },
             (error) => {
                 this.contentLoading = false;
-                console.error('error company not found');
-                this.companyForm.get('company_website_url').patchValue(this.websiteForm.value.url);
+                this.msgs.push({
+                    severity: 'error',
+                    detail: 'Email is required.'
+                });
+            }
+        );
+    }
+
+    onFinishSecondStep() {
+        const six_digit_code: string =
+            this.otpForm.value.first_digit +
+            this.otpForm.value.second_digit +
+            this.otpForm.value.third_digit +
+            '-' +
+            this.otpForm.value.fouth_digit +
+            this.otpForm.value.fifth_digit +
+            this.otpForm.value.sixth_digit;
+        this.contentLoading = true;
+        this.authService.verifyOtp(this.credentialsForm.value.email, six_digit_code).subscribe(
+            (response: any) => {
+                this.contentLoading = false;
+                this.step = 'third';
+            },
+            (error) => {
+                this.contentLoading = false;
+                this.msgs.push({
+                    severity: 'error',
+                    detail: 'Invalid Pin.'
+                });
             }
         );
     }
 
     onFinishThirdStep() {
+        if (!this.passwordForm.valid) {
+            this.formHelper.markFormGroupTouched(this.passwordForm);
+            return;
+        }
         this.contentLoading = true;
-        const data = { ...this.companyForm.value, ...this.credentialsForm.value };
+        const data = { ...this.credentialsForm.value, ...this.passwordForm.value };
+        console.log(data);
         this.authService
             .getUserData()
             .then((geo_data) => {
                 data.geo_data = geo_data;
-                if (this.authResponse) {
-                    data.authData = this.authResponse;
-                    this.authService.signUpWithGoogle(data).subscribe(
-                        (response: any) => {
-                            this.contentLoading = false;
-                            this.msgs = [];
-                            this.authService.setSession(response);
-                            this.utilities.setTenant(response.tenant_id);
-                            this.store.dispatch(new fromStore.LoadUser());
-                            this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
-                        },
-                        (response) => {
-                            this.contentLoading = false;
-                            this.msgs = [];
-                            this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
-                        }
-                    );
-                } else {
-                    this.authService.signup(data).subscribe(
-                        (response: any) => {
-                            this.contentLoading = false;
-                            this.msgs = [];
-                            this.authService.setSession(response);
-                            this.utilities.setTenant(response.tenant_id);
-                            this.store.dispatch(new fromStore.LoadUser());
-                            this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
-                        },
-                        (response) => {
-                            this.contentLoading = false;
-                            this.msgs = [];
-                            this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
-                        }
-                    );
-                }
+                // if (this.authResponse) {
+                //     data.authData = this.authResponse;
+                //     this.authService.signUpWithGoogle(data).subscribe(
+                //         (response: any) => {
+                //             this.contentLoading = false;
+                //             this.msgs = [];
+                //             this.authService.setSession(response);
+                //             this.utilities.setTenant(response.tenant_id);
+                //             this.store.dispatch(new fromStore.LoadUser());
+                //             this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
+                //         },
+                //         (response) => {
+                //             this.contentLoading = false;
+                //             this.msgs = [];
+                //             this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
+                //         }
+                //     );
+                // } else {
+                this.authService.signup(data).subscribe(
+                    (response: any) => {
+                        console.log('yes', response);
+                        this.contentLoading = false;
+                        this.msgs = [];
+                        this.authService.setSession(response);
+                        this.utilities.setTenant(response.tenant_id);
+                        this.store.dispatch(new fromStore.LoadUser());
+                        this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
+                    },
+                    (response) => {
+                        console.log('no', response);
+                        this.contentLoading = false;
+                        this.msgs = [];
+                        this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
+                    }
+                );
+                // }
             })
             .catch((error) => {
                 console.error(error);

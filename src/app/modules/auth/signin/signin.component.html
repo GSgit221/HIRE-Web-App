@@ -1,6 +1,7 @@
 <app-loader *ngIf="contentLoading"></app-loader>
 <div class="inner-block">
     <ng-container>
+        <h1>Welcome back.</h1>
         <span class="signin-btn-google" (click)="onGoogleSigninClick($event)">
             <span class="abcRioButtonIcon" style="padding:6px">
                 <img src="/assets/images/google.svg" alt="Google icon" />
@@ -41,7 +42,7 @@
                     </button>
                 </div>
                 <div class="sign-in-sso">
-                    <a href="/auth/signin-sso" class="sso">Sign in with SSO</a>
+                    <span routerLink="/auth/signin-sso" class="sso">Sign in with SSO</span>
                 </div>
             </div>
         </form>
