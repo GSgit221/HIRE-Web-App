@@ -8,10 +8,10 @@ import * as fromStore from './../../../store';
 
 import { environment } from '@env/environment';
 import { response } from 'express';
+import { AuthService } from '../auth.service';
 import { JobService } from '../../../core/services/job.service';
 import { UtilitiesService } from '../../../core/services/utilities.service';
 import { FormHelperService } from './../../../core/services/form-helper.service';
-import { AuthService } from '../auth.service';
 import { PasswordValidation } from './../../../core/validators/password.validator';
 
 @Component({

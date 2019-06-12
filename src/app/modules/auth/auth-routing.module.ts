@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { LayoutComponent } from './layout/layout.component';
 import { UnauthGuard } from './../../core/guards/unauth.guard';
+import { LayoutComponent } from './layout/layout.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { SetPasswordComponent } from './set-password/set-password.component';
 import { SigninComponent } from './signin/signin.component';
