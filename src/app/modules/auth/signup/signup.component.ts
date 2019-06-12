@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { SelectItem } from 'primeng/api';
 import { Message } from 'primeng/components/common/api';
 import * as fromStore from './../../../store';
 
-import { environment } from '@env/environment';
-import { response } from 'express';
 import { AuthService } from '../auth.service';
 import { JobService } from '../../../core/services/job.service';
 import { UtilitiesService } from '../../../core/services/utilities.service';
@@ -101,20 +99,6 @@ export class SignupComponent implements OnInit {
                                 if (employees) {
                                     employees = employees.replace(/ /g, '');
                                 }
-                                // this.passwordForm = this.fb.group({
-                                //     company_website_url: [
-                                //         data.domain,
-                                //         [Validators.required, Validators.pattern(this.websiteReg)]
-                                //     ],
-                                //     company_name: [
-                                //         data.name,
-                                //         [Validators.required, Validators.pattern(this.companyNameReg)]
-                                //     ],
-                                //     country_code: [data.geo.countryCode, Validators.required],
-                                //     employees: [employees, Validators.required],
-                                //     agreed: [false, Validators.requiredTrue],
-                                //     country_name: [data.geo.country]
-                                // });
                                 return false;
                             } else {
                                 this.msgs = [];
@@ -142,12 +126,7 @@ export class SignupComponent implements OnInit {
 
     initForms() {
         this.credentialsForm = this.fb.group({
-            // name: [
-            //     '',
-            //     [Validators.required, Validators.minLength(2), Validators.pattern('\\b\\w+\\b(?:.*?\\b\\w+\\b){1}')]
-            // ],
             email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]]
-            // password: ['', [Validators.required, Validators.minLength(8)]]
         });
 
         this.otpForm = this.fb.group({
@@ -168,13 +147,6 @@ export class SignupComponent implements OnInit {
             }
         );
     }
-
-    // onChangeCountry(event) {
-    //     const countryLabel = this.countryTypeOptions.find((country) => country.value === event.value);
-    //     this.passwordForm.patchValue({
-    //         country_name: countryLabel.label
-    //     });
-    // }
 
     onFinishFirstStep() {
         this.authResponse = null;
@@ -240,32 +212,12 @@ export class SignupComponent implements OnInit {
         }
         this.contentLoading = true;
         const data = { ...this.credentialsForm.value, ...this.passwordForm.value };
-        console.log(data);
         this.authService
             .getUserData()
             .then((geo_data) => {
                 data.geo_data = geo_data;
-                // if (this.authResponse) {
-                //     data.authData = this.authResponse;
-                //     this.authService.signUpWithGoogle(data).subscribe(
-                //         (response: any) => {
-                //             this.contentLoading = false;
-                //             this.msgs = [];
-                //             this.authService.setSession(response);
-                //             this.utilities.setTenant(response.tenant_id);
-                //             this.store.dispatch(new fromStore.LoadUser());
-                //             this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
-                //         },
-                //         (response) => {
-                //             this.contentLoading = false;
-                //             this.msgs = [];
-                //             this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
-                //         }
-                //     );
-                // } else {
                 this.authService.signup(data).subscribe(
                     (response: any) => {
-                        console.log('yes', response);
                         this.contentLoading = false;
                         this.msgs = [];
                         this.authService.setSession(response);
@@ -274,7 +226,6 @@ export class SignupComponent implements OnInit {
                         this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
                     },
                     (response) => {
-                        console.log('no', response);
                         this.contentLoading = false;
                         this.msgs = [];
                         this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });

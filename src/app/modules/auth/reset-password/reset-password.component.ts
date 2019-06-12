@@ -41,6 +41,7 @@ export class ResetPasswordComponent implements OnInit {
     ngOnInit() {}
 
     onReset(event) {
+        console.log('event');
         this.contentLoading = true;
         event.preventDefault();
         if (!this.resetForm.valid) {

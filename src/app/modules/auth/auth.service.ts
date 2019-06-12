@@ -49,7 +49,6 @@ export class AuthService {
     }
 
     usersignup(email) {
-        console.log('data', email);
         return this.http.post(`${environment.apiUrl}/auth/send-email`, {
             email,
             source: 'jobs'
@@ -57,7 +56,6 @@ export class AuthService {
     }
 
     verifyOtp(email, otp) {
-        console.log('data', email, otp);
         return this.http.post(`${environment.apiUrl}/auth/user-signup-verify-otp`, {
             email,
             otp,
@@ -115,5 +113,11 @@ export class AuthService {
     }
     getCompanyByEmail(email) {
         return this.http.post(`${environment.apiUrl}/email`, { email });
+    }
+
+    ssoSignIn(company) {
+        return this.http.post(`${environment.apiUrl}/login`, {
+            company
+        });
     }
 }

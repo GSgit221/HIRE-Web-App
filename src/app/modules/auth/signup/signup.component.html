@@ -4,7 +4,14 @@
     <div *ngIf="step === 'first'">
         <h1>Welcome to Clevateam!</h1>
         <p>Your <b>email address</b></p>
-        <input name="email" class="form-input" type="email" placeholder="Email address" formControlName="email" />
+        <input
+            name="email"
+            class="form-input"
+            type="email"
+            placeholder="Email address"
+            formControlName="email"
+            (keyup)="onKeyupEmail($event)"
+        />
         <p class="term-text">By creating a profile, you agree to our customer terms of service and privacy policy.</p>
         <button class="btn btn-primary" (click)="onFinishFirstStep()" type="submit">
             Next
