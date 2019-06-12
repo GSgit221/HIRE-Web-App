@@ -7,12 +7,12 @@ import { Message } from 'primeng/components/common/api';
 import * as fromStore from './../../../store';
 
 import { environment } from '@env/environment';
+import { response } from 'express';
 import { JobService } from '../../../core/services/job.service';
 import { UtilitiesService } from '../../../core/services/utilities.service';
+import { FormHelperService } from './../../../core/services/form-helper.service';
 import { AuthService } from '../auth.service';
 import { PasswordValidation } from './../../../core/validators/password.validator';
-import { FormHelperService } from './../../../core/services/form-helper.service';
-import { response } from 'express';
 
 @Component({
     selector: 'app-signup',
@@ -183,14 +183,14 @@ export class SignupComponent implements OnInit {
         this.authService.checkUserExists(this.credentialsForm.get('email').value).subscribe(
             (response: any) => {
                 console.log(response);
-                // if (response.user_exists) {
-                //     this.contentLoading = false;
-                //     this.msgs.push({
-                //         severity: 'error',
-                //         detail: 'User with this email is already registered. Please sign in.'
-                //     });
-                //     return false;
-                // }
+                if (response.user_exists) {
+                    this.contentLoading = false;
+                    this.msgs.push({
+                        severity: 'error',
+                        detail: 'User with this email is already registered. Please sign in.'
+                    });
+                    return false;
+                }
                 this.authService.usersignup(this.credentialsForm.value.email).subscribe((response: any) => {
                     this.otp = response.otp;
                     this.contentLoading = false;

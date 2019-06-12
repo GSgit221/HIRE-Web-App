@@ -16,6 +16,7 @@ export class ResetPasswordComponent implements OnInit {
     resetForm: FormGroup;
     msgs: Message[] = [];
     resetSuccess = false;
+    email: any;
 
     constructor(
         private authService: AuthService,
@@ -46,6 +47,7 @@ export class ResetPasswordComponent implements OnInit {
         }
         this.authService.resetPassword(this.resetForm.value.email).subscribe(
             (response) => {
+                this.email = this.resetForm.value.email;
                 this.msgs = [];
                 this.resetSuccess = true;
                 setTimeout(() => this.router.navigateByUrl('/auth/signin'), 5000);

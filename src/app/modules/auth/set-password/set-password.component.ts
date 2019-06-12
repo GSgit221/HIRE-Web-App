@@ -36,8 +36,7 @@ export class SetPasswordComponent implements OnInit {
         this.setPasswordForm = this.fb.group(
             {
                 password: ['', Validators.required],
-                confirm_password: ['', Validators.required],
-                agreed: [false, Validators.requiredTrue]
+                confirm_password: ['', Validators.required]
             },
             {
                 validator: PasswordValidation.MatchPassword
