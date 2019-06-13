@@ -19,7 +19,6 @@ import { PasswordValidation } from './../../../core/validators/password.validato
 })
 export class SignupComponent implements OnInit {
     credentialsForm: FormGroup;
-    otpForm: FormGroup;
     passwordForm: FormGroup;
     countryTypeOptions: SelectItem[] = [];
     employeesTypeOptions: SelectItem[] = [];
@@ -32,6 +31,7 @@ export class SignupComponent implements OnInit {
     googleSigninLink = '';
     msgs: Message[] = [];
     authResponse: any;
+    otp_value: string = '';
 
     constructor(
         private fb: FormBuilder,
@@ -129,14 +129,6 @@ export class SignupComponent implements OnInit {
             email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]]
         });
 
-        this.otpForm = this.fb.group({
-            first_digit: ['', [Validators.required]],
-            second_digit: ['', [Validators.required]],
-            third_digit: ['', [Validators.required]],
-            fouth_digit: ['', [Validators.required]],
-            fifth_digit: ['', [Validators.required]],
-            sixth_digit: ['', [Validators.required]]
-        });
         this.passwordForm = this.fb.group(
             {
                 password: ['', [Validators.required, Validators.minLength(8)]],
@@ -154,7 +146,7 @@ export class SignupComponent implements OnInit {
         this.msgs = [];
         this.authService.checkUserExists(this.credentialsForm.get('email').value).subscribe(
             (response: any) => {
-                console.log(response);
+                this.msgs = [];
                 if (response.user_exists) {
                     this.contentLoading = false;
                     this.msgs.push({
@@ -171,6 +163,7 @@ export class SignupComponent implements OnInit {
                 });
             },
             (error) => {
+                this.msgs = [];
                 this.contentLoading = false;
                 this.msgs.push({
                     severity: 'error',
@@ -181,21 +174,17 @@ export class SignupComponent implements OnInit {
     }
 
     onFinishSecondStep() {
-        const six_digit_code: string =
-            this.otpForm.value.first_digit +
-            this.otpForm.value.second_digit +
-            this.otpForm.value.third_digit +
-            '-' +
-            this.otpForm.value.fouth_digit +
-            this.otpForm.value.fifth_digit +
-            this.otpForm.value.sixth_digit;
+        const string = this.otp_value;
+        const six_digit_code: string = string.split(/(?=.{3}$)/).join('-');
         this.contentLoading = true;
         this.authService.verifyOtp(this.credentialsForm.value.email, six_digit_code).subscribe(
             (response: any) => {
+                this.msgs = [];
                 this.contentLoading = false;
                 this.step = 'third';
             },
             (error) => {
+                this.msgs = [];
                 this.contentLoading = false;
                 this.msgs.push({
                     severity: 'error',

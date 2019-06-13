@@ -20,83 +20,14 @@
     </div>
 </form>
 
-<form [formGroup]="otpForm">
+<form>
     <div *ngIf="step === 'second'">
         <h1>Check your email</h1>
         <p>
             We’ve just sent a 6-digit code to <b>{{ email }}</b
             >. It will expire shortly so enter it soon.
         </p>
-        <div class="pincode-inputs">
-            <input
-                type="text"
-                class="form-input pincode"
-                name="first_digit"
-                formControlName="first_digit"
-                autocomplete="off"
-                required
-                maxlength="1"
-                autofocus
-                tabindex="1"
-                pattern="\d*"
-            />
-            <input
-                type="text"
-                class="form-input pincode "
-                name="second_digit"
-                formControlName="second_digit"
-                required
-                maxlength="1"
-                autocomplete="off"
-                tabindex="2"
-                pattern="\d*"
-            />
-            <input
-                type="text"
-                class="form-input pincode"
-                name="third_digit"
-                formControlName="third_digit"
-                required
-                maxlength="1"
-                autocomplete="off"
-                tabindex="3"
-                pattern="\d*"
-            />
-            <span class="line"></span>
-            <input
-                type="text"
-                class="form-input pincode"
-                name="fouth_digit"
-                formControlName="fouth_digit"
-                required
-                maxlength="1"
-                autocomplete="off"
-                tabindex="4"
-                pattern="\d*"
-            />
-            <input
-                type="text"
-                class="form-input pincode"
-                name="fifth_digit"
-                formControlName="fifth_digit"
-                required
-                maxlength="1"
-                autocomplete="off"
-                tabindex="5"
-                pattern="\d*"
-            />
-            <input
-                type="text"
-                class="form-input pincode"
-                name="sixth_digit"
-                formControlName="sixth_digit"
-                required
-                maxlength="1"
-                autocomplete="off"
-                tabindex="6"
-                pattern="\d*"
-            />
-        </div>
+        <app-ng-otp-input (onInputChange)="otp_value = $event" [config]="{ length: 6 }"></app-ng-otp-input>
         <p class="txt-opacity">Leave this wondow open while you check. Don’t forget to also check your span folder.</p>
         <button class="btn btn-primary" (click)="onFinishSecondStep()" type="submit">
             Next
