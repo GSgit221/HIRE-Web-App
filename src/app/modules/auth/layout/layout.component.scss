@@ -64,6 +64,11 @@
                 text-align: left;
                 flex-shrink: 0;
 
+                @include respond(md) {
+                    padding: 45px 30px;
+                    width: 100%;
+                }
+
                 .inner-block {
                     width: 100%;
                 }
@@ -111,6 +116,9 @@
                 background: url('/assets/images/list-placeholder2.png') no-repeat right bottom;
                 width: 50%;
                 flex-shrink: 0;
+                @include respond(md) {
+                    display: none;
+                }
             }
         }
 

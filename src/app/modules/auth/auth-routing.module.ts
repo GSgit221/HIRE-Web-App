@@ -16,6 +16,11 @@ const routes: Routes = [
         component: LayoutComponent,
         canActivate: [UnauthGuard],
         children: [
+              {
+                path: '',
+                pathMatch: 'full',
+                redirectTo:"/auth/signin"
+            },
             { path: 'signin', component: SigninComponent },
             { path: 'signup', component: SignupComponent },
             { path: 'reset-password', component: ResetPasswordComponent },
