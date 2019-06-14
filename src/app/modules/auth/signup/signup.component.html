@@ -13,10 +13,17 @@
             (keyup)="onKeyupEmail($event)"
         />
         <p class="term-text">By creating a profile, you agree to our customer terms of service and privacy policy.</p>
-        <button class="btn btn-primary" (click)="onFinishFirstStep()" type="submit">
-            Next
-            <span class="icon icon-right-arrow"></span>
-        </button>
+        <div class="hc-form-row form-bottom">
+            <button
+                class="btn btn-primary"
+                (click)="onFinishFirstStep()"
+                [disabled]="!credentialsForm.valid"
+                type="submit"
+            >
+                Next
+                <span class="icon icon-right-arrow"></span>
+            </button>
+        </div>
     </div>
 </form>
 
@@ -62,9 +69,16 @@
         >
             Password does not match
         </div>
-        <button class="btn btn-primary finish" (click)="onFinishThirdStep()" type="submit">
-            Finish
-            <span class="icon icon-right-arrow"></span>
-        </button>
+        <div class="hc-form-row form-bottom">
+            <button
+                class="btn btn-primary finish"
+                (click)="onFinishThirdStep()"
+                [disabled]="!passwordForm.valid"
+                type="submit"
+            >
+                Finish
+                <span class="icon icon-right-arrow"></span>
+            </button>
+        </div>
     </div>
 </form>

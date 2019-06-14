@@ -42,7 +42,7 @@ export class AuthService {
     }
 
     signup(data) {
-        return this.http.post(`${environment.apiUrl}/auth/signup`, {
+        return this.http.post(`${environment.apiUrl}/auth/sign-up`, {
             ...data,
             source: 'jobs'
         });

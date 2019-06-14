@@ -8,10 +8,10 @@ import { SignoutComponent } from './signout.component';
 import { SignupComponent } from './signup/signup.component';
 
 import { NgOtpInputModule } from '../ng-otp-input/ng-otp-input.module';
-import { SharedModule } from '../../modules/shared/shared.module';
 import { AuthRoutingModule } from './auth-routing.module';
 import { LayoutComponent } from './layout/layout.component';
 import { SSOComponent } from './sso/sso.component';
+import { SharedModule } from '../../modules/shared/shared.module';
 
 @NgModule({
     declarations: [

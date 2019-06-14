@@ -183,11 +183,11 @@
                 .hc-help-text {
                     color: #545454;
                 }
-                // :disabled{
-                //     background: #545454;
-                //     border: #545454;
-                //     cursor: unset;
-                // }
+                :disabled {
+                    background: #949aa8;
+                    border: 1px solid #949aa8;
+                    cursor: unset;
+                }
             }
 
             hc-button .hc-button-inner button {
