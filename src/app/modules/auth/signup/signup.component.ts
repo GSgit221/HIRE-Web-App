@@ -74,7 +74,7 @@ export class SignupComponent implements OnInit {
     ngOnInit() {}
 
     onGoogleSignup() {
-        this.contentLoading = true;
+        this.authService.loading = true;
         this.authService
             .onGoogleSignin()
             .then((authResponse) => {
@@ -83,7 +83,7 @@ export class SignupComponent implements OnInit {
                 this.authService.checkUserExists(authResponse.email).subscribe(
                     (response: any) => {
                         if (response.user_exists) {
-                            this.contentLoading = false;
+                            this.authService.loading = false;
                             this.msgs = [];
                             this.msgs.push({
                                 severity: 'error',
@@ -92,7 +92,7 @@ export class SignupComponent implements OnInit {
                             return;
                         }
                         this.authService.getCompanyByEmail(this.authResponse.email).subscribe((data: any) => {
-                            this.contentLoading = false;
+                            this.authService.loading = false;
                             if (data) {
                                 this.step = 'third';
                                 let employees = data.metrics.employeesRange;
@@ -113,7 +113,7 @@ export class SignupComponent implements OnInit {
                 );
             })
             .catch((errorResponse) => {
-                this.contentLoading = false;
+                this.authService.loading = false;
                 this.msgs = [];
                 console.log(errorResponse);
                 this.msgs.push({ severity: 'error', detail: errorResponse.error || 'Error' });
@@ -143,52 +143,64 @@ export class SignupComponent implements OnInit {
 
     onFinishFirstStep() {
         this.authResponse = null;
-        this.contentLoading = true;
+        this.authService.loading = true;
         this.msgs = [];
-        this.authService.checkUserExists(this.credentialsForm.get('email').value).subscribe(
+        this.authService.userSignup(this.credentialsForm.value.email).subscribe(
             (response: any) => {
                 this.msgs = [];
-                if (response.user_exists) {
-                    this.contentLoading = false;
-                    this.msgs.push({
-                        severity: 'error',
-                        detail: 'User with this email is already registered. Please sign in.'
-                    });
-                    return false;
-                }
-                this.authService.userSignup(this.credentialsForm.value.email).subscribe((response: any) => {
-                    this.otp = response.otp;
-                    this.contentLoading = false;
-                    this.email = this.credentialsForm.value.email;
-                    this.step = 'second';
-                });
+                this.otp = response.otp;
+                this.authService.loading = false;
+                this.email = this.credentialsForm.value.email;
+                this.step = 'second';
             },
             (error) => {
                 console.error(error);
                 this.msgs = [];
-                this.contentLoading = false;
+                this.authService.loading = false;
                 this.msgs.push({
                     severity: 'error',
                     detail: 'Email is required.'
                 });
             }
         );
+        // this.authService.checkUserExists(this.credentialsForm.get('email').value).subscribe(
+        //     (response: any) => {
+        //         this.msgs = [];
+        //         if (response.user_exists) {
+        //             this.authService.loading = false;
+        //             this.msgs.push({
+        //                 severity: 'error',
+        //                 detail: 'User with this email is already registered. Please sign in.'
+        //             });
+        //             return false;
+        //         }
+        //     },
+        //     (error) => {
+        //         console.error(error);
+        //         this.msgs = [];
+        //         this.authService.loading = false;
+        //         this.msgs.push({
+        //             severity: 'error',
+        //             detail: 'Email is required.'
+        //         });
+        //     }
+        // );
     }
 
     onFinishSecondStep() {
         const string = this.otp_value;
         const six_digit_code: string = string.split(/(?=.{3}$)/).join('-');
-        this.contentLoading = true;
+        this.authService.loading = true;
         this.authService.verifyOtp(this.credentialsForm.value.email, six_digit_code).subscribe(
             (response: any) => {
                 this.msgs = [];
-                this.contentLoading = false;
+                this.authService.loading = false;
                 this.step = 'third';
             },
             (error) => {
                 console.error(error);
                 this.msgs = [];
-                this.contentLoading = false;
+                this.authService.loading = false;
                 this.msgs.push({
                     severity: 'error',
                     detail: 'Invalid Pin.'
@@ -202,7 +214,7 @@ export class SignupComponent implements OnInit {
             this.formHelper.markFormGroupTouched(this.passwordForm);
             return;
         }
-        this.contentLoading = true;
+        this.authService.loading = true;
         const data = { ...this.credentialsForm.value, ...this.passwordForm.value };
         this.authService
             .getUserData()
@@ -210,7 +222,7 @@ export class SignupComponent implements OnInit {
                 data.geo_data = geo_data;
                 this.authService.signup(data).subscribe(
                     (response: any) => {
-                        this.contentLoading = false;
+                        this.authService.loading = false;
                         this.msgs = [];
                         this.authService.setSession(response);
                         this.utilities.setTenant(response.tenant_id);
@@ -219,7 +231,7 @@ export class SignupComponent implements OnInit {
                     },
                     (response) => {
                         console.error(response);
-                        this.contentLoading = false;
+                        this.authService.loading = false;
                         this.msgs = [];
                         this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
                     }

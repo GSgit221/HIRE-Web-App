@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
     selector: 'app-layout',
@@ -6,7 +8,15 @@ import { Component, OnInit } from '@angular/core';
     styleUrls: ['./layout.component.scss']
 })
 export class LayoutComponent implements OnInit {
-    constructor() {}
+    currentRoute: any = '';
+    loading: boolean = false;
+    constructor(private router: Router, private authService: AuthService) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.router.events.subscribe(() => {
+            this.currentRoute = this.router.url;
+        });
+
+        this.authService.$loading.subscribe((loading) => (this.loading = loading));
+    }
 }

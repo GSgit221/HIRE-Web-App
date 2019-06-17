@@ -5,18 +5,39 @@ import { CookieService } from 'ngx-cookie-service';
 
 import { environment } from '@env/environment';
 import { UtilitiesService } from './../../core/services/utilities.service';
+import { Subject, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
     defaultTenantId = 'hellocrowd';
+
+    dataSource: any = {
+        loading: false
+    };
+
+    _loading: Subject<boolean>;
+
     constructor(
         private http: HttpClient,
         private utilities: UtilitiesService,
         private cookie: CookieService,
         private socialAuthService: SocialAuthService
-    ) {}
+    ) {
+        this._loading = new Subject();
+    }
+
+    public get $loading(): Observable<boolean> {
+        return this._loading.asObservable();
+    }
+    public get loading(): boolean {
+        return this.dataSource.loading;
+    }
+    public set loading(value: boolean) {
+        this.dataSource.loading = value;
+        this._loading.next(value);
+    }
 
     onGoogleSignin() {
         return this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);

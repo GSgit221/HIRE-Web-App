@@ -3,6 +3,7 @@
         <div class="auth-login animated fadeIn">
             <div class="auth-container">
                 <div class="left-block">
+                    <app-loader *ngIf="loading"></app-loader>
                     <div class="inner-block">
                         <div class="logo-holder">
                             <div class="logo" routerLink="/">
@@ -14,7 +15,23 @@
                         <router-outlet></router-outlet>
                     </div>
                 </div>
-                <div class="img-corner"></div>
+                <div class="img-corner">
+                    <div class="top-right">
+                        <div class="hc-form-row text-right " *ngIf="this.currentRoute === '/auth/signin'">
+                            <span>Don’t have a profile yet?</span>
+                            <button class="btn btn-primary" type="submit" routerLink="/auth/signup">
+                                Sign Up <span class="icon icon-right-arrow"></span>
+                            </button>
+                        </div>
+                        <div class="hc-form-row text-right " *ngIf="this.currentRoute === '/auth/signup'">
+                            <span *ngIf="true">Already have an account?</span>
+                            <button class="btn btn-primary" type="submit" routerLink="/auth/signin">
+                                Sign In
+                                <span class="icon icon-right-arrow"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

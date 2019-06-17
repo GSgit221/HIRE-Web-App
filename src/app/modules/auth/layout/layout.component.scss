@@ -6,7 +6,7 @@
         flex-direction: column;
         justify-content: center;
         min-height: 100vh;
-        font-size: 14px;
+        font-size: 15px;
 
         .logo-holder {
             display: flex;
@@ -51,18 +51,19 @@
             width: 100%;
             display: flex;
             min-height: 100vh;
-            background-image: linear-gradient(to right, $dark-blue 50%, $main-background 50%);
+            // background-image: linear-gradient(to right, $dark-blue 50%, $main-background 50%);
             flex-direction: row;
             align-items: stretch;
 
             .left-block {
-                width: 50%;
+                width: 600px;
                 background: $dark-blue;
                 color: $dark-blue-text;
                 padding: 45px 100px;
                 position: relative;
                 text-align: left;
                 flex-shrink: 0;
+                background: linear-gradient(to right, $dark-blue 100%, $main-background 50%);
 
                 @include respond(md) {
                     padding: 45px 30px;
@@ -112,10 +113,19 @@
                 }
             }
 
+            .top-right {
+                position: relative;
+                text-align: right;
+                padding-top: 45px;
+                padding-right: 45px;
+                .btn-primary {
+                    margin-left: 20px;
+                }
+            }
             .img-corner {
                 background: url('/assets/images/list-placeholder2.png') no-repeat right bottom;
-                width: 50%;
-                flex-shrink: 0;
+                width: 100%;
+                flex-shrink: 1;
                 @include respond(md) {
                     display: none;
                 }

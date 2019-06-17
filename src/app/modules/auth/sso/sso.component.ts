@@ -33,17 +33,17 @@ export class SSOComponent implements OnInit {
             this.formHelper.markFormGroupTouched(this.ssoForm);
             return;
         }
-        this.contentLoading = true;
+        this.authService.loading = true;
         const val = this.ssoForm.value;
         this.authService.ssoSignIn(val.company).subscribe(
             (response: any) => {
-                this.contentLoading = false;
+                this.authService.loading = false;
                 console.log('response here', response);
                 //window.location.href = 'https://www.google.com';
                 //this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
             },
             (response) => {
-                this.contentLoading = false;
+                this.authService.loading = false;
                 this.msgs = [];
                 this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
             }

@@ -121,4 +121,31 @@ export class NgOtpInputComponent implements OnInit {
         });
         this.onInputChange.emit(val);
     }
+
+    pasteEvent(event) {
+        console.log(event);
+        var clipboardData = event.clipboardData;
+        console.log(clipboardData);
+        var pastedData = clipboardData.getData('text/plain');
+        console.log(pastedData);
+        this.pasteCode(pastedData);
+    }
+
+    pasteCode(pastedData) {
+        pastedData = pastedData.slice(0, 7);
+        var count = 0;
+
+        for (let i = 0; i < pastedData.length; i++) {
+            if (isNaN(pastedData[i])) {
+                continue;
+            }
+            if (parseInt(pastedData[i]) >= 0 && parseInt(pastedData[i]) <= 9) {
+                this.otpForm.controls['ctrl_' + count].setValue(pastedData[i]);
+                count++;
+                if (count == 6) {
+                    break;
+                }
+            }
+        }
+    }
 }

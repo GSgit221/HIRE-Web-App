@@ -9,6 +9,7 @@
             autocomplete="off"
             [formControl]="otpForm.controls[item]"
             id="otp_{{ i }}_{{ componentKey }}"
+            (paste)="pasteEvent($event)"
             (keyup)="onKeyUp($event, 'otp_' + (i + 1), 'otp_' + (i - 1))"
         />
     </div>

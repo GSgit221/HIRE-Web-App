@@ -42,7 +42,7 @@ export class ResetPasswordComponent implements OnInit {
 
     onReset(event) {
         console.log('event');
-        this.contentLoading = true;
+        this.authService.loading = true;
         event.preventDefault();
         if (!this.resetForm.valid) {
             this.formHelper.markFormGroupTouched(this.resetForm);
@@ -50,14 +50,14 @@ export class ResetPasswordComponent implements OnInit {
         }
         this.authService.resetPassword(this.resetForm.value.email).subscribe(
             (response) => {
-                this.contentLoading = false;
+                this.authService.loading = false;
                 this.email = this.resetForm.value.email;
                 this.msgs = [];
                 this.resetSuccess = true;
                 setTimeout(() => this.router.navigateByUrl('/auth/signin'), 5000);
             },
             (response) => {
-                this.contentLoading = false;
+                this.authService.loading = false;
                 this.msgs = [];
                 this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
             }
