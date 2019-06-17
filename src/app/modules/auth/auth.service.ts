@@ -48,7 +48,7 @@ export class AuthService {
         });
     }
 
-    usersignup(email) {
+    userSignup(email) {
         return this.http.post(`${environment.apiUrl}/auth/send-email`, {
             email,
             source: 'jobs'

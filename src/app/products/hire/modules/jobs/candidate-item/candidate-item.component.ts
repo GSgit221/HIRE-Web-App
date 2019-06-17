@@ -153,7 +153,7 @@ export class CandidateItemComponent implements OnInit {
             })
         );
         const candidateRequest = this.jobService.getCandidate(this.jobId, this.candidateId);
-        const getAllData = forkJoin(jobRequest, candidateRequest).pipe(
+        const getAllData = forkJoin([jobRequest, candidateRequest]).pipe(
             switchMap((response: any) => {
                 const questions = response[0];
                 const candidate: any = response[1];

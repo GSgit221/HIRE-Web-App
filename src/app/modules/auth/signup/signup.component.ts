@@ -6,9 +6,9 @@ import { SelectItem } from 'primeng/api';
 import { Message } from 'primeng/components/common/api';
 import * as fromStore from './../../../store';
 
-import { AuthService } from '../auth.service';
 import { JobService } from '../../../core/services/job.service';
 import { UtilitiesService } from '../../../core/services/utilities.service';
+import { AuthService } from '../auth.service';
 import { FormHelperService } from './../../../core/services/form-helper.service';
 import { PasswordValidation } from './../../../core/validators/password.validator';
 
@@ -115,6 +115,7 @@ export class SignupComponent implements OnInit {
             .catch((errorResponse) => {
                 this.contentLoading = false;
                 this.msgs = [];
+                console.log(errorResponse);
                 this.msgs.push({ severity: 'error', detail: errorResponse.error || 'Error' });
                 this.authResponse = null;
             });
@@ -155,7 +156,7 @@ export class SignupComponent implements OnInit {
                     });
                     return false;
                 }
-                this.authService.usersignup(this.credentialsForm.value.email).subscribe((response: any) => {
+                this.authService.userSignup(this.credentialsForm.value.email).subscribe((response: any) => {
                     this.otp = response.otp;
                     this.contentLoading = false;
                     this.email = this.credentialsForm.value.email;
@@ -163,6 +164,7 @@ export class SignupComponent implements OnInit {
                 });
             },
             (error) => {
+                console.error(error);
                 this.msgs = [];
                 this.contentLoading = false;
                 this.msgs.push({
@@ -184,6 +186,7 @@ export class SignupComponent implements OnInit {
                 this.step = 'third';
             },
             (error) => {
+                console.error(error);
                 this.msgs = [];
                 this.contentLoading = false;
                 this.msgs.push({
@@ -215,6 +218,7 @@ export class SignupComponent implements OnInit {
                         this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
                     },
                     (response) => {
+                        console.error(response);
                         this.contentLoading = false;
                         this.msgs = [];
                         this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
