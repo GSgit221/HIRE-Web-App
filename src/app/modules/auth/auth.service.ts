@@ -42,8 +42,23 @@ export class AuthService {
     }
 
     signup(data) {
-        return this.http.post(`${environment.apiUrl}/auth/signup`, {
+        return this.http.post(`${environment.apiUrl}/auth/sign-up`, {
             ...data,
+            source: 'jobs'
+        });
+    }
+
+    usersignup(email) {
+        return this.http.post(`${environment.apiUrl}/auth/send-email`, {
+            email,
+            source: 'jobs'
+        });
+    }
+
+    verifyOtp(email, otp) {
+        return this.http.post(`${environment.apiUrl}/auth/user-signup-verify-otp`, {
+            email,
+            otp,
             source: 'jobs'
         });
     }
@@ -98,5 +113,11 @@ export class AuthService {
     }
     getCompanyByEmail(email) {
         return this.http.post(`${environment.apiUrl}/email`, { email });
+    }
+
+    ssoSignIn(company) {
+        return this.http.post(`${environment.apiUrl}/login`, {
+            company
+        });
     }
 }

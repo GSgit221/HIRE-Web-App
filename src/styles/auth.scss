@@ -113,6 +113,15 @@
         min-height: 350px;
         flex-direction: row;
         align-items: stretch;
+        .img-corner {
+            background-image: url('/assets/images/list-placeholder2.png');
+            position: absolute;
+            background-size: 100% 100%;
+            width: 606px;
+            height: 403px;
+            bottom: 0;
+            right: 0;
+        }
     }
 
     .left-block {
@@ -158,7 +167,7 @@
     .main-block {
         display: flex;
         flex: 1;
-        padding: 65px 65px 30px 56px;
+        padding: 100px 0px 0px 111px;
         flex-direction: column;
         position: relative;
 
@@ -167,6 +176,13 @@
             left: 0;
             top: 0;
             width: 100%;
+        }
+
+        .term-text {
+            width: 400px;
+            font-size: 15px;
+            font-weight: normal;
+            line-height: normal;
         }
     }
 
@@ -366,7 +382,7 @@
         .left-block {
             flex: 0 0 50%;
             background: #192a4d;
-            padding: 192px 10px 0 10px;
+            padding: 45px 100px 0px 0px;
             position: relative;
             text-align: left;
 
@@ -384,15 +400,18 @@
         }
 
         .main-block {
-            flex: 0 0 50%;
-            padding: 181px 10px 30px 10px;
-            position: relative;
-            background: #f1f5f9;
+            // flex: 0 0 50%;
+            // padding: 181px 10px 30px 10px;
+            // position: relative;
+            // background: #f1f5f9;
 
-            .inner-block {
-                margin: 0 auto;
-                max-width: 560px;
-                width: 100%;
+            // .inner-block {
+            //     margin: 0 auto;
+            //     max-width: 560px;
+            //     width: 100%;
+            // }
+
+            .term-text {
             }
 
             .signup-link {
@@ -459,11 +478,13 @@
         .form-input {
             background-color: #fff !important;
             border-radius: 5px;
-            height: 51px;
+            height: 46px;
+            width: 400px;
             box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
             padding: 9px 2px 9px 23px;
             border: 2px solid transparent;
             font-size: 14px;
+            border-radius: 2px;
 
             &:focus {
                 border: 2px solid $pink;
@@ -479,10 +500,10 @@
         }
 
         .btn.btn-primary {
-            min-width: 141px;
-            height: 51px;
-            font-size: 15px;
-            border: none;
+            width: 110px;
+            height: 46px;
+            border-radius: 3px;
+            background-color: #ff2d55;
 
             &:disabled {
                 background: #d7dbdf;
@@ -559,26 +580,6 @@
 
         input:-moz-placeholder {
             font-size: 15px;
-        }
-    }
-}
-
-.auth-signup {
-    .form-bottom hc-button {
-        margin-left: auto;
-    }
-
-    .form-bottom {
-        md-checkbox .md-container {
-            margin-top: -8px;
-        }
-    }
-
-    field-errors {
-        width: 100%;
-
-        p {
-            margin: 3px 0 0 16px;
         }
     }
 }

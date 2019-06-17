@@ -1,0 +1,235 @@
+@import 'variables';
+:host {
+    .auth-page {
+        background-color: #f6f6f6;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 100vh;
+        font-size: 14px;
+
+        .logo-holder {
+            display: flex;
+            flex-direction: row;
+            .logo {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                outline: 0 !important;
+
+                &:hover {
+                    cursor: pointer;
+                }
+
+                .hc-logo {
+                    display: block;
+                    width: 30px;
+                    height: 30px;
+                    margin: 0;
+                }
+
+                .logo-separator {
+                    display: block;
+                    font-size: 20px;
+                    line-height: 30px;
+                    font-weight: 500;
+                    color: $pink;
+                    margin: 0 5px;
+                }
+
+                .text-logo {
+                    display: block;
+                    font-size: 20px;
+                    line-height: 30px;
+                    font-weight: 500;
+                    margin: 0;
+                }
+            }
+        }
+
+        .auth-container {
+            width: 100%;
+            display: flex;
+            min-height: 100vh;
+            background-image: linear-gradient(to right, $dark-blue 50%, $main-background 50%);
+            flex-direction: row;
+            align-items: stretch;
+
+            .left-block {
+                width: 50%;
+                background: $dark-blue;
+                color: $dark-blue-text;
+                padding: 45px 100px;
+                position: relative;
+                text-align: left;
+                flex-shrink: 0;
+
+                @include respond(md) {
+                    padding: 45px 30px;
+                    width: 100%;
+                }
+
+                .inner-block {
+                    width: 100%;
+                }
+
+                h2 {
+                    font-size: 33px;
+                    font-weight: 700;
+                    margin: 0 0 24px;
+                }
+
+                .main-block {
+                    margin-top: 30%;
+                    position: relative;
+                    .alert-container {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                    }
+
+                    .term-text {
+                        font-size: 15px;
+                        font-weight: normal;
+                        line-height: normal;
+                    }
+
+                    .signup-link {
+                        display: flex;
+                        justify-content: center;
+                        margin: 0 0 32px;
+                        font-size: 15px;
+
+                        p {
+                            margin: 0;
+                        }
+
+                        a {
+                            padding: 0 0 0 3px;
+                        }
+                    }
+                }
+            }
+
+            .img-corner {
+                background: url('/assets/images/list-placeholder2.png') no-repeat right bottom;
+                width: 50%;
+                flex-shrink: 0;
+                @include respond(md) {
+                    display: none;
+                }
+            }
+        }
+
+        ::ng-deep {
+            .hc-help-text {
+                font-size: 14px;
+                line-height: 1.4;
+                vertical-align: top;
+                display: inline-block;
+            }
+
+            .btn {
+                border-radius: 3px;
+                height: 46px;
+                font-size: 12px;
+                font-weight: 500;
+                padding: 12px 20px;
+                line-height: 1.5em;
+                text-transform: uppercase;
+                .icon {
+                    margin-left: 26px;
+                    vertical-align: middle;
+                }
+
+                .btn-primary {
+                    background-color: #ff2d55;
+                    color: #fff;
+                    &:disabled {
+                        background: #d7dbdf;
+                        color: #000;
+                    }
+                }
+            }
+
+            .form-input {
+                height: 46px;
+            }
+
+            .auth-wrapper {
+                width: 584px;
+                margin: 0 auto;
+            }
+
+            .alert {
+                max-height: 65px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            .hc-form-row {
+                min-height: 35px;
+                margin: 0 0 22px;
+
+                .hc-form-control {
+                    font-size: 14px;
+                    background: #f7f9fa;
+                    border: 1px solid #f7f9fa;
+                    margin: 0;
+                }
+            }
+
+            .form-bottom {
+                md-checkbox {
+                    margin: 0;
+                }
+
+                .fwidth {
+                    width: 100%;
+                }
+                .hc-help-text {
+                    color: #545454;
+                }
+                :disabled {
+                    background: #949aa8;
+                    border: 1px solid #949aa8;
+                    cursor: unset;
+                }
+            }
+
+            hc-button .hc-button-inner button {
+                font-size: 14px;
+                line-height: 29px;
+            }
+
+            .agreed-holder {
+                a {
+                    text-decoration: underline;
+
+                    &:hover {
+                        text-decoration: none;
+                    }
+                }
+            }
+
+            p-messages {
+                display: block;
+                position: relative;
+                margin: 0 0 20px;
+            }
+
+            p-checkbox {
+                line-height: 0;
+            }
+
+            .checkbox-holder {
+                align-items: center;
+            }
+
+            .auth-wrapper {
+                width: 100%;
+            }
+        }
+    }
+}

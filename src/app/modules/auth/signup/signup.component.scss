@@ -1,7 +1,31 @@
-.attention {
-    font-size: 15px;
-    color: #72808d;
-}
-.checkbox-holder {
-    display: flex;
+@import 'variables';
+:host {
+    .pincode {
+        width: 45.9px;
+        height: 46px;
+        border: solid 1px #1a2848;
+        background-color: #ffffff;
+    }
+    .password {
+        margin-top: 21px;
+    }
+    .finish {
+        margin-top: 23px;
+    }
+    .txt-opacity {
+        opacity: 0.6;
+    }
+
+    .pincode-inputs {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        .line {
+            margin: 0 20px;
+            display: block;
+            height: 1px;
+            width: 15px;
+            border-top: solid 1px #ffffff;
+        }
+    }
 }

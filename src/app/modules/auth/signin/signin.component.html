@@ -1,82 +1,50 @@
-<div class="auth-page tenats-auth">
-    <div class="auth-wrapper">
-        <div class="auth-login animated fadeIn">
-            <div class="auth-container">
-                <div class="auth-container-frame">
-                    <div class="left-block">
-                        <div class="inner-block">
-                            <div class="logo-holder">
-                                <div class="logo" routerLink="/">
-                                    <img src="/assets/images/hire-logo.svg" alt="HelloCrowd" width="115" height="44" />
-                                </div>
-                            </div>
-                            <h2>Let’s get you signed in</h2>
-                        </div>
-                    </div>
-                    <div class="main-block">
-                        <div class="inner-block">
-                            <div class="signup-link">
-                                <p>Don’t yet have an account?</p>
-                                <!-- LINK TO SIGN UP -->
-                                <a routerLink="/auth/signup"> Sign up here</a>
-                            </div>
-                            <form [formGroup]="signinForm">
-                                <p-messages [(value)]="msgs"></p-messages>
-                                <a class="signin-btn" (click)="onGoogleSigninClick($event)">
-                                    <span class="abcRioButtonIcon" style="padding:6px">
-                                        <span
-                                            style="width:18px;height:18px;"
-                                            class="abcRioButtonSvgImageWithFallback abcRioButtonIconImage abcRioButtonIconImage18"
-                                        >
-                                            <img
-                                                src="/assets/images/google.svg"
-                                                alt="Google icon"
-                                                width="18"
-                                                height="18"
-                                            />
-                                        </span>
-                                    </span>
-                                    <span class="text">Sign in with Google</span>
-                                </a>
-                                <div class="separator"><span class="separator-text">OR</span></div>
-                                <div class="section-content">
-                                    <div class="hc-form-row">
-                                        <input
-                                            name="email"
-                                            formControlName="email"
-                                            class="form-input"
-                                            type="email"
-                                            placeholder="Email address"
-                                        />
-                                    </div>
-                                    <div class="hc-form-row password-row">
-                                        <input
-                                            name="password"
-                                            formControlName="password"
-                                            type="password"
-                                            class="form-input"
-                                            placeholder="Password"
-                                            (keydown.enter)="onSignIn($event); (false)"
-                                        />
-                                    </div>
-                                    <div class="flex-row flex-aic form-bottom">
-                                        <span class="forgot" routerLink="/auth/reset-password">Forgot Password</span>
-                                        <button
-                                            class="btn btn-primary mla"
-                                            [disabled]="!signinForm.valid"
-                                            (click)="onSignIn($event)"
-                                            type="submit"
-                                        >
-                                            Sign In
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+<app-loader *ngIf="contentLoading"></app-loader>
+<div class="inner-block">
+    <ng-container>
+        <h1>Welcome back.</h1>
+        <span class="signin-btn-google" (click)="onGoogleSigninClick($event)">
+            <span class="abcRioButtonIcon" style="padding:6px">
+                <img src="/assets/images/google.svg" alt="Google icon" />
+            </span>
+            <span class="text">SIGN IN WITH GOOGLE</span>
+        </span>
+        <div class="separator"><span class="separator-text">Or, sign in with your email address </span></div>
+        <form [formGroup]="signinForm" autocomplete="off">
+            <p-messages [(value)]="msgs"></p-messages>
+            <div class="section-content">
+                <div class="hc-form-row">
+                    <input
+                        name="email"
+                        class="form-input"
+                        type="email"
+                        placeholder="Email address"
+                        formControlName="email"
+                    />
+                </div>
+                <div class="hc-form-row password-row">
+                    <input
+                        name="password"
+                        class="form-input"
+                        type="password"
+                        placeholder="Password"
+                        formControlName="password"
+                    />
+                    <span routerLink="/auth/reset-password" class="forgot-pwd">forgot password?</span>
+                </div>
+                <div class="hc-form-row form-bottom">
+                    <button
+                        class="btn btn-primary signin-btn"
+                        [disabled]="!signinForm.valid"
+                        (click)="onSignIn($event)"
+                        type="submit"
+                    >
+                        SIGN IN
+                    </button>
+                </div>
+                <div class="sign-in-sso">
+                    <span routerLink="/auth/signin-sso" class="sso">Sign in with SSO</span>
                 </div>
             </div>
-        </div>
-    </div>
-    <app-loader *ngIf="contentLoading"></app-loader>
+        </form>
+    </ng-container>
 </div>
