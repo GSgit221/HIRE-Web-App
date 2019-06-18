@@ -5,7 +5,8 @@ import { CookieService } from 'ngx-cookie-service';
 
 import { environment } from '@env/environment';
 import { UtilitiesService } from './../../core/services/utilities.service';
-import { Subject, Observable } from 'rxjs';
+
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'

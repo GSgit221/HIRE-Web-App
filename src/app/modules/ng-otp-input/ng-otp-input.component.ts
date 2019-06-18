@@ -134,7 +134,7 @@ export class NgOtpInputComponent implements OnInit {
     pasteCode(pastedData) {
         pastedData = pastedData.slice(0, 7);
         var count = 0;
-
+        /* tslint:disable */
         for (let i = 0; i < pastedData.length; i++) {
             if (isNaN(pastedData[i])) {
                 continue;
@@ -147,5 +147,6 @@ export class NgOtpInputComponent implements OnInit {
                 }
             }
         }
+        /* tslint:enable */
     }
 }
