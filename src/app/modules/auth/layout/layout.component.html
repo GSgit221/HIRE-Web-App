@@ -9,6 +9,19 @@
                             <div class="logo" routerLink="/">
                                 <img src="/assets/images/hire-logo.svg" alt="HelloCrowd" width="67" height="26" />
                             </div>
+                            <div class="top-left">
+                                <div class="" *ngIf="this.currentRoute === '/auth/signin'">
+                                    <button class="btn btn-primary" type="submit" routerLink="/auth/signup">
+                                        Sign Up <span class="icon icon-right-arrow"></span>
+                                    </button>
+                                </div>
+                                <div class="" *ngIf="this.currentRoute === '/auth/signup'">
+                                    <button class="btn btn-primary" type="submit" routerLink="/auth/signin">
+                                        Sign In
+                                        <span class="icon icon-right-arrow"></span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="main-block">
@@ -18,13 +31,13 @@
                 <div class="img-corner">
                     <div class="top-right">
                         <div class="hc-form-row text-right " *ngIf="this.currentRoute === '/auth/signin'">
-                            <span>Don’t have a profile yet?</span>
+                            <span>Don’t have an account?</span>
                             <button class="btn btn-primary" type="submit" routerLink="/auth/signup">
                                 Sign Up <span class="icon icon-right-arrow"></span>
                             </button>
                         </div>
                         <div class="hc-form-row text-right " *ngIf="this.currentRoute === '/auth/signup'">
-                            <span *ngIf="true">Already have an account?</span>
+                            <span>Already have an account?</span>
                             <button class="btn btn-primary" type="submit" routerLink="/auth/signin">
                                 Sign In
                                 <span class="icon icon-right-arrow"></span>

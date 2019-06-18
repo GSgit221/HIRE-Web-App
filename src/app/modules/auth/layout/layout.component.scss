@@ -80,6 +80,14 @@
                     margin: 0 0 24px;
                 }
 
+                .top-left {
+                    display: none;
+                    @include respond(md) {
+                        display: block;
+                        margin-left: auto;
+                    }
+                }
+
                 .main-block {
                     margin-top: 30%;
                     position: relative;
@@ -118,12 +126,16 @@
                 text-align: right;
                 padding-top: 45px;
                 padding-right: 45px;
+
+                @include respond(md) {
+                    display: none;
+                }
                 .btn-primary {
                     margin-left: 20px;
                 }
             }
             .img-corner {
-                background: url('/assets/images/list-placeholder2.png') no-repeat right bottom;
+                background: url('/assets/images/group-2.png') no-repeat right bottom;
                 width: 100%;
                 flex-shrink: 1;
                 @include respond(md) {
