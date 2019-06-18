@@ -123,11 +123,8 @@ export class NgOtpInputComponent implements OnInit {
     }
 
     pasteEvent(event) {
-        console.log(event);
         var clipboardData = event.clipboardData;
-        console.log(clipboardData);
         var pastedData = clipboardData.getData('text/plain');
-        console.log(pastedData);
         this.pasteCode(pastedData);
     }
 
