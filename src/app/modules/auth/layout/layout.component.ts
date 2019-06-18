@@ -10,13 +10,13 @@ import { AuthService } from '../auth.service';
 export class LayoutComponent implements OnInit {
     currentRoute: any = '';
     loading: boolean = false;
-    constructor(private router: Router, private authService: AuthService) {}
-
-    ngOnInit() {
+    constructor(private router: Router, private authService: AuthService) {
         this.router.events.subscribe(() => {
             this.currentRoute = this.router.url;
         });
+    }
 
+    ngOnInit() {
         this.authService.$loading.subscribe((loading) => (this.loading = loading));
     }
 }
