@@ -306,19 +306,23 @@ export class CandidateItemComponent implements OnInit {
                     answers: []
                 };
                 if (candidateQuestions && candidateQuestions[q.id]) {
-                    if (Array.isArray(candidateQuestions[q.id])) {
-                        candidateQuestions[q.id].forEach((qa) => {
+                    if (q.answers) {
+                        if (Array.isArray(candidateQuestions[q.id])) {
+                            candidateQuestions[q.id].forEach((qa) => {
+                                const answer = q.answers.find((a) => a.id === qa);
+                                if (answer) {
+                                    obj.answers.push(answer.text);
+                                }
+                            });
+                        } else {
+                            const qa = candidateQuestions[q.id];
                             const answer = q.answers.find((a) => a.id === qa);
                             if (answer) {
                                 obj.answers.push(answer.text);
                             }
-                        });
-                    } else {
-                        const qa = candidateQuestions[q.id];
-                        const answer = q.answers.find((a) => a.id === qa);
-                        if (answer) {
-                            obj.answers.push(answer.text);
                         }
+                    } else {
+                        obj.answers.push(candidateQuestions[q.id]);
                     }
                 }
 
