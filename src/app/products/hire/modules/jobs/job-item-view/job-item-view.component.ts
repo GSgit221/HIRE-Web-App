@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UtilitiesService } from '@app/core/services';
+import { environment } from '@env/environment';
 import { select, Store } from '@ngrx/store';
 import { ToastrService } from 'ngx-toastr';
 import { SelectItem } from 'primeng/api';
@@ -103,7 +104,7 @@ export class JobItemViewComponent implements OnInit {
             this.setAppliedCanidates(this.candidates);
         });
         this.resumeThreshold = this.getJobResumeMatchingThreshold();
-        this.href = `https://apply.clevateam.io/tenant/${this.utilities.getTenant()}/applications/${
+        this.href = `${environment.applicationPortalUrl}/tenant/${this.utilities.getTenant()}/applications/${
             this.job.id
         }/resume`;
     }

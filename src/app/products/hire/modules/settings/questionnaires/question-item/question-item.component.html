@@ -59,39 +59,44 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-block" *ngIf="type.value !== 'one-way-video'">
-                            <div class="form-block-2-columns" formArrayName="answers">
-                                <div class="form-block-2-columns-holder">
-                                    <div class="form-block-col" *ngFor="let item of answers.controls; let i = index">
-                                        <div class="input-block right-option-block" [formGroupName]="i">
-                                            <label class="form-block-label">Answer {{ i + 1 }}</label>
-                                            <div class="input-block">
-                                                <input type="text" class="form-input" formControlName="text" />
-                                                <div class="right-option">
-                                                    <p-checkbox
-                                                        label="Knockout"
-                                                        formControlName="is_knockout"
-                                                        binary="true"
-                                                    ></p-checkbox>
+                        <ng-container *ngIf="type.value === 'multiple' || type.value === 'single'">
+                            <div class="form-block">
+                                <div class="form-block-2-columns" formArrayName="answers">
+                                    <div class="form-block-2-columns-holder">
+                                        <div
+                                            class="form-block-col"
+                                            *ngFor="let item of answers.controls; let i = index"
+                                        >
+                                            <div class="input-block right-option-block" [formGroupName]="i">
+                                                <label class="form-block-label">Answer {{ i + 1 }}</label>
+                                                <div class="input-block">
+                                                    <input type="text" class="form-input" formControlName="text" />
+                                                    <div class="right-option">
+                                                        <p-checkbox
+                                                            label="Knockout"
+                                                            formControlName="is_knockout"
+                                                            binary="true"
+                                                        ></p-checkbox>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <span class="hc-link" (click)="onAddAnswer()" *ngIf="isAddAvailable()">Add Answer</span>
                             </div>
-                            <span class="hc-link" (click)="onAddAnswer()" *ngIf="isAddAvailable()">Add Answer</span>
-                        </div>
-                        <div class="form-content-box-bottom" *ngIf="type.value !== 'one-way-video'">
-                            <div class="form-content-box-bottom-holder">
-                                <div class="text-with-icon flex-row flex-aic">
-                                    <img alt="" class="icon" height="13" src="/assets/images/pin.svg" width="13" />
-                                    <p>
-                                        <strong>Knockout:</strong> If a candidate should be disqualified based on an
-                                        answer, select the checkbox assiciated with the disqualifying answer.
-                                    </p>
+                            <div class="form-content-box-bottom">
+                                <div class="form-content-box-bottom-holder">
+                                    <div class="text-with-icon flex-row flex-aic">
+                                        <img alt="" class="icon" height="13" src="/assets/images/pin.svg" width="13" />
+                                        <p>
+                                            <strong>Knockout:</strong> If a candidate should be disqualified based on an
+                                            answer, select the checkbox assiciated with the disqualifying answer.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </ng-container>
                         <div class="form-block" *ngIf="type.value === 'one-way-video'">
                             <div class="form-block-columns">
                                 <div class="form-block-col">

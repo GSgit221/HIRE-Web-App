@@ -2,9 +2,9 @@
     <div class="title-block">
         <h1 class="page-title">Questionnaires</h1>
         <div class="buttons-holder" *ngIf="list && list.length">
-            <button class="btn btn-primary w140 mla" routerLink="./../new">
+            <a class="btn btn-primary w140 mla" routerLink="./new">
                 Add Questionnaire
-            </button>
+            </a>
         </div>
     </div>
     <div *ngIf="!list || (!list.length && !contentLoading)">
@@ -19,9 +19,9 @@
                     </p>
                 </div>
                 <div class="buttons-holder">
-                    <button class="btn btn-primary w140" routerLink="./../../settings/questionnaires/new">
+                    <a class="btn btn-primary w140" routerLink="./new">
                         Add Questionnaire
-                    </button>
+                    </a>
                 </div>
             </div>
             <div class="upload-block"></div>

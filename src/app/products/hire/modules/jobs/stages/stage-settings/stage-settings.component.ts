@@ -95,8 +95,8 @@ export class StageSettingsComponent implements OnInit {
                         (response: Questionnaire[]) => {
                             this.contentLoading = false;
                             if (response) {
-                                this.questionnaireList = response.filter((q) => q.type === 'video');
                                 const options = [];
+                                this.questionnaireList = response.filter((q) => q.type === 'video');
                                 this.questionnaireList.forEach((q) => {
                                     options.push({
                                         value: q.id,

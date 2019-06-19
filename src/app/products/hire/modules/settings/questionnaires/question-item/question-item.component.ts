@@ -26,6 +26,9 @@ export class QuestionItemComponent implements OnInit {
     questionTypeOptions = [
         { label: 'Multiple Choice', value: 'multiple' },
         { label: 'Single Choice', value: 'single' },
+        { label: 'Text Field', value: 'text-field' },
+        { label: 'Paragraph', value: 'paragraph' },
+        { label: 'Star Rating', value: 'stars' },
         { label: 'One Way Video Question', value: 'one-way-video' }
     ];
     typeQuestion = 'multiple';
@@ -95,7 +98,7 @@ export class QuestionItemComponent implements OnInit {
             number_of_takes: [1]
         });
         this.questionForm.get('type').valueChanges.subscribe((val) => {
-            if (val === 'one-way-video') {
+            if (['one-way-video', 'text-field', 'paragraph', 'stars'].indexOf(val) !== -1) {
                 this.answers.controls.forEach((answerControl: FormGroup, index) => {
                     answerControl.controls['text'].setValidators([]);
                     answerControl.controls['text'].updateValueAndValidity();
@@ -185,7 +188,7 @@ export class QuestionItemComponent implements OnInit {
                 () => {
                     this.contentLoading = false;
                     this.router.navigateByUrl(
-                        `${this.baseURL}/settings/questionnaires/${this.questionnaireId}/questions/`
+                        `${this.baseURL}/settings/questionnaires/${this.questionnaireId}/questions`
                     );
                 },
                 (error) => {
@@ -199,7 +202,7 @@ export class QuestionItemComponent implements OnInit {
                 () => {
                     this.contentLoading = false;
                     this.router.navigateByUrl(
-                        `${this.baseURL}/settings/questionnaires/${this.questionnaireId}/questions/`
+                        `${this.baseURL}/settings/questionnaires/${this.questionnaireId}/questions`
                     );
                 },
                 (error) => {
@@ -213,8 +216,18 @@ export class QuestionItemComponent implements OnInit {
 
     getFormValue(form) {
         const formValue = form.value;
-        return formValue.type === 'one-way-video'
-            ? this.utilities.omit(formValue, ['answers'])
-            : this.utilities.omit(formValue, ['review_time', 'answer_time', 'number_of_takes']);
+        switch (formValue.type) {
+            case 'one-way-video':
+                return this.utilities.omit(formValue, ['answers']);
+            case 'single':
+            case 'multiple':
+                return this.utilities.omit(formValue, ['review_time', 'answer_time', 'number_of_takes']);
+            case 'text-field':
+            case 'paragraph':
+            case 'stars':
+                return this.utilities.omit(formValue, ['review_time', 'answer_time', 'number_of_takes', 'answers']);
+            default:
+                return {};
+        }
     }
 }
