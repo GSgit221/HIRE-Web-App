@@ -26,6 +26,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { SliderModule } from 'primeng/slider';
 import { TooltipModule } from 'primeng/tooltip';
+import { QuestionTypePipe } from './../../products/hire/modules/settings/questionnaires/pipes/question-type.pipe';
 
 import { GetFirstLetterPipe } from '../../core/pipes/get-first-letter.pipe';
 import { HireEditorModule } from '../../libs/editor/editor.module';
@@ -59,6 +60,7 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         GetFirstLetterPipe,
         InitialsPipe,
         AccountTypePipe,
+        QuestionTypePipe,
         SortByDatePipe,
         SortByOrderPipe,
         UploadFileNamePipe,
@@ -111,6 +113,7 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         GetFirstLetterPipe,
         InitialsPipe,
         AccountTypePipe,
+        QuestionTypePipe,
         SortByDatePipe,
         SortByOrderPipe,
         UploadFileNamePipe,

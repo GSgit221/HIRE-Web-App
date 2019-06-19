@@ -58,12 +58,12 @@
                 </div>
                 <div class="col col2 flex-60">Questions</div>
                 <div class="col col3 flex-20">Type</div>
-                <div
+                <!-- <div
                     class="col col4 flex-15"
                     *ngIf="questionnaire && questionnaire.type && questionnaire.type === 'text'"
                 >
                     Knockout
-                </div>
+                </div> -->
             </div>
             <div class="nr-list-content">
                 <div class="hc-blocker"></div>
@@ -96,14 +96,9 @@
                             <p class="hc-content-p">{{ item.text }}</p>
                         </div>
                         <div class="col col3  flex-20">
-                            <ng-container *ngIf="item.type !== 'one-way-video'">
-                                <p class="hc-content-p">{{ item.type | titlecase }} Choice</p>
-                            </ng-container>
-                            <ng-container *ngIf="item.type === 'one-way-video'">
-                                <p class="hc-content-p">Video</p>
-                            </ng-container>
+                            <p class="hc-content-p">{{ item.type | questionType }}</p>
                         </div>
-                        <div
+                        <!-- <div
                             class="col col4 flex-15"
                             *ngIf="questionnaire && questionnaire.type && questionnaire.type === 'text'"
                         >
@@ -113,7 +108,7 @@
                                 src="/assets/images/delete_sign.svg"
                                 alt="Delete icon"
                             />
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
