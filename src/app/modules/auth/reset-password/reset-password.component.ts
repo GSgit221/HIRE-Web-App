@@ -28,7 +28,6 @@ export class ResetPasswordComponent implements OnInit {
     ) {
         // Check if app
         const tenant = this.utilities.getTenant();
-        console.log(tenant);
         if (tenant === 'app') {
             this.router.navigateByUrl('/auth/signup');
         }

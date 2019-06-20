@@ -1,6 +1,6 @@
 <div class="sidebar-header">
     <div class="logo" routerLink="{{ baseUrl }}">
-        <img src="/assets/images/hire-logo.svg" alt="HelloCrowd" width="67" height="26" />
+        <img src="/assets/images/clevateam.png" alt="ClevaTeam" width="149" height="32" />
     </div>
     <button class="triangle-btn" #toggleButton (click)="onToggleDropdown()">&#9662;</button>
     <div class="dropdown-content myDropdown" *ngIf="showMenu">
@@ -33,13 +33,13 @@
 <div class="sidebar-nav">
     <div class="sidebar-nav-link">
         <a href="#" routerLink="{{ baseUrl }}/jobs" routerLinkActive="active">
-            <span class="icon"><img src="/assets/images/jobs.svg" alt="Jobs icon" width="14" height="13"/></span>
+            <span class="icon icon-jobs"></span>
             <span class="text">Jobs</span>
         </a>
     </div>
     <div class="sidebar-nav-link">
         <a href="#" routerLink="{{ baseUrl }}/people" routerLinkActive="active">
-            <span class="icon"> <img src="/assets/images/people.svg" alt="People icon" width="13" height="13" /> </span>
+            <span class="icon icon-people"></span>
             <span class="text">People</span>
         </a>
     </div>
@@ -48,9 +48,7 @@
 <div class="sidebar-nav-oc">
     <div class="sidebar-nav-oc-item" [attr.aria-expanded]="settingsOpened" routerLinkActive="active">
         <div class="sidebar-nav-oc-item-header" (click)="onToggleOcItem($event)">
-            <span class="icon">
-                <img src="/assets/images/sidebar-settings.svg" alt="Settings icon" width="14" height="14" />
-            </span>
+            <span class="icon icon-settings"></span>
             <span class="text">Settings</span>
             <span class="ui-button-icon-left ui-clickable pi pi-chevron-down"></span>
             <span class="ui-button-icon-left ui-clickable pi pi-chevron-up"></span>
@@ -59,9 +57,7 @@
             <div class="sidebar-nav">
                 <div class="sidebar-nav-link">
                     <a href="#" routerLink="{{ baseUrl }}/settings/users" routerLinkActive="active">
-                        <span class="icon"
-                            ><img src="/assets/images/users.svg" alt="Users icon" width="14" height="13"
-                        /></span>
+                        <span class="icon icon-users"></span>
                         <span class="text">Users</span>
                     </a>
                 </div>
@@ -75,17 +71,13 @@
                 </div>
                 <div class="sidebar-nav-link">
                     <a href="#" routerLink="{{ baseUrl }}/settings/billing" routerLinkActive="active">
-                        <span class="icon"
-                            ><img src="/assets/images/billing.svg" alt="Billing icon" width="14" height="13"
-                        /></span>
+                        <span class="icon icon-billing"></span>
                         <span class="text">Billing</span>
                     </a>
                 </div>
                 <div class="sidebar-nav-link">
                     <a href="#" routerLink="{{ baseUrl }}/settings/questionnaires" routerLinkActive="active">
-                        <span class="icon"
-                            ><img src="/assets/images/sidebar-questions.svg" alt="Questions icon" width="14" height="13"
-                        /></span>
+                        <span class="icon icon-questions"></span>
                         <span class="text">Questions</span>
                     </a>
                 </div>
@@ -104,35 +96,19 @@
                 </div> -->
                 <div class="sidebar-nav-link">
                     <a href="#" routerLink="{{ baseUrl }}/settings/email-templates" routerLinkActive="active">
-                        <span class="icon">
-                            <img
-                                src="/assets/images/sidebar-email-templates.svg"
-                                alt="Email icon"
-                                width="14"
-                                height="11"
-                            />
-                        </span>
+                        <span class="icon icon-email-templates"></span>
                         <span class="text">Email Templates</span>
                     </a>
                 </div>
                 <div class="sidebar-nav-link">
                     <a href="#" routerLink="{{ baseUrl }}/settings/theme" routerLinkActive="active">
-                        <span class="icon">
-                            <img src="/assets/images/theme.svg" alt="Email icon" width="13" height="13" />
-                        </span>
+                        <span class="icon icon-theme"></span>
                         <span class="text">Theme</span>
                     </a>
                 </div>
                 <div class="sidebar-nav-link">
                     <a href="#" routerLink="{{ baseUrl }}/settings/integrations" routerLinkActive="active">
-                        <span class="icon">
-                            <img
-                                src="/assets/images/sidebar-integrations.svg"
-                                alt="Integrations icon"
-                                width="13"
-                                height="13"
-                            />
-                        </span>
+                        <span class="icon icon-integrations"></span>
                         <span class="text">Integrations</span>
                     </a>
                 </div>
