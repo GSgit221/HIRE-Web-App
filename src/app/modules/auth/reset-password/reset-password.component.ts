@@ -16,6 +16,8 @@ export class ResetPasswordComponent implements OnInit {
     resetForm: FormGroup;
     msgs: Message[] = [];
     resetSuccess = false;
+    email: any;
+    contentLoading = false;
 
     constructor(
         private authService: AuthService,
@@ -32,13 +34,15 @@ export class ResetPasswordComponent implements OnInit {
         }
 
         this.resetForm = this.fb.group({
-            email: ['', Validators.required]
+            email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]]
         });
     }
 
     ngOnInit() {}
 
     onReset(event) {
+        console.log('event');
+        this.authService.loading = true;
         event.preventDefault();
         if (!this.resetForm.valid) {
             this.formHelper.markFormGroupTouched(this.resetForm);
@@ -46,11 +50,14 @@ export class ResetPasswordComponent implements OnInit {
         }
         this.authService.resetPassword(this.resetForm.value.email).subscribe(
             (response) => {
+                this.authService.loading = false;
+                this.email = this.resetForm.value.email;
                 this.msgs = [];
                 this.resetSuccess = true;
                 setTimeout(() => this.router.navigateByUrl('/auth/signin'), 5000);
             },
             (response) => {
+                this.authService.loading = false;
                 this.msgs = [];
                 this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
             }

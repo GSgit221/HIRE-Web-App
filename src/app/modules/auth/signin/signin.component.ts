@@ -34,27 +34,27 @@ export class SigninComponent implements OnInit {
 
     onGoogleSigninClick(event) {
         event.preventDefault();
-        this.contentLoading = true;
+        this.authService.loading = true;
         this.authService
             .onGoogleSignin()
             .then((response) => {
                 this.authService.signInWithGoogle(response).subscribe(
                     (response: any) => {
-                        this.contentLoading = false;
+                        this.authService.loading = false;
                         this.msgs = [];
                         this.authService.setSession(response);
                         this.utilities.setTenant(response.tenant_id);
                         this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
                     },
                     (response) => {
-                        this.contentLoading = false;
+                        this.authService.loading = false;
                         this.msgs = [];
                         this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
                     }
                 );
             })
             .catch((errorResponse) => {
-                this.contentLoading = false;
+                this.authService.loading = false;
                 this.msgs = [];
                 this.msgs.push({ severity: 'error', detail: errorResponse.error || 'Error' });
             });
@@ -66,18 +66,18 @@ export class SigninComponent implements OnInit {
             this.formHelper.markFormGroupTouched(this.signinForm);
             return;
         }
-        this.contentLoading = true;
+        this.authService.loading = true;
         const val = this.signinForm.value;
         this.authService.signin(val.email, val.password).subscribe(
             (response: any) => {
-                this.contentLoading = false;
+                this.authService.loading = false;
                 this.msgs = [];
                 this.authService.setSession(response);
                 this.utilities.setTenant(response.tenant_id);
                 this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
             },
             (response) => {
-                this.contentLoading = false;
+                this.authService.loading = false;
                 this.msgs = [];
                 this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
             }

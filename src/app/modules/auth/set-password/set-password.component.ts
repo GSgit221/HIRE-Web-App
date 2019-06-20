@@ -18,6 +18,7 @@ export class SetPasswordComponent implements OnInit {
     invitation_code: string;
     setPasswordForm: FormGroup;
     msgs: Message[] = [];
+    contentLoading = false;
 
     constructor(
         private authService: AuthService,
@@ -36,8 +37,7 @@ export class SetPasswordComponent implements OnInit {
         this.setPasswordForm = this.fb.group(
             {
                 password: ['', Validators.required],
-                confirm_password: ['', Validators.required],
-                agreed: [false, Validators.requiredTrue]
+                confirm_password: ['', Validators.required]
             },
             {
                 validator: PasswordValidation.MatchPassword
@@ -51,6 +51,7 @@ export class SetPasswordComponent implements OnInit {
     }
 
     onSubmit(event) {
+        this.authService.loading = true;
         event.preventDefault();
         if (!this.setPasswordForm.valid) {
             this.formHelper.markFormGroupTouched(this.setPasswordForm);
@@ -59,11 +60,13 @@ export class SetPasswordComponent implements OnInit {
         const val = this.setPasswordForm.value;
         this.authService.setPassword(val.password, this.token, this.invitation_code).subscribe(
             (response) => {
+                this.authService.loading = false;
                 this.msgs = [];
                 this.authService.setSession(response);
                 this.router.navigateByUrl('/');
             },
             (response) => {
+                this.authService.loading = false;
                 this.msgs = [];
                 this.msgs.push({ severity: 'error', detail: response.error.error || 'Error' });
             }

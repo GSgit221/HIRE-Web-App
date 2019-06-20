@@ -1,185 +1,83 @@
-<div class="auth-page tenats-auth">
-    <div class="auth-wrapper">
-        <div class="auth-login animated fadeIn">
-            <div class="auth-container">
-                <div class="auth-container-frame">
-                    <div class="left-block">
-                        <div class="inner-block">
-                            <div class="logo-holder">
-                                <div class="logo" routerLink="/">
-                                    <img src="/assets/images/hire-logo.svg" alt="HelloCrowd" width="115" height="44" />
-                                </div>
-                            </div>
-                            <h2>Let’s get you signed up</h2>
-                        </div>
-                    </div>
-                    <div class="main-block">
-                        <app-loader *ngIf="contentLoading"></app-loader>
-                        <div class="inner-block">
-                            <ng-container *ngIf="step === 'first'">
-                                <span class="signin-btn" (click)="onGoogleSignup()">
-                                    <span class="abcRioButtonIcon" style="padding:6px">
-                                        <span
-                                            style="width:18px;height:18px;"
-                                            class="abcRioButtonSvgImageWithFallback abcRioButtonIconImage abcRioButtonIconImage18"
-                                        >
-                                            <img
-                                                src="/assets/images/google.svg"
-                                                alt="Google icon"
-                                                width="18"
-                                                height="18"
-                                            />
-                                        </span>
-                                    </span>
-                                    <span class="text">Sign up with Google</span>
-                                </span>
-                                <div class="separator"><span class="separator-text">OR</span></div>
-                                <form [formGroup]="credentialsForm" autocomplete="off">
-                                    <p-messages [(value)]="msgs"></p-messages>
-                                    <div class="section-content">
-                                        <div class="hc-form-row">
-                                            <input
-                                                name="name"
-                                                id="name"
-                                                formControlName="name"
-                                                class="form-input"
-                                                type="text"
-                                            />
-                                            <label for="name" class="label-input">Full Name</label>
-                                        </div>
-                                        <div class="hc-form-row">
-                                            <input
-                                                autocomplete="off"
-                                                formControlName="email"
-                                                id="email"
-                                                class="form-input"
-                                                type="email"
-                                                (keyup)="onKeyupEmail($event)"
-                                            />
-                                            <label for="email" class="label-input">Email Address</label>
-                                        </div>
-                                        <div class="hc-form-row password-row">
-                                            <input
-                                                autocomplete="off"
-                                                formControlName="password"
-                                                type="password"
-                                                class="form-input"
-                                                (keydown.enter)="onFinishFirstStep(); (false)"
-                                            />
-                                            <label class="label-input">Password</label>
-                                        </div>
-                                        <div class="flex-row form-bottom">
-                                            <p class="attention">* We will never share your details with anyone</p>
-                                            <button
-                                                class="btn btn-primary mla"
-                                                [disabled]="!credentialsForm.valid"
-                                                (click)="onFinishFirstStep()"
-                                                type="button"
-                                            >
-                                                Next
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </ng-container>
-                            <ng-container *ngIf="step === 'second'">
-                                <form [formGroup]="websiteForm">
-                                    <p-messages [(value)]="msgs"></p-messages>
-                                    <div class="hc-form-row">
-                                        <input
-                                            name="email-company"
-                                            formControlName="url"
-                                            class="form-input"
-                                            type="email"
-                                            id="url"
-                                            (keydown.enter)="onFinishSecondStep(); (false)"
-                                        />
-                                        <label for="url" class="label-input">Company Website URL</label>
-                                    </div>
-                                    <div class="flex-row form-bottom">
-                                        <button
-                                            class="btn btn-primary mla"
-                                            [disabled]="!websiteForm.valid"
-                                            (click)="onFinishSecondStep()"
-                                            type="button"
-                                        >
-                                            Next
-                                        </button>
-                                    </div>
-                                </form>
-                            </ng-container>
-                            <ng-container *ngIf="step === 'third'">
-                                <p-messages [(value)]="msgs"></p-messages>
-                                <form [formGroup]="companyForm">
-                                    <div class="hc-form-row">
-                                        <input
-                                            formControlName="company_website_url"
-                                            class="form-input"
-                                            type="text"
-                                            id="company_website_url"
-                                        />
-                                        <label for="company_website_url" class="label-input">Company Website</label>
-                                    </div>
-                                    <div class="hc-form-row">
-                                        <input
-                                            name="name-company"
-                                            formControlName="company_name"
-                                            class="form-input"
-                                            type="email"
-                                            id="company_name"
-                                        />
-                                        <label for="company_name" class="label-input">Company Name</label>
-                                    </div>
-                                    <div class="hc-form-row">
-                                        <p-dropdown
-                                            [options]="countryTypeOptions"
-                                            formControlName="country_code"
-                                            [style]="{ width: '100%' }"
-                                            (onChange)="onChangeCountry($event)"
-                                            placeholder="Please select country"
-                                        ></p-dropdown>
-                                        <label class="label-input">Country</label>
-                                    </div>
-                                    <div class="hc-form-row">
-                                        <p-dropdown
-                                            [options]="employeesTypeOptions"
-                                            formControlName="employees"
-                                            [style]="{ width: '100%' }"
-                                            placeholder="Number of employees"
-                                        ></p-dropdown>
-                                        <label class="label-input">Number of Employees</label>
-                                    </div>
-                                    <div class="flex-row form-bottom">
-                                        <div class="checkbox-holder">
-                                            <p-checkbox
-                                                formControlName="agreed"
-                                                inputId="agreed"
-                                                binary="true"
-                                            ></p-checkbox>
-                                            <label for="agreed"
-                                                >I agree to HelloCrowd’s
-                                                <a href="https://hellocrowd.net/#terms-of-service">Terms of Services</a>
-                                                and
-                                                <a href="https://hellocrowd.net/#privacy-policy"
-                                                    >Privacy Policy</a
-                                                ></label
-                                            >
-                                        </div>
-                                        <button
-                                            class="btn btn-primary mla"
-                                            (click)="onFinishThirdStep()"
-                                            [disabled]="!companyForm.valid"
-                                            type="button"
-                                        >
-                                            Finish
-                                        </button>
-                                    </div>
-                                </form>
-                            </ng-container>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<form [formGroup]="credentialsForm">
+    <p-messages [(value)]="msgs"></p-messages>
+    <div *ngIf="step === 'first'">
+        <h1>Welcome to Clevateam!</h1>
+        <p>Your <b>email address</b></p>
+        <input
+            name="email"
+            class="form-input"
+            type="email"
+            placeholder="Email address"
+            formControlName="email"
+            (keyup)="onKeyupEmail($event)"
+        />
+        <p class="term-text">By creating a profile, you agree to our customer terms of service and privacy policy.</p>
+        <div class="hc-form-row form-bottom">
+            <button
+                class="btn btn-primary"
+                (click)="onFinishFirstStep()"
+                [disabled]="!credentialsForm.valid"
+                type="submit"
+            >
+                Next
+                <span class="icon icon-right-arrow"></span>
+            </button>
         </div>
     </div>
-</div>
+</form>
+
+<form>
+    <div *ngIf="step === 'second'">
+        <h1>Check your email</h1>
+        <p>
+            We’ve just sent a 6-digit code to <b>{{ email }}</b
+            >. It will expire shortly so enter it soon.
+        </p>
+        <app-ng-otp-input (onInputChange)="otp_value = $event" [config]="{ length: 6 }"></app-ng-otp-input>
+        <p class="txt-opacity">Leave this wondow open while you check. Don’t forget to also check your span folder.</p>
+        <button class="btn btn-primary" (click)="onFinishSecondStep()" type="submit">
+            Next
+            <span class="icon icon-right-arrow"></span>
+        </button>
+    </div>
+</form>
+
+<form [formGroup]="passwordForm">
+    <div *ngIf="step === 'third'">
+        <h1>Finally, create a password</h1>
+        <input
+            name="password"
+            type="password"
+            class="form-input"
+            placeholder="Choose a password"
+            formControlName="password"
+        />
+        <input
+            name="confirm password"
+            type="password"
+            class="form-input password"
+            placeholder="Retype password"
+            formControlName="confirm_password"
+        />
+        <div
+            class="error-message"
+            *ngIf="
+                passwordForm.controls.confirm_password.errors?.MatchPassword &&
+                passwordForm.controls.confirm_password.touched
+            "
+        >
+            Password does not match
+        </div>
+        <div class="hc-form-row form-bottom">
+            <button
+                class="btn btn-primary finish"
+                (click)="onFinishThirdStep()"
+                [disabled]="!passwordForm.valid"
+                type="submit"
+            >
+                Finish
+                <span class="icon icon-right-arrow"></span>
+            </button>
+        </div>
+    </div>
+</form>

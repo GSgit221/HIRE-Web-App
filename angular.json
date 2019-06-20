@@ -26,6 +26,7 @@
                         "polyfills": "src/polyfills.ts",
                         "tsConfig": "src/tsconfig.app.json",
                         "assets": ["src/favicon.ico", "src/assets"],
+
                         "styles": [
                             "node_modules/primeicons/primeicons.css",
                             "node_modules/primeng/resources/themes/omega/theme.css",
@@ -38,7 +39,7 @@
                             "src/styles.scss"
                         ],
                         "stylePreprocessorOptions": {
-                            "includePaths": ["src/styles"]
+                            "includePaths": ["src/styles", "src/styles/common"]
                         },
                         "scripts": ["node_modules/quill/dist/quill.js"]
                     },

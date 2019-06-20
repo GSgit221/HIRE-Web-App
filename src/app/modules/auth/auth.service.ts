@@ -6,17 +6,39 @@ import { CookieService } from 'ngx-cookie-service';
 import { environment } from '@env/environment';
 import { UtilitiesService } from './../../core/services/utilities.service';
 
+import { Observable, Subject } from 'rxjs';
+
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
     defaultTenantId = 'hellocrowd';
+
+    dataSource: any = {
+        loading: false
+    };
+
+    _loading: Subject<boolean>;
+
     constructor(
         private http: HttpClient,
         private utilities: UtilitiesService,
         private cookie: CookieService,
         private socialAuthService: SocialAuthService
-    ) {}
+    ) {
+        this._loading = new Subject();
+    }
+
+    public get $loading(): Observable<boolean> {
+        return this._loading.asObservable();
+    }
+    public get loading(): boolean {
+        return this.dataSource.loading;
+    }
+    public set loading(value: boolean) {
+        this.dataSource.loading = value;
+        this._loading.next(value);
+    }
 
     onGoogleSignin() {
         return this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
@@ -42,8 +64,23 @@ export class AuthService {
     }
 
     signup(data) {
-        return this.http.post(`${environment.apiUrl}/auth/signup`, {
+        return this.http.post(`${environment.apiUrl}/auth/sign-up`, {
             ...data,
+            source: 'jobs'
+        });
+    }
+
+    userSignup(email) {
+        return this.http.post(`${environment.apiUrl}/auth/send-email`, {
+            email,
+            source: 'jobs'
+        });
+    }
+
+    verifyOtp(email, otp) {
+        return this.http.post(`${environment.apiUrl}/auth/user-signup-verify-otp`, {
+            email,
+            otp,
             source: 'jobs'
         });
     }
@@ -98,5 +135,11 @@ export class AuthService {
     }
     getCompanyByEmail(email) {
         return this.http.post(`${environment.apiUrl}/email`, { email });
+    }
+
+    ssoSignIn(company) {
+        return this.http.post(`${environment.apiUrl}/login`, {
+            company
+        });
     }
 }

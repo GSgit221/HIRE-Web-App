@@ -144,7 +144,9 @@ export class JobItemEditComponent implements OnInit {
 
         this.questionnaireOptions = [];
         this.questionnaireService.getAll().subscribe((questionnaires: Questionnaire[]) => {
-            questionnaires.forEach((q) => this.questionnaireOptions.push({ label: q.title, value: q.id }));
+            questionnaires
+                .filter((q) => q.type === 'text')
+                .forEach((q) => this.questionnaireOptions.push({ label: q.title, value: q.id }));
         });
 
         this.JobDescriptionOptions = [];

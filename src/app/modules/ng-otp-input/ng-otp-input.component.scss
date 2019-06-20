@@ -1,0 +1,36 @@
+.otp-input {
+    width: 45.9px;
+    height: 46px;
+    border: solid 1px #1a2848;
+    background-color: #ffffff;
+    font-size: 24px;
+    text-align: center;
+}
+
+.wrapper {
+    display: flex;
+    .otp-input:not(:last-child) {
+        margin-right: 8px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .otp-input {
+        width: 40px;
+        font-size: 24px;
+        height: 40px;
+    }
+}
+
+.pincode-inputs {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .line {
+        margin: 0 20px;
+        display: block;
+        height: 1px;
+        width: 15px;
+        border-top: solid 1px #ffffff;
+    }
+}

@@ -34,6 +34,7 @@ export class EmailTemplatesListComponent implements OnInit {
         });
         this.store.pipe(select(fromStoreSelectors.getEmailsLoaded)).subscribe((loaded: boolean) => {
             if (loaded) {
+                this.store.dispatch(new fromStoreActions.LoadEmails());
                 this.contentLoading = false;
             }
         });

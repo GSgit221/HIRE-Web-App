@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { UtilitiesService } from '@app/core/services';
 import { environment } from '@env/environment';
 import { select, Store } from '@ngrx/store';
 import { ToastrService } from 'ngx-toastr';
 import { SelectItem } from 'primeng/api';
 
-import { UtilitiesService } from '@app/core/services';
 import { Candidate } from '../../../../../core/models/candidate';
 import { Job } from '../../../../../core/models/job';
 import { Stage } from '../../../../../core/models/stage';
@@ -104,8 +104,9 @@ export class JobItemViewComponent implements OnInit {
             this.setAppliedCanidates(this.candidates);
         });
         this.resumeThreshold = this.getJobResumeMatchingThreshold();
-        // this.href = environment.appUrl + this.router.url;
-        this.href = 'https://' + environment.tenant + '.apply.hire.science/applications/' + this.job.id;
+        this.href = `${environment.applicationPortalUrl}/tenant/${this.utilities.getTenant()}/applications/${
+            this.job.id
+        }/resume`;
     }
 
     onJobStatusChange(item) {

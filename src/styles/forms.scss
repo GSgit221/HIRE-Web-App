@@ -1,16 +1,15 @@
-@import 'variables.scss';
+@import 'variables';
 
 .form-input {
     background: $white;
     width: 100%;
-
-    // height: 36px;
+    height: 36px;
     border-radius: 2px;
     color: $main-blue;
     border: 1px solid $grey-border;
     font-size: 14px;
     line-height: 16px;
-    padding: 9px 2px 9px 10px;
+    padding: 9px 10px 9px 10px;
     box-shadow: none;
     outline: none;
 

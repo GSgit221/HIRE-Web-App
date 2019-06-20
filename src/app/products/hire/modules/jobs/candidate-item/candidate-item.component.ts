@@ -153,7 +153,7 @@ export class CandidateItemComponent implements OnInit {
             })
         );
         const candidateRequest = this.jobService.getCandidate(this.jobId, this.candidateId);
-        const getAllData = forkJoin(jobRequest, candidateRequest).pipe(
+        const getAllData = forkJoin([jobRequest, candidateRequest]).pipe(
             switchMap((response: any) => {
                 const questions = response[0];
                 const candidate: any = response[1];
@@ -306,19 +306,23 @@ export class CandidateItemComponent implements OnInit {
                     answers: []
                 };
                 if (candidateQuestions && candidateQuestions[q.id]) {
-                    if (Array.isArray(candidateQuestions[q.id])) {
-                        candidateQuestions[q.id].forEach((qa) => {
+                    if (q.answers) {
+                        if (Array.isArray(candidateQuestions[q.id])) {
+                            candidateQuestions[q.id].forEach((qa) => {
+                                const answer = q.answers.find((a) => a.id === qa);
+                                if (answer) {
+                                    obj.answers.push(answer.text);
+                                }
+                            });
+                        } else {
+                            const qa = candidateQuestions[q.id];
                             const answer = q.answers.find((a) => a.id === qa);
                             if (answer) {
                                 obj.answers.push(answer.text);
                             }
-                        });
-                    } else {
-                        const qa = candidateQuestions[q.id];
-                        const answer = q.answers.find((a) => a.id === qa);
-                        if (answer) {
-                            obj.answers.push(answer.text);
                         }
+                    } else {
+                        obj.answers.push(candidateQuestions[q.id]);
                     }
                 }
 
