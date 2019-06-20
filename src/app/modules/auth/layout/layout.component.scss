@@ -57,13 +57,13 @@
 
             .left-block {
                 width: 600px;
-                background: $dark-blue;
+                background: $bg-blue;
                 color: $dark-blue-text;
                 padding: 45px 100px;
                 position: relative;
                 text-align: left;
                 flex-shrink: 0;
-                background: linear-gradient(to right, $dark-blue 100%, $main-background 50%);
+                background: linear-gradient(to right, $bg-blue 100%, $main-background 50%);
 
                 @include respond(lg) {
                     padding: 45px 60px;
