@@ -85,7 +85,7 @@
         font-size: 12px;
         font-weight: 500;
         padding: 15px;
-        background: $sign-in;
+        background: $pink;
         font-family: Roboto;
         border-radius: 2px;
         border: none;
@@ -130,7 +130,7 @@
             display: inline-block;
             padding: 1px 15px;
             position: relative;
-            background-color: #1a2848;
+            background-color: $bg-blue;
         }
     }
     .password-row {
@@ -140,7 +140,7 @@
             right: 16px;
             top: 50%;
             transform: translateY(-50%);
-            color: #ff2d55;
+            color: $pink;
             cursor: pointer;
         }
     }

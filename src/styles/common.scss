@@ -527,13 +527,13 @@ body p-selectbutton {
             }
 
             &.ui-state-active {
-                background: $light-green;
+                background: $pink;
                 outline: 0;
                 color: $white;
                 box-shadow: none !important;
 
                 &:hover {
-                    background: $light-green;
+                    background: $pink;
                 }
 
                 &:focus {
@@ -549,11 +549,11 @@ body p-selectbutton {
 
         .ui-button:nth-child(2) {
             &.ui-state-active {
-                background: $orange;
+                background: $pink;
 
                 &:hover {
-                    background: $orange !important;
-                    border-color: $orange !important;
+                    background: $pink !important;
+                    border-color: $pink !important;
                 }
             }
         }
@@ -711,11 +711,11 @@ body p-selectbutton {
     border-radius: 50%;
 
     &.live {
-        background: $green;
+        background: #41eaaf;
     }
 
     &.build {
-        background: $orange;
+        background: #d8d8d8;
     }
 }
 
@@ -871,7 +871,7 @@ body p-selectbutton {
 
 p-chips {
     .ui-inputtext.ui-state-default.ui-corner-all {
-        border: 2px solid $pink;
+        border: 1px solid $pink;
         background: $white;
         width: 100%;
         min-height: 36px;
@@ -960,7 +960,7 @@ p-chips {
         display: block;
         font-size: 14px;
         font-weight: 700;
-        color: $main-blue;
+        color: $pink;
         padding: 10px;
         margin: 0;
     }

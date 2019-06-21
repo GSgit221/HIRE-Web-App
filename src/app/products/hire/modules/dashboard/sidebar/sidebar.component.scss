@@ -6,7 +6,7 @@
     top: 0;
     width: 230px;
     height: 100%;
-    background: $dark-blue;
+    background: #29324b;
     color: #fff;
     padding: 15px;
     z-index: 2;
@@ -117,7 +117,7 @@ a {
 
         a {
             display: inline-block;
-            opacity: 0.5;
+            // opacity: 0.5;
             transition: all 0.2s ease;
 
             .icon {
@@ -129,7 +129,8 @@ a {
 
             &:hover,
             &.active {
-                opacity: 1;
+                color: $pink;
+                // opacity: 1;
                 cursor: pointer;
             }
         }
@@ -169,7 +170,8 @@ a {
 
         &.active {
             .sidebar-nav-oc-item-header {
-                opacity: 1;
+                // opacity: 1;
+                color: $pink;
             }
         }
     }
@@ -179,7 +181,7 @@ a {
         flex-direction: row;
         align-items: center;
         margin: 0 0 10px;
-        opacity: 0.5;
+        // opacity: 0.5;
         transition: all 0.2s ease;
 
         .text {
@@ -239,7 +241,7 @@ a {
         text-align: left;
 
         &:hover {
-            background-color: #ff2d55;
+            background-color: $pink;
             color: #ffffff;
             border-radius: 3px;
 
