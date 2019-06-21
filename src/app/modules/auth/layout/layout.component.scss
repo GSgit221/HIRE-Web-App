@@ -17,6 +17,14 @@
                 align-items: center;
                 outline: 0 !important;
 
+                .clevateam {
+                    width: 159px;
+                    height: auto;
+                    @include respond(md) {
+                        width: 129px;
+                        height: auto;
+                    }
+                }
                 &:hover {
                     cursor: pointer;
                 }
