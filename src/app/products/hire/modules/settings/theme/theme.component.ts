@@ -128,7 +128,7 @@ export class ThemeComponent implements OnInit {
     uploadFile(item) {
         this.uploadError = null;
         this.utilities
-            .readAndResizeImage(item.file, 300, 300)
+            .readAndResizeImage(item.file, 800, 800)
             .then((fileValue: any) => {
                 item.uploadStarted = true;
                 const uploadProgressInterval = setInterval(() => {
