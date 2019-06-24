@@ -21,6 +21,9 @@
                         <div class="form-block">
                             <label class="form-block-label">Questionaire Name</label>
                             <input type="text" class="form-input" formControlName="title" />
+                            <div class="error-message" *ngIf="!form.get('title').valid && form.get('title').touched">
+                                Questionaire name is required
+                            </div>
                         </div>
                     </div>
                 </div>

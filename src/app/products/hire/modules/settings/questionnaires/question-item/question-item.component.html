@@ -32,6 +32,12 @@
                             <div class="textarea-holder">
                                 <textarea class="textarea" formControlName="text"></textarea>
                             </div>
+                            <div
+                                class="error-message"
+                                *ngIf="!questionForm.get('text').valid && questionForm.get('text').touched"
+                            >
+                                Question name is required
+                            </div>
                         </div>
                         <div class="form-block">
                             <div class="form-block-columns">
