@@ -90,6 +90,7 @@ export class JobItemViewComponent implements OnInit {
                 if (
                     c.employment_history &&
                     c.employment_history.length &&
+                    c.employment_history[0].end_date &&
                     c.employment_history[0].end_date.toLowerCase() === 'current'
                 ) {
                     if (

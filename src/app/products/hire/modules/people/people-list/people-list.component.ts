@@ -46,8 +46,14 @@ export class PeopleListComponent implements OnInit {
                 this.filteredList = this.list.slice(0);
                 this.contentLoading = false;
                 this.lastCandidate = {
-                    first_name: this.list[this.list.length - 1].first_name ? this.list[this.list.length - 1].first_name : '' ,
-                    last_name: this.list[this.list.length - 1].last_name
+                    first_name:
+                        this.list[this.list.length - 1] && this.list[this.list.length - 1].first_name
+                            ? this.list[this.list.length - 1].first_name
+                            : '',
+                    last_name:
+                        this.list[this.list.length - 1] && this.list[this.list.length - 1].last_name
+                            ? this.list[this.list.length - 1].last_name
+                            : ''
                 };
                 this.jobService.getCandidatesAmount().subscribe((amount: number) => {
                     this.amountCandidates = amount;
