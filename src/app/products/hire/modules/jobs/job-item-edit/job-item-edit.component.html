@@ -45,7 +45,7 @@
                             <g
                                 id="Add-Job---Details"
                                 transform="translate(-956.000000, -92.000000)"
-                                fill="#FF3B30"
+                                fill="#3bb273"
                                 fill-rule="nonzero"
                             >
                                 <g id="icons8-save_close" transform="translate(956.000000, 92.000000)">
@@ -95,12 +95,24 @@
                                         >
                                     </div>
                                 </div>
+                                <div
+                                    class="error-message"
+                                    *ngIf="!jobDetailsForm.get('title').valid && jobDetailsForm.get('title').touched"
+                                >
+                                    Job title is required
+                                </div>
                             </div>
                         </div>
                         <div class="form-block">
                             <div class="input-block">
                                 <label for="" class="form-block-label">Company</label>
                                 <input type="text" class="form-input" formControlName="company" />
+                            </div>
+                            <div
+                                class="error-message"
+                                *ngIf="!jobDetailsForm.get('company').valid && jobDetailsForm.get('company').touched"
+                            >
+                                Company name is required
                             </div>
                         </div>
                         <div class="form-block">
@@ -112,6 +124,7 @@
                                     <input
                                         type="text"
                                         class="form-input"
+                                        formControlName="location"
                                         placeholder="Enter a city"
                                         ngx-google-places-autocomplete
                                         #placesRef="ngx-places"
@@ -131,6 +144,14 @@
                                         ></p-checkbox>
                                     </div>
                                 </div>
+                                <div
+                                    class="error-message"
+                                    *ngIf="
+                                        !jobDetailsForm.get('location').valid && jobDetailsForm.get('location').touched
+                                    "
+                                >
+                                    Primary job location is required
+                                </div>
                                 <div class="input-block"></div>
                             </div>
                         </div>
@@ -146,6 +167,15 @@
                                             placeholder="Please select an option"
                                         ></p-dropdown>
                                     </div>
+                                    <div
+                                        class="error-message"
+                                        *ngIf="
+                                            !jobDetailsForm.get('job_type').valid &&
+                                            jobDetailsForm.get('job_type').touched
+                                        "
+                                    >
+                                        Job type is required
+                                    </div>
                                 </div>
                                 <div class="form-block-col-separator"></div>
                                 <div class="form-block-col">
@@ -157,6 +187,15 @@
                                             [style]="{ width: '100%' }"
                                             placeholder="Please select an option"
                                         ></p-dropdown>
+                                    </div>
+                                    <div
+                                        class="error-message"
+                                        *ngIf="
+                                            !jobDetailsForm.get('number_of_hires').valid &&
+                                            jobDetailsForm.get('number_of_hires').touched
+                                        "
+                                    >
+                                        Number of positions is required
                                     </div>
                                 </div>
                             </div>
@@ -215,7 +254,7 @@
                                                 currencyMask
                                                 formControlName="salary_from"
                                                 maxlength="20"
-                                                [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                                                [options]="{ prefix: '', thousands: ',', precision: 0 }"
                                             />
                                             <div class="currency-symbol">R</div>
                                         </div>
@@ -230,7 +269,7 @@
                                                 class="form-input pl30"
                                                 currencyMask
                                                 formControlName="salary_to"
-                                                [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                                                [options]="{ prefix: '', thousands: ',', precision: 0 }"
                                                 maxlength="20"
                                             />
                                             <div class="currency-symbol">R</div>
@@ -520,7 +559,7 @@
                                 class="mla"
                             ></p-selectButton>
                         </div>
-                        <div class="section-separator mb10 mt10"></div>
+                        <!-- <div class="section-separator mb10 mt10"></div>
                         <div class="options-row flex-row flex-aic">
                             <span class="text">Cover Letter</span>
                             <p-selectButton
@@ -528,7 +567,7 @@
                                 formControlName="application_field_cover_letter"
                                 class="mla"
                             ></p-selectButton>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

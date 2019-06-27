@@ -1,9 +1,9 @@
 @font-face {
     font-family: 'icomoon';
-    src: url('fonts/icomoon.eot?ppmlhe');
-    src: url('fonts/icomoon.eot?ppmlhe#iefix') format('embedded-opentype'),
-        url('fonts/icomoon.ttf?ppmlhe') format('truetype'), url('fonts/icomoon.woff?ppmlhe') format('woff'),
-        url('fonts/icomoon.svg?ppmlhe#icomoon') format('svg');
+    src: url('fonts/icomoon.eot?puynj2');
+    src: url('fonts/icomoon.eot?puynj2#iefix') format('embedded-opentype'),
+        url('fonts/icomoon.ttf?puynj2') format('truetype'), url('fonts/icomoon.woff?puynj2') format('woff'),
+        url('fonts/icomoon.svg?puynj2#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -23,6 +23,36 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-theme:before {
+    content: '\e903';
+}
+.icon-integrations:before {
+    content: '\e904';
+}
+.icon-email-templates:before {
+    content: '\e905';
+}
+.icon-questions:before {
+    content: '\e906';
+}
+.icon-billing:before {
+    content: '\e907';
+}
+.icon-users:before {
+    content: '\e908';
+}
+.icon-settings:before {
+    content: '\e909';
+}
+.icon-people:before {
+    content: '\e90a';
+}
+.icon-star:before {
+    content: '\e901';
+}
+.icon-jobs:before {
+    content: '\e902';
+}
 .icon-right-arrow:before {
     content: '\e900';
 }
