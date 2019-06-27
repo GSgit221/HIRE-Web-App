@@ -64,7 +64,7 @@ export class AuthService {
     }
 
     signup(data) {
-        return this.http.post(`${environment.apiUrl}/auth/sign-up`, {
+        return this.http.post(`${environment.apiUrl}/auth/signup`, {
             ...data,
             source: 'jobs'
         });
