@@ -12,7 +12,6 @@ import { UtilitiesService } from './utilities.service';
 })
 export class JobService {
     apiURL: string = environment.apiUrl;
-    tenantId = 'undefined';
     baseURL = '';
     constructor(private http: HttpClient, private utilities: UtilitiesService) {}
 
@@ -105,19 +104,19 @@ export class JobService {
     }
 
     getAllCandidates() {
-        return this.http.get(`${this.apiURL}/tenants/${this.tenantId}/candidates`);
+        return this.http.get(`${this.apiURL}/tenants/${this.utilities.getTenant()}/candidates`);
     }
 
     getCandidatesChunk(startAt, limit, sortBy = 'first_name') {
         return this.http.get(
-            `${this.apiURL}/tenants/${
-                this.tenantId
-            }/candidates-chunk?sortBy=${sortBy}&startAt=${startAt}&limit=${limit}`
+            `${
+                this.apiURL
+            }/tenants/${this.utilities.getTenant()}/candidates-chunk?sortBy=${sortBy}&startAt=${startAt}&limit=${limit}`
         );
     }
 
     getCandidatesAmount() {
-        return this.http.get(`${this.apiURL}/tenants/${this.tenantId}/candidates-amount`);
+        return this.http.get(`${this.apiURL}/tenants/${this.utilities.getTenant()}/candidates-amount`);
     }
 
     getDataCompany(url) {
@@ -129,12 +128,11 @@ export class JobService {
     }
 
     getStage(jobId: string, stageId: string) {
-        this.tenantId = this.utilities.getTenant();
         return this.http.get(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/stages/${stageId}`);
     }
 
     createStage(jobId: string, data: { title: string }) {
-        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
+        this.baseURL = `${this.apiURL}/tenants/${this.utilities.getTenant()}`;
         return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/stages`, { data });
     }
 
@@ -210,12 +208,11 @@ export class JobService {
     }
 
     createJobFromCv(formData: object) {
-        this.tenantId = this.utilities.getTenant();
         return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/spec`, formData);
     }
 
     updateCandidateStage(jobId: string, candidateId: string, stage: any) {
-        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
+        this.baseURL = `${this.apiURL}/tenants/${this.utilities.getTenant()}`;
         return this.http.put(
             `${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/${candidateId}/stage`,
             { data: { stage } }
