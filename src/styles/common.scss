@@ -956,6 +956,21 @@ p-chips {
         z-index: 2;
     }
 
+    .ql-snow .ql-editor pre {
+        white-space: pre-wrap;
+        margin-bottom: 26px !important;
+        /* margin-top: 5px; */
+        background-color: #f9fafb !important;
+        padding: 40px !important;
+    }
+    .ql-snow .ql-editor code {
+        font-size: 85%;
+        padding: 10px 100px !important;
+        background-color: #8e8e93 !important;
+        border-radius: 3px !important;
+        margin-left: 225px;
+    }
+
     .editor-title {
         display: block;
         font-size: 14px;
