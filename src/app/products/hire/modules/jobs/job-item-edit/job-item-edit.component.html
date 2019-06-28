@@ -200,7 +200,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="form-block">
+                        <div class="form-block">
                             <div class="form-block-columns">
                                 <div class="form-block-col">
                                     <div class="input-block">
@@ -211,6 +211,15 @@
                                             [style]="{ width: '100%' }"
                                             placeholder="Please select an option"
                                         ></p-dropdown>
+                                    </div>
+                                    <div
+                                        class="error-message"
+                                        *ngIf="
+                                            !jobDetailsForm.get('education').valid &&
+                                            jobDetailsForm.get('education').touched
+                                        "
+                                    >
+                                        Education is required
                                     </div>
                                 </div>
                                 <div class="form-block-col-separator"></div>
@@ -224,9 +233,18 @@
                                             placeholder="Please select an option"
                                         ></p-dropdown>
                                     </div>
+                                    <div
+                                        class="error-message"
+                                        *ngIf="
+                                            !jobDetailsForm.get('experience').valid &&
+                                            jobDetailsForm.get('experience').touched
+                                        "
+                                    >
+                                        Experience is required
+                                    </div>
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
             </div>
