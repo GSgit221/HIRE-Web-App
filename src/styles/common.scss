@@ -946,6 +946,20 @@ p-chips {
         padding: 10px;
     }
 
+    .ql-editor p,
+    .ql-editor ol,
+    .ql-editor ul,
+    .ql-editor pre,
+    .ql-editor blockquote,
+    .ql-editor h1,
+    .ql-editor h2,
+    .ql-editor h3,
+    .ql-editor h4,
+    .ql-editor h5,
+    .ql-editor h6 {
+        color: #000000 !important;
+    }
+
     .ql-toolbar.ql-snow {
         position: absolute;
         left: 0;
@@ -954,21 +968,6 @@ p-chips {
         height: 52px;
         border: 0;
         z-index: 2;
-    }
-
-    .ql-snow .ql-editor pre {
-        white-space: pre-wrap;
-        margin-bottom: 26px !important;
-        /* margin-top: 5px; */
-        background-color: #f9fafb !important;
-        padding: 40px !important;
-    }
-    .ql-snow .ql-editor code {
-        font-size: 85%;
-        padding: 10px 100px !important;
-        background-color: #8e8e93 !important;
-        border-radius: 3px !important;
-        margin-left: 225px;
     }
 
     .editor-title {
