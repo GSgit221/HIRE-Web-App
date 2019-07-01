@@ -76,44 +76,48 @@
                 </div>
                 <div class="form-content-holder">
                     <div class="form-content-box">
-                        <p-editor #pEditor formControlName="content" [style]="{ height: '400px' }">
-                            <p-header>
-                                <span class="ql-formats">
-                                    <select class="ql-size">
-                                        <option selected></option>
-                                        <option value="huge">Heading</option>
-                                        <option value="large">Subheading</option>
-                                    </select>
-                                </span>
-                                <span class="ql-formats">
-                                    <button class="ql-bold" aria-label="Bold"></button>
-                                    <button class="ql-italic" aria-label="Italic"></button>
-                                    <button class="ql-underline" aria-label="Underline"></button>
-                                </span>
-                                <span class="ql-formats">
-                                    <button class="ql-list" value="ordered" type="button"></button>
-                                    <button class="ql-list" value="bullet" type="button"></button>
-                                    <select class="ql-align">
-                                        <option selected=""></option>
-                                        <option value="center"></option>
-                                        <option value="right"></option>
-                                        <option value="justify"></option>
-                                    </select>
-                                </span>
-                                <span class="ql-formats">
-                                    <button aria-label="Remove Styles" class="ql-clean" type="button"></button>
-                                </span>
-                                <span class="ql-formats job_desc">
-                                    <p-dropdown
-                                        formControlName="emailplaceholder"
-                                        [options]="InsertPlaceholders"
-                                        placeholder="Insert placeholder"
-                                        (onChange)="onChangePlaceholder($event)"
-                                        [style]="{ width: '100%' }"
-                                    ></p-dropdown>
-                                </span>
-                            </p-header>
-                        </p-editor>
+                        <div class="form-block">
+                            <div class="editors-container">
+                                <p-editor #pEditor formControlName="content" [style]="{ height: '400px' }">
+                                    <p-header>
+                                        <span class="ql-formats">
+                                            <select class="ql-size">
+                                                <option selected></option>
+                                                <option value="huge">Heading</option>
+                                                <option value="large">Subheading</option>
+                                            </select>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-bold" aria-label="Bold"></button>
+                                            <button class="ql-italic" aria-label="Italic"></button>
+                                            <button class="ql-underline" aria-label="Underline"></button>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-list" value="ordered" type="button"></button>
+                                            <button class="ql-list" value="bullet" type="button"></button>
+                                            <select class="ql-align">
+                                                <option selected=""></option>
+                                                <option value="center"></option>
+                                                <option value="right"></option>
+                                                <option value="justify"></option>
+                                            </select>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button aria-label="Remove Styles" class="ql-clean" type="button"></button>
+                                        </span>
+                                        <span class="ql-formats job_desc">
+                                            <p-dropdown
+                                                formControlName="emailplaceholder"
+                                                [options]="InsertPlaceholders"
+                                                placeholder="Insert placeholder"
+                                                (onChange)="onChangePlaceholder($event)"
+                                                [style]="{ width: '100%' }"
+                                            ></p-dropdown>
+                                        </span>
+                                    </p-header>
+                                </p-editor>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
