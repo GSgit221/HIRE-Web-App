@@ -182,8 +182,8 @@ export class JobItemEditComponent implements OnInit {
         // Get current user
         this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
             this.user = { ...user };
-            if (this.job.owner === user.id || user.role === 'admin') {
-                console.log(user);
+            if (this.job.owner === user.id || user.role === 'admin' || user.role === 'account_owner') {
+                // console.log(user);
                 this.isJobOwner = true;
                 this.jobOwner = `${user.first_name} ${user.last_name}`;
                 this.hiringForm.patchValue({ default_email_name: this.job.default_email_name, owner: user.id });
@@ -204,7 +204,7 @@ export class JobItemEditComponent implements OnInit {
             this.users = users.map((u) => ({ ...u }));
             this.accountOwners = [];
             this.users.forEach((user) => {
-                if (user.role && ['user', 'admin', 'account_owner'].indexOf(user.role) !== -1) {
+                if (user.role && ['recruiter', 'admin', 'account_owner'].indexOf(user.role) !== -1) {
                     this.accountOwners.push({
                         label: `${user.first_name} ${user.last_name}`,
                         value: user.id
