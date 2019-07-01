@@ -388,8 +388,26 @@
                             </div>
                         </div>
                     </div>
-                    <div class="no-resume-block" *ngIf="candidate.resume_file">
+                    <div class="no-resume-block" *ngIf="candidate.resume_file_new">
                         <h3>Resume</h3>
+                        <div class="file-block">
+                            <div class="file-block-frame">
+                                <a
+                                    *ngIf="candidate.resume_link_new"
+                                    [href]="candidate.resume_link_new"
+                                    [title]="candidate.resume_file_new"
+                                    class="resume-link"
+                                    target="_blank"
+                                ></a>
+                                <app-resume-file-type [name]="candidate.resume_file_new"></app-resume-file-type>
+                                <div class="file-block-holder">
+                                    <strong class="title">{{ candidate.resume_file_new }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="no-resume-block" *ngIf="candidate.resume_file">
+                        <h3>Original Resume</h3>
                         <div class="file-block">
                             <div class="file-block-frame">
                                 <a

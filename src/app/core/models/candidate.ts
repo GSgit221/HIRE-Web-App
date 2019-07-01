@@ -8,7 +8,9 @@ export class Candidate {
     skills?: any;
     matching?: any;
     resume_file?: string;
+    resume_file_new?: string;
     resume_link?: string;
+    resume_link_new?: string;
     questions?: any;
     source?: string;
     feedback?: any;
