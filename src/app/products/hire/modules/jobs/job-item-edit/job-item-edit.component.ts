@@ -206,8 +206,9 @@ export class JobItemEditComponent implements OnInit {
             this.accountOwners = [];
             this.users.forEach((user) => {
                 if (user.role && ['recruiter', 'admin', 'account_owner'].indexOf(user.role) !== -1) {
+                    const name = user.first_name ? `${user.first_name} ${user.last_name}` : user.email;
                     this.accountOwners.push({
-                        label: `${user.first_name} ${user.last_name}`,
+                        label: name,
                         value: user.id
                     });
                 }
