@@ -1,11 +1,13 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 
 import { User } from './../../../../../../core/models/user';
 import { UserService } from './../../../../../../core/services/user.service';
 import { UtilitiesService } from './../../../../../../core/services/utilities.service';
 import { AuthService } from './../../../../../../modules/auth/auth.service';
+import * as fromStore from './../../../../../../store';
 
 @Component({
     selector: 'app-takeover',
@@ -40,7 +42,8 @@ export class TakeoverComponent implements OnInit {
         private userService: UserService,
         private authService: AuthService,
         private router: Router,
-        private utilities: UtilitiesService
+        private utilities: UtilitiesService,
+        private store: Store<fromStore.State>
     ) {}
 
     ngOnInit() {
@@ -63,14 +66,17 @@ export class TakeoverComponent implements OnInit {
             const email = this.form.value.search;
             console.log('Takeover', email);
 
-            this.userService.takeover(email).subscribe((response) => {
-                this.authService.setSession(response);
+            this.userService.takeover(email).subscribe((response: any) => {
                 this.showList = false;
-                const tenantId = this.utilities.getTenant();
-                this.router.navigateByUrl(`/tenant/${tenantId}/hire/people`, { skipLocationChange: true }).then(() => {
-                    // this.store.dispatch(new fromUserActions.GetAuthUser());
-                    this.router.navigateByUrl(`/tenant/${tenantId}/hire/jobs`);
-                });
+                this.authService.setSession(response);
+                this.utilities.setTenant(response.tenant_id);
+                this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
+                this.router
+                    .navigateByUrl(`tenant/${response.tenant_id}/hire/people`, { skipLocationChange: true })
+                    .then(() => {
+                        this.store.dispatch(new fromStore.LoadUser());
+                        this.router.navigateByUrl(`tenant/${response.tenant_id}/hire/jobs`);
+                    });
             });
         }
     }
