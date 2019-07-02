@@ -186,7 +186,9 @@ export class JobItemEditComponent implements OnInit {
                 // console.log(user);
                 this.isJobOwner = true;
                 this.jobOwner = `${user.first_name} ${user.last_name}`;
-                this.hiringForm.patchValue({ default_email_name: this.job.default_email_name, owner: user.id });
+                if (!this.hiringForm.get('default_email_name').value) {
+                    this.hiringForm.patchValue({ default_email_name: this.user.first_name || '' });
+                }
             }
         });
 
@@ -197,7 +199,6 @@ export class JobItemEditComponent implements OnInit {
             label: `${this.user.first_name} ${this.user.last_name}`,
             value: `${this.user.id}`
         });
-        this.hiringForm.patchValue({ default_email_name: this.user.id });
 
         // Get list of users
         this.store.pipe(select(fromSelectors.getUsersEntities)).subscribe((users: User[]) => {
@@ -225,10 +226,12 @@ export class JobItemEditComponent implements OnInit {
     }
 
     onChangeUser(event) {
-        const user = this.users.filter((x) => x.id === event.value);
-        console.log(user);
-        this.jobOwner = `${user[0].first_name} ${user[0].last_name}`;
-        this.hiringForm.patchValue({ default_email_name: user[0].id });
+        const user = this.users.filter((x) => x.id === event.value)[0];
+        console.log('onChangeUser', user);
+        this.jobOwner = `${user.first_name} ${user.last_name}`;
+        if (!this.hiringForm.get('default_email_name').value) {
+            this.hiringForm.patchValue({ default_email_name: user.first_name || '' });
+        }
     }
 
     onChangeJob(event) {
@@ -353,10 +356,10 @@ export class JobItemEditComponent implements OnInit {
             questionnaire: [{ value: this.job.questionnaire, disabled: false }]
         });
         this.hiringForm = this.fb.group({
-            owner: [this.user ? this.user.id : ''],
+            owner: [this.job.owner],
             hiring_managers: [this.job.hiring_managers],
             recruiters: [this.job.recruiters],
-            default_email_name: this.job.default_email_name
+            default_email_name: [this.job.default_email_name]
         });
         this.editorAutofocusFix();
 
