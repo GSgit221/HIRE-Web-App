@@ -665,7 +665,7 @@
                 </div>
             </div>
             <div class="section-separator mb20 mt20"></div>
-            <div class="form-content-section">
+            <!-- <div class="form-content-section">
                 <div class="description">
                     <strong class="title">Recruitment Agencies</strong>
                     <p>
@@ -680,7 +680,7 @@
                     </div>
                 </div>
             </div>
-            <div class="section-separator mb20 mt20"></div>
+            <div class="section-separator mb20 mt20"></div> -->
             <div class="form-content-section">
                 <div class="description">
                     <strong class="title">Default Email</strong>
@@ -689,25 +689,9 @@
                 <div class="form-content-holder">
                     <div class="form-content-box">
                         <div class="form-block">
-                            <div class="input-block" *ngIf="recruitersDefaults.length">
+                            <div class="input-block">
                                 <label for="" class="form-block-label">Default Email Name</label>
-                                <p-dropdown
-                                    [options]="recruitersDefaults"
-                                    formControlName="default_email_name"
-                                    placeholder="Add to this position"
-                                    (onChange)="onChangeUser($event)"
-                                    [style]="{ width: '100%' }"
-                                    [(ngModel)]="selectedOwner"
-                                ></p-dropdown>
-                            </div>
-                            <div class="input-block" *ngIf="!recruitersDefaults.length">
-                                <label for="" class="form-block-label">Default Email Name</label>
-                                <input
-                                    type="text"
-                                    class="form-input"
-                                    formControlName="default_email_name"
-                                    [value]="this.jobOwner"
-                                />
+                                <input type="text" class="form-input" formControlName="default_email_name" />
                             </div>
                         </div>
                     </div>

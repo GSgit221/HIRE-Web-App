@@ -197,12 +197,11 @@ export class JobService {
         );
     }
 
-    setCandidatesEmailNotifications(jobId: string, emails: string[], send_emails: boolean) {
+    setCandidatesEmailNotifications(jobId: string, emails: string[]) {
         return this.http.post(
             `${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/set-email-notifications`,
             {
-                emails,
-                send_emails
+                emails
             }
         );
     }

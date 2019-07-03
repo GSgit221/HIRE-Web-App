@@ -325,7 +325,7 @@ p-slider {
         .ui-slider-handle {
             width: 26px !important;
             height: 32px !important;
-            background: url(/assets/images/slider-handle.png) no-repeat;
+            background: url(/assets/images/slider-handle.svg) no-repeat;
             background-size: contain;
         }
 
@@ -519,6 +519,7 @@ p-slider {
     border: 1px solid #e3e7eb;
     font-size: 15px;
     line-height: 16px;
+
     // padding: 9px 2px 9px 22px;
     box-shadow: none;
     outline: none;

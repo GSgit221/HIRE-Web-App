@@ -51,7 +51,7 @@ export class NewCandidateItemComponent implements OnInit {
     ngOnInit() {
         console.log(this.jobId);
         this.form = this.fb.group({
-            send_email: [true],
+            // send_email: [true],
             file: [''],
             emails: this.fb.array([this.fb.control('', [Validators.required, Validators.email])])
         });
@@ -99,7 +99,7 @@ export class NewCandidateItemComponent implements OnInit {
         event.preventDefault();
         if (this.emails.length) {
             this.jobService
-                .setCandidatesEmailNotifications(this.jobId, this.emails, this.form.value.send_email)
+                .setCandidatesEmailNotifications(this.jobId, this.emails)
                 .subscribe((response) => console.log(response), (error) => console.error(error));
             this.uploadQueue = [];
             this.emails = [];

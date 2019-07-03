@@ -24,12 +24,18 @@ export class AppComponent {
                     select(fromSelectors.getUserEntity),
                     filter((user) => !!user)
                 )
-                .subscribe((user: User) => {
-                    this.contentLoading = false;
-                    if (user && user.role === 'recruiter' && !user.activated) {
-                        this.router.navigateByUrl('/recruiters/onboarding');
+                .subscribe(
+                    (user: User) => {
+                        this.contentLoading = false;
+                        if (user && user.role === 'recruiter' && !user.activated) {
+                            this.router.navigateByUrl('/recruiters/onboarding');
+                        }
+                    },
+                    (errorResponse) => {
+                        console.error(errorResponse);
+                        this.contentLoading = false;
                     }
-                });
+                );
         }
     }
 }

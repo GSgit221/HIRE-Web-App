@@ -946,6 +946,20 @@ p-chips {
         padding: 10px;
     }
 
+    .ql-editor p,
+    .ql-editor ol,
+    .ql-editor ul,
+    .ql-editor pre,
+    .ql-editor blockquote,
+    .ql-editor h1,
+    .ql-editor h2,
+    .ql-editor h3,
+    .ql-editor h4,
+    .ql-editor h5,
+    .ql-editor h6 {
+        color: #000000 !important;
+    }
+
     .ql-toolbar.ql-snow {
         position: absolute;
         left: 0;

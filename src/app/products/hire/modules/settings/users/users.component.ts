@@ -61,6 +61,7 @@ export class UsersComponent implements OnInit {
         this.accountTypeOptions = [
             { label: 'Account Owner', value: 'account_owner' },
             { label: 'Admin', value: 'admin' },
+            { label: 'Recruiter', value: 'recruiter' },
             { label: 'Hiring Manager', value: 'hiring_manager' }
         ];
 
