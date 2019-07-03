@@ -116,9 +116,7 @@
                                         </span>
                                     </p-header>
                                 </app-editor>
-                                <div
-                                    *ngIf="this.item ? this.item.link : 0 === 1 || this.item ? this.item.link : 0 === 2"
-                                >
+                                <div *ngIf="(this.item && this.item.link === 1) || (this.item && this.item.link === 2)">
                                     <div class="action">
                                         <button class="btn btn-primary action-btn">Update My Application</button>
                                         <button
