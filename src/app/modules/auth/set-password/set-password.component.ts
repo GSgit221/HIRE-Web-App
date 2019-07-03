@@ -59,11 +59,12 @@ export class SetPasswordComponent implements OnInit {
         }
         const val = this.setPasswordForm.value;
         this.authService.setPassword(val.password, this.token, this.invitation_code).subscribe(
-            (response) => {
+            (response: any) => {
                 this.authService.loading = false;
                 this.msgs = [];
                 this.authService.setSession(response);
-                this.router.navigateByUrl('/');
+                this.utilities.setTenant(response.tenant_id);
+                this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
             },
             (response) => {
                 this.authService.loading = false;

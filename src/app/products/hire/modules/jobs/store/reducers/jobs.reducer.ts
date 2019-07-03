@@ -26,17 +26,12 @@ export function reducer(state = initialState, action: fromJobsActions.JobsAction
 
         case fromJobsActions.LOAD_JOBS_SUCCESS: {
             const jobs = action.payload;
-            const entities = jobs.reduce(
-                (_entities: { [id: string]: Job }, job) => {
-                    return {
-                        ..._entities,
-                        [job.id]: job
-                    };
-                },
-                {
-                    ...state.entities
-                }
-            );
+            const entities = jobs.reduce((_entities: { [id: string]: Job }, job) => {
+                return {
+                    ..._entities,
+                    [job.id]: job
+                };
+            }, {});
             return { ...state, loading: false, loaded: true, entities };
         }
 

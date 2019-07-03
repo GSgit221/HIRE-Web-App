@@ -202,6 +202,14 @@ export class CandidateItemComponent implements OnInit {
                         (errorResponse) => console.error(errorResponse)
                     );
             }
+            if (this.candidate.resume_file_new && this.candidate.resume_file_new.length) {
+                this.candidateService
+                    .getResumeLink(this.candidate.resume_file_new)
+                    .subscribe(
+                        (response: string) => (this.candidate.resume_link_new = response),
+                        (errorResponse) => console.error(errorResponse)
+                    );
+            }
             // Video
             if (
                 this.candidate.stages_data &&
