@@ -41,6 +41,7 @@ export class JobItemViewComponent implements OnInit {
     droppedFiles: File[] = [];
     candidates: Candidate[];
     draggedCandidate: Candidate;
+    draggedFromStage: any = null;
     appliedCandidates: any;
     resumeThreshold = 60;
     candidateIsDragged = false;
@@ -326,12 +327,15 @@ export class JobItemViewComponent implements OnInit {
         return threshold;
     }
 
-    onCandidateDragStart() {
+    onCandidateDragStart(candidate, stageId) {
         this.candidateIsDragged = true;
+        console.log('candidate', candidate, stageId);
+        this.draggedFromStage = stageId;
     }
 
-    onCandidateDragEnd() {
+    onCandidateDragEnd(candidate, stageId) {
         this.candidateIsDragged = false;
+        this.draggedFromStage = null;
     }
 
     onStageDragStart(stage) {
@@ -340,6 +344,10 @@ export class JobItemViewComponent implements OnInit {
 
     onStageDragEnd() {
         this.draggedStage = null;
+    }
+
+    isDraggedFromStage(stageId) {
+        return stageId === this.draggedFromStage;
     }
 
     onStageDragOver(event, order) {

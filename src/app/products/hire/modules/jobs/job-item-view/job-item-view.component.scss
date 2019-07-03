@@ -241,8 +241,7 @@
     border: 1px solid transparent;
 
     .drop-holder {
-        height: 108px;
-        border: 1px dashed $grey-border;
+        height: 75px;
         border-radius: 5px;
         width: 100%;
         overflow: hidden;
@@ -251,9 +250,15 @@
 
     &.drag-target-border {
         // border: 1px dashed $grey-border;
-
         .drop-holder {
             opacity: 1;
+            background: rgba($color: #3bb273, $alpha: 0.2);
+        }
+    }
+
+    &.is-dragged-from-stage {
+        .drop-holder {
+            opacity: 0 !important;
         }
     }
 
@@ -274,7 +279,15 @@
         }
 
         &:active {
-            background: darken($white, 4%);
+            // background: darken($white, 4%);
+        }
+
+        &.dragged {
+            background: rgba($color: #3bb273, $alpha: 0.2);
+
+            & > * {
+                opacity: 0;
+            }
         }
 
         &.dd {

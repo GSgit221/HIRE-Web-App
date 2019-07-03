@@ -1,3 +1,4 @@
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
@@ -78,6 +79,7 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         FormsModule,
         CreditCardDirectivesModule,
         NgDragDropModule.forRoot(),
+        DragDropModule,
         AutoSizeInputModule,
         GooglePlaceModule,
         InfiniteScrollModule,
@@ -126,6 +128,7 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         FormsModule,
         CreditCardDirectivesModule,
         NgDragDropModule,
+        DragDropModule,
         AutoSizeInputModule,
         GooglePlaceModule,
         InfiniteScrollModule,

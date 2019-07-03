@@ -96,6 +96,7 @@
                         [dropScope]="['candidate']"
                         [dragOverClass]="'drag-target-border'"
                         (onDrop)="onCandidateDrop($event, 'applied')"
+                        [ngClass]="{ 'is-dragged-from-stage': isDraggedFromStage('applied') }"
                     >
                         <!-- CANDIDATE BLOCK -->
                         <div
@@ -105,9 +106,11 @@
                             draggable
                             [dragScope]="['candidate']"
                             [dragData]="candidate"
-                            (onDragStart)="onCandidateDragStart()"
-                            (onDragEnd)="onCandidateDragEnd()"
+                            (onDragStart)="onCandidateDragStart(candidate, 'applied')"
+                            (onDragEnd)="onCandidateDragEnd(candidate, stage.id)"
                             [ngClass]="{ dd: candidate.isDdEmployee }"
+                            [dragClass]="'dragged'"
+                            [dragTransitClass]="'drag-transit'"
                         >
                             <div class="warning-block" *ngIf="candidate && !candidate.resume_file">
                                 <div class="warning-block-holder"><span>!</span></div>
@@ -227,6 +230,7 @@
                                 >
                             </div>
                         </div>
+                        <div class="drop-holder"></div>
                     </div>
                 </div>
             </div>
@@ -258,6 +262,7 @@
                         [dropScope]="['candidate']"
                         [dragOverClass]="'drag-target-border'"
                         (onDrop)="onCandidateDrop($event, stage.id)"
+                        [ngClass]="{ 'is-dragged-from-stage': isDraggedFromStage(stage.id) }"
                     >
                         <div
                             class="block"
@@ -266,9 +271,11 @@
                             draggable
                             [dragScope]="['candidate']"
                             [dragData]="candidate"
-                            (onDragStart)="onCandidateDragStart()"
-                            (onDragEnd)="onCandidateDragEnd()"
+                            (onDragStart)="onCandidateDragStart(candidate, stage.id)"
+                            (onDragEnd)="onCandidateDragEnd(candidate, stage.id)"
                             [ngClass]="{ dd: candidate.isDdEmployee }"
+                            [dragClass]="'dragged'"
+                            [dragTransitClass]="'drag-transit'"
                         >
                             <div
                                 class="compliance-rate"
