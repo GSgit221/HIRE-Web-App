@@ -5,6 +5,8 @@ export class EmailTemplate {
     from: string;
     delayed: any;
     content: string;
+    email_content: string;
+    link: number;
     mandatory: boolean;
     created_at: number;
     updated_at: number;
