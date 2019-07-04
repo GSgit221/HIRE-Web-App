@@ -43,30 +43,7 @@
                 <span *ngIf="getHm(hm) && !getHm(hm).icon_url_small">{{ getHm(hm) | initials }}</span>
             </div>
             <button class="btn btn-round btn-grey" (click)="onAddHiringManagerClick($event)" title="Add Hiring Manager">
-                <svg
-                    width="13px"
-                    height="13px"
-                    viewBox="0 0 13 13"
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink"
-                >
-                    <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                        <g
-                            id="Job-View---Default"
-                            transform="translate(-503.000000, -144.000000)"
-                            fill="#505F6E"
-                            fill-rule="nonzero"
-                        >
-                            <g id="icons8-plus_math" transform="translate(503.000000, 144.000000)">
-                                <polygon
-                                    id="Shape"
-                                    points="6 0 6 6 0 6 0 7 6 7 6 13 7 13 7 7 13 7 13 6 7 6 7 0"
-                                ></polygon>
-                            </g>
-                        </g>
-                    </g>
-                </svg>
+                <svg-icon class="fill-black" src="/assets/images/plus.svg"></svg-icon>
             </button>
         </div>
         <!-- <button class="btn btn-primary w140 mla add-btn" (click)="onAddCandidateClick()">Add Candidate</button> -->
@@ -99,113 +76,24 @@
                         [ngClass]="{ 'is-dragged-from-stage': isDraggedFromStage('applied') }"
                     >
                         <!-- CANDIDATE BLOCK -->
-                        <div
-                            class="block"
+                        <app-candidate-block
                             (click)="onCandidateClick(candidate.id)"
                             *ngFor="let candidate of appliedCandidates.visible"
                             draggable
                             [dragScope]="['candidate']"
                             [dragData]="candidate"
                             (onDragStart)="onCandidateDragStart(candidate, 'applied')"
-                            (onDragEnd)="onCandidateDragEnd(candidate, stage.id)"
+                            (onDragEnd)="onCandidateDragEnd(candidate, 'applied')"
                             [ngClass]="{ dd: candidate.isDdEmployee }"
                             [dragClass]="'dragged'"
                             [dragTransitClass]="'drag-transit'"
+                            [candidate]="candidate"
+                            [job]="job"
+                            (onDeleting)="onDeletingCandidate($event)"
+                            (deleted)="onDeletedCandidate($event)"
+                            [resumeThreshold]="resumeThreshold"
                         >
-                            <div class="warning-block" *ngIf="candidate && !candidate.resume_file">
-                                <div class="warning-block-holder"><span>!</span></div>
-                            </div>
-                            <div
-                                class="warning-block alert"
-                                *ngIf="
-                                    candidate &&
-                                    candidate.markedAsUnsuccessful &&
-                                    candidate.markedAsUnsuccessful[job.id]
-                                "
-                            >
-                                <div class="warning-block-holder"><span>!</span></div>
-                            </div>
-                            <div
-                                class="compliance-rate"
-                                [attr.data-score]="candidate.score"
-                                [ngClass]="{
-                                    green: candidate.score >= resumeThreshold,
-                                    orange:
-                                        candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold,
-                                    red: candidate.score < resumeThreshold - 15
-                                }"
-                                [hidden]="
-                                    candidate &&
-                                    candidate.markedAsUnsuccessful &&
-                                    candidate.markedAsUnsuccessful[job.id]
-                                "
-                            ></div>
-                            <span
-                                class="complience-value"
-                                [hidden]="
-                                    candidate &&
-                                    candidate.markedAsUnsuccessful &&
-                                    candidate.markedAsUnsuccessful[job.id]
-                                "
-                                >{{ candidate.score }}%</span
-                            >
-                            <div class="ava-column">
-                                <div class="ava">
-                                    <img
-                                        [src]="candidate.profile_image"
-                                        alt="profile image"
-                                        *ngIf="candidate.profile_image"
-                                    />
-                                    <div class="ava-placeholder" *ngIf="!candidate.profile_image">
-                                        {{ candidate | initials }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="block-content">
-                                <strong
-                                    class="title"
-                                    *ngIf="candidate.first_name || candidate.last_name; else noFirstName"
-                                    >{{ candidate.first_name | titlecase }}
-                                    {{ candidate.last_name | titlecase }}</strong
-                                >
-                                <ng-template #noFirstName>
-                                    <strong class="title">{{ candidate.email }}</strong>
-                                </ng-template>
-                                <span class="position" *ngIf="candidate.employment_history"
-                                    >{{ candidate.employment_history[0].title | titlecase }} @
-                                    {{ candidate.employment_history[0].company | titlecase }}</span
-                                >
-                                <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
-                                <div class="stats-actions-block">
-                                    <div class="text-with-icon flex-row flex-aic" *ngIf="candidate.created_at_rel">
-                                        <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10" />
-                                        <p>{{ candidate.created_at_rel }}</p>
-                                    </div>
-                                    <div class="text-with-icon flex-row flex-aic ml20" *ngIf="candidate.updated_at_rel">
-                                        <img
-                                            src="/assets/images/update.svg"
-                                            class="icon"
-                                            alt=""
-                                            width="12"
-                                            height="13"
-                                        />
-                                        <p>{{ candidate.updated_at_rel }}</p>
-                                    </div>
-                                    <div class="actions mla">
-                                        <!-- <span class="icon-btn">
-                                                            <img src="/assets/images/refresh.svg" alt="" width="10" height="10">
-                                                        </span> -->
-                                        <span
-                                            class="icon-btn ml10"
-                                            (click)="onDeleteCandidateClick($event, candidate.id)"
-                                        >
-                                            <img src="/assets/images/delete.svg" alt="" width="10" height="10" />
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        </app-candidate-block>
                         <!-- NO MATCHES -->
                         <div
                             class="no-matches-block"
@@ -264,8 +152,7 @@
                         (onDrop)="onCandidateDrop($event, stage.id)"
                         [ngClass]="{ 'is-dragged-from-stage': isDraggedFromStage(stage.id) }"
                     >
-                        <div
-                            class="block"
+                        <app-candidate-block
                             (click)="onCandidateClick(candidate.id)"
                             *ngFor="let candidate of stageCandidates(stage.id)"
                             draggable
@@ -276,87 +163,12 @@
                             [ngClass]="{ dd: candidate.isDdEmployee }"
                             [dragClass]="'dragged'"
                             [dragTransitClass]="'drag-transit'"
-                        >
-                            <div
-                                class="compliance-rate"
-                                [attr.data-score]="candidate.score"
-                                [ngClass]="{
-                                    green: candidate.score >= resumeThreshold,
-                                    orange:
-                                        candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold,
-                                    red: candidate.score < resumeThreshold - 15
-                                }"
-                                [hidden]="
-                                    candidate &&
-                                    candidate.markedAsUnsuccessful &&
-                                    candidate.markedAsUnsuccessful[job.id]
-                                "
-                            ></div>
-                            <span
-                                class="complience-value"
-                                [hidden]="
-                                    candidate &&
-                                    candidate.markedAsUnsuccessful &&
-                                    candidate.markedAsUnsuccessful[job.id]
-                                "
-                                >{{ candidate.score }}%</span
-                            >
-                            <div class="ava-column">
-                                <div class="ava">
-                                    <img
-                                        [src]="candidate.profile_image"
-                                        alt="profile image"
-                                        *ngIf="candidate.profile_image"
-                                    />
-                                    <div class="ava-placeholder" *ngIf="!candidate.profile_image && candidate">
-                                        {{ candidate | initials }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="block-content">
-                                <strong
-                                    class="title"
-                                    *ngIf="candidate.first_name || candidate.last_name; else noFirstName"
-                                    >{{ candidate.first_name | titlecase }}
-                                    {{ candidate.last_name | titlecase }}</strong
-                                >
-                                <ng-template #noFirstName>
-                                    <strong class="title">{{ candidate.email }}</strong>
-                                </ng-template>
-                                <span class="position" *ngIf="candidate.employment_history"
-                                    >{{ candidate.employment_history[0].title | titlecase }} @
-                                    {{ candidate.employment_history[0].company | titlecase }}</span
-                                >
-                                <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
-                                <div class="stats-actions-block">
-                                    <div class="text-with-icon flex-row flex-aic" *ngIf="candidate.created_at_rel">
-                                        <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10" />
-                                        <p>{{ candidate.created_at_rel }}</p>
-                                    </div>
-                                    <div class="text-with-icon flex-row flex-aic ml20" *ngIf="candidate.updated_at_rel">
-                                        <img
-                                            src="/assets/images/update.svg"
-                                            class="icon"
-                                            alt=""
-                                            width="12"
-                                            height="13"
-                                        />
-                                        <p>{{ candidate.updated_at_rel }}</p>
-                                    </div>
-                                    <div class="actions mla">
-                                        <!-- <span class="icon-btn">
-                                                                                        <img src="/assets/images/refresh.svg" alt="" width="10" height="10">
-                                                                                    </span> -->
-                                        <span
-                                            class="icon-btn ml10"
-                                            (click)="onDeleteCandidateClick($event, candidate.id)"
-                                        >
-                                            <img src="/assets/images/delete.svg" alt="" width="10" height="10" />
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                            [candidate]="candidate"
+                            [job]="job"
+                            (onDeleting)="onDeletingCandidate($event)"
+                            (deleted)="onDeletedCandidate($event)"
+                            [resumeThreshold]="resumeThreshold"
+                        ></app-candidate-block>
                         <div class="drop-holder"></div>
                     </div>
                 </div>
@@ -368,31 +180,7 @@
                     (click)="createStageMode = true"
                     *ngIf="!createStageMode"
                 >
-                    <svg
-                        class="ml10 mr10"
-                        width="13px"
-                        height="13px"
-                        viewBox="0 0 13 13"
-                        version="1.1"
-                        xmlns="http://www.w3.org/2000/svg"
-                        xmlns:xlink="http://www.w3.org/1999/xlink"
-                    >
-                        <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                            <g
-                                id="Job-View---Default"
-                                transform="translate(-503.000000, -144.000000)"
-                                fill="#505F6E"
-                                fill-rule="nonzero"
-                            >
-                                <g id="icons8-plus_math" transform="translate(503.000000, 144.000000)">
-                                    <polygon
-                                        id="Shape"
-                                        points="6 0 6 6 0 6 0 7 6 7 6 13 7 13 7 7 13 7 13 6 7 6 7 0"
-                                    ></polygon>
-                                </g>
-                            </g>
-                        </g>
-                    </svg>
+                    <svg-icon class="fill-black ml10 mr10" src="/assets/images/plus.svg"></svg-icon>
                     <span class="text">Add Stage</span>
                 </button>
                 <div class="stage-content" *ngIf="createStageMode">

@@ -122,6 +122,12 @@
             color: $white;
         }
     }
+
+    svg {
+        g > g {
+            fill: #000000;
+        }
+    }
 }
 
 .stages-section {
@@ -172,6 +178,8 @@
         width: 100%;
         min-height: 100%;
         position: relative;
+        display: flex;
+        flex-direction: column;
 
         &.drag-border {
             background: rgba(224, 230, 232, 0.5);
@@ -236,7 +244,7 @@
 
 .stage-content {
     width: 100%;
-    min-height: 101px;
+    flex: 1;
     position: relative;
     border: 1px solid transparent;
 
@@ -284,6 +292,7 @@
 
         &.dragged {
             background: rgba($color: #3bb273, $alpha: 0.2);
+            box-shadow: none;
 
             & > * {
                 opacity: 0;

@@ -279,6 +279,23 @@ export class JobItemViewComponent implements OnInit {
         });
     }
 
+    onDeletingCandidate(loading) {
+        console.log('onDeletingCandidate', loading);
+        this.contentLoading = loading;
+    }
+
+    onDeletedCandidate(candidateId) {
+        console.log('onDeletedCandidate', candidateId);
+        this.contentLoading = false;
+        const index = this.candidates.findIndex((c) => c.id === candidateId);
+        this.candidates.splice(index, 1);
+
+        const visibleIndex = this.appliedCandidates.visible.findIndex((c) => c.id === candidateId);
+        this.appliedCandidates.visible.splice(visibleIndex, 1);
+
+        this.appliedCandidates.total = this.appliedCandidates.visible.length + this.appliedCandidates.hidden.length;
+    }
+
     onCandidateDrop(event, stageId) {
         // console.log('drop', event.dragData, stageId);
         this.candidateIsDragged = false;

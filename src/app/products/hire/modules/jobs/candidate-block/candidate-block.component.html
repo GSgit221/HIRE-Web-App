@@ -1,3 +1,64 @@
-<p>
-    candidate-block works!
-</p>
+<div class="warning-block" *ngIf="candidate && !candidate.resume_file">
+    <div class="warning-block-holder"><span>!</span></div>
+</div>
+<div
+    class="warning-block alert"
+    *ngIf="candidate && candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id]"
+>
+    <div class="warning-block-holder"><span>!</span></div>
+</div>
+<div
+    class="compliance-rate"
+    [attr.data-score]="candidate.score"
+    [ngClass]="{
+        green: candidate.score >= resumeThreshold,
+        orange: candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold,
+        red: candidate.score < resumeThreshold - 15
+    }"
+    [hidden]="candidate && candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id]"
+></div>
+<span
+    class="complience-value"
+    [hidden]="candidate && candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id]"
+    >{{ candidate.score }}%</span
+>
+<div class="ava-column">
+    <div class="ava">
+        <img [src]="candidate.profile_image" alt="profile image" *ngIf="candidate.profile_image" />
+        <div class="ava-placeholder" *ngIf="!candidate.profile_image">
+            {{ candidate | initials }}
+        </div>
+    </div>
+</div>
+<div class="block-content">
+    <strong class="title" *ngIf="candidate.first_name || candidate.last_name; else noFirstName"
+        >{{ candidate.first_name | titlecase }} {{ candidate.last_name | titlecase }}</strong
+    >
+    <ng-template #noFirstName>
+        <strong class="title">{{ candidate.email }}</strong>
+    </ng-template>
+    <span class="position" *ngIf="candidate.employment_history"
+        >{{ candidate.employment_history[0].title | titlecase }}
+        @
+        {{ candidate.employment_history[0].company | titlecase }}</span
+    >
+    <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
+    <div class="stats-actions-block">
+        <div class="text-with-icon flex-row flex-aic" *ngIf="candidate.created_at_rel">
+            <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10" />
+            <p>{{ candidate.created_at_rel }}</p>
+        </div>
+        <div class="text-with-icon flex-row flex-aic ml20" *ngIf="candidate.updated_at_rel">
+            <img src="/assets/images/update.svg" class="icon" alt="" width="12" height="13" />
+            <p>{{ candidate.updated_at_rel }}</p>
+        </div>
+        <div class="actions mla">
+            <!-- <span class="icon-btn">
+                                                            <img src="/assets/images/refresh.svg" alt="" width="10" height="10">
+                                                        </span> -->
+            <span class="icon-btn ml10" (click)="onDeleteCandidateClick($event, candidate.id)">
+                <img src="/assets/images/delete.svg" alt="" width="10" height="10" />
+            </span>
+        </div>
+    </div>
+</div>
