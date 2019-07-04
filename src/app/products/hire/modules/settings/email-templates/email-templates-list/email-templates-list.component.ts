@@ -47,7 +47,7 @@ export class EmailTemplatesListComponent implements OnInit {
         const target = event.target;
         const escapeDD = closest(event.target, '[data-escape-click]');
         if (!escapeDD) {
-            this.router.navigate([`${this.baseUrl}/settings//email-templates/${item.id}`]);
+            this.router.navigate([`${this.baseUrl}/settings/email-templates/${item.id}`]);
         }
     }
 
