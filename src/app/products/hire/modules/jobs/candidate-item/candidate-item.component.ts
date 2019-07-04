@@ -304,6 +304,7 @@ export class CandidateItemComponent implements OnInit {
     prepareQuestionsAnswers() {
         if (this.job && this.candidate && this.questions) {
             const questionsAnswers = [];
+            let isKnockout = true;
             const candidateQuestions =
                 this.candidate.questions && this.candidate.questions[this.jobId]
                     ? this.candidate.questions[this.jobId]
@@ -311,7 +312,8 @@ export class CandidateItemComponent implements OnInit {
             this.questions.forEach((q) => {
                 const obj = {
                     text: q.text,
-                    answers: []
+                    answers: [],
+                    isKnockout: ''
                 };
                 if (candidateQuestions && candidateQuestions[q.id]) {
                     if (q.answers) {
@@ -319,6 +321,10 @@ export class CandidateItemComponent implements OnInit {
                             candidateQuestions[q.id].forEach((qa) => {
                                 const answer = q.answers.find((a) => a.id === qa);
                                 if (answer) {
+                                    if (answer.is_knockout !== undefined && obj.isKnockout !== 'knockout wrong') {
+                                        obj.isKnockout = answer.is_knockout ? 'knockout' : 'knockout wrong';
+                                        if (isKnockout && !answer.is_knockout) isKnockout = false;
+                                    }
                                     obj.answers.push(answer.text);
                                 }
                             });
@@ -326,6 +332,10 @@ export class CandidateItemComponent implements OnInit {
                             const qa = candidateQuestions[q.id];
                             const answer = q.answers.find((a) => a.id === qa);
                             if (answer) {
+                                if (answer.is_knockout !== undefined && obj.isKnockout !== 'knockout wrong') {
+                                    obj.isKnockout = answer.is_knockout ? 'knockout' : 'knockout wrong';
+                                    if (isKnockout && !answer.is_knockout) isKnockout = false;
+                                }
                                 obj.answers.push(answer.text);
                             }
                         }

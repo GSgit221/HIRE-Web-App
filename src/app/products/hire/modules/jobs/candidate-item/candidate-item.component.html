@@ -293,10 +293,16 @@
                 </div>
                 <div class="content-section" *ngIf="activeSection === 'questions'">
                     <ng-container *ngIf="questionsAnswers">
-                        <div class="question-block" *ngFor="let question of questionsAnswers">
-                            <h3>{{ question.text }}</h3>
-                            <ng-container *ngFor="let answer of question.answers">
-                                <p>{{ answer }}</p>
+                        <div
+                            class="question-block"
+                            *ngFor="let question of questionsAnswers"
+                            ngClass="{{ question.isKnockout }}"
+                        >
+                            <h3><b>Q:</b> {{ question.text }}</h3>
+                            <ng-container *ngFor="let answer of question.answers; let i = index">
+                                <p>
+                                    <b>{{ 'ABCDE'[i] }} :</b> {{ answer }}
+                                </p>
                             </ng-container>
                         </div>
                     </ng-container>

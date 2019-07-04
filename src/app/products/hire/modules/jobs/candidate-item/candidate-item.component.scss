@@ -522,7 +522,17 @@
 }
 
 .question-block {
+    border-left: 3px solid #d7dbdf;
     margin: 0 0 40px;
+    padding-left: 14px;
+
+    &.knockout {
+        border-left-color: #3bb273;
+
+        &.wrong {
+            border-left-color: #ff3b30;
+        }
+    }
 
     h3 {
         color: $main-blue;
@@ -533,6 +543,7 @@
     }
 
     p {
+        font-size: 14px;
         margin: 0;
     }
 }
