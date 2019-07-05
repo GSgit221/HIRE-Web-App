@@ -525,15 +525,15 @@
 }
 
 .question-block {
-    border-left: 3px solid #d7dbdf;
+    border-left: 3px solid $grey-border;
     margin-bottom: 40px;
     padding-left: 14px;
 
     &.knockout {
-        border-left-color: #3bb273;
+        border-left-color: $pink;
 
         &.wrong {
-            border-left-color: #ff3b30;
+            border-left-color: $red;
         }
     }
 
