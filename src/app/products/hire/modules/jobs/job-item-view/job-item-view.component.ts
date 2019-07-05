@@ -50,6 +50,7 @@ export class JobItemViewComponent implements OnInit {
     showTick: boolean = false;
     showCopyBoard: boolean = true;
     baseUrl: string;
+    showMore = false;
 
     constructor(
         private router: Router,
@@ -178,7 +179,7 @@ export class JobItemViewComponent implements OnInit {
             if (this.job.pool) {
                 applied.visible.push(c);
             } else {
-                if (c.score >= this.resumeThreshold - 15) {
+                if (c.score >= this.resumeThreshold - 15 || this.showMore) {
                     applied.visible.push(c);
                 } else {
                     applied.hidden.push(c);
@@ -192,6 +193,13 @@ export class JobItemViewComponent implements OnInit {
     onLoadMore() {
         const items = this.appliedCandidates.hidden.splice(0, this.appliedCandidates.hidden.length);
         this.appliedCandidates.visible = [...this.appliedCandidates.visible, ...items];
+        this.showMore = true;
+    }
+
+    onLoadLess() {
+        console.log('onLoadLess');
+        this.showMore = false;
+        this.setAppliedCanidates(this.candidates);
     }
 
     onCandidateClick(candidateId) {

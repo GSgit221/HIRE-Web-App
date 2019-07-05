@@ -17,9 +17,7 @@ export class CandidateBlockComponent implements OnInit {
     @Output() deleted = new EventEmitter<string>();
     constructor(private jobService: JobService) {}
 
-    ngOnInit() {
-        console.log('candidate', this.candidate);
-    }
+    ngOnInit() {}
 
     onDeleteCandidateClick(event, candidateId) {
         event.preventDefault();
