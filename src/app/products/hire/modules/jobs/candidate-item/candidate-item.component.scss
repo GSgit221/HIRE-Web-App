@@ -782,8 +782,8 @@
 .candidate-attention {
     height: 71px;
     border-radius: 5px;
-    border: dotted 2px #d7dbdf;
-    background-color: #ffffff;
+    border: dotted 2px $grey-border;
+    background-color: $white;
     padding: 26px 20px;
     font-size: 15px;
     display: flex;
@@ -798,10 +798,10 @@
 
 .warning-knockout {
     align-items: center;
-    background-color: #ffffff;
-    border: dotted 2px #d7dbdf;
+    background-color: $white;
+    border: dotted 2px $grey-border;
     border-radius: 5px;
-    color: #637381;
+    color: $grey;
     display: flex;
     font-size: 13px;
     line-height: 15px;
@@ -809,7 +809,7 @@
     margin-bottom: 24px;
 
     b {
-        color: #212b35;
+        color: $main-blue;
     }
 
     img {
