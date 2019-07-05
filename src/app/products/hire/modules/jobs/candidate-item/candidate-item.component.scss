@@ -172,7 +172,6 @@
 
 .candidate-content {
     display: flex;
-    margin: -8px 0 0;
     height: 100%;
 
     h3 {
@@ -227,7 +226,7 @@
 
 .content-section {
     flex: 1;
-    padding: 4px 30px 60px 0;
+    margin-right: 30px;
 }
 
 .chart-job-index {
@@ -521,9 +520,13 @@
     }
 }
 
+.question-answers {
+    margin-top: 15px;
+}
+
 .question-block {
     border-left: 3px solid #d7dbdf;
-    margin: 0 0 40px;
+    margin-bottom: 40px;
     padding-left: 14px;
 
     &.knockout {
@@ -790,6 +793,29 @@
     img {
         margin: 0 19px 0 0;
         width: 29px;
+    }
+}
+
+.warning-knockout {
+    align-items: center;
+    background-color: #ffffff;
+    border: dotted 2px #d7dbdf;
+    border-radius: 5px;
+    color: #637381;
+    display: flex;
+    font-size: 13px;
+    line-height: 15px;
+    padding: 13px;
+    margin-bottom: 24px;
+
+    b {
+        color: #212b35;
+    }
+
+    img {
+        height: 40px;
+        margin-right: 16px;
+        width: 40px;
     }
 }
 

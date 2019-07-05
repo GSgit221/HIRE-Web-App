@@ -85,7 +85,7 @@
                     {{ section | titlecase }}
                 </div>
             </div>
-            <div class="section-separator mb20"></div>
+            <div class="section-separator mb10"></div>
             <div class="candidate-content">
                 <div class="content-section" *ngIf="activeSection === 'overview'">
                     <ng-container *ngIf="candidate.summary">
@@ -293,17 +293,32 @@
                 </div>
                 <div class="content-section" *ngIf="activeSection === 'questions'">
                     <ng-container *ngIf="questionsAnswers">
-                        <div
-                            class="question-block"
-                            *ngFor="let question of questionsAnswers"
-                            ngClass="{{ question.isKnockout }}"
-                        >
-                            <h3><b>Q:</b> {{ question.text }}</h3>
-                            <ng-container *ngFor="let answer of question.answers; let i = index">
-                                <p>
-                                    <b>{{ 'ABCDE'[i] }} :</b> {{ answer }}
-                                </p>
-                            </ng-container>
+                        <div class="warning-knockout" *ngIf="questionsAnswers.isKnockout">
+                            <img
+                                alt="warning"
+                                class="icon"
+                                height="20"
+                                src="/assets/images/icons/danger.svg"
+                                width="23"
+                            />
+                            <span>
+                                <b>Knockout Question Incorrect</b><br />
+                                This candidate answered at least one knockout question incorreclty.
+                            </span>
+                        </div>
+                        <div class="question-answers">
+                            <div
+                                class="question-block"
+                                *ngFor="let question of questionsAnswers.questions"
+                                ngClass="{{ question.isKnockout }}"
+                            >
+                                <h3><b>Q:</b> {{ question.text }}</h3>
+                                <ng-container *ngFor="let answer of question.answers; let i = index">
+                                    <p>
+                                        <b>{{ 'ABCDE'[i] }} :</b> {{ answer }}
+                                    </p>
+                                </ng-container>
+                            </div>
                         </div>
                     </ng-container>
                 </div>

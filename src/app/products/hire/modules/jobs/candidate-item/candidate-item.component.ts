@@ -55,7 +55,7 @@ export class CandidateItemComponent implements OnInit {
     showFeedback = false;
     jobOwner = false;
     questions: any[];
-    questionsAnswers: any[] = [];
+    questionsAnswers: any = {};
 
     stageId: string = '';
     videos: any[] = [];
@@ -304,7 +304,7 @@ export class CandidateItemComponent implements OnInit {
     prepareQuestionsAnswers() {
         if (this.job && this.candidate && this.questions) {
             const questionsAnswers = [];
-            let isKnockout = true;
+            let isKnockout = false;
             const candidateQuestions =
                 this.candidate.questions && this.candidate.questions[this.jobId]
                     ? this.candidate.questions[this.jobId]
@@ -315,16 +315,21 @@ export class CandidateItemComponent implements OnInit {
                     answers: [],
                     isKnockout: ''
                 };
+
+                function applyKnockout(answer) {
+                    if (answer.is_knockout !== undefined && this.isKnockout !== 'knockout wrong') {
+                        this.isKnockout = answer.is_knockout ? 'knockout' : 'knockout wrong';
+                        if (!isKnockout && !answer.is_knockout) isKnockout = true;
+                    }
+                }
+
                 if (candidateQuestions && candidateQuestions[q.id]) {
                     if (q.answers) {
                         if (Array.isArray(candidateQuestions[q.id])) {
                             candidateQuestions[q.id].forEach((qa) => {
                                 const answer = q.answers.find((a) => a.id === qa);
                                 if (answer) {
-                                    if (answer.is_knockout !== undefined && obj.isKnockout !== 'knockout wrong') {
-                                        obj.isKnockout = answer.is_knockout ? 'knockout' : 'knockout wrong';
-                                        if (isKnockout && !answer.is_knockout) isKnockout = false;
-                                    }
+                                    applyKnockout.call(obj, answer);
                                     obj.answers.push(answer.text);
                                 }
                             });
@@ -332,10 +337,7 @@ export class CandidateItemComponent implements OnInit {
                             const qa = candidateQuestions[q.id];
                             const answer = q.answers.find((a) => a.id === qa);
                             if (answer) {
-                                if (answer.is_knockout !== undefined && obj.isKnockout !== 'knockout wrong') {
-                                    obj.isKnockout = answer.is_knockout ? 'knockout' : 'knockout wrong';
-                                    if (isKnockout && !answer.is_knockout) isKnockout = false;
-                                }
+                                applyKnockout.call(obj, answer);
                                 obj.answers.push(answer.text);
                             }
                         }
@@ -346,7 +348,10 @@ export class CandidateItemComponent implements OnInit {
 
                 questionsAnswers.push(obj);
             });
-            this.questionsAnswers = questionsAnswers.slice(0);
+            this.questionsAnswers = {
+                questions: questionsAnswers.slice(0),
+                isKnockout
+            };
         }
     }
 
