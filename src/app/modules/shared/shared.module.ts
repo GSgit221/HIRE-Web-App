@@ -49,6 +49,7 @@ import { LoaderComponent } from './loader/loader.component';
 import { MultiSelectComponent } from './multi-select/multi-select.component';
 import { ProgressCircleComponent } from './progress-circle/progress-circle.component';
 import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.component';
+import { StageColumnHeightDirective } from './stage-column-height.directive';
 
 @NgModule({
     declarations: [
@@ -69,7 +70,8 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         DragEnterDirective,
         ToggleDetailsDirective,
         ListFilterComponent,
-        InputPhoneComponent
+        InputPhoneComponent,
+        StageColumnHeightDirective
     ],
     providers: [AuthService, httpInterceptorProviders, CookieService],
     imports: [
@@ -150,7 +152,8 @@ import { ResumeFileTypeComponent } from './resume-file-type/resume-file-type.com
         AutoCompleteModule,
         RadioButtonModule,
         CalendarModule,
-        ChartModule
+        ChartModule,
+        StageColumnHeightDirective
     ]
 })
 export class SharedModule {}

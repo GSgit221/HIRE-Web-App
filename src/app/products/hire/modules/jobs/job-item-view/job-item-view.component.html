@@ -74,6 +74,7 @@
                         [dragOverClass]="'drag-target-border'"
                         (onDrop)="onCandidateDrop($event, 'applied')"
                         [ngClass]="{ 'is-dragged-from-stage': isDraggedFromStage('applied') }"
+                        appStageColumnHeight
                     >
                         <!-- CANDIDATE BLOCK -->
                         <app-candidate-block
@@ -116,6 +117,11 @@
                                 <span class="load-more" (click)="onLoadMore()"
                                     >Show more ({{ appliedCandidates.hidden.length }})</span
                                 >
+                            </div>
+                        </div>
+                        <div class="show-more-block" *ngIf="initialLoad && showMore">
+                            <div class="tac">
+                                <span class="load-more" (click)="onLoadLess()">Show Less</span>
                             </div>
                         </div>
                         <div class="drop-holder"></div>
