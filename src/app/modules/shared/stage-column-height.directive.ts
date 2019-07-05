@@ -9,14 +9,15 @@ export class StageColumnHeightDirective implements AfterViewInit, OnDestroy {
     constructor(private el: ElementRef, @Inject(DOCUMENT) document) {}
 
     setHeight() {
-        console.log('setHeight');
         const windowHeight = this.w.innerHeight;
         const padding = 30;
         const headerHeight = document.querySelector('.container .header-block').clientHeight;
         const separatorHeight = 21;
         const stageHeaderHeight = document.querySelector('.container .stage-header').clientHeight + 12;
         const heightAvailable = windowHeight - padding - headerHeight - separatorHeight - stageHeaderHeight;
-        this.el.nativeElement.style.maxHeight = heightAvailable + 'px';
+        if (this.el.nativeElement) {
+            this.el.nativeElement.style.maxHeight = heightAvailable + 'px';
+        }
     }
 
     ngAfterViewInit() {
@@ -27,6 +28,8 @@ export class StageColumnHeightDirective implements AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.w.removeEventListener('resize');
+        this.w.removeEventListener('resize', () => {
+            this.setHeight();
+        });
     }
 }
