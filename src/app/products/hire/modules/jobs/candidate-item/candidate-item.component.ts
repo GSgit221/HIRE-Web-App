@@ -318,8 +318,8 @@ export class CandidateItemComponent implements OnInit {
 
                 function applyKnockout(answer) {
                     if (answer.is_knockout !== undefined && this.isKnockout !== 'knockout wrong') {
-                        this.isKnockout = answer.is_knockout ? 'knockout' : 'knockout wrong';
-                        if (!isKnockout && !answer.is_knockout) isKnockout = true;
+                        this.isKnockout = !answer.is_knockout ? 'knockout' : 'knockout wrong';
+                        if (!isKnockout && answer.is_knockout) isKnockout = true;
                     }
                 }
 

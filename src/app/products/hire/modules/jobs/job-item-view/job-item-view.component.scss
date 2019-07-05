@@ -247,7 +247,7 @@
     flex: 1;
     position: relative;
     border: 1px solid transparent;
-    overflow-y: scroll;
+    overflow-y: auto;
 
     .drop-holder {
         height: 75px;
