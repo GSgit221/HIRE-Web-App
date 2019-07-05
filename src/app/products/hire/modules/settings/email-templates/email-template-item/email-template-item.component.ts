@@ -54,6 +54,7 @@ export class EmailTemplateItemComponent implements OnInit {
             from: ['owner', Validators.required],
             delayed: ['none', Validators.required],
             content: ['', Validators.required],
+            email_content: [''],
             emailplaceholder: ['']
         });
         this.store.pipe(select(fromStoreSelectors.getSelectedEmail)).subscribe(
@@ -86,25 +87,31 @@ export class EmailTemplateItemComponent implements OnInit {
     }
 
     @ViewChild('pEditor') pEditor: any;
+    @ViewChild('pEditorSec') pEditorSec: any;
 
     value: string;
 
     quill: any;
+    quillSec: any;
 
     ngOnInit() {}
 
     ngAfterViewInit() {
         this.quill = this.pEditor.quill;
+        this.quillSec = this.pEditorSec ? this.pEditorSec.quill : '';
 
-        if (this.value) {
-            this.quill.pasteHTML(this.value);
+        this.textChange(this.quill);
+        if (this.item && (this.item.link === 1 || this.item.link === 2)) {
+            this.textChange(this.quillSec);
         }
+    }
 
-        this.quill.on('text-change', (delta, oldContents, source) => {
-            this.formateQuillTest();
+    textChange(quill) {
+        quill.on('text-change', (delta, oldContents, source) => {
+            this.formateQuillTest(quill);
         });
 
-        this.quill.on('selection-change', (range, oldRange, source) => {
+        quill.on('selection-change', (range, oldRange, source) => {
             this.cursorPosition = oldRange;
         });
     }
@@ -116,6 +123,7 @@ export class EmailTemplateItemComponent implements OnInit {
             from: [item.from || 'owner', Validators.required],
             delayed: [item.delayed || 'none', Validators.required],
             content: [item.content || '', Validators.required],
+            email_content: [item.email_content || ''],
             emailplaceholder: [item.emailplaceholder || '']
         });
     }
@@ -148,15 +156,23 @@ export class EmailTemplateItemComponent implements OnInit {
         this.quill.insertText(index, event.value, {}, 'user');
         this.quill.insertText(index + event.value.length, ' ', 'user');
         //function of format {{}} variables
-        this.formateQuillTest();
+        this.formateQuillTest(this.quill);
     }
 
-    formateQuillTest() {
-        const inset = this.quill.getText();
+    onChangePlaceholderSec(event) {
+        let index: number = this.cursorPosition ? this.cursorPosition.index : 0;
+        this.quillSec.insertText(index, event.value, {}, 'user');
+        this.quillSec.insertText(index + event.value.length, ' ', 'user');
+        //function of format {{}} variables
+        this.formateQuillTest(this.quillSec);
+    }
+
+    formateQuillTest(quill) {
+        const inset = quill.getText();
         let variables = FindVariables(inset);
 
         for (let variable of variables) {
-            this.quill.formatText(
+            quill.formatText(
                 variable.index,
                 variable.index + variable.name.length,
                 {
@@ -165,7 +181,7 @@ export class EmailTemplateItemComponent implements OnInit {
                 'silent'
             );
 
-            this.quill.formatText(
+            quill.formatText(
                 variable.index + variable.name.length,
                 variable.index + variable.name.length + 1,
                 {

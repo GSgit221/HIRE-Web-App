@@ -19,4 +19,8 @@ export class Candidate {
     audit?: any;
     created_at?: number;
     stages_data?: any;
+    markedAsUnsuccessful?: any;
+    profile_image?: any;
+    created_at_rel?: any;
+    updated_at_rel?: any;
 }

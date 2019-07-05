@@ -41,6 +41,7 @@ export class JobItemViewComponent implements OnInit {
     droppedFiles: File[] = [];
     candidates: Candidate[];
     draggedCandidate: Candidate;
+    draggedFromStage: any = null;
     appliedCandidates: any;
     resumeThreshold = 60;
     candidateIsDragged = false;
@@ -278,6 +279,23 @@ export class JobItemViewComponent implements OnInit {
         });
     }
 
+    onDeletingCandidate(loading) {
+        console.log('onDeletingCandidate', loading);
+        this.contentLoading = loading;
+    }
+
+    onDeletedCandidate(candidateId) {
+        console.log('onDeletedCandidate', candidateId);
+        this.contentLoading = false;
+        const index = this.candidates.findIndex((c) => c.id === candidateId);
+        this.candidates.splice(index, 1);
+
+        const visibleIndex = this.appliedCandidates.visible.findIndex((c) => c.id === candidateId);
+        this.appliedCandidates.visible.splice(visibleIndex, 1);
+
+        this.appliedCandidates.total = this.appliedCandidates.visible.length + this.appliedCandidates.hidden.length;
+    }
+
     onCandidateDrop(event, stageId) {
         // console.log('drop', event.dragData, stageId);
         this.candidateIsDragged = false;
@@ -326,12 +344,15 @@ export class JobItemViewComponent implements OnInit {
         return threshold;
     }
 
-    onCandidateDragStart() {
+    onCandidateDragStart(candidate, stageId) {
         this.candidateIsDragged = true;
+        console.log('candidate', candidate, stageId);
+        this.draggedFromStage = stageId;
     }
 
-    onCandidateDragEnd() {
+    onCandidateDragEnd(candidate, stageId) {
         this.candidateIsDragged = false;
+        this.draggedFromStage = null;
     }
 
     onStageDragStart(stage) {
@@ -340,6 +361,10 @@ export class JobItemViewComponent implements OnInit {
 
     onStageDragEnd() {
         this.draggedStage = null;
+    }
+
+    isDraggedFromStage(stageId) {
+        return stageId === this.draggedFromStage;
     }
 
     onStageDragOver(event, order) {

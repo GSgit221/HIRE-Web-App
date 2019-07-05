@@ -5,6 +5,7 @@ import { StoreModule } from '@ngrx/store';
 import { NgxCurrencyModule } from 'ngx-currency';
 import { SharedModule } from './../../../../modules/shared/shared.module';
 
+import { CandidateBlockComponent } from './candidate-block/candidate-block.component';
 import { CandidateItemFeedbackComponent } from './candidate-item-feedback/candidate-item-feedback.component';
 import { CandidateItemTimelineComponent } from './candidate-item-timeline/candidate-item-timeline.component';
 import { CandidateItemComponent } from './candidate-item/candidate-item.component';
@@ -49,7 +50,8 @@ const routes: Routes = [
         NewCandidateItemComponent,
         JobItemNewComponent,
         CandidateItemFeedbackComponent,
-        CandidateItemTimelineComponent
+        CandidateItemTimelineComponent,
+        CandidateBlockComponent
     ],
     providers: [...fromGuards.guards],
     imports: [
