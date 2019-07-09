@@ -37,5 +37,12 @@ export class AppComponent {
                     }
                 );
         }
+
+        this.authService.$unauthorized.subscribe((value) => {
+            if (value) {
+                console.log('UNAUTHORIZED');
+                this.contentLoading = false;
+            }
+        });
     }
 }

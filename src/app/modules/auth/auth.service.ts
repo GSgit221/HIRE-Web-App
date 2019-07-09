@@ -19,6 +19,7 @@ export class AuthService {
     };
 
     _loading: Subject<boolean>;
+    _unauthorized: Subject<boolean>;
 
     constructor(
         private http: HttpClient,
@@ -27,6 +28,7 @@ export class AuthService {
         private socialAuthService: SocialAuthService
     ) {
         this._loading = new Subject();
+        this._unauthorized = new Subject();
     }
 
     public get $loading(): Observable<boolean> {
@@ -38,6 +40,13 @@ export class AuthService {
     public set loading(value: boolean) {
         this.dataSource.loading = value;
         this._loading.next(value);
+    }
+
+    public get $unauthorized(): Observable<boolean> {
+        return this._unauthorized.asObservable();
+    }
+    public set unauthorized(value: boolean) {
+        this._unauthorized.next(value);
     }
 
     onGoogleSignin() {

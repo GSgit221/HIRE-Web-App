@@ -12,6 +12,7 @@ export class AuthInterceptor implements HttpInterceptor {
     handleError(err) {
         if (err instanceof HttpErrorResponse) {
             if (err.status === 401) {
+                this.authService.unauthorized = true;
                 this.authService.logout();
                 if (this.router.url !== '/atuh/signin') {
                     this.router.navigateByUrl('/auth/signin');
