@@ -27,20 +27,23 @@ export class EmailService {
     };
 
     constructor(private http: HttpClient, private utilities: UtilitiesService) {
-        this.tenantId = this.utilities.getTenant();
-        this.baseUrl = `${this.apiURL}/tenants/${this.tenantId}/settings/email-templates`;
+        this.baseUrl = `${this.apiURL}/tenants/${this.utilities.getTenant()}/settings/email-templates`;
     }
 
     findAll() {
-        return this.http.get<EmailTemplate[]>(`${this.baseUrl}`).pipe(
-            map((emailTemplates: EmailTemplate[]) => emailTemplates.sort((a, b) => a.created_at - b.created_at)),
-            catchError((error: any) => throwError(error))
-        );
+        return this.http
+            .get<EmailTemplate[]>(`${this.apiURL}/tenants/${this.utilities.getTenant()}/settings/email-templates`)
+            .pipe(
+                map((emailTemplates: EmailTemplate[]) => emailTemplates.sort((a, b) => a.created_at - b.created_at)),
+                catchError((error: any) => throwError(error))
+            );
     }
 
     create(data: any) {
         return this.http
-            .post<EmailTemplate>(`${this.baseUrl}`, { data })
+            .post<EmailTemplate>(`${this.apiURL}/tenants/${this.utilities.getTenant()}/settings/email-templates`, {
+                data
+            })
             .pipe(catchError((error: any) => throwError(error)));
     }
 
@@ -49,24 +52,32 @@ export class EmailService {
             return of(this.newItem);
         } else {
             return this.http
-                .get<EmailTemplate>(`${this.baseUrl}/${id}`)
+                .get<EmailTemplate>(
+                    `${this.apiURL}/tenants/${this.utilities.getTenant()}/settings/email-templates/${id}`
+                )
                 .pipe(catchError((error: any) => throwError(error)));
         }
     }
 
     update(id: string, data: any) {
         return this.http
-            .put<EmailTemplate>(`${this.baseUrl}/${id}`, { data })
+            .put<EmailTemplate>(`${this.apiURL}/tenants/${this.utilities.getTenant()}/settings/email-templates/${id}`, {
+                data
+            })
             .pipe(catchError((error: any) => throwError(error)));
     }
 
     delete(id: string) {
-        return this.http.delete(`${this.baseUrl}/${id}`).pipe(catchError((error: any) => throwError(error)));
+        return this.http
+            .delete(`${this.apiURL}/tenants/${this.utilities.getTenant()}/settings/email-templates/${id}`)
+            .pipe(catchError((error: any) => throwError(error)));
     }
 
     bulkDelete(ids: string[]) {
         return this.http
-            .post(`${this.baseUrl}/bulk-delete`, { items: ids })
+            .post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/settings/email-templates/bulk-delete`, {
+                items: ids
+            })
             .pipe(catchError((error: any) => throwError(error)));
     }
 }
