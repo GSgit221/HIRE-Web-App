@@ -475,23 +475,21 @@
         width: 150px;
 
         &:hover {
-            background-color: $pink;
             box-shadow: 2px 2px 5px lightgrey;
             text-decoration: none;
             transform: translate(-1px, -1px);
+        }
+
+        &.green {
+            background-color: $pink;
 
             svg > g {
                 fill: $white;
-            }
-
-            .file-block-holder {
-                color: $pink;
             }
         }
 
         svg {
             margin: 20px;
-            transition: all 0.2s;
         }
 
         .file-block-holder {
