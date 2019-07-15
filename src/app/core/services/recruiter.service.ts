@@ -10,8 +10,6 @@ import { environment } from '@env/environment';
 })
 export class RecruiterService {
     apiURL: string = environment.apiUrl;
-    tenantId = 'undefined';
-    baseURL = '';
     defaultSteps = [
         {
             id: 'company-details',
@@ -33,22 +31,15 @@ export class RecruiterService {
     private onboardingBackClickSubject = new Subject<any>();
 
     constructor(private http: HttpClient, private utilities: UtilitiesService) {
-        this.tenantId = this.utilities.getTenant();
-        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
-
         this.onboardingStepsSubject = new BehaviorSubject<any>(this.defaultSteps);
     }
 
     getOnboarding() {
-        this.tenantId = this.utilities.getTenant();
-        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
-        return this.http.get(`${this.baseURL}/onboarding`);
+        return this.http.get(`${this.apiURL}/tenants/${this.utilities.getTenant()}/onboarding`);
     }
 
     updateOnboarding(data) {
-        this.tenantId = this.utilities.getTenant();
-        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
-        return this.http.put(`${this.baseURL}/onboarding`, data);
+        return this.http.put(`${this.apiURL}/tenants/${this.utilities.getTenant()}/onboarding`, data);
     }
 
     getOnboardingStepCompletedSubject(): Observable<any> {
@@ -76,15 +67,11 @@ export class RecruiterService {
     }
 
     loadOnboardingStepsFromApi() {
-        this.tenantId = this.utilities.getTenant();
-        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
-        return this.http.get(`${this.baseURL}/onboarding/steps`);
+        return this.http.get(`${this.apiURL}/tenants/${this.utilities.getTenant()}/onboarding/steps`);
     }
 
     saveSteps(steps) {
-        this.tenantId = this.utilities.getTenant();
-        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
-        return this.http.put(`${this.baseURL}/onboarding/steps`, steps);
+        return this.http.put(`${this.apiURL}/tenants/${this.utilities.getTenant()}/onboarding/steps`, steps);
     }
 
     loadOnboardingSteps() {
@@ -105,8 +92,6 @@ export class RecruiterService {
     }
 
     uploadDocument(data) {
-        this.tenantId = this.utilities.getTenant();
-        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
-        return this.http.post(`${this.baseURL}/onboarding/documents`, data);
+        return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/onboarding/documents`, data);
     }
 }

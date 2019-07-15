@@ -11,23 +11,21 @@ import { UtilitiesService } from './utilities.service';
 })
 export class SiteService {
     apiURL: string = environment.apiUrl;
-    tenantId = 'undefined';
     baseURL = '';
     defaultColor = '#ffffff';
     color: string;
     theme: any;
     private subject: BehaviorSubject<any>;
     constructor(private http: HttpClient, private utilities: UtilitiesService, private cookie: CookieService) {
-        this.tenantId = this.utilities.getTenant();
         this.subject = new BehaviorSubject<any>({ color: this.defaultColor, logo_url: '' });
     }
 
     loadThemeFromAPI() {
-        return this.http.get(`${this.apiURL}/tenants/${this.tenantId}/settings/theme`);
+        return this.http.get(`${this.apiURL}/tenants/${this.utilities.getTenant()}/settings/theme`);
     }
 
     loadThemeFromCookie() {
-        return localStorage.getItem(`${this.tenantId}_theme`);
+        return localStorage.getItem(`${this.utilities.getTenant()}_theme`);
     }
 
     loadTheme() {
@@ -38,7 +36,7 @@ export class SiteService {
             this.loadThemeFromAPI().subscribe(
                 (response: any) => {
                     console.log('set in cookies', JSON.stringify(response));
-                    localStorage.setItem(`${this.tenantId}_theme`, JSON.stringify(response));
+                    localStorage.setItem(`${this.utilities.getTenant()}_theme`, JSON.stringify(response));
                     return this.subject.next(response);
                 },
                 (errorResponse) => {
@@ -51,7 +49,7 @@ export class SiteService {
             this.loadThemeFromAPI().subscribe(
                 (response: any) => {
                     console.log('set in cookies', JSON.stringify(response));
-                    localStorage.setItem(`${this.tenantId}_theme`, JSON.stringify(response));
+                    localStorage.setItem(`${this.utilities.getTenant()}_theme`, JSON.stringify(response));
                     return this.subject.next(response);
                 },
                 (errorResponse) => {
