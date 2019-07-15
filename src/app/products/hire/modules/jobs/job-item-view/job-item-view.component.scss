@@ -235,12 +235,20 @@
         color: $white;
         cursor: pointer;
         font-size: 13px;
-        line-height: 16px;
-        padding: 10px;
+        height: 36px;
+        line-height: 15px;
         width: calc(50% - 10px);
+
+        &:hover {
+            background: darken($pink, 10%);
+        }
 
         &.danger {
             background-color: $red;
+
+            &:hover {
+                background: darken($red, 10%);
+            }
         }
 
         &[disabled] {
