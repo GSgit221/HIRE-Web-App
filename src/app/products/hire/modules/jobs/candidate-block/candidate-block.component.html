@@ -28,6 +28,15 @@
         <div class="ava-placeholder" *ngIf="!candidate.profile_image">
             {{ candidate | initials }}
         </div>
+        <div
+            class="check-wrapper"
+            [ngClass]="{ checked: selected }"
+            (click)="onSelectCandidateClick($event, candidate.id)"
+        >
+            <div class="check-box">
+                <img src="/assets/images/check.svg" />
+            </div>
+        </div>
     </div>
 </div>
 <div class="block-content">

@@ -13,8 +13,10 @@ export class CandidateBlockComponent implements OnInit {
     @Input() candidate: Candidate;
     @Input() job: Job;
     @Input() resumeThreshold: number;
+    @Input() selected: boolean;
     @Output() onDeleting = new EventEmitter<boolean>();
     @Output() deleted = new EventEmitter<string>();
+    @Output() onSelect = new EventEmitter<string>();
     constructor(private jobService: JobService) {}
 
     ngOnInit() {}
@@ -26,5 +28,11 @@ export class CandidateBlockComponent implements OnInit {
         this.jobService.deleteCandidate(this.job.id, candidateId).subscribe(() => {
             this.deleted.next(candidateId);
         });
+    }
+
+    onSelectCandidateClick(event, candidateId) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.onSelect.next(candidateId);
     }
 }
