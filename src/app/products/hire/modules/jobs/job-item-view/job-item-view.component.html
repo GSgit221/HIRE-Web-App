@@ -53,7 +53,7 @@
         <div class="stages-holder">
             <div class="stage-column">
                 <div class="stage-column-holder">
-                    <div class="stage-header">
+                    <div class="stage-header" *ngIf="!hasSelection('applied')">
                         <h2 class="title">Applied</h2>
                         <span class="counter">{{ appliedCandidates.total || '0' }}</span>
                         <button
@@ -67,6 +67,14 @@
                             <img src="/assets/images/plus.svg" alt="" width="13" height="13" />
                         </button>
                     </div>
+                    <div class="stage-actions" *ngIf="hasSelection('applied')">
+                        <button class="btn danger" (click)="onSelectionDecline()">
+                            Decline
+                        </button>
+                        <button class="btn" (click)="onSelectionProgress()">
+                            Progress
+                        </button>
+                    </div>
                     <div
                         class="stage-content"
                         droppable
@@ -78,7 +86,7 @@
                     >
                         <!-- CANDIDATE BLOCK -->
                         <app-candidate-block
-                            (click)="onCandidateClick(candidate.id)"
+                            (click)="onCandidateClick('applied', candidate.id)"
                             *ngFor="let candidate of appliedCandidates.visible"
                             draggable
                             [dragScope]="['candidate']"
@@ -93,6 +101,8 @@
                             (onDeleting)="onDeletingCandidate($event)"
                             (deleted)="onDeletedCandidate($event)"
                             [resumeThreshold]="resumeThreshold"
+                            [selected]="selection.columnId === 'applied' && selection.candidates[candidate.id]"
+                            (onSelect)="onCandidateSelect('applied', $event)"
                         >
                         </app-candidate-block>
                         <!-- NO MATCHES -->
@@ -143,11 +153,19 @@
                 (onDragOver)="onStageDragOver($event, stage.order)"
             >
                 <div class="stage-column-holder">
-                    <div class="stage-header">
+                    <div class="stage-header" *ngIf="!hasSelection(stage.id)">
                         <h2 class="title">{{ stage.title }}</h2>
                         <span class="counter">{{ stageCandidates(stage.id)?.length || '0' }}</span>
                         <button class="btn settings-btn mla" (click)="onSettigsClick(stage.id)">
                             <img src="/assets/images/settings-dots.svg" alt="" width="2" height="10" />
+                        </button>
+                    </div>
+                    <div class="stage-actions" *ngIf="hasSelection(stage.id)">
+                        <button class="btn danger" (click)="onSelectionDecline()">
+                            Decline
+                        </button>
+                        <button class="btn" (click)="onSelectionProgress()" [disabled]="stage.order === stages.length">
+                            Progress
                         </button>
                     </div>
                     <div
@@ -159,7 +177,7 @@
                         [ngClass]="{ 'is-dragged-from-stage': isDraggedFromStage(stage.id) }"
                     >
                         <app-candidate-block
-                            (click)="onCandidateClick(candidate.id)"
+                            (click)="onCandidateClick(stage.id, candidate.id)"
                             *ngFor="let candidate of stageCandidates(stage.id)"
                             draggable
                             [dragScope]="['candidate']"
@@ -174,6 +192,8 @@
                             (onDeleting)="onDeletingCandidate($event)"
                             (deleted)="onDeletedCandidate($event)"
                             [resumeThreshold]="resumeThreshold"
+                            [selected]="selection.columnId === stage.id && selection.candidates[candidate.id]"
+                            (onSelect)="onCandidateSelect(stage.id, $event)"
                         ></app-candidate-block>
                         <div class="drop-holder"></div>
                     </div>

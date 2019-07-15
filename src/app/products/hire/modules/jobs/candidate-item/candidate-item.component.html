@@ -323,8 +323,55 @@
                     </ng-container>
                 </div>
                 <div class="content-section" *ngIf="activeSection === 'attachments'">
-                    <div class="no-resume-block" *ngIf="!candidate.resume_file">
+                    <div class="no-resume-block">
                         <h3>Resume</h3>
+                        <div class="resume-block">
+                            <a
+                                *ngIf="candidate.resume_file_new"
+                                [href]="candidate.resume_link_new"
+                                [title]="candidate.resume_file_new"
+                                class="file-block-frame green"
+                                target="_blank"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="55" viewBox="0 0 44 55">
+                                    <g fill="#525F7F" fill-rule="nonzero">
+                                        <path
+                                            d="M31.877 41.426H11.234A1.38 1.38 0 0 1 9.83 40.02a1.38 1.38 0 0 1 1.404-1.404h20.643a1.38 1.38 0 0 1 1.404 1.404 1.38 1.38 0 0 1-1.404 1.405zM31.877 32.86H11.234a1.38 1.38 0 0 1-1.404-1.405 1.38 1.38 0 0 1 1.404-1.404h20.643a1.38 1.38 0 0 1 1.404 1.404 1.38 1.38 0 0 1-1.404 1.405zM31.877 24.247H11.234a1.38 1.38 0 0 1-1.404-1.404 1.38 1.38 0 0 1 1.404-1.405h20.643a1.38 1.38 0 0 1 1.404 1.405 1.38 1.38 0 0 1-1.404 1.404z"
+                                        />
+                                        <g opacity=".5">
+                                            <path
+                                                d="M43.532 11.14L32.812.421A1.836 1.836 0 0 0 31.69 0H3.604A3.556 3.556 0 0 0 .047 3.557V50.74a3.556 3.556 0 0 0 3.557 3.558h36.792a3.556 3.556 0 0 0 3.557-3.558V12.123a1.46 1.46 0 0 0-.421-.983zM33.234 4.774l5.945 5.945h-5.196a.74.74 0 0 1-.749-.749V4.774zm7.864 45.966a.74.74 0 0 1-.75.75H3.605a.74.74 0 0 1-.749-.75V3.557a.74.74 0 0 1 .75-.748h26.774V9.97a3.556 3.556 0 0 0 3.557 3.558h7.162V50.74z"
+                                            />
+                                        </g>
+                                    </g>
+                                </svg>
+                                <div class="file-block-holder">ClevaTeam Generated Resume</div>
+                            </a>
+                            <a
+                                *ngIf="candidate.resume_file"
+                                [href]="candidate.resume_link"
+                                [title]="candidate.resume_file"
+                                class="file-block-frame"
+                                target="_blank"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="55" viewBox="0 0 44 55">
+                                    <g fill="#525F7F" fill-rule="nonzero">
+                                        <path
+                                            d="M31.877 41.426H11.234A1.38 1.38 0 0 1 9.83 40.02a1.38 1.38 0 0 1 1.404-1.404h20.643a1.38 1.38 0 0 1 1.404 1.404 1.38 1.38 0 0 1-1.404 1.405zM31.877 32.86H11.234a1.38 1.38 0 0 1-1.404-1.405 1.38 1.38 0 0 1 1.404-1.404h20.643a1.38 1.38 0 0 1 1.404 1.404 1.38 1.38 0 0 1-1.404 1.405zM31.877 24.247H11.234a1.38 1.38 0 0 1-1.404-1.404 1.38 1.38 0 0 1 1.404-1.405h20.643a1.38 1.38 0 0 1 1.404 1.405 1.38 1.38 0 0 1-1.404 1.404z"
+                                        />
+                                        <g opacity=".5">
+                                            <path
+                                                d="M43.532 11.14L32.812.421A1.836 1.836 0 0 0 31.69 0H3.604A3.556 3.556 0 0 0 .047 3.557V50.74a3.556 3.556 0 0 0 3.557 3.558h36.792a3.556 3.556 0 0 0 3.557-3.558V12.123a1.46 1.46 0 0 0-.421-.983zM33.234 4.774l5.945 5.945h-5.196a.74.74 0 0 1-.749-.749V4.774zm7.864 45.966a.74.74 0 0 1-.75.75H3.605a.74.74 0 0 1-.749-.75V3.557a.74.74 0 0 1 .75-.748h26.774V9.97a3.556 3.556 0 0 0 3.557 3.558h7.162V50.74z"
+                                            />
+                                        </g>
+                                    </g>
+                                </svg>
+                                <div class="file-block-holder">Candidate Uploaded Resume</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="no-resume-block" *ngIf="!candidate.resume_file">
+                        <h3>Other Documents</h3>
                         <div
                             class="file-block-wrapper"
                             *ngFor="let uploadItem of uploadQueue"
@@ -397,7 +444,6 @@
                             <div class="error-message" *ngIf="uploadError">{{ uploadError }}</div>
                         </div>
                         <div *ngIf="candidate.files && candidate.files.length">
-                            <h3>Other Documents</h3>
                             <div class="file-block" *ngFor="let file of candidate.files" draggable [dragData]="file">
                                 <ng-container *ngIf="file && file.file_name">
                                     <app-resume-file-type [type]="file.mimetype"></app-resume-file-type>
@@ -406,42 +452,6 @@
                                         <p *ngIf="file.size">{{ file.size / 1000000 | number: '1.2-2' }} MB</p>
                                     </div>
                                 </ng-container>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="no-resume-block" *ngIf="candidate.resume_file_new">
-                        <h3>Resume</h3>
-                        <div class="file-block">
-                            <div class="file-block-frame">
-                                <a
-                                    *ngIf="candidate.resume_link_new"
-                                    [href]="candidate.resume_link_new"
-                                    [title]="candidate.resume_file_new"
-                                    class="resume-link"
-                                    target="_blank"
-                                ></a>
-                                <app-resume-file-type [name]="candidate.resume_file_new"></app-resume-file-type>
-                                <div class="file-block-holder">
-                                    <strong class="title">{{ candidate.resume_file_new }}</strong>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="no-resume-block" *ngIf="candidate.resume_file">
-                        <h3>Original Resume</h3>
-                        <div class="file-block">
-                            <div class="file-block-frame">
-                                <a
-                                    *ngIf="candidate.resume_link"
-                                    [href]="candidate.resume_link"
-                                    [title]="candidate.resume_file"
-                                    class="resume-link"
-                                    target="_blank"
-                                ></a>
-                                <app-resume-file-type [name]="candidate.resume_file"></app-resume-file-type>
-                                <div class="file-block-holder">
-                                    <strong class="title">{{ candidate.resume_file }}</strong>
-                                </div>
                             </div>
                         </div>
                     </div>

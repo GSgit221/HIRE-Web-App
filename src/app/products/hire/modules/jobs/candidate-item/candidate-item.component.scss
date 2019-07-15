@@ -457,6 +457,52 @@
     }
 }
 
+.resume-block {
+    display: flex;
+    flex-wrap: wrap;
+
+    .file-block-frame {
+        align-items: center;
+        background-color: $light;
+        border-radius: 5px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        margin-right: 20px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        transition: all 0.2s;
+        width: 150px;
+
+        &:hover {
+            box-shadow: 2px 2px 5px lightgrey;
+            text-decoration: none;
+            transform: translate(-1px, -1px);
+        }
+
+        &.green {
+            background-color: $pink;
+
+            svg > g {
+                fill: $white;
+            }
+        }
+
+        svg {
+            margin: 20px;
+        }
+
+        .file-block-holder {
+            background: $white;
+            color: $grey;
+            font-size: 15px;
+            line-height: normal;
+            padding: 9px 10px;
+            word-break: break-word;
+        }
+    }
+}
+
 .file-block {
     width: 100%;
     display: flex;
@@ -820,5 +866,10 @@
 }
 
 .no-resume-block {
-    margin: 0 0 20px;
+    margin-bottom: 14px;
+
+    h3 {
+        margin-top: 6px;
+        margin-bottom: 15px;
+    }
 }
