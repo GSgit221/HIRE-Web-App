@@ -200,8 +200,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 3px 0 0;
-    margin: 0 0 12px;
+    padding: 3px 0 12px;
 
     .title {
         font-size: 16px;
@@ -227,7 +226,7 @@
 .stage-actions {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
+    padding-bottom: 8px;
 
     .btn {
         background-color: $pink;
@@ -235,12 +234,20 @@
         color: $white;
         cursor: pointer;
         font-size: 13px;
-        line-height: 16px;
-        padding: 10px;
+        height: 36px;
+        line-height: 15px;
         width: calc(50% - 10px);
+
+        &:hover {
+            background: darken($pink, 10%);
+        }
 
         &.danger {
             background-color: $red;
+
+            &:hover {
+                background: darken($red, 10%);
+            }
         }
 
         &[disabled] {
