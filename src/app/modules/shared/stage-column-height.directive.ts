@@ -17,7 +17,7 @@ export class StageColumnHeightDirective implements AfterViewInit, OnDestroy {
         const separatorHeight = 21;
         const stageHeaderHeight = document.querySelector('.container .stage-header').clientHeight + 12;
         const heightAvailable = windowHeight - padding - headerHeight - separatorHeight - stageHeaderHeight + 10;
-        const stageContenBlocks = document.querySelectorAll('.container .stage-content');
+        const stageContenBlocks = Array.from(document.querySelectorAll('.container .stage-content'));
         stageContenBlocks.forEach((block: HTMLElement) => {
             block.style.maxHeight = heightAvailable + 'px';
         });
