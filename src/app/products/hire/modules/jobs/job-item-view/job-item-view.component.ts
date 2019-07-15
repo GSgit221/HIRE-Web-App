@@ -121,7 +121,7 @@ export class JobItemViewComponent implements OnInit {
 
     resetSelection() {
         this.selection = {
-            columnId: '-1',
+            columnId: 'applied',
             candidates: {}
         };
     }
