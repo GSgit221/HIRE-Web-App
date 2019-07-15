@@ -16,6 +16,11 @@ import { CandidateService } from './../../../../../core/services/candidate.servi
 import * as fromStore from './../../../../../store';
 import * as fromSelectors from './../../../../../store/selectors';
 
+interface IColumnSelection {
+    columnId: string;
+    candidates: object;
+}
+
 @Component({
     selector: 'app-job-item-view',
     templateUrl: './job-item-view.component.html',
@@ -51,6 +56,7 @@ export class JobItemViewComponent implements OnInit {
     showCopyBoard: boolean = true;
     baseUrl: string;
     showMore = false;
+    selection: IColumnSelection;
 
     constructor(
         private router: Router,
@@ -75,6 +81,7 @@ export class JobItemViewComponent implements OnInit {
         };
     }
     ngOnInit() {
+        this.resetSelection();
         this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
             this.user = user;
         });
@@ -110,6 +117,13 @@ export class JobItemViewComponent implements OnInit {
         this.href = `${environment.applicationPortalUrl}/tenant/${this.utilities.getTenant()}/applications/${
             this.job.id
         }/resume`;
+    }
+
+    resetSelection() {
+        this.selection = {
+            columnId: 'applied',
+            candidates: {}
+        };
     }
 
     onJobStatusChange(item) {
@@ -188,6 +202,7 @@ export class JobItemViewComponent implements OnInit {
         });
 
         this.appliedCandidates = applied;
+        this.resetSelection();
     }
 
     onLoadMore() {
@@ -202,8 +217,12 @@ export class JobItemViewComponent implements OnInit {
         this.setAppliedCanidates(this.candidates);
     }
 
-    onCandidateClick(candidateId) {
-        this.router.navigateByUrl(`${this.baseUrl}/jobs/${this.job.id}/candidate/${candidateId}`);
+    onCandidateClick(columnId: string, candidateId: string) {
+        if (this.hasSelection(columnId)) {
+            this.onCandidateSelect(columnId, candidateId);
+        } else {
+            this.router.navigateByUrl(`${this.baseUrl}/jobs/${this.job.id}/candidate/${candidateId}`);
+        }
     }
 
     onSettigsClick(stageId: string) {
@@ -399,5 +418,98 @@ export class JobItemViewComponent implements OnInit {
         if (deleteItem) {
             this.onDeleteCandidateClick(event.nativeEvent, deleteItem.id);
         }
+    }
+
+    onCandidateSelect(columnId: string, candidateId: string): void {
+        if (this.hasSelection(columnId)) {
+            if (this.selection.candidates[candidateId]) {
+                delete this.selection.candidates[candidateId];
+            } else {
+                this.selection.candidates[candidateId] = true;
+            }
+        } else {
+            this.selection = {
+                columnId,
+                candidates: {
+                    [candidateId]: true
+                }
+            };
+        }
+    }
+
+    hasSelection(columnId: string) {
+        return columnId === this.selection.columnId && Object.keys(this.selection.candidates).length;
+    }
+
+    async onSelectionDecline() {
+        const {
+            job: { id: jobId },
+            selection: { candidates }
+        } = this;
+        const candidateIds = Object.keys(candidates);
+
+        this.contentLoading = true;
+        for (let candidateId of candidateIds) {
+            await new Promise((res, rej) =>
+                this.jobService.deleteCandidate(jobId, candidateId).subscribe(() => {
+                    console.log(`Candidate <${candidateId}> was declined`);
+                    const index = this.candidates.findIndex(({ id }) => id === candidateId);
+                    this.candidates.splice(index, 1);
+
+                    const visibleIndex = this.appliedCandidates.visible.findIndex(({ id }) => id === candidateId);
+                    this.appliedCandidates.visible.splice(visibleIndex, 1);
+
+                    this.appliedCandidates.total =
+                        this.appliedCandidates.visible.length + this.appliedCandidates.hidden.length;
+                    res(candidateId);
+                }, rej)
+            );
+        }
+
+        this.contentLoading = false;
+        this.setAppliedCanidates(this.candidates);
+    }
+
+    async onSelectionProgress() {
+        const {
+            job: { id: jobId },
+            user: { id: userId },
+            selection: { columnId, candidates }
+        } = this;
+        const candidateIds = Object.keys(candidates);
+
+        const { order, id: fromId = 'applied' } = this.stages.find(({ id }) => id === columnId) || { order: 0 };
+        const { id: toId, title } = this.stages.find((stage) => stage.order === order + 1);
+
+        this.contentLoading = true;
+        for (let candidateId of candidateIds) {
+            const candidate = this.candidates.find(({ id }) => id === candidateId);
+            candidate.stage[jobId] = toId;
+
+            await new Promise((res, rej) =>
+                this.jobService.updateCandidateStage(jobId, candidateId, candidate.stage).subscribe(() => {
+                    console.log(`Candidate <${candidateId}> was progressed to - ${title}`);
+                    this.candidateService
+                        .addToAudit(jobId, candidateId, {
+                            type: 'stages_progress',
+                            user_id: userId,
+                            stage_from_id: fromId,
+                            stage_to_id: toId,
+                            created_at: new Date().getTime()
+                        })
+                        .subscribe(
+                            (response) => {
+                                res(response);
+                            },
+                            (errorResponse) => {
+                                rej(errorResponse);
+                            }
+                        );
+                })
+            );
+        }
+
+        this.contentLoading = false;
+        this.setAppliedCanidates(this.candidates);
     }
 }
