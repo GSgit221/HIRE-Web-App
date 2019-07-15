@@ -151,7 +151,6 @@
                 [dropScope]="['stage']"
                 [dragOverClass]="'over'"
                 (onDragOver)="onStageDragOver($event, stage.order)"
-                appStageColumnHeight
             >
                 <div class="stage-column-holder">
                     <div class="stage-header" *ngIf="!hasSelection(stage.id)">
