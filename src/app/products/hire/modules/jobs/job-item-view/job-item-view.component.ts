@@ -16,6 +16,9 @@ import { CandidateService } from './../../../../../core/services/candidate.servi
 import * as fromStore from './../../../../../store';
 import * as fromSelectors from './../../../../../store/selectors';
 
+import { EmailService } from '../../../../../core/services/email.service';
+import { EmailTemplate } from './../../../../../core/models/email-template';
+
 interface IColumnSelection {
     columnId: string;
     candidates: object;
@@ -57,12 +60,15 @@ export class JobItemViewComponent implements OnInit {
     baseUrl: string;
     showMore = false;
     selection: IColumnSelection;
+    emailTemplates: EmailTemplate[];
+    declineModalVisible: boolean = true;
 
     constructor(
         private router: Router,
         private fb: FormBuilder,
         private jobService: JobService,
         private candidateService: CandidateService,
+        private emailService: EmailService,
         private toastr: ToastrService,
         private store: Store<fromStore.State>,
         private utilities: UtilitiesService
@@ -117,6 +123,9 @@ export class JobItemViewComponent implements OnInit {
         this.href = `${environment.applicationPortalUrl}/tenant/${this.utilities.getTenant()}/applications/${
             this.job.id
         }/resume`;
+        this.emailService.findAll().subscribe((emailTemplates: EmailTemplate[]) => {
+            this.emailTemplates = emailTemplates.filter(({ type }) => type.indexOf('decline_template_') !== -1);
+        });
     }
 
     resetSelection() {
@@ -511,5 +520,9 @@ export class JobItemViewComponent implements OnInit {
 
         this.contentLoading = false;
         this.setAppliedCanidates(this.candidates);
+    }
+
+    onHide() {
+        this.declineModalVisible = false;
     }
 }

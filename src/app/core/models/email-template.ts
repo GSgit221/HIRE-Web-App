@@ -1,5 +1,6 @@
 export class EmailTemplate {
     id?: string;
+    type: string;
     title: string;
     subject: string;
     from: string;
