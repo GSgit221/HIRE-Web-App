@@ -7,17 +7,9 @@ import { select, Store } from '@ngrx/store';
 import { ToastrService } from 'ngx-toastr';
 import { SelectItem } from 'primeng/api';
 
-import { Candidate } from '../../../../../core/models/candidate';
-import { Job } from '../../../../../core/models/job';
-import { Stage } from '../../../../../core/models/stage';
-import { User } from '../../../../../core/models/user';
-import { JobService } from '../../../../../core/services/job.service';
-import { CandidateService } from './../../../../../core/services/candidate.service';
-import * as fromStore from './../../../../../store';
-import * as fromSelectors from './../../../../../store/selectors';
-
-import { EmailService } from '../../../../../core/services/email.service';
-import { EmailTemplate } from './../../../../../core/models/email-template';
+import { Candidate, EmailTemplate, Job, Stage, User } from '../../../../../core/models';
+import { CandidateService, EmailService, JobService } from '../../../../../core/services';
+import { getUserEntity, State as StoreState } from '../../../../../store';
 
 interface IColumnSelection {
     columnId: string;
@@ -70,7 +62,7 @@ export class JobItemViewComponent implements OnInit {
         private candidateService: CandidateService,
         private emailService: EmailService,
         private toastr: ToastrService,
-        private store: Store<fromStore.State>,
+        private store: Store<StoreState>,
         private utilities: UtilitiesService
     ) {
         this.baseUrl = this.utilities.getHireBaseUrl();
@@ -88,7 +80,7 @@ export class JobItemViewComponent implements OnInit {
     }
     ngOnInit() {
         this.resetSelection();
-        this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
+        this.store.pipe(select(getUserEntity)).subscribe((user: User) => {
             this.user = user;
         });
         this.newJobStageForm = this.fb.group({
