@@ -79,6 +79,7 @@
         "no-submodule-imports": false,
         "no-implicit-dependencies": [false, ["@env", "@app"]],
         "no-conditional-assignment": false,
+        "no-this-assignment": [true, { "allow-destructuring": true }],
         "interface-name": false
     },
     "extends": ["tslint:latest", "tslint-config-prettier"]
