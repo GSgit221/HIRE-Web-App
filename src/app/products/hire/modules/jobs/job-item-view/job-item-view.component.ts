@@ -60,6 +60,7 @@ export class JobItemViewComponent implements OnInit {
     emailTemplates: ISelect[];
     declineModalVisible: boolean = false;
     declineModalForm: FormGroup;
+    modalSubmission: object = {};
 
     constructor(
         private router: Router,
@@ -459,7 +460,7 @@ export class JobItemViewComponent implements OnInit {
     }
 
     isValidField(form, key) {
-        return !form.get(key).valid && form.get(key).touched;
+        return !this[form].get(key).valid && this.modalSubmission[form];
     }
 
     async onSelectionDecline() {
@@ -493,10 +494,7 @@ export class JobItemViewComponent implements OnInit {
             this.onShowModal(false);
             this.setAppliedCanidates(this.candidates);
         } else {
-            Object.keys(this.declineModalForm.controls).forEach((field) => {
-                const control = this.declineModalForm.get(field);
-                control.markAsTouched({ onlySelf: true });
-            });
+            this.modalSubmission['declineModalForm'] = true;
         }
     }
 
@@ -545,7 +543,10 @@ export class JobItemViewComponent implements OnInit {
     }
 
     onShowModal(visible = true) {
-        if (visible) this.declineModalForm.reset();
+        if (visible) {
+            this.declineModalForm.reset();
+            delete this.modalSubmission['declineModalForm'];
+        }
         this.declineModalVisible = visible;
     }
 }
