@@ -1108,6 +1108,15 @@ p-chips {
                     .input-block {
                         width: 100%;
                     }
+
+                    .ui-dropdown {
+                        .ui-dropdown-label {
+                            border-color: $red;
+                        }
+                        .ui-dropdown-panel .ui-state-highlight {
+                            background-color: $red;
+                        }
+                    }
                 }
 
                 .btn {
