@@ -1,8 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Job } from './../../../../../core/models/job';
-import { JobService } from './../../../../../core/services/job.service';
-
-import { Candidate } from './../../../../../core/models/candidate';
+import { Candidate, Job } from '../../../../../core/models';
+import { JobService } from '../../../../../core/services';
 
 @Component({
     selector: 'app-candidate-block',
