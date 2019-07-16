@@ -1068,3 +1068,77 @@ p-chips {
     background-color: rgba(0, 0, 0, 0.4);
     opacity: 1;
 }
+
+.decline-modal {
+    .ui-dialog.ui-widget {
+        border: none;
+        border-radius: 5px;
+
+        .ui-dialog-content {
+            overflow: visible;
+            padding: 0;
+
+            .p-header {
+                background: $red;
+                border-radius: 5px 5px 0 0;
+                color: white;
+                font-size: 17px;
+                line-height: normal;
+                padding: 24px;
+
+                svg {
+                    margin-right: 9px;
+                }
+            }
+
+            .p-body {
+                max-width: 500px;
+                padding: 18px 20px 30px;
+
+                p {
+                    color: $black;
+                    font-size: 15px;
+                    line-height: normal;
+                    margin-bottom: 15px;
+                }
+
+                .action {
+                    display: flex;
+
+                    .input-block {
+                        width: 100%;
+                    }
+                }
+
+                .btn {
+                    background-color: $pink;
+                    border: 0;
+                    color: $white;
+                    cursor: pointer;
+                    font-size: 13px;
+                    height: 36px;
+                    line-height: 15px;
+                    margin-left: 12px;
+                    width: 175px;
+
+                    &:hover {
+                        background: darken($pink, 10%);
+                    }
+
+                    &.danger {
+                        background-color: $red;
+
+                        &:hover {
+                            background: darken($red, 10%);
+                        }
+                    }
+
+                    &[disabled] {
+                        cursor: not-allowed;
+                        opacity: 0.7;
+                    }
+                }
+            }
+        }
+    }
+}
