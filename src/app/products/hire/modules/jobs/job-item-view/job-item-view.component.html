@@ -68,10 +68,10 @@
                         </button>
                     </div>
                     <div class="stage-actions" *ngIf="hasSelection('applied')">
-                        <button class="btn danger" (click)="onSelectionDecline()">
+                        <button class="btn danger" (click)="onShowModal()">
                             Decline
                         </button>
-                        <button class="btn" (click)="onSelectionProgress()">
+                        <button class="btn" (click)="onSelectionProgress()" [disabled]="!stages.length">
                             Progress
                         </button>
                     </div>
@@ -161,10 +161,10 @@
                         </button>
                     </div>
                     <div class="stage-actions" *ngIf="hasSelection(stage.id)">
-                        <button class="btn danger" (click)="onSelectionDecline()">
+                        <button class="btn danger" (click)="onShowModal()">
                             Decline
                         </button>
-                        <button class="btn" (click)="onSelectionProgress()" [disabled]="stage.order === stages.length">
+                        <button class="btn" (click)="onSelectionProgress()" [disabled]="isLastStage(stage.id)">
                             Progress
                         </button>
                     </div>
@@ -245,3 +245,68 @@
     [droppedFiles]="droppedFiles"
 ></app-new-candidate-item>
 <app-loader *ngIf="contentLoading"></app-loader>
+<p-dialog
+    [(visible)]="declineModalVisible"
+    (onHide)="onShowModal(false)"
+    [style]="{ width: '460px' }"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [dismissableMask]="true"
+    [showHeader]="false"
+    class="decline-modal"
+>
+    <div class="p-header">
+        <svg
+            width="19.4px"
+            height="16.7px"
+            viewBox="0 0 30 26"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+        >
+            <g id="Recruit-Setup" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="Candidate-View---Details" transform="translate(-326.000000, -356.000000)">
+                    <g id="icons8-error" transform="translate(326.000000, 356.000000)">
+                        <path
+                            d="M27.5675676,26 L1.62162162,26 C1.04027027,26 0.505135135,25.6888125 0.215675676,25.18425 C-0.072972973,24.6796875 -0.0713513514,24.0589375 0.221351351,23.556 L13.1943243,0.806 C13.4845946,0.307125 14.0181081,0 14.5945946,0 C15.1710811,0 15.7045946,0.307125 15.9956757,0.806 L28.9686486,23.556 C29.2613514,24.0589375 29.262973,24.6796875 28.9743243,25.18425 C28.6856757,25.6888125 28.1481081,26 27.5675676,26 Z"
+                            id="Path"
+                            fill="#FFC107"
+                        ></path>
+                        <path
+                            d="M12.972973,21.240375 C12.972973,21.0218125 13.0110811,20.8219375 13.0889189,20.63425 C13.1651351,20.449 13.2745946,20.288125 13.4156757,20.15325 C13.5543243,20.01675 13.7254054,19.9103125 13.9216216,19.8339375 C14.1194595,19.7591875 14.3416216,19.719375 14.5897297,19.719375 C14.8378378,19.719375 15.0616216,19.7591875 15.2610811,19.8339375 C15.4637838,19.9103125 15.6348649,20.01675 15.7735135,20.15325 C15.9154054,20.288125 16.0248649,20.449 16.1002703,20.63425 C16.1781081,20.8219375 16.2162162,21.0218125 16.2162162,21.240375 C16.2162162,21.45975 16.1781081,21.659625 16.1002703,21.841625 C16.0240541,22.0244375 15.9145946,22.1820625 15.7735135,22.319375 C15.6348649,22.45425 15.4637838,22.559875 15.2610811,22.637875 C15.0616216,22.712625 14.8378378,22.75 14.5897297,22.75 C14.3408108,22.75 14.1194595,22.712625 13.9216216,22.6370625 C13.7254054,22.5590625 13.5543243,22.4534375 13.4156757,22.3185625 C13.2737838,22.18125 13.1643243,22.023625 13.0889189,21.8408125 C13.0110811,21.6588125 12.972973,21.4589375 12.972973,21.240375 Z M15.7945946,17.875 L13.3840541,17.875 L13.0427027,8.125 L16.1351351,8.125 L15.7945946,17.875 Z"
+                            id="Shape"
+                            fill="#fff"
+                            fill-rule="nonzero"
+                        ></path>
+                    </g>
+                </g>
+            </g>
+        </svg>
+        Decline Candidates
+    </div>
+    <div class="p-body">
+        <p>
+            You are about to decline <b>{{ hasSelection(selection.columnId) }}</b> candidate from
+            <b>{{ job.job_role }}</b> role. Please select the email template you’d like to use to decline them
+        </p>
+        <form [formGroup]="declineModalForm" class="action">
+            <div class="input-block">
+                <div class="input-holder">
+                    <p-dropdown
+                        [options]="emailTemplates"
+                        formControlName="emailTemplate"
+                        [style]="{ width: '100%' }"
+                        placeholder="Please select decline email template"
+                    ></p-dropdown>
+                    <div class="error-message" *ngIf="isValidField(declineModalForm, 'emailTemplate')">
+                        Email template is required
+                    </div>
+                </div>
+            </div>
+            <button class="btn danger" (click)="onSelectionDecline()">
+                Decline
+            </button>
+        </form>
+    </div>
+</p-dialog>
