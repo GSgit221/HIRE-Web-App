@@ -545,6 +545,7 @@ export class JobItemViewComponent implements OnInit {
     }
 
     onShowModal(visible = true) {
+        if (visible) this.declineModalForm.reset();
         this.declineModalVisible = visible;
     }
 }
