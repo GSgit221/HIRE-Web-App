@@ -480,7 +480,7 @@ export class JobItemViewComponent implements OnInit {
         const candidateIds = Object.keys(candidates);
 
         const columnIndex = this.stages.findIndex(({ id }) => id === columnId);
-        const { id: fromId = 'applied' } = this.stages[columnIndex];
+        const { id: fromId = 'applied' } = columnIndex === -1 ? { id: 'applied' } : this.stages[columnIndex];
         const { id: toId, title } = this.stages[columnIndex + 1];
 
         this.contentLoading = true;
