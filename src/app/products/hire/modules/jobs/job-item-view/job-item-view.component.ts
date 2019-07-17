@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UtilitiesService } from '@app/core/services';
 import { environment } from '@env/environment';
@@ -7,18 +7,18 @@ import { select, Store } from '@ngrx/store';
 import { ToastrService } from 'ngx-toastr';
 import { SelectItem } from 'primeng/api';
 
-import { Candidate } from '../../../../../core/models/candidate';
-import { Job } from '../../../../../core/models/job';
-import { Stage } from '../../../../../core/models/stage';
-import { User } from '../../../../../core/models/user';
-import { JobService } from '../../../../../core/services/job.service';
-import { CandidateService } from './../../../../../core/services/candidate.service';
-import * as fromStore from './../../../../../store';
-import * as fromSelectors from './../../../../../store/selectors';
+import { Candidate, EmailTemplate, Job, Stage, User } from '../../../../../core/models';
+import { CandidateService, EmailService, JobService } from '../../../../../core/services';
+import { getUserEntity, State as StoreState } from '../../../../../store';
 
 interface IColumnSelection {
     columnId: string;
     candidates: object;
+}
+
+interface ISelect {
+    label?: string;
+    value: number | string;
 }
 
 @Component({
@@ -57,14 +57,19 @@ export class JobItemViewComponent implements OnInit {
     baseUrl: string;
     showMore = false;
     selection: IColumnSelection;
+    emailTemplates: ISelect[];
+    declineModalVisible: boolean = false;
+    declineModalForm: FormGroup;
+    modalSubmission: object = {};
 
     constructor(
         private router: Router,
         private fb: FormBuilder,
         private jobService: JobService,
         private candidateService: CandidateService,
+        private emailService: EmailService,
         private toastr: ToastrService,
-        private store: Store<fromStore.State>,
+        private store: Store<StoreState>,
         private utilities: UtilitiesService
     ) {
         this.baseUrl = this.utilities.getHireBaseUrl();
@@ -82,7 +87,7 @@ export class JobItemViewComponent implements OnInit {
     }
     ngOnInit() {
         this.resetSelection();
-        this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
+        this.store.pipe(select(getUserEntity)).subscribe((user: User) => {
             this.user = user;
         });
         this.newJobStageForm = this.fb.group({
@@ -117,6 +122,14 @@ export class JobItemViewComponent implements OnInit {
         this.href = `${environment.applicationPortalUrl}/tenant/${this.utilities.getTenant()}/applications/${
             this.job.id
         }/resume`;
+        this.emailService.findAll().subscribe((emailTemplates: EmailTemplate[]) => {
+            this.emailTemplates = emailTemplates
+                .filter(({ type }) => type.indexOf('decline_template_') !== -1)
+                .map(({ id, title }) => ({ value: id, label: title }));
+        });
+        this.declineModalForm = this.fb.group({
+            emailTemplate: [null, Validators.required]
+        });
     }
 
     resetSelection() {
@@ -438,36 +451,51 @@ export class JobItemViewComponent implements OnInit {
     }
 
     hasSelection(columnId: string) {
-        return columnId === this.selection.columnId && Object.keys(this.selection.candidates).length;
+        return columnId === this.selection.columnId ? Object.keys(this.selection.candidates).length : 0;
+    }
+
+    isLastStage(stageId: string) {
+        const stageIndex = this.stages.findIndex(({ id }) => id === stageId);
+        return stageIndex === this.stages.length - 1;
+    }
+
+    isValidField(form, key) {
+        return !this[form].get(key).valid && this.modalSubmission[form];
     }
 
     async onSelectionDecline() {
-        const {
-            job: { id: jobId },
-            selection: { candidates }
-        } = this;
-        const candidateIds = Object.keys(candidates);
+        if (this.declineModalForm.valid) {
+            const { emailTemplate: emailTemplateId } = this.declineModalForm.value;
+            const {
+                job: { id: jobId },
+                selection: { candidates }
+            } = this;
+            const candidateIds = Object.keys(candidates);
 
-        this.contentLoading = true;
-        for (let candidateId of candidateIds) {
-            await new Promise((res, rej) =>
-                this.jobService.deleteCandidate(jobId, candidateId).subscribe(() => {
-                    console.log(`Candidate <${candidateId}> was declined`);
-                    const index = this.candidates.findIndex(({ id }) => id === candidateId);
-                    this.candidates.splice(index, 1);
+            this.contentLoading = true;
+            for (let candidateId of candidateIds) {
+                await new Promise((res, rej) =>
+                    this.jobService.deleteCandidate(jobId, candidateId, emailTemplateId).subscribe(() => {
+                        console.log(`Candidate <${candidateId}> was declined`);
+                        const index = this.candidates.findIndex(({ id }) => id === candidateId);
+                        this.candidates.splice(index, 1);
 
-                    const visibleIndex = this.appliedCandidates.visible.findIndex(({ id }) => id === candidateId);
-                    this.appliedCandidates.visible.splice(visibleIndex, 1);
+                        const visibleIndex = this.appliedCandidates.visible.findIndex(({ id }) => id === candidateId);
+                        this.appliedCandidates.visible.splice(visibleIndex, 1);
 
-                    this.appliedCandidates.total =
-                        this.appliedCandidates.visible.length + this.appliedCandidates.hidden.length;
-                    res(candidateId);
-                }, rej)
-            );
+                        this.appliedCandidates.total =
+                            this.appliedCandidates.visible.length + this.appliedCandidates.hidden.length;
+                        res(candidateId);
+                    }, rej)
+                );
+            }
+
+            this.contentLoading = false;
+            this.onShowModal(false);
+            this.setAppliedCanidates(this.candidates);
+        } else {
+            this.modalSubmission['declineModalForm'] = true;
         }
-
-        this.contentLoading = false;
-        this.setAppliedCanidates(this.candidates);
     }
 
     async onSelectionProgress() {
@@ -478,8 +506,9 @@ export class JobItemViewComponent implements OnInit {
         } = this;
         const candidateIds = Object.keys(candidates);
 
-        const { order, id: fromId = 'applied' } = this.stages.find(({ id }) => id === columnId) || { order: 0 };
-        const { id: toId, title } = this.stages.find((stage) => stage.order === order + 1);
+        const columnIndex = this.stages.findIndex(({ id }) => id === columnId);
+        const { id: fromId = 'applied' } = columnIndex === -1 ? { id: 'applied' } : this.stages[columnIndex];
+        const { id: toId, title } = this.stages[columnIndex + 1];
 
         this.contentLoading = true;
         for (let candidateId of candidateIds) {
@@ -511,5 +540,13 @@ export class JobItemViewComponent implements OnInit {
 
         this.contentLoading = false;
         this.setAppliedCanidates(this.candidates);
+    }
+
+    onShowModal(visible = true) {
+        if (visible) {
+            this.declineModalForm.reset();
+            delete this.modalSubmission['declineModalForm'];
+        }
+        this.declineModalVisible = visible;
     }
 }
