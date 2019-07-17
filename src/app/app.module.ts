@@ -8,6 +8,7 @@ import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router
 import { MetaReducer, StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AuthServiceConfig, GoogleLoginProvider, SocialLoginModule } from 'angularx-social-login';
+import { IntercomModule } from 'ng-intercom';
 import { ToastrModule } from 'ngx-toastr';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -40,7 +41,11 @@ export function provideConfig() {
         StoreRouterConnectingModule,
         ToastrModule.forRoot(),
         EffectsModule.forRoot(effects),
-        !environment.production ? StoreDevtoolsModule.instrument() : []
+        !environment.production ? StoreDevtoolsModule.instrument() : [],
+        IntercomModule.forRoot({
+            appId: environment.intercomAppId,
+            updateOnRouterChange: true
+        })
     ],
     providers: [
         {

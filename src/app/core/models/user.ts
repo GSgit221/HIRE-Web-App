@@ -21,4 +21,5 @@ export class User {
     type?: string;
     activated?: boolean;
     tenant_id?: string;
+    user_hash?: string;
 }
