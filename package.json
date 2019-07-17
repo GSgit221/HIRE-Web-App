@@ -39,6 +39,7 @@
         "core-js": "^2.5.7",
         "moment": "^2.23.0",
         "ng-drag-drop": "^5.0.0",
+        "ng-intercom": "^8.0.0",
         "ng2-tel-input": "^1.0.16",
         "ngrx-store-freeze": "^0.2.4",
         "ngx-autosize-input": "^2.2.2",

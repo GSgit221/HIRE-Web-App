@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { Message } from 'primeng/components/common/api';
+import { environment } from './../../../../environments/environment';
 
 import { FormHelperService } from '../../../core/services/form-helper.service';
 import { AuthService } from '../auth.service';
 import { UtilitiesService } from './../../../core/services/utilities.service';
+import * as fromStore from './../../../store';
+import * as fromSelectors from './../../../store/selectors';
 
 @Component({
     selector: 'app-signin',
@@ -22,7 +26,8 @@ export class SigninComponent implements OnInit {
         private fb: FormBuilder,
         private router: Router,
         private formHelper: FormHelperService,
-        private utilities: UtilitiesService
+        private utilities: UtilitiesService,
+        private store: Store<fromStore.State>
     ) {
         this.signinForm = this.fb.group({
             email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
