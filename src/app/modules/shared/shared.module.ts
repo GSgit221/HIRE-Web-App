@@ -28,7 +28,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { SliderModule } from 'primeng/slider';
 import { TooltipModule } from 'primeng/tooltip';
-import { QuestionTypePipe } from './../../products/hire/modules/settings/questionnaires/pipes/question-type.pipe';
+import { QuestionnaireTypePipe, QuestionTypePipe } from './../../products/hire/modules/settings/questionnaires/pipes';
 
 import { GetFirstLetterPipe } from '../../core/pipes/get-first-letter.pipe';
 import { HireEditorModule } from '../../libs/editor/editor.module';
@@ -64,6 +64,7 @@ import { StageColumnHeightDirective } from './stage-column-height.directive';
         InitialsPipe,
         AccountTypePipe,
         QuestionTypePipe,
+        QuestionnaireTypePipe,
         SortByDatePipe,
         SortByOrderPipe,
         UploadFileNamePipe,
@@ -120,6 +121,7 @@ import { StageColumnHeightDirective } from './stage-column-height.directive';
         InitialsPipe,
         AccountTypePipe,
         QuestionTypePipe,
+        QuestionnaireTypePipe,
         SortByDatePipe,
         SortByOrderPipe,
         UploadFileNamePipe,
