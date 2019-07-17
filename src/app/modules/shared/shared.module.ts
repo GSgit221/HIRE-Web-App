@@ -16,6 +16,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { ChartModule } from 'primeng/chart';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ChipsModule } from 'primeng/chips';
+import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { EditorModule } from 'primeng/editor';
 import { MessageModule } from 'primeng/message';
@@ -86,6 +87,7 @@ import { StageColumnHeightDirective } from './stage-column-height.directive';
         GooglePlaceModule,
         InfiniteScrollModule,
         CheckboxModule,
+        DialogModule,
         DropdownModule,
         EditorModule,
         HireEditorModule,
@@ -135,6 +137,7 @@ import { StageColumnHeightDirective } from './stage-column-height.directive';
         GooglePlaceModule,
         InfiniteScrollModule,
         CheckboxModule,
+        DialogModule,
         DropdownModule,
         EditorModule,
         HireEditorModule,

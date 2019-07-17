@@ -11,22 +11,24 @@ import { UtilitiesService } from './utilities.service';
 })
 export class ThemeService {
     apiURL: string = environment.apiUrl;
-    tenantId = 'undefined';
     baseURL = '';
-    constructor(private http: HttpClient, private utilities: UtilitiesService) {
-        this.tenantId = this.utilities.getTenant();
-        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}/settings/theme`;
-    }
+    constructor(private http: HttpClient, private utilities: UtilitiesService) {}
 
     getTheme() {
-        return this.http.get(`${this.baseURL}`).pipe(catchError((error: any) => throwError(error)));
+        return this.http
+            .get(`${this.apiURL}/tenants/${this.utilities.getTenant()}/settings/theme`)
+            .pipe(catchError((error: any) => throwError(error)));
     }
 
     saveTheme(data: any) {
-        return this.http.put(`${this.baseURL}`, data).pipe(catchError((error: any) => throwError(error)));
+        return this.http
+            .put(`${this.apiURL}/tenants/${this.utilities.getTenant()}/settings/theme`, data)
+            .pipe(catchError((error: any) => throwError(error)));
     }
 
     uploadLogo(data: any) {
-        return this.http.post(`${this.baseURL}/logo`, data).pipe(catchError((error: any) => throwError(error)));
+        return this.http
+            .post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/settings/theme/logo`, data)
+            .pipe(catchError((error: any) => throwError(error)));
     }
 }

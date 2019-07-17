@@ -14,20 +14,15 @@ import { UtilitiesService } from './utilities.service';
 })
 export class XLSXService {
     apiURL: string = environment.apiUrl;
-    tenantId = 'undefined';
     baseURL = '';
 
-    constructor(private http: HttpClient, private authService: AuthService, private utilities: UtilitiesService) {
-        this.tenantId = this.utilities.getTenant();
-        this.baseURL = `${this.apiURL}/tenants/${this.tenantId}`;
-    }
+    constructor(private http: HttpClient, private authService: AuthService, private utilities: UtilitiesService) {}
 
     create(data: any) {
         return this.http.post(`${environment.apiUrl}/job_catalogue`, data);
     }
 
     getJobCatalogues() {
-        // return this.http.get(`${environment.apiUrl}/job_descriptions`);
         return this.http
             .get<JobCatalogue[]>(`${environment.apiUrl}/job_descriptions`)
             .pipe(catchError((error: any) => throwError(error)));
