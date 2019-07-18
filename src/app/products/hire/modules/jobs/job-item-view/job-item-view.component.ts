@@ -239,7 +239,9 @@ export class JobItemViewComponent implements OnInit {
             if (this.hasRead(read)) {
                 this.router.navigateByUrl(`${this.baseUrl}/jobs/${this.job.id}/candidate/${candidateId}`);
             } else {
+                this.contentLoading = true;
                 this.jobService.readCandidate(this.job.id, candidateId, [...read, this.job.id]).subscribe(() => {
+                    this.contentLoading = false;
                     console.log('Read Candidate:', candidateId);
                     this.router.navigateByUrl(`${this.baseUrl}/jobs/${this.job.id}/candidate/${candidateId}`);
                 });
