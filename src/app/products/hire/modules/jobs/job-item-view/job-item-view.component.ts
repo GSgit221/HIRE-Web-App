@@ -363,7 +363,7 @@ export class JobItemViewComponent implements OnInit {
         this.contentLoading = true;
         if (stageFromId !== stageToId) {
             const { stage, read: originRead } = this.candidates[candidateIndex];
-            const read = this.hasRead(originRead) ? [...originRead, this.job.id] : [...originRead];
+            const read = this.hasRead(originRead) ? [...originRead] : [...originRead, this.job.id];
             stage[this.job.id] = stageId;
 
             this.jobService.updateCandidateStage(this.job.id, candidate.id, { stage, read }).subscribe(() => {
@@ -536,7 +536,7 @@ export class JobItemViewComponent implements OnInit {
         this.contentLoading = true;
         for (let candidateId of candidateIds) {
             const { stage, read: originRead } = this.candidates.find(({ id }) => id === candidateId);
-            const read = this.hasRead(originRead) ? [...originRead, this.job.id] : [...originRead];
+            const read = this.hasRead(originRead) ? [...originRead] : [...originRead, this.job.id];
             stage[jobId] = toId;
 
             await new Promise((res, rej) =>
