@@ -212,11 +212,17 @@ export class JobService {
         return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/spec`, formData);
     }
 
-    updateCandidateStage(jobId: string, candidateId: string, stage: any) {
-        this.baseURL = `${this.apiURL}/tenants/${this.utilities.getTenant()}`;
+    updateCandidateStage(jobId: string, candidateId: string, data: any) {
         return this.http.put(
             `${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/${candidateId}/stage`,
-            { data: { stage } }
+            { data }
+        );
+    }
+
+    readCandidate(jobId: string, candidateId: string, read: string[]) {
+        return this.http.put(
+            `${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/${candidateId}`,
+            { data: { read } }
         );
     }
 
