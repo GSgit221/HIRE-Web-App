@@ -92,7 +92,7 @@ export class CandidateItemTimelineComponent implements OnInit {
                 const stage_from = stages.find((s) => s.id === e.stage_from_id);
                 const stage_to = stages.find((s) => s.id === e.stage_to_id);
                 e.stage_from_title = stage_from && stage_from.title;
-                e.stage_to_title = stage_from && stage_to.title;
+                e.stage_to_title = stage_to && stage_to.title;
 
                 if (e.user && e.stage_from_title && e.stage_to_title) {
                     result.push(e);
