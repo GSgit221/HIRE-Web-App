@@ -23,4 +23,5 @@ export class Candidate {
     profile_image?: any;
     created_at_rel?: any;
     updated_at_rel?: any;
+    read?: string[];
 }
