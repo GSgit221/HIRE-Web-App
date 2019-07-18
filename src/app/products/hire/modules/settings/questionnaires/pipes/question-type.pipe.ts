@@ -17,8 +17,10 @@ export class QuestionTypePipe implements PipeTransform {
                     return 'Paragraph';
                 case 'stars':
                     return 'Star Rating';
-                case 'video':
+                case 'one-way-video':
                     return 'Video';
+                case 'document-upload':
+                    return 'Document Upload';
                 default:
                     return '';
             }

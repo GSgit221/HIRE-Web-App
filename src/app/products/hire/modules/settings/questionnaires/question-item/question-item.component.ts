@@ -29,7 +29,8 @@ export class QuestionItemComponent implements OnInit {
         { label: 'Text Field', value: 'text-field' },
         { label: 'Paragraph', value: 'paragraph' },
         { label: 'Star Rating', value: 'stars' },
-        { label: 'One Way Video Question', value: 'one-way-video' }
+        { label: 'One Way Video Question', value: 'one-way-video' },
+        { label: 'Document Upload', value: 'document-upload' }
     ];
     typeQuestion = 'multiple';
     videoQuestionOption = {
@@ -98,7 +99,7 @@ export class QuestionItemComponent implements OnInit {
             number_of_takes: [1]
         });
         this.questionForm.get('type').valueChanges.subscribe((val) => {
-            if (['one-way-video', 'text-field', 'paragraph', 'stars'].indexOf(val) !== -1) {
+            if (['one-way-video', 'text-field', 'paragraph', 'stars', 'document-upload'].indexOf(val) !== -1) {
                 this.answers.controls.forEach((answerControl: FormGroup, index) => {
                     answerControl.controls['text'].setValidators([]);
                     answerControl.controls['text'].updateValueAndValidity();
@@ -225,6 +226,7 @@ export class QuestionItemComponent implements OnInit {
             case 'text-field':
             case 'paragraph':
             case 'stars':
+            case 'document-upload':
                 return this.utilities.omit(formValue, ['review_time', 'answer_time', 'number_of_takes', 'answers']);
             default:
                 return {};
