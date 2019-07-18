@@ -114,6 +114,7 @@ export class JobItemViewComponent implements OnInit {
                         c.isDdEmployee = true;
                     }
                 }
+                if (!c.read) c.read = [];
                 return c;
             });
             this.setAppliedCanidates(this.candidates);
@@ -288,7 +289,10 @@ export class JobItemViewComponent implements OnInit {
     onFinishedCandidatesCreation(event) {
         this.jobService.getCandidates(this.job.id).subscribe((candidates: any[]) => {
             // console.log(candidates);
-            this.candidates = candidates;
+            this.candidates = candidates.map((c) => {
+                if (!c.read) c.read = [];
+                return c;
+            });
             this.setAppliedCanidates(this.candidates);
         });
         this.createCandidateMode = false;
