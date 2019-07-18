@@ -130,10 +130,19 @@
 }
 
 .title {
+    color: $pink;
     display: block;
     font-size: 14px;
     line-height: 15px;
     margin: 0 0 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: calc(100% - 38px);
+
+    &.read {
+        color: $main-blue;
+    }
 }
 
 .position {
