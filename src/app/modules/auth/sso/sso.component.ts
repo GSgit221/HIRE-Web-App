@@ -29,13 +29,13 @@ export class SSOComponent implements OnInit {
 
     onssoSignIn(event) {
         event.preventDefault();
-        if (!this.ssoForm.valid) {
-            this.formHelper.markFormGroupTouched(this.ssoForm);
-            return;
-        }
+        // if (!this.ssoForm.valid) {
+        //     this.formHelper.markFormGroupTouched(this.ssoForm);
+        //     return;
+        // }
         this.authService.loading = true;
-        const val = this.ssoForm.value;
-        this.authService.ssoSignIn(val.company).subscribe(
+        // const val = this.ssoForm.value;
+        this.authService.ssoSignIn().subscribe(
             (response: any) => {
                 this.authService.loading = false;
                 console.log('response here', response);
