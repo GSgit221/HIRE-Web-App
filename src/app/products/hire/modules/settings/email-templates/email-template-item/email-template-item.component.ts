@@ -55,7 +55,9 @@ export class EmailTemplateItemComponent implements OnInit {
             delayed: ['none', Validators.required],
             content: ['', Validators.required],
             email_content: [''],
-            emailplaceholder: ['']
+            emailplaceholder: [''],
+            hasSMS: [false],
+            messageContent: ['']
         });
         this.store.pipe(select(fromStoreSelectors.getSelectedEmail)).subscribe(
             (emailTemplate: EmailTemplate) => {
@@ -106,6 +108,10 @@ export class EmailTemplateItemComponent implements OnInit {
         }
     }
 
+    get hasSMS() {
+        return this.itemForm && this.itemForm.get('hasSMS').value;
+    }
+
     textChange(quill) {
         quill.on('text-change', (delta, oldContents, source) => {
             this.formateQuillTest(quill);
@@ -124,7 +130,9 @@ export class EmailTemplateItemComponent implements OnInit {
             delayed: [item.delayed || 'none', Validators.required],
             content: [item.content || '', Validators.required],
             email_content: [item.email_content || ''],
-            emailplaceholder: [item.emailplaceholder || '']
+            emailplaceholder: [item.emailplaceholder || ''],
+            hasSMS: [item.hasSMS || false],
+            messageContent: [item.messageContent || '']
         });
     }
 
@@ -141,11 +149,11 @@ export class EmailTemplateItemComponent implements OnInit {
         this.contentLoading = true;
         const formValue = form.value;
         if (this.emailTemplateId === 'new') {
-            this.store.dispatch(new fromStoreActions.CreateEmail(form.value));
+            this.store.dispatch(new fromStoreActions.CreateEmail(formValue));
         } else {
-            this.store.dispatch(new fromStoreActions.UpdateEmail({ id: this.item.id, data: form.value }));
+            this.store.dispatch(new fromStoreActions.UpdateEmail({ id: this.item.id, data: formValue }));
             setTimeout(() => {
-                this.item = { ...this.item, ...form.value };
+                this.item = { ...this.item, ...formValue };
                 this.contentLoading = false;
             }, 1000);
         }
