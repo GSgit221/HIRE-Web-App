@@ -84,14 +84,14 @@
                     >
                         <div class="hc-list-row-content" data-id="{{ item.id }}">
                             <div class="col col1 flex-6 ">
-                                <div class="hc-checkbox" data-escape-click>
+                                <div class="hc-checkbox" data-escape-click *ngIf="!item.active">
                                     <p-checkbox
                                         binary="true"
                                         [(ngModel)]="item.selected"
                                         (onChange)="onItemSeletectedChange()"
                                     ></p-checkbox>
                                 </div>
-                                <div class="img-block" *ngIf="!item.checked">
+                                <div class="img-block" *ngIf="!item.selected" [ngClass]="{ inactive: !item.active }">
                                     <div class="initial" *ngIf="!item.profile_image">{{ item | initials }}</div>
                                     <img
                                         *ngIf="item.profile_image"
@@ -115,7 +115,7 @@
                             </div>
                             <div class="col col5 flex-8 flex-center">{{ item.created_at_rel }}</div>
                             <div class="col col6 flex-8 flex-center">{{ item.updated_at_rel }}</div>
-                            <div class="col col7 flex-8">Active</div>
+                            <div class="col col7 flex-8">{{ item.active ? 'Active' : 'Inactive' }}</div>
                         </div>
                     </div>
                 </div>
