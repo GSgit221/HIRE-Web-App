@@ -19,6 +19,12 @@ export class CandidateBlockComponent implements OnInit {
 
     ngOnInit() {}
 
+    hasRead() {
+        const jobId = this.job.id;
+        const { read } = this.candidate;
+        return read.findIndex((jId) => jId === jobId) !== -1;
+    }
+
     onDeleteCandidateClick(event, candidateId) {
         event.preventDefault();
         event.stopPropagation();
