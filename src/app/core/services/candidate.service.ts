@@ -51,4 +51,10 @@ export class CandidateService {
             }
         );
     }
+
+    bulkDelete(ids: string[]) {
+        return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/candidates/bulk-delete`, {
+            items: ids
+        });
+    }
 }
