@@ -123,9 +123,13 @@ export class JobItemViewComponent implements OnInit {
             this.job.id
         }/resume`;
         this.emailService.findAll().subscribe((emailTemplates: EmailTemplate[]) => {
-            this.emailTemplates = emailTemplates
-                .filter(({ type }) => type.indexOf('decline_template_') !== -1)
-                .map(({ id, title }) => ({ value: id, label: title }));
+            console.log('Email templates:');
+            console.log(emailTemplates);
+            if (emailTemplates && emailTemplates.length) {
+                this.emailTemplates = emailTemplates
+                    .filter(({ type }) => type && type.indexOf('decline_template_') !== -1)
+                    .map(({ id, title }) => ({ value: id, label: title }));
+            }
         });
         this.declineModalForm = this.fb.group({
             emailTemplate: [null, Validators.required]
