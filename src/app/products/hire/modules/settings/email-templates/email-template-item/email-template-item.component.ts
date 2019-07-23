@@ -57,7 +57,7 @@ export class EmailTemplateItemComponent implements OnInit {
             email_content: [''],
             emailplaceholder: [''],
             hasSMS: [false],
-            messageContent: ['']
+            messageContent: ['', [Validators.minLength(10), Validators.maxLength(120)]]
         });
         this.store.pipe(select(fromStoreSelectors.getSelectedEmail)).subscribe(
             (emailTemplate: EmailTemplate) => {
@@ -112,6 +112,10 @@ export class EmailTemplateItemComponent implements OnInit {
         return this.itemForm && this.itemForm.get('hasSMS').value;
     }
 
+    get messageContent() {
+        return this.itemForm && this.itemForm.get('messageContent').value;
+    }
+
     textChange(quill) {
         quill.on('text-change', (delta, oldContents, source) => {
             this.formateQuillTest(quill);
@@ -132,7 +136,7 @@ export class EmailTemplateItemComponent implements OnInit {
             email_content: [item.email_content || ''],
             emailplaceholder: [item.emailplaceholder || ''],
             hasSMS: [item.hasSMS || false],
-            messageContent: [item.messageContent || '']
+            messageContent: [item.messageContent || '', [Validators.minLength(10), Validators.maxLength(120)]]
         });
     }
 
