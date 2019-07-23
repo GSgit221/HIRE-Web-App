@@ -13,4 +13,6 @@ export class EmailTemplate {
     updated_at: number;
     last_send?: number;
     selected?: boolean;
+    hasSMS?: boolean;
+    messageContent?: string;
 }
