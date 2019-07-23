@@ -27,11 +27,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="section-separator mb20 mt20"></div>
+                <div class="section-separator mb10 mt10"></div>
             </ng-container>
             <div class="form-content-section">
                 <div class="description">
-                    <strong class="title">Email Details</strong>
+                    <strong class="title">Notification Details</strong>
                     <p>Enter your Email Subject and who the email should be sent from.</p>
                     <br />
                     <br />
@@ -66,7 +66,33 @@
                     </div>
                 </div>
             </div>
-            <div class="section-separator mb20 mt20"></div>
+            <div class="section-separator mb10 mt10"></div>
+            <div class="form-content-section">
+                <div class="description">
+                    <strong class="title">SMS Message</strong>
+                    <p>Send the candidate an SMS message with this email?</p>
+                </div>
+                <div class="form-content-holder">
+                    <div class="form-content-box">
+                        <div class="form-block">
+                            <div class="input-block">
+                                <p-checkbox
+                                    class="checkbox-required"
+                                    name="require"
+                                    binary="true"
+                                    label="Send an SMS message with this email"
+                                    formControlName="hasSMS"
+                                ></p-checkbox>
+                            </div>
+                        </div>
+                        <div class="form-block" *ngIf="hasSMS">
+                            <label class="form-block-label">Message content</label>
+                            <textarea class="textarea" formControlName="messageContent" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section-separator mb10 mt10"></div>
             <div class="form-content-section">
                 <div class="description">
                     <strong class="title">Email Content</strong>
