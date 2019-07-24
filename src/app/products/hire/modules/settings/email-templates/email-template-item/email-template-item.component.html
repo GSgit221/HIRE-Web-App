@@ -85,9 +85,12 @@
                                 ></p-checkbox>
                             </div>
                         </div>
-                        <div class="form-block" *ngIf="hasSMS">
-                            <label class="form-block-label">Message content</label>
-                            <textarea class="textarea" formControlName="messageContent" rows="2"></textarea>
+                        <div class="form-content-box-bottom" *ngIf="hasSMS">
+                            <div class="form-block">
+                                <label class="form-block-label">Message content</label>
+                                <textarea class="textarea" formControlName="messageContent" rows="2"></textarea>
+                                <span>{{ messageContent.length }} / 120</span>
+                            </div>
                         </div>
                     </div>
                 </div>

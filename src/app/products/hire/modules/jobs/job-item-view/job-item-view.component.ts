@@ -114,6 +114,7 @@ export class JobItemViewComponent implements OnInit {
                         c.isDdEmployee = true;
                     }
                 }
+                if (!c.read) c.read = [];
                 return c;
             });
             this.setAppliedCanidates(this.candidates);
@@ -238,7 +239,17 @@ export class JobItemViewComponent implements OnInit {
         if (this.hasSelection(columnId)) {
             this.onCandidateSelect(columnId, candidateId);
         } else {
-            this.router.navigateByUrl(`${this.baseUrl}/jobs/${this.job.id}/candidate/${candidateId}`);
+            const { read } = this.candidates.find(({ id }) => id === candidateId);
+            if (this.hasRead(read)) {
+                this.router.navigateByUrl(`${this.baseUrl}/jobs/${this.job.id}/candidate/${candidateId}`);
+            } else {
+                this.contentLoading = true;
+                this.jobService.readCandidate(this.job.id, candidateId, [...read, this.job.id]).subscribe(() => {
+                    this.contentLoading = false;
+                    console.log('Read Candidate:', candidateId);
+                    this.router.navigateByUrl(`${this.baseUrl}/jobs/${this.job.id}/candidate/${candidateId}`);
+                });
+            }
         }
     }
 
@@ -292,7 +303,10 @@ export class JobItemViewComponent implements OnInit {
     onFinishedCandidatesCreation(event) {
         this.jobService.getCandidates(this.job.id).subscribe((candidates: any[]) => {
             // console.log(candidates);
-            this.candidates = candidates;
+            this.candidates = candidates.map((c) => {
+                if (!c.read) c.read = [];
+                return c;
+            });
             this.setAppliedCanidates(this.candidates);
         });
         this.createCandidateMode = false;
@@ -352,29 +366,35 @@ export class JobItemViewComponent implements OnInit {
 
         const stageToId = stageId;
 
+        this.contentLoading = true;
         if (stageFromId !== stageToId) {
-            this.candidates[candidateIndex].stage[this.job.id] = stageId;
-            this.jobService
-                .updateCandidateStage(this.job.id, candidate.id, this.candidates[candidateIndex].stage)
-                .subscribe(() => {
-                    console.log('Candidate stage was updated to:', stageId);
-                    this.candidateService
-                        .addToAudit(this.job.id, candidate.id, {
-                            type: 'stages_progress',
-                            user_id: this.user.id,
-                            stage_from_id: stageFromId,
-                            stage_to_id: stageToId,
-                            created_at: new Date().getTime()
-                        })
-                        .subscribe(
-                            (response) => {
-                                console.log(response);
-                            },
-                            (errorResponse) => {
-                                console.error(errorResponse);
-                            }
-                        );
-                });
+            const { stage, read: originRead } = this.candidates[candidateIndex];
+            const read = this.hasRead(originRead) ? [...originRead] : [...originRead, this.job.id];
+            stage[this.job.id] = stageId;
+
+            this.jobService.updateCandidateStage(this.job.id, candidate.id, { stage, read }).subscribe(() => {
+                if (!this.hasRead(originRead)) {
+                    originRead.push(this.job.id);
+                }
+                this.contentLoading = false;
+                console.log('Candidate stage was updated to:', stageId);
+                this.candidateService
+                    .addToAudit(this.job.id, candidate.id, {
+                        type: 'stages_progress',
+                        user_id: this.user.id,
+                        stage_from_id: stageFromId,
+                        stage_to_id: stageToId,
+                        created_at: new Date().getTime()
+                    })
+                    .subscribe(
+                        (response) => {
+                            console.log(response);
+                        },
+                        (errorResponse) => {
+                            console.error(errorResponse);
+                        }
+                    );
+            });
         }
         this.setAppliedCanidates(this.candidates);
     }
@@ -458,6 +478,11 @@ export class JobItemViewComponent implements OnInit {
         return columnId === this.selection.columnId ? Object.keys(this.selection.candidates).length : 0;
     }
 
+    hasRead(read: string[]) {
+        const jobId = this.job.id;
+        return read.findIndex((jId) => jId === jobId) !== -1;
+    }
+
     isLastStage(stageId: string) {
         const stageIndex = this.stages.findIndex(({ id }) => id === stageId);
         return stageIndex === this.stages.length - 1;
@@ -516,11 +541,15 @@ export class JobItemViewComponent implements OnInit {
 
         this.contentLoading = true;
         for (let candidateId of candidateIds) {
-            const candidate = this.candidates.find(({ id }) => id === candidateId);
-            candidate.stage[jobId] = toId;
+            const { stage, read: originRead } = this.candidates.find(({ id }) => id === candidateId);
+            const read = this.hasRead(originRead) ? [...originRead] : [...originRead, this.job.id];
+            stage[jobId] = toId;
 
             await new Promise((res, rej) =>
-                this.jobService.updateCandidateStage(jobId, candidateId, candidate.stage).subscribe(() => {
+                this.jobService.updateCandidateStage(jobId, candidateId, { stage, read }).subscribe(() => {
+                    if (!this.hasRead(originRead)) {
+                        originRead.push(this.job.id);
+                    }
                     console.log(`Candidate <${candidateId}> was progressed to - ${title}`);
                     this.candidateService
                         .addToAudit(jobId, candidateId, {

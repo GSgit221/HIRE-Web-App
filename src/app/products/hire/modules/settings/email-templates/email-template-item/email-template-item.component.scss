@@ -13,6 +13,27 @@
     }
 }
 
-.textarea {
-    height: auto;
+.form-content-box-bottom {
+    padding: 20px;
+
+    .textarea {
+        color: #000000;
+        font-size: 14px;
+        height: auto;
+        line-height: 1.43;
+        padding: 6px 9px;
+    }
+
+    .form-block {
+        position: relative;
+    }
+
+    span {
+        font-size: 10px;
+        color: #637381;
+        line-height: normal;
+        position: absolute;
+        right: 10px;
+        bottom: 12px;
+    }
 }
