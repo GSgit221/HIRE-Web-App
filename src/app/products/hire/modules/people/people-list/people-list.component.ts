@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as closest from 'closest';
 
-import { JobService } from '../../../../../core/services/job.service';
-import { UtilitiesService } from './../../../../../core/services/utilities.service';
+import { CandidateService, JobService, UtilitiesService } from '../../../../../core/services';
 
 @Component({
     selector: 'app-people-list',
@@ -21,7 +20,6 @@ export class PeopleListComponent implements OnInit {
     candidatesCompleted = false;
     selectedAll = false;
     amountCandidates;
-    selectedItems = 0;
     filter = [];
     countries: any[] = [];
     educationOptions = [
@@ -34,17 +32,22 @@ export class PeopleListComponent implements OnInit {
         { label: 'Professional', value: 'professional' }
     ];
 
-    constructor(private jobService: JobService, private utilities: UtilitiesService) {
+    constructor(
+        private jobService: JobService,
+        private candidateService: CandidateService,
+        private utilities: UtilitiesService
+    ) {
         this.utilities.getCountries().subscribe((countries: Array<{ name: string; code: string }>) => {
             this.countries = countries;
         });
 
         this.chunkRequestInProgress = true;
         this.jobService.getCandidatesChunk('first', 100).subscribe(
-            (candidates) => {
-                this.list = candidates || [];
+            (candidates: any[]) => {
+                this.list = (candidates || []).map((item) => ({ ...item, active: item.job_id && item.job_id.length }));
                 this.filteredList = this.list.slice(0);
                 this.contentLoading = false;
+                this.candidatesCompleted = true;
                 this.lastCandidate = {
                     first_name:
                         this.list[this.list.length - 1] && this.list[this.list.length - 1].first_name
@@ -72,31 +75,46 @@ export class PeopleListComponent implements OnInit {
     getCandidatesChunk() {
         console.log('getCandidateChunk', this.chunkRequestInProgress);
         if (this.lastCandidate.first_name && this.lastCandidate.first_name.length && !this.chunkRequestInProgress) {
-            this.chunkRequestInProgress = true;
-            this.jobService.getCandidatesChunk(this.lastCandidate.first_name, 100).subscribe(
-                (candidates: any) => {
-                    if (candidates.length === 0) {
-                        this.candidatesCompleted = true;
-                    }
-                    candidates.forEach((item) => {
-                        if (this.selectedAll) {
-                            item.checked = true;
-                        }
-                        this.list.push(item);
-                    });
-                    this.lastCandidate = {
-                        first_name: this.list[this.list.length - 1].first_name,
-                        last_name: this.list[this.list.length - 1].last_name
-                    };
-                    this.filterCandidates();
-                    this.chunkRequestInProgress = false;
-                },
-                (errorResponse) => {
-                    console.error(errorResponse);
-                    this.chunkRequestInProgress = false;
-                }
-            );
+            this.fetchCandidatesChunk(this.lastCandidate.first_name);
         }
+    }
+
+    fetchCandidatesChunk(first = 'first', len = 100) {
+        if (first === 'first') {
+            this.contentLoading = true;
+            this.list = [];
+            this.filteredList = [];
+        } else this.candidatesCompleted = false;
+        this.chunkRequestInProgress = true;
+        this.jobService.getCandidatesChunk(first, len).subscribe(
+            (candidates: any) => {
+                candidates.forEach((item) => {
+                    if (this.selectedAll) {
+                        item.selected = true;
+                    }
+                    item.active = item.job_id && item.job_id.length;
+                    this.list.push(item);
+                    this.filteredList.push(item);
+                });
+                this.lastCandidate = {
+                    first_name: this.list[this.list.length - 1].first_name,
+                    last_name: this.list[this.list.length - 1].last_name
+                };
+                this.jobService.getCandidatesAmount().subscribe((amount: number) => {
+                    this.amountCandidates = amount;
+                });
+                this.filterCandidates();
+                this.candidatesCompleted = true;
+                this.chunkRequestInProgress = false;
+                this.contentLoading = false;
+            },
+            (errorResponse) => {
+                console.error(errorResponse);
+                this.candidatesCompleted = true;
+                this.chunkRequestInProgress = false;
+                this.contentLoading = false;
+            }
+        );
     }
 
     onScroll() {
@@ -110,6 +128,16 @@ export class PeopleListComponent implements OnInit {
         this.contentLoading = true;
         const itemsToRemove = this.filteredList.filter((item) => item.selected).map((item) => item.id);
         console.log('Remove: ', itemsToRemove);
+        this.candidateService.bulkDelete(itemsToRemove).subscribe(
+            (res: any) => {
+                console.log('Removed: ', res);
+                this.fetchCandidatesChunk();
+            },
+            (errorResponse) => {
+                console.error(errorResponse);
+                this.contentLoading = false;
+            }
+        );
     }
 
     onItemClick(event, item) {
@@ -127,8 +155,11 @@ export class PeopleListComponent implements OnInit {
         this.calculateSelectedItems();
     }
 
+    get selectedItems() {
+        return this.filteredList.filter((item) => item.selected).length;
+    }
+
     private calculateSelectedItems() {
-        this.selectedItems = this.filteredList.filter((item) => item.selected).length;
         if (!this.selectedItems) {
             this.selectedAll = false;
         }
@@ -146,6 +177,7 @@ export class PeopleListComponent implements OnInit {
     onFilterChanges(value) {
         console.log('onFilterChanges', value);
         this.filter = value;
+        this.candidatesCompleted = false;
         this.filterCandidates();
     }
 

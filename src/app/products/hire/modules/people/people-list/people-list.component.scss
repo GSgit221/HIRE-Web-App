@@ -42,7 +42,7 @@
 }
 
 .hc-list-row-content:hover {
-    .img-block {
+    .img-block.inactive {
         opacity: 0;
         z-index: -1;
     }
