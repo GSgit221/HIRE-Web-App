@@ -22,7 +22,7 @@ import * as fromSelectors from './../../../../../store/selectors';
     styleUrls: ['./candidate-item.component.scss']
 })
 export class CandidateItemComponent implements OnInit {
-    sections: string[] = ['overview', 'details', 'attachments'];
+    sections: string[] = ['overview', 'details', 'assessments', 'attachments'];
     activeSection = 'overview';
     activeInteractivity = 'chat';
     jobId: string;
