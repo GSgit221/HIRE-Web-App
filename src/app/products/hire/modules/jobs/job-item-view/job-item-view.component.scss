@@ -240,7 +240,8 @@
         font-size: 13px;
         height: 36px;
         line-height: 15px;
-        width: calc(50% - 10px);
+        margin-left: 12px;
+        width: calc(50% - 30px);
 
         &:hover {
             background: darken($pink, 10%);
@@ -251,6 +252,16 @@
 
             &:hover {
                 background: darken($red, 10%);
+            }
+        }
+
+        &.grey {
+            background-color: $grey3;
+            margin-left: 0;
+            width: 36px;
+
+            &:hover {
+                background: darken($grey3, 10%);
             }
         }
 

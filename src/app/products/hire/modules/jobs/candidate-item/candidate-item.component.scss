@@ -8,6 +8,7 @@
 
 .candidate-header {
     display: flex;
+    position: relative;
 
     .img-block {
         position: relative;
@@ -79,6 +80,50 @@
 
         .icon {
             margin: 0 6px 0 0;
+        }
+    }
+
+    .actions {
+        display: flex;
+        align-items: center;
+
+        height: 100%;
+        position: absolute;
+        right: 0;
+
+        .btn {
+            background-color: $pink;
+            border: 0;
+            color: $white;
+            cursor: pointer;
+            font-size: 13px;
+            height: 36px;
+            line-height: 15px;
+            margin-left: 10px;
+            width: 125px;
+
+            &:hover {
+                background: darken($pink, 10%);
+            }
+
+            &.grey {
+                background-color: $grey3;
+                width: 36px;
+
+                &:hover {
+                    background: darken($grey3, 10%);
+                }
+            }
+
+            &[disabled] {
+                cursor: not-allowed;
+                opacity: 0.7;
+            }
+
+            img {
+                display: block;
+                margin: 0 auto;
+            }
         }
     }
 }
@@ -599,16 +644,14 @@
 
 .candidate-content {
     .personality-profile-title {
-        margin: 50px 0 34px;
+        margin: 3px 0 34px;
+        font-weight: 500;
     }
 
     .interview-title {
         margin: 0 0 34px;
+        font-weight: 500;
     }
-}
-
-.candidate-content .personality-profile-title {
-    margin: 50px 0 34px;
 }
 
 .personality-profile-holder {

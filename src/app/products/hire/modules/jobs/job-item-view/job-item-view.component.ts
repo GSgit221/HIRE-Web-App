@@ -124,8 +124,7 @@ export class JobItemViewComponent implements OnInit {
             this.job.id
         }/resume`;
         this.emailService.findAll().subscribe((emailTemplates: EmailTemplate[]) => {
-            console.log('Email templates:');
-            console.log(emailTemplates);
+            console.log('Email templates:', emailTemplates);
             if (emailTemplates && emailTemplates.length) {
                 this.emailTemplates = emailTemplates
                     .filter(({ type }) => type && type.indexOf('decline_template_') !== -1)
