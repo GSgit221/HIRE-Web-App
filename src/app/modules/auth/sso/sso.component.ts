@@ -39,8 +39,7 @@ export class SSOComponent implements OnInit {
             (response: any) => {
                 this.authService.loading = false;
                 console.log('response here', response);
-                //window.location.href = 'https://www.google.com';
-                //this.router.navigateByUrl(`tenant/${response.tenant_id}/hire`);
+                window.location.href = response.login_url;
             },
             (response) => {
                 this.authService.loading = false;
