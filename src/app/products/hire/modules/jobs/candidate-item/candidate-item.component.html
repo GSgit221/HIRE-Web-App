@@ -141,89 +141,6 @@
                             </ng-container>
                         </div>
                     </div>
-                    <ng-container *ngIf="candidate?.stage && (candidate?.stage)[jobId] !== 'applied'">
-                        <h3 class="personality-profile-title">Personality Profile</h3>
-                        <div
-                            class="personality-profile-holder"
-                            *ngIf="personality_assessment; else waitingForPersonalityData"
-                        >
-                            <div class="personality-profile-graph">
-                                <p-chart
-                                    #chart
-                                    type="radar"
-                                    [options]="radar_chart_options"
-                                    [data]="radar_chart_data"
-                                ></p-chart>
-                            </div>
-                            <div class="personality-profile-scores scores">
-                                <div class="score-item" *ngFor="let score of personalityProfileScores">
-                                    <div class="score-name">{{ score.title }}</div>
-                                    <div class="score-chart">
-                                        <div
-                                            class="line"
-                                            [ngStyle]="{ width: (score.value / 120) * 100 + '%' }"
-                                            [ngClass]="{
-                                                'green-bg': score?.scoreText === 'neutral',
-                                                'orange-bg': score?.scoreText === 'low' || score?.scoreText === 'high'
-                                            }"
-                                        ></div>
-                                    </div>
-                                    <div class="score-chart">
-                                        <div class="line grey-bg" [ngStyle]="{ width: score.average + '%' }"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <ng-template #waitingForPersonalityData>
-                            <div class="candidate-attention">
-                                <img
-                                    alt="warning"
-                                    class="icon"
-                                    height="20"
-                                    src="/assets/images/warning.svg"
-                                    width="23"
-                                />
-                                <span>Waiting for the candidate to submit their Personality Profile</span>
-                            </div>
-                        </ng-template>
-                        <h3 class="interview-title">One Way Interview</h3>
-                        <div class="interview-holder" *ngIf="videos && videos.length; else waitingForInterviewData">
-                            <div class="item" *ngFor="let video of videos; let i = index">
-                                <div
-                                    class="placeholder"
-                                    [ngStyle]="{
-                                        background: 'url(https:' + video.thumbnail_url + ') no-repeat 50% 50%'
-                                    }"
-                                ></div>
-                                <button class="btn btn-view" (click)="onViewAndRate(i)">View and Rate</button>
-                                <div class="interview-question">Q{{ i + 1 }}</div>
-                                <div class="interview-rate" *ngIf="video.ratings">
-                                    <ng-container *ngFor="let rate of video.ratings; let i = index">
-                                        <img
-                                            *ngIf="rate === 1 || rate === 2 || rate === 3"
-                                            src="/assets/images/star-red.svg"
-                                            alt="Red"
-                                        />
-                                        <img *ngIf="rate === 5" src="/assets/images/star-green.svg" alt="Green" />
-                                        <img *ngIf="rate === 4" src="/assets/images/star-yellow.svg" alt="Yellow" />
-                                        <img *ngIf="rate === 0" src="/assets/images/star-empty.svg" alt="" />
-                                    </ng-container>
-                                </div>
-                            </div>
-                        </div>
-                        <ng-template #waitingForInterviewData>
-                            <div class="candidate-attention">
-                                <img
-                                    alt="warning"
-                                    class="icon"
-                                    height="20"
-                                    src="/assets/images/warning.svg"
-                                    width="23"
-                                />
-                                <span>Waiting for the candidate to submit their One Way Video Interview</span>
-                            </div>
-                        </ng-template>
-                    </ng-container>
                 </div>
                 <div class="content-section" *ngIf="activeSection === 'details'">
                     <div class="wrap-block" *ngIf="candidate.executive_summary">
@@ -320,6 +237,91 @@
                                 </ng-container>
                             </div>
                         </div>
+                    </ng-container>
+                </div>
+                <div class="content-section" *ngIf="activeSection === 'assessments'">
+                    <ng-container *ngIf="candidate?.stage && (candidate?.stage)[jobId] !== 'applied'">
+                        <h3 class="personality-profile-title">Personality Profile</h3>
+                        <div
+                            class="personality-profile-holder"
+                            *ngIf="personality_assessment; else waitingForPersonalityData"
+                        >
+                            <div class="personality-profile-graph">
+                                <p-chart
+                                    #chart
+                                    type="radar"
+                                    [options]="radar_chart_options"
+                                    [data]="radar_chart_data"
+                                ></p-chart>
+                            </div>
+                            <div class="personality-profile-scores scores">
+                                <div class="score-item" *ngFor="let score of personalityProfileScores">
+                                    <div class="score-name">{{ score.title }}</div>
+                                    <div class="score-chart">
+                                        <div
+                                            class="line"
+                                            [ngStyle]="{ width: (score.value / 120) * 100 + '%' }"
+                                            [ngClass]="{
+                                                'green-bg': score?.scoreText === 'neutral',
+                                                'orange-bg': score?.scoreText === 'low' || score?.scoreText === 'high'
+                                            }"
+                                        ></div>
+                                    </div>
+                                    <div class="score-chart">
+                                        <div class="line grey-bg" [ngStyle]="{ width: score.average + '%' }"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ng-template #waitingForPersonalityData>
+                            <div class="candidate-attention">
+                                <img
+                                    alt="warning"
+                                    class="icon"
+                                    height="20"
+                                    src="/assets/images/warning.svg"
+                                    width="23"
+                                />
+                                <span>Waiting for the candidate to submit their Personality Profile</span>
+                            </div>
+                        </ng-template>
+                        <h3 class="interview-title">One Way Interview</h3>
+                        <div class="interview-holder" *ngIf="videos && videos.length; else waitingForInterviewData">
+                            <div class="item" *ngFor="let video of videos; let i = index">
+                                <div
+                                    class="placeholder"
+                                    [ngStyle]="{
+                                        background: 'url(https:' + video.thumbnail_url + ') no-repeat 50% 50%'
+                                    }"
+                                ></div>
+                                <button class="btn btn-view" (click)="onViewAndRate(i)">View and Rate</button>
+                                <div class="interview-question">Q{{ i + 1 }}</div>
+                                <div class="interview-rate" *ngIf="video.ratings">
+                                    <ng-container *ngFor="let rate of video.ratings; let i = index">
+                                        <img
+                                            *ngIf="rate === 1 || rate === 2 || rate === 3"
+                                            src="/assets/images/star-red.svg"
+                                            alt="Red"
+                                        />
+                                        <img *ngIf="rate === 5" src="/assets/images/star-green.svg" alt="Green" />
+                                        <img *ngIf="rate === 4" src="/assets/images/star-yellow.svg" alt="Yellow" />
+                                        <img *ngIf="rate === 0" src="/assets/images/star-empty.svg" alt="" />
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+                        <ng-template #waitingForInterviewData>
+                            <div class="candidate-attention">
+                                <img
+                                    alt="warning"
+                                    class="icon"
+                                    height="20"
+                                    src="/assets/images/warning.svg"
+                                    width="23"
+                                />
+                                <span>Waiting for the candidate to submit their One Way Video Interview</span>
+                            </div>
+                        </ng-template>
                     </ng-container>
                 </div>
                 <div class="content-section" *ngIf="activeSection === 'attachments'">
