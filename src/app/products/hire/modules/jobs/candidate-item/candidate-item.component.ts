@@ -1,5 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { switchMap } from 'rxjs/operators';
@@ -7,14 +8,15 @@ import { CandidateService } from './../../../../../core/services/candidate.servi
 
 import { UIChart } from 'primeng/chart';
 import { forkJoin, of } from 'rxjs';
-import { Candidate } from '../../../../../core/models/candidate';
-import { Job } from '../../../../../core/models/job';
-import { User } from '../../../../../core/models/user';
-import { JobService } from './../../../../../core/services/job.service';
-import { QuestionnaireService } from './../../../../../core/services/questionnaire.service';
-import { UtilitiesService } from './../../../../../core/services/utilities.service';
+import { Candidate, EmailTemplate, Job, Stage, User } from '../../../../../core/models';
+import { EmailService, JobService, QuestionnaireService, UtilitiesService } from './../../../../../core/services';
 import * as fromStore from './../../../../../store';
-import * as fromSelectors from './../../../../../store/selectors';
+import { getUserEntity } from './../../../../../store/selectors';
+
+interface ISelect {
+    label?: string;
+    value: number | string;
+}
 
 @Component({
     selector: 'app-candidate-item',
@@ -27,6 +29,8 @@ export class CandidateItemComponent implements OnInit {
     activeInteractivity = 'chat';
     jobId: string;
     job: Job;
+    stages: Stage[] = [];
+    user: User;
     candidateId: string;
     candidate: Candidate;
     matchingMap = {
@@ -63,9 +67,16 @@ export class CandidateItemComponent implements OnInit {
     @ViewChild('chart') chart: UIChart;
     baseUrl: string;
 
+    emailTemplates: ISelect[];
+    declineModalVisible: boolean = false;
+    declineModalForm: FormGroup;
+    modalSubmission: object = {};
+
     constructor(
         private jobService: JobService,
+        private fb: FormBuilder,
         private candidateService: CandidateService,
+        private emailService: EmailService,
         private route: ActivatedRoute,
         private router: Router,
         private utilities: UtilitiesService,
@@ -144,6 +155,9 @@ export class CandidateItemComponent implements OnInit {
             switchMap((job: Job) => {
                 this.allowShowFeedback();
                 this.job = job;
+                this.stages = this.job.stages
+                    .filter((stage) => stage.id !== 'applied')
+                    .sort((a, b) => a.order - b.order);
                 if (this.job.questionnaire) {
                     this.sections.splice(2, 0, 'questions');
                     return this.questionnaireService.getQuestions(this.job.questionnaire);
@@ -281,23 +295,35 @@ export class CandidateItemComponent implements OnInit {
         }
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.store.pipe(select(getUserEntity)).subscribe((user: User) => {
+            this.user = user;
+        });
+        this.emailService.findAll().subscribe((emailTemplates: EmailTemplate[]) => {
+            console.log('Email templates:', emailTemplates);
+            if (emailTemplates && emailTemplates.length) {
+                this.emailTemplates = emailTemplates
+                    .filter(({ type }) => type && type.indexOf('decline_template_') !== -1)
+                    .map(({ id, title }) => ({ value: id, label: title }));
+            }
+        });
+        this.declineModalForm = this.fb.group({
+            emailTemplate: [null, Validators.required]
+        });
+    }
 
     allowShowFeedback() {
-        if (this.job && this.candidate) {
-            this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
-                // console.log('Got user:', user);
-                if (this.job.owner === user.id) {
-                    this.showFeedback = true;
-                    if (this.showFeedback) {
-                        return true;
-                    }
-                } else if (this.job && typeof this.job.show_position_rating !== 'undefined') {
-                    this.showFeedback = true;
-                } else {
-                    this.showFeedback = false;
+        if (this.job && this.candidate && this.user) {
+            if (this.job.owner === this.user.id) {
+                this.showFeedback = true;
+                if (this.showFeedback) {
+                    return true;
                 }
-            });
+            } else if (this.job && typeof this.job.show_position_rating !== 'undefined') {
+                this.showFeedback = true;
+            } else {
+                this.showFeedback = false;
+            }
         }
     }
 
@@ -543,5 +569,90 @@ export class CandidateItemComponent implements OnInit {
     }
     onClearStars() {
         this.stars.forEach((s) => (s.hover = false));
+    }
+
+    isValidField(form, key) {
+        return !this[form].get(key).valid && this.modalSubmission[form];
+    }
+
+    onDecline() {
+        if (this.declineModalForm.valid) {
+            const { emailTemplate: emailTemplateId } = this.declineModalForm.value;
+            const {
+                job: { id: jobId },
+                candidate: { id: candidateId }
+            } = this;
+
+            this.contentLoading = true;
+            this.jobService.deleteCandidate(jobId, candidateId, emailTemplateId).subscribe(
+                () => {
+                    console.log(`Candidate <${candidateId}> was declined`);
+                    this.onBackClick();
+                },
+                (error) => {
+                    this.contentLoading = false;
+                    console.error(error);
+                }
+            );
+        } else {
+            this.modalSubmission['declineModalForm'] = true;
+        }
+    }
+
+    onShowModal(visible = true) {
+        if (visible) {
+            this.declineModalForm.reset();
+            delete this.modalSubmission['declineModalForm'];
+        }
+        this.declineModalVisible = visible;
+    }
+
+    get isProgressable() {
+        const {
+            job: { id: jobId },
+            stages,
+            candidate: { stage }
+        } = this;
+        const stageId = stage[jobId];
+        const columnIndex = stages.findIndex(({ id }) => id === stageId);
+        return columnIndex + 1 < stages.length;
+    }
+
+    onProgress() {
+        const {
+            job: { id: jobId },
+            stages,
+            user: { id: userId },
+            candidate: { id: candidateId, stage }
+        } = this;
+        const stageId = stage[jobId];
+
+        const columnIndex = stages.findIndex(({ id }) => id === stageId);
+        const { id: fromId = 'applied' } = columnIndex === -1 ? { id: 'applied' } : this.stages[columnIndex];
+        const { id: toId, title } = stages[columnIndex + 1];
+
+        this.contentLoading = true;
+        stage[jobId] = toId;
+
+        this.jobService.updateCandidateStage(jobId, candidateId, { stage }).subscribe(() => {
+            console.log(`Candidate <${candidateId}> was progressed to - ${title}`);
+            this.contentLoading = false;
+            this.candidateService
+                .addToAudit(jobId, candidateId, {
+                    type: 'stages_progress',
+                    user_id: userId,
+                    stage_from_id: fromId,
+                    stage_to_id: toId,
+                    created_at: new Date().getTime()
+                })
+                .subscribe(
+                    (response) => {
+                        console.log(response);
+                    },
+                    (errorResponse) => {
+                        console.error(errorResponse);
+                    }
+                );
+        });
     }
 }
