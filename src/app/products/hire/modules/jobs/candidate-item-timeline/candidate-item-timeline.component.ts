@@ -53,8 +53,6 @@ export class CandidateItemTimelineComponent implements OnInit {
                 this.audit = this.transformAudit(this.auditData);
             } else {
                 this.audit = this.transformAudit([]);
-
-                console.log(this.audit);
             }
         });
     }
@@ -91,8 +89,8 @@ export class CandidateItemTimelineComponent implements OnInit {
                 const stages = this.job.stages;
                 const stage_from = stages.find((s) => s.id === e.stage_from_id);
                 const stage_to = stages.find((s) => s.id === e.stage_to_id);
-                e.stage_from_title = stage_from && stage_from.title;
-                e.stage_to_title = stage_to && stage_to.title;
+                e.stage_from_title = (stage_from && stage_from.title) || 'Applied';
+                e.stage_to_title = (stage_to && stage_to.title) || 'Applied';
 
                 if (e.user && e.stage_from_title && e.stage_to_title) {
                     result.push(e);
@@ -105,7 +103,6 @@ export class CandidateItemTimelineComponent implements OnInit {
     }
 
     onSaveComment() {
-        console.log('onSaveComment');
         this.contentLoading = true;
         if (this.commentForm.valid) {
             const comment = {
@@ -123,8 +120,8 @@ export class CandidateItemTimelineComponent implements OnInit {
                     this.audit = this.transformAudit(this.auditData);
                 },
                 (errorResponse) => {
-                    this.contentLoading = false;
                     console.error(errorResponse);
+                    this.contentLoading = false;
                 }
             );
         }
