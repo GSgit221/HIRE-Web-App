@@ -22,4 +22,6 @@ export class User {
     activated?: boolean;
     tenant_id?: string;
     user_hash?: string;
+    name_id?: string;
+    session_index?: string;
 }

@@ -146,9 +146,11 @@ export class AuthService {
         return this.http.post(`${environment.apiUrl}/email`, { email });
     }
 
-    ssoSignIn(company) {
-        return this.http.post(`${environment.apiUrl}/login`, {
-            company
-        });
+    ssoSignIn(domain) {
+        return this.http.post(`${environment.apiUrl}/signin-sso`, { domain });
+    }
+
+    ssoSignOut(data) {
+        return this.http.post(`${environment.apiUrl}/signout-sso`, data);
     }
 }
