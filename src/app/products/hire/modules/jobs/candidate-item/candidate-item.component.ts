@@ -153,7 +153,6 @@ export class CandidateItemComponent implements OnInit {
         // Get job
         const jobRequest = this.jobService.getJob(this.jobId).pipe(
             switchMap((job: Job) => {
-                this.allowShowFeedback();
                 this.job = job;
                 this.stages = this.job.stages
                     .filter((stage) => stage.id !== 'applied')
@@ -177,6 +176,8 @@ export class CandidateItemComponent implements OnInit {
                     this.questions = questions;
                     this.prepareQuestionsAnswers();
                 }
+
+                this.allowShowFeedback();
 
                 this.stageId = this.candidate.stage[this.jobId];
                 const stageSettings = this.job.stages.find((s) => s.id === this.stageId);
@@ -316,9 +317,6 @@ export class CandidateItemComponent implements OnInit {
         if (this.job && this.candidate && this.user) {
             if (this.job.owner === this.user.id) {
                 this.showFeedback = true;
-                if (this.showFeedback) {
-                    return true;
-                }
             } else if (this.job && typeof this.job.show_position_rating !== 'undefined') {
                 this.showFeedback = true;
             } else {
