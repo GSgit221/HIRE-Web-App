@@ -26,7 +26,7 @@ export class SSOComponent implements OnInit {
         private utilities: UtilitiesService
     ) {
         this.ssoForm = this.fb.group({
-            company: ['', Validators.required]
+            domain: ['', Validators.required]
         });
     }
     ngOnInit() {
@@ -49,15 +49,15 @@ export class SSOComponent implements OnInit {
         });
     }
 
-    onssoSignIn(event) {
+    onSignIn(event) {
         event.preventDefault();
-        // if (!this.ssoForm.valid) {
-        //     this.formHelper.markFormGroupTouched(this.ssoForm);
-        //     return;
-        // }
+        if (!this.ssoForm.valid) {
+            this.formHelper.markFormGroupTouched(this.ssoForm);
+            return;
+        }
         this.authService.loading = true;
         // const val = this.ssoForm.value;
-        this.authService.ssoSignIn().subscribe(
+        this.authService.ssoSignIn(this.ssoForm.value.domain).subscribe(
             (response: any) => {
                 this.authService.loading = false;
                 console.log('response here', response);
