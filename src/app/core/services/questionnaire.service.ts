@@ -80,4 +80,8 @@ export class QuestionnaireService {
             { data }
         );
     }
+
+    getVideoQuestions() {
+        return this.http.get(`${this.apiURL}/tenants/${this.utilities.getTenant()}/video-questions`);
+    }
 }
