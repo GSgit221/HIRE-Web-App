@@ -71,6 +71,7 @@ export class CandidateItemComponent implements OnInit {
     declineModalVisible: boolean = false;
     declineModalForm: FormGroup;
     modalSubmission: object = {};
+    emailModalVisible: boolean = false;
 
     constructor(
         private jobService: JobService,
@@ -652,5 +653,9 @@ export class CandidateItemComponent implements OnInit {
                     }
                 );
         });
+    }
+
+    onShowEmailModal(visible = true) {
+        this.emailModalVisible = visible;
     }
 }

@@ -56,11 +56,15 @@ export class JobItemViewComponent implements OnInit {
     showCopyBoard: boolean = true;
     baseUrl: string;
     showMore = false;
-    selection: IColumnSelection;
+    selection: IColumnSelection = {
+        columnId: 'applied',
+        candidates: {}
+    };
     emailTemplates: ISelect[];
     declineModalVisible: boolean = false;
     declineModalForm: FormGroup;
     modalSubmission: object = {};
+    emailModalVisible: boolean = false;
 
     constructor(
         private router: Router,
@@ -365,8 +369,8 @@ export class JobItemViewComponent implements OnInit {
 
         const stageToId = stageId;
 
-        this.contentLoading = true;
         if (stageFromId !== stageToId) {
+            this.contentLoading = true;
             const { stage, read: originRead } = this.candidates[candidateIndex];
             const read = this.hasRead(originRead) ? [...originRead] : [...originRead, this.job.id];
             stage[this.job.id] = stageId;
@@ -477,6 +481,17 @@ export class JobItemViewComponent implements OnInit {
         return columnId === this.selection.columnId ? Object.keys(this.selection.candidates).length : 0;
     }
 
+    get selectionEmails(): string[] {
+        const {
+            selection: { candidates: ids },
+            candidates
+        } = this;
+        return Object.keys(ids).map((id) => {
+            const match = candidates.find(({ id: candidateId }) => id === candidateId);
+            return match.email;
+        });
+    }
+
     hasRead(read: string[]) {
         const jobId = this.job.id;
         return read.findIndex((jId) => jId === jobId) !== -1;
@@ -580,5 +595,9 @@ export class JobItemViewComponent implements OnInit {
             delete this.modalSubmission['declineModalForm'];
         }
         this.declineModalVisible = visible;
+    }
+
+    onShowEmailModal(visible: boolean = true) {
+        this.emailModalVisible = visible;
     }
 }
