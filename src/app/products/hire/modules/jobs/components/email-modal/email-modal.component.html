@@ -20,7 +20,13 @@
             <div class="form-control">
                 <div class="label to">To:</div>
                 <div class="form-value to">
-                    <span *ngFor="let candidate of candidates">{{ candidate[1] }}</span>
+                    <span *ngFor="let candidate of candidates">
+                        {{
+                            candidate[1].first_name
+                                ? (candidate[1].first_name | titlecase) + ' ' + (candidate[1].last_name | titlecase)
+                                : candidate[1].email
+                        }}
+                    </span>
                 </div>
             </div>
             <div class="form-control">
