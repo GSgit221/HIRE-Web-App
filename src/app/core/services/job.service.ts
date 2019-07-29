@@ -234,4 +234,11 @@ export class JobService {
             data
         );
     }
+
+    sendEmailToCandidate(jobId: string, candidateId: string, data: any) {
+        return this.http.post(
+            `${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/${candidateId}/email`,
+            data
+        );
+    }
 }

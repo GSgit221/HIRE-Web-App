@@ -68,7 +68,7 @@
                         </button>
                     </div>
                     <div class="stage-actions" *ngIf="hasSelection('applied')">
-                        <button class="btn grey">
+                        <button class="btn grey" (click)="onShowEmailModal()">
                             <img src="/assets/images/icons/icons-email.svg" alt="" style="width: 14px; height: 11px;" />
                         </button>
                         <button class="btn danger" (click)="onShowModal()">
@@ -164,7 +164,7 @@
                         </button>
                     </div>
                     <div class="stage-actions" *ngIf="hasSelection(stage.id)">
-                        <button class="btn grey">
+                        <button class="btn grey" (click)="onShowEmailModal()">
                             <img src="/assets/images/icons/icons-email.svg" alt="" style="width: 14px; height: 11px;" />
                         </button>
                         <button class="btn danger" (click)="onShowModal()">
@@ -316,3 +316,10 @@
         </form>
     </div>
 </p-dialog>
+<app-email-modal
+    *ngIf="job"
+    [(visible)]="emailModalVisible"
+    [jobId]="job.id"
+    [candidates]="selectionEmails"
+    (onHide)="onShowEmailModal(false)"
+></app-email-modal>

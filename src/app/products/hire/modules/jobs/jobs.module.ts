@@ -9,6 +9,7 @@ import { CandidateBlockComponent } from './candidate-block/candidate-block.compo
 import { CandidateItemFeedbackComponent } from './candidate-item-feedback/candidate-item-feedback.component';
 import { CandidateItemTimelineComponent } from './candidate-item-timeline/candidate-item-timeline.component';
 import { CandidateItemComponent } from './candidate-item/candidate-item.component';
+import { EmailModalComponent } from './components/email-modal/email-modal.component';
 import * as fromGuards from './guards';
 import { JobItemEditComponent } from './job-item-edit/job-item-edit.component';
 import { JobItemNewComponent } from './job-item-new/job-item-new.component';
@@ -51,7 +52,8 @@ const routes: Routes = [
         JobItemNewComponent,
         CandidateItemFeedbackComponent,
         CandidateItemTimelineComponent,
-        CandidateBlockComponent
+        CandidateBlockComponent,
+        EmailModalComponent
     ],
     providers: [...fromGuards.guards],
     imports: [
