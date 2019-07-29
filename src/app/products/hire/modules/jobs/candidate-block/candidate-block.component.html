@@ -1,4 +1,10 @@
-<div class="warning-block" *ngIf="candidate && !candidate.resume_file">
+<div
+    class="warning-block"
+    *ngIf="
+        candidate &&
+        (!candidate.resume_file || (!candidate.applicaiton_completed || !candidate.applicaiton_completed[job.id]))
+    "
+>
     <div class="warning-block-holder"><span>!</span></div>
 </div>
 <div
@@ -19,7 +25,10 @@
 ></div>
 <span
     class="complience-value"
-    [hidden]="candidate && candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id]"
+    [hidden]="
+        (candidate && (candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id])) ||
+        (!candidate.applicaiton_completed || !candidate.applicaiton_completed[job.id])
+    "
     >{{ candidate.score }}%</span
 >
 <div class="ava-column">
