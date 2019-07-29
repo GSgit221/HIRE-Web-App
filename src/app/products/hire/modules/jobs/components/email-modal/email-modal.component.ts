@@ -15,7 +15,7 @@ declare var Quill: any;
 export class EmailModalComponent implements OnInit {
     @Input() visible: boolean;
     @Input() jobId: string;
-    @Input() candidates: string[];
+    @Input() candidates: any[];
     @Output() onHide = new EventEmitter<boolean>();
     @ViewChild('pEditor') pEditor: any;
 
@@ -70,8 +70,8 @@ export class EmailModalComponent implements OnInit {
         const formValue = form.value;
 
         try {
-            for (let candidateId of this.candidates) {
-                await this.jobService.sendEmailToCandidate(this.jobId, candidateId, formValue);
+            for (let candidate of this.candidates) {
+                await this.jobService.sendEmailToCandidate(this.jobId, candidate[0], formValue).subscribe(console.log);
             }
             this.onHideModal();
         } catch (e) {

@@ -481,14 +481,14 @@ export class JobItemViewComponent implements OnInit {
         return columnId === this.selection.columnId ? Object.keys(this.selection.candidates).length : 0;
     }
 
-    get selectionEmails(): string[] {
+    get selectionEmails(): any[] {
         const {
             selection: { candidates: ids },
             candidates
         } = this;
         return Object.keys(ids).map((id) => {
             const match = candidates.find(({ id: candidateId }) => id === candidateId);
-            return match.email;
+            return [match.id, match.email];
         });
     }
 
