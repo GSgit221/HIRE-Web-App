@@ -21,7 +21,10 @@
         orange: candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold,
         red: candidate.score < resumeThreshold - 15
     }"
-    [hidden]="candidate && candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id]"
+    [hidden]="
+        (candidate && (candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id])) ||
+        (!candidate.applicaiton_completed || !candidate.applicaiton_completed[job.id])
+    "
 ></div>
 <span
     class="complience-value"
