@@ -61,6 +61,8 @@ export class CandidateItemComponent implements OnInit {
     questions: any[];
     questionsAnswers: any = {};
 
+    personality_assessment: any = null;
+
     stageId: string = '';
     videos: any[] = [];
     videoInterviewQuestions: any[] = [];
@@ -167,43 +169,24 @@ export class CandidateItemComponent implements OnInit {
             })
         );
         const candidateRequest = this.jobService.getCandidate(this.jobId, this.candidateId);
-        const getAllData = forkJoin([jobRequest, candidateRequest]).pipe(
-            switchMap((response: any) => {
-                const questions = response[0];
-                const candidate: any = response[1];
-                this.candidate = candidate;
-
-                if (questions) {
-                    this.questions = questions;
-                    this.prepareQuestionsAnswers();
-                }
-
-                this.allowShowFeedback();
-
-                this.stageId = this.candidate.stage[this.jobId];
-                const stageSettings = this.job.stages.find((s) => s.id === this.stageId);
-                if (
-                    stageSettings &&
-                    stageSettings.assessment &&
-                    stageSettings.assessment.find((ass) => ass.type === 'video-interview')
-                ) {
-                    const assessment = stageSettings.assessment.find((ass) => ass.type === 'video-interview');
-                    const questionnaireId = assessment.option;
-                    if (questionnaireId) {
-                        return this.questionnaireService.getQuestions(questionnaireId);
-                    } else {
-                        return of(false);
-                    }
-                } else {
-                    return of(false);
-                }
-            })
-        );
-        getAllData.subscribe((videoInterviewQuestions: any) => {
+        const getVideoQuestions = this.questionnaireService.getVideoQuestions();
+        const getAllData = forkJoin([jobRequest, candidateRequest, getVideoQuestions]).subscribe((response: any) => {
             setTimeout(() => (this.contentLoading = false), 200);
+
+            const questions = response[0];
+            const candidate: any = response[1];
+            const videoInterviewQuestions = response[2];
+
+            this.candidate = candidate;
             if (videoInterviewQuestions) {
                 this.videoInterviewQuestions = videoInterviewQuestions;
             }
+            if (questions) {
+                this.questions = questions;
+                this.prepareQuestionsAnswers();
+            }
+
+            this.allowShowFeedback();
 
             // After all data is loaded
             // Attachments
@@ -226,75 +209,64 @@ export class CandidateItemComponent implements OnInit {
                         (errorResponse) => console.error(errorResponse)
                     );
             }
-            // Video
-            if (
-                this.candidate.stages_data &&
-                this.candidate.stages_data[this.jobId] &&
-                this.candidate.stages_data[this.jobId][this.stageId] &&
-                this.candidate.stages_data[this.jobId][this.stageId].videos &&
-                this.candidate.stages_data[this.jobId][this.stageId].videos.links
-            ) {
-                const videos = this.candidate.stages_data[this.jobId][this.stageId].videos.links;
-                this.videoInterviewQuestions.forEach((q) => {
-                    if (videos[q.id]) {
-                        const video = videos[q.id];
-                        video.id = q.id;
-                        video.question = q.text;
-                        if (video.rating) {
-                            video.ratings = [];
-                            for (let i = 0; i < 5; i++) {
-                                i < video.rating ? video.ratings.push(video.rating) : video.ratings.push(0);
+
+            // Get assessments
+            if (this.candidate.stages_data && this.candidate.stages_data[this.jobId]) {
+                const stagesData = this.candidate.stages_data[this.jobId];
+                for (const stageId in stagesData) {
+                    if (stagesData.hasOwnProperty(stageId)) {
+                        const stageData = stagesData[stageId];
+                        // Video
+                        if (stageData.videos && stageData.videos.links) {
+                            const videos = stageData.videos.links;
+                            this.videoInterviewQuestions.forEach((q) => {
+                                if (videos[q.id]) {
+                                    const video = videos[q.id];
+                                    video.id = q.id;
+                                    video.question = q.text;
+                                    if (video.rating) {
+                                        video.ratings = [];
+                                        for (let i = 0; i < 5; i++) {
+                                            i < video.rating ? video.ratings.push(video.rating) : video.ratings.push(0);
+                                        }
+                                    }
+                                    this.videos.push(video);
+                                }
+                            });
+                        }
+
+                        // Personal Profile
+                        if (stageData.personality_assessment) {
+                            const assessment = stageData.personality_assessment;
+                            this.personality_assessment = stageData.personality_assessment;
+                            this.personalityProfileScores[0].value = assessment[1].score;
+                            this.personalityProfileScores[1].value = assessment[3].score;
+                            this.personalityProfileScores[2].value = assessment[2].score;
+                            this.personalityProfileScores[3].value = assessment[4].score;
+                            this.personalityProfileScores[4].value = assessment[0].score;
+                            this.personalityProfileScores[0].scoreText = assessment[1].scoreText;
+                            this.personalityProfileScores[1].scoreText = assessment[3].scoreText;
+                            this.personalityProfileScores[2].scoreText = assessment[2].scoreText;
+                            this.personalityProfileScores[3].scoreText = assessment[4].scoreText;
+                            this.personalityProfileScores[4].scoreText = assessment[0].scoreText;
+
+                            this.radar_chart_data.datasets[0].data = [
+                                assessment[1].score,
+                                assessment[3].score,
+                                assessment[4].score,
+                                assessment[0].score,
+                                assessment[2].score
+                            ];
+                            if (this.chart) {
+                                this.chart.refresh();
                             }
                         }
-                        this.videos.push(video);
                     }
-                });
-            }
-
-            if (
-                this.candidate.stages_data &&
-                this.candidate.stages_data[this.jobId] &&
-                this.candidate.stages_data[this.jobId][this.stageId] &&
-                this.candidate.stages_data[this.jobId][this.stageId].personality_assessment
-            ) {
-                // Personal Profile
-
-                const assessment = this.candidate.stages_data[this.jobId][this.stageId].personality_assessment;
-                // console.log('personal assessment', assessment);
-                this.personalityProfileScores[0].value = assessment[1].score;
-                this.personalityProfileScores[1].value = assessment[3].score;
-                this.personalityProfileScores[2].value = assessment[2].score;
-                this.personalityProfileScores[3].value = assessment[4].score;
-                this.personalityProfileScores[4].value = assessment[0].score;
-                this.personalityProfileScores[0].scoreText = assessment[1].scoreText;
-                this.personalityProfileScores[1].scoreText = assessment[3].scoreText;
-                this.personalityProfileScores[2].scoreText = assessment[2].scoreText;
-                this.personalityProfileScores[3].scoreText = assessment[4].scoreText;
-                this.personalityProfileScores[4].scoreText = assessment[0].scoreText;
-
-                this.radar_chart_data.datasets[0].data = [
-                    assessment[1].score,
-                    assessment[3].score,
-                    assessment[4].score,
-                    assessment[0].score,
-                    assessment[2].score
-                ];
-                this.chart.refresh();
-                console.log(this.personalityProfileScores);
+                }
+            } else {
+                console.log('No stages data for this job');
             }
         });
-    }
-
-    get personality_assessment() {
-        if (
-            this.candidate &&
-            this.candidate.stages_data &&
-            this.candidate.stages_data[this.jobId] &&
-            this.candidate.stages_data[this.jobId][this.stageId] &&
-            this.candidate.stages_data[this.jobId][this.stageId].personality_assessment
-        ) {
-            return this.candidate.stages_data[this.jobId][this.stageId].personality_assessment;
-        }
     }
 
     ngOnInit() {
@@ -302,7 +274,6 @@ export class CandidateItemComponent implements OnInit {
             this.user = user;
         });
         this.emailService.findAll().subscribe((emailTemplates: EmailTemplate[]) => {
-            console.log('Email templates:', emailTemplates);
             if (emailTemplates && emailTemplates.length) {
                 this.emailTemplates = emailTemplates
                     .filter(({ type }) => type && type.indexOf('decline_template_') !== -1)
@@ -316,6 +287,7 @@ export class CandidateItemComponent implements OnInit {
 
     allowShowFeedback() {
         if (this.job && this.candidate && this.user) {
+            console.log('check show feedback', this.job.owner, this.user.id);
             if (this.job.owner === this.user.id) {
                 this.showFeedback = true;
             } else if (this.job && typeof this.job.show_position_rating !== 'undefined') {
@@ -384,6 +356,10 @@ export class CandidateItemComponent implements OnInit {
         this.activeSection = section;
         if (!this.candidate.resume_file) {
             this.activeSection = 'attachments';
+        }
+
+        if (this.chart) {
+            this.chart.refresh();
         }
     }
 

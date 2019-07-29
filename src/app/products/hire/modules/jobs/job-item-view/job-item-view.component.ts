@@ -366,9 +366,7 @@ export class JobItemViewComponent implements OnInit {
             this.candidates[candidateIndex].stage = { [this.job.id]: 'applied' };
         }
         const stageFromId = this.candidates[candidateIndex].stage[this.job.id] || 'applied';
-
         const stageToId = stageId;
-
         if (stageFromId !== stageToId) {
             this.contentLoading = true;
             const { stage, read: originRead } = this.candidates[candidateIndex];
