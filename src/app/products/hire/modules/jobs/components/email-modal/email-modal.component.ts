@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FindVariables } from 'app/libs/util';
-import { Message, SelectItem } from 'primeng/components/common/api';
+import { SelectItem } from 'primeng/components/common/api';
+
+import { JobService } from '../../../../../../core/services';
 
 declare var Quill: any;
 
@@ -12,6 +14,7 @@ declare var Quill: any;
 })
 export class EmailModalComponent implements OnInit {
     @Input() visible: boolean;
+    @Input() jobId: string;
     @Input() candidates: string[];
     @Output() onHide = new EventEmitter<boolean>();
     @ViewChild('pEditor') pEditor: any;
@@ -23,7 +26,7 @@ export class EmailModalComponent implements OnInit {
 
     emailModalForm: FormGroup;
 
-    constructor(private fb: FormBuilder) {
+    constructor(private fb: FormBuilder, private jobService: JobService) {
         this.InsertPlaceholders = [
             { label: 'candidate_name', value: '{{candidate_name}}' },
             { label: 'missing_fields', value: '{{missing_fields}}' },
@@ -38,7 +41,6 @@ export class EmailModalComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.candidates);
         this.emailModalForm = this.fb.group({
             subject: [null, Validators.required],
             content: ['', Validators.required],
@@ -56,7 +58,7 @@ export class EmailModalComponent implements OnInit {
         this.onHide.next(false);
     }
 
-    private onSend() {
+    private async onSend() {
         const form = this.emailModalForm;
         if (!form.valid) {
             console.log('FORM IS INVALID:', form);
@@ -69,7 +71,14 @@ export class EmailModalComponent implements OnInit {
 
         console.log(formValue);
 
-        this.contentLoading = false;
+        try {
+            for (let candidateId of this.candidates) {
+                await this.jobService.sendEmailToCandidate(this.jobId, candidateId, formValue);
+            }
+            this.onHideModal();
+        } catch (e) {
+            this.contentLoading = false;
+        }
     }
 
     onChangePlaceholder(event) {

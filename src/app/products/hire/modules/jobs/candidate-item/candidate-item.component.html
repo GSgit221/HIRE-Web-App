@@ -744,8 +744,9 @@
     </div>
 </p-dialog>
 <app-email-modal
-    *ngIf="candidate"
+    *ngIf="candidate && job"
     [(visible)]="emailModalVisible"
+    [jobId]="[job.id]"
     [candidates]="[candidate.email]"
     (onHide)="onShowEmailModal(false)"
 ></app-email-modal>

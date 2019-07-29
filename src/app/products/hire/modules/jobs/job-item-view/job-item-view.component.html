@@ -317,7 +317,9 @@
     </div>
 </p-dialog>
 <app-email-modal
+    *ngIf="job"
     [(visible)]="emailModalVisible"
+    [jobId]="job.id"
     [candidates]="selectionEmails"
     (onHide)="onShowEmailModal(false)"
 ></app-email-modal>
