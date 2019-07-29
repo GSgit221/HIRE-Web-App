@@ -53,12 +53,12 @@ export class EmailModalComponent implements OnInit {
         this.textChange(this.quill);
     }
 
-    private onHideModal() {
+    onHideModal() {
         this.emailModalForm.reset();
         this.onHide.next(false);
     }
 
-    private async onSend() {
+    async onSend() {
         const form = this.emailModalForm;
         if (!form.valid) {
             console.log('FORM IS INVALID:', form);
