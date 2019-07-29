@@ -69,8 +69,6 @@ export class EmailModalComponent implements OnInit {
         this.contentLoading = true;
         const formValue = form.value;
 
-        console.log(formValue);
-
         try {
             for (let candidateId of this.candidates) {
                 await this.jobService.sendEmailToCandidate(this.jobId, candidateId, formValue);
