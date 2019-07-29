@@ -21,6 +21,7 @@ export class EmailModalComponent implements OnInit {
 
     contentLoading: boolean = false;
     InsertPlaceholders: SelectItem[];
+    InsertTitles: string[];
     cursorPosition: any;
     quill: any;
 
@@ -28,16 +29,17 @@ export class EmailModalComponent implements OnInit {
 
     constructor(private fb: FormBuilder, private jobService: JobService) {
         this.InsertPlaceholders = [
-            { label: 'candidate_name', value: '{{candidate_name}}' },
-            { label: 'missing_fields', value: '{{missing_fields}}' },
-            { label: 'sender_email', value: '{{sender_email}}' },
-            { label: 'sender_name', value: '{{sender_name}}' },
-            { label: 'job_title', value: '{{job_title}}' },
-            { label: 'sender_company', value: '{{sender_company}}' },
-            { label: 'tenant_name', value: '{{tenant_name}}' },
-            { label: 'recruiter', value: '{{recruiter}}' },
-            { label: 'job_owner', value: '{{job_owner}}' }
+            { label: 'candidate_name', value: '{{candidate_name}}', title: 'Candidate Name' },
+            { label: 'missing_fields', value: '{{missing_fields}}', title: 'Missing Fields' },
+            { label: 'sender_email', value: '{{sender_email}}', title: 'Sender Email' },
+            { label: 'sender_name', value: '{{sender_name}}', title: 'Sender Name' },
+            { label: 'job_title', value: '{{job_title}}', title: 'Job Title' },
+            { label: 'sender_company', value: '{{sender_company}}', title: 'Sender Company' },
+            { label: 'tenant_name', value: '{{tenant_name}}', title: 'Tenant Name' },
+            { label: 'recruiter', value: '{{recruiter}}', title: 'Recruiter' },
+            { label: 'job_owner', value: '{{job_owner}}', title: 'Job Owner' }
         ];
+        this.InsertTitles = this.InsertPlaceholders.filter(({ title }) => !!title).map(({ title }) => title);
     }
 
     ngOnInit() {
@@ -66,12 +68,32 @@ export class EmailModalComponent implements OnInit {
         }
         console.log('FORM IS VALID:', form.value);
 
+        let { content } = form.value;
+        this.InsertPlaceholders.forEach(({ title, value }) => {
+            if (title) content = content.replace(new RegExp(title, 'gi'), value);
+        });
+        content = content.replace(
+            new RegExp('color: white;', 'gi'),
+            `
+                color: white;
+                mix-blend-mode: multiply;
+                border-radius: 11px;
+                background-color: rgb(59, 178, 115);
+                line-height: 22px;
+                margin: 0 5px 3px;
+                display: inline-block;
+                padding: 0px 10px;
+            `
+        );
+
         this.contentLoading = true;
         const formValue = form.value;
 
         try {
             for (let candidate of this.candidates) {
-                await this.jobService.sendEmailToCandidate(this.jobId, candidate[0], formValue).subscribe(console.log);
+                await this.jobService
+                    .sendEmailToCandidate(this.jobId, candidate[0], { ...formValue, content })
+                    .subscribe(console.log);
             }
             this.onHideModal();
         } catch (e) {
@@ -81,8 +103,10 @@ export class EmailModalComponent implements OnInit {
 
     onChangePlaceholder(event) {
         let index: number = this.cursorPosition ? this.cursorPosition.index : 0;
-        this.quill.insertText(index, event.value, {}, 'user');
-        this.quill.insertText(index + event.value.length, ' ', 'user');
+        const placeholder = this.InsertPlaceholders.find(({ value }) => value === event.value);
+        const placeText = placeholder.title || placeholder.value;
+        this.quill.insertText(index, placeText, {}, 'user');
+        this.quill.insertText(index + placeText.length, ' ', 'user');
         //function of format {{}} variables
         this.formateQuillTest(this.quill);
     }
@@ -99,15 +123,19 @@ export class EmailModalComponent implements OnInit {
 
     formateQuillTest(quill) {
         const inset = quill.getText();
-        let variables = FindVariables(inset);
+        let variables = FindVariables(inset, this.InsertTitles);
 
         for (let variable of variables) {
             quill.formatText(
                 variable.index,
                 variable.index + variable.name.length,
-                {
-                    color: '#8e8e93'
-                },
+                variable.isTitle
+                    ? {
+                          color: 'white'
+                      }
+                    : {
+                          color: '#8e8e93'
+                      },
                 'silent'
             );
 

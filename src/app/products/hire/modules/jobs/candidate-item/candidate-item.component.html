@@ -747,6 +747,6 @@
     *ngIf="candidate && job"
     [(visible)]="emailModalVisible"
     [jobId]="[job.id]"
-    [candidates]="[[candidate.id, candidate.email]]"
+    [candidates]="[[candidate.id, candidateNameOrEmail]]"
     (onHide)="onShowEmailModal(false)"
 ></app-email-modal>

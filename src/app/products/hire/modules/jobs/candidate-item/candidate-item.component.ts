@@ -285,6 +285,12 @@ export class CandidateItemComponent implements OnInit {
         });
     }
 
+    get candidateNameOrEmail() {
+        if (!this.candidate) return '';
+        const { first_name, last_name, email } = this.candidate;
+        return { first_name, last_name, email };
+    }
+
     allowShowFeedback() {
         if (this.job && this.candidate && this.user) {
             console.log('check show feedback', this.job.owner, this.user.id);

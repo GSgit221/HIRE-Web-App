@@ -485,8 +485,8 @@ export class JobItemViewComponent implements OnInit {
             candidates
         } = this;
         return Object.keys(ids).map((id) => {
-            const match = candidates.find(({ id: candidateId }) => id === candidateId);
-            return [match.id, match.email];
+            const { id: matchId, first_name, last_name, email } = candidates.find(({ id: cId }) => id === cId);
+            return [matchId, { first_name, last_name, email }];
         });
     }
 

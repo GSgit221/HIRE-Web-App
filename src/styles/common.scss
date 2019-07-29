@@ -1195,6 +1195,10 @@ p-chips {
                         line-height: normal;
                         padding-top: 18px;
 
+                        &.subject {
+                            padding-top: 16px;
+                        }
+
                         &.editor {
                             padding-top: 26px;
                         }
@@ -1232,15 +1236,16 @@ p-chips {
 
                         &.editor {
                             border-bottom: 0;
+                            font-size: 14px;
+                            padding: 12px 0;
 
                             app-editor {
                                 .ui-editor-container {
-                                    min-height: 560px;
                                     margin-top: 14px;
 
                                     .ui-editor-toolbar {
                                         border-radius: 2px;
-                                        box-shadow: inset 0px 0px 1px 1px #d8d8d8;
+                                        box-shadow: inset 0 0 0 0 rgba(0, 0, 0, 0.5);
                                         border: solid 1px #d8d8d8;
                                         background: #f9fafb;
                                         padding: 8px;
@@ -1267,7 +1272,26 @@ p-chips {
 
                                     .ui-editor-content {
                                         border: 0;
+
+                                        .ql-editor {
+                                            min-height: 514px;
+                                        }
                                     }
+
+                                    span[style*='color: white;'] {
+                                        mix-blend-mode: multiply;
+                                        border-radius: 11px;
+                                        background-color: rgb(59, 178, 115);
+                                        line-height: 22px;
+                                        margin: 0 5px 3px;
+                                        display: inline-block;
+                                        padding: 0px 10px;
+                                    }
+                                }
+
+                                .ql-toolbar.ql-snow .ql-formats.formatting {
+                                    display: flex;
+                                    align-items: center;
                                 }
                             }
                         }
