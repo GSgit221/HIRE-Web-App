@@ -1241,7 +1241,6 @@ p-chips {
 
                         &.editor {
                             border-bottom: 0;
-                            font-size: 14px;
 
                             app-editor {
                                 .ui-editor-container {
@@ -1278,6 +1277,7 @@ p-chips {
                                         border: 0;
 
                                         .ql-editor {
+                                            font-size: 14px;
                                             min-height: 514px;
                                             padding: 12px 0;
                                         }
