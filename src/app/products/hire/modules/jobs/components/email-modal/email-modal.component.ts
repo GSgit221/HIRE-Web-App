@@ -90,9 +90,11 @@ export class EmailModalComponent implements OnInit {
 
         try {
             for (let candidate of this.candidates) {
-                await this.jobService
-                    .sendEmailToCandidate(this.jobId, candidate[0], { ...formValue, content })
-                    .subscribe(console.log);
+                await new Promise((res, rej) =>
+                    this.jobService
+                        .sendEmailToCandidate(this.jobId, candidate[0], { ...formValue, content })
+                        .subscribe(res, rej)
+                );
             }
             this.onHideModal();
         } catch (e) {
