@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { UnauthGuard } from './../../core/guards/unauth.guard';
+import { BrowserGuard, UnauthGuard } from './../../core/guards';
 import { LayoutComponent } from './layout/layout.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { SetPasswordComponent } from './set-password/set-password.component';
@@ -14,12 +14,12 @@ const routes: Routes = [
     {
         path: '',
         component: LayoutComponent,
-        canActivate: [UnauthGuard],
+        canActivate: [BrowserGuard, UnauthGuard],
         children: [
-              {
+            {
                 path: '',
                 pathMatch: 'full',
-                redirectTo:"/auth/signin"
+                redirectTo: '/auth/signin'
             },
             { path: 'signin', component: SigninComponent },
             { path: 'signup', component: SignupComponent },

@@ -12,8 +12,8 @@ import { IntercomModule } from 'ng-intercom';
 import { ToastrModule } from 'ngx-toastr';
 
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './core/components/app/app.component';
-import { PageNotFoundComponent } from './core/components/page-not-found/page-not-found.component';
+import { AppComponent, PageNotFoundComponent, UnsupportedBrowserComponent } from './core/components';
+import { BrowserGuard } from './core/guards';
 import { SharedModule } from './modules/shared/shared.module';
 import { CustomSerializer, effects, reducers } from './store';
 
@@ -30,7 +30,7 @@ export function provideConfig() {
 }
 
 @NgModule({
-    declarations: [AppComponent, PageNotFoundComponent],
+    declarations: [AppComponent, PageNotFoundComponent, UnsupportedBrowserComponent],
     imports: [
         AppRoutingModule,
         BrowserModule,
@@ -56,6 +56,7 @@ export function provideConfig() {
             provide: RouterStateSerializer,
             useClass: CustomSerializer
         },
+        BrowserGuard,
         UtilitiesService
     ],
     bootstrap: [AppComponent]
