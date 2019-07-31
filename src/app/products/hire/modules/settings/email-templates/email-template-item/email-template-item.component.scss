@@ -1,3 +1,5 @@
+@import 'variables';
+
 .action {
     background-color: #f9fafb;
     padding: 20px;
@@ -18,7 +20,7 @@
 
     .textarea {
         color: #000000;
-        font-size: 14px;
+        font-size: $font-size-origin;
         height: auto;
         line-height: 1.43;
         padding: 6px 9px;

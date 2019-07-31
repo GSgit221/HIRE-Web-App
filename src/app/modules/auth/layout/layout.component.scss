@@ -6,7 +6,7 @@
         flex-direction: column;
         justify-content: center;
         min-height: 100vh;
-        font-size: 15px;
+        font-size: $font-size;
 
         .logo-holder {
             display: flex;
@@ -112,7 +112,7 @@
                     }
 
                     .term-text {
-                        font-size: 15px;
+                        font-size: $font-size;
                         font-weight: normal;
                         line-height: normal;
                     }
@@ -121,7 +121,7 @@
                         display: flex;
                         justify-content: center;
                         margin: 0 0 32px;
-                        font-size: 15px;
+                        font-size: $font-size;
 
                         p {
                             margin: 0;
@@ -159,7 +159,7 @@
 
         ::ng-deep {
             .hc-help-text {
-                font-size: 14px;
+                font-size: $font-size-origin;
                 line-height: 1.4;
                 vertical-align: top;
                 display: inline-block;
@@ -208,7 +208,7 @@
                 margin: 0 0 22px;
 
                 .hc-form-control {
-                    font-size: 14px;
+                    font-size: $font-size-origin;
                     background: #f7f9fa;
                     border: 1px solid #f7f9fa;
                     margin: 0;
@@ -234,7 +234,7 @@
             }
 
             hc-button .hc-button-inner button {
-                font-size: 14px;
+                font-size: $font-size-origin;
                 line-height: 29px;
             }
 

@@ -7,7 +7,7 @@
     border-radius: 2px;
     color: $main-blue;
     border: 1px solid $grey-border;
-    font-size: 14px;
+    font-size: $font-size-origin;
     line-height: 16px;
     padding: 8px 1px 8px 9px;
     box-shadow: none;
@@ -15,19 +15,19 @@
 
     &::-webkit-input-placeholder {
         color: $grey;
-        font-size: 14px;
+        font-size: $font-size-origin;
         line-height: 16px;
     }
 
     &::-moz-placeholder {
         color: $grey;
-        font-size: 14px;
+        font-size: $font-size-origin;
         line-height: 16px;
     }
 
     &:-ms-input-placeholder {
         color: $grey;
-        font-size: 14px;
+        font-size: $font-size-origin;
         line-height: 16px;
     }
 
@@ -59,7 +59,7 @@
     border-radius: 2px;
     color: $grey;
     border: 1px solid $grey-border;
-    font-size: 14px;
+    font-size: $font-size-origin;
     line-height: 16px;
     padding: 8px 1px 8px 9px;
     box-shadow: none;
@@ -68,19 +68,19 @@
 
     &::-webkit-input-placeholder {
         color: $grey;
-        font-size: 14px;
+        font-size: $font-size-origin;
         line-height: 16px;
     }
 
     &::-moz-placeholder {
         color: $grey;
-        font-size: 14px;
+        font-size: $font-size-origin;
         line-height: 16px;
     }
 
     &:-ms-input-placeholder {
         color: $grey;
-        font-size: 14px;
+        font-size: $font-size-origin;
         line-height: 16px;
     }
 
@@ -130,7 +130,7 @@ p-dropdown {
                 margin: 0;
                 border-radius: 0;
                 font-weight: 400;
-                font-size: 14px;
+                font-size: $font-size-origin;
             }
 
             .ui-state-highlight {
@@ -160,7 +160,7 @@ p-dropdown {
             border-radius: 2px;
             color: $dark-blue;
             border: 1px solid $grey-border;
-            font-size: 14px;
+            font-size: $font-size-origin;
             line-height: 16px;
             padding: 9px 12px 9px 10px;
         }
@@ -410,7 +410,7 @@ p-slider {
             border-radius: 2px;
             color: #3d4953;
             border: 1px solid #e3e7eb;
-            font-size: 15px;
+            font-size: $font-size;
             line-height: 26px;
             padding: 9px 2px 9px 22px;
             box-shadow: none;
@@ -517,7 +517,7 @@ p-slider {
     border-radius: 2px;
     color: #3d4953;
     border: 1px solid #e3e7eb;
-    font-size: 15px;
+    font-size: $font-size;
     line-height: 16px;
 
     // padding: 9px 2px 9px 22px;
@@ -774,7 +774,7 @@ body p-calendar {
         border-radius: 2px;
         color: #3d4953;
         border: 1px solid #e3e7eb;
-        font-size: 15px;
+        font-size: $font-size;
         line-height: 16px;
         padding: 9px 2px 9px 22px;
         box-shadow: none;

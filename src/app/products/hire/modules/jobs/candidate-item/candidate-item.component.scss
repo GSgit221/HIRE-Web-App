@@ -248,7 +248,8 @@
         outline: none;
         padding: 0;
         cursor: pointer;
-        font: 14px/1.538 'Roboto', Helvetica, Arial, sans-serif;
+        font: $font-size-origin 'Roboto', Helvetica, Arial, sans-serif;
+        line-height: 1.538;
         background: url('/assets/images/bottom.svg') no-repeat center;
         margin: 0 0 11px;
         transition: 0.25s;
@@ -408,7 +409,7 @@
     .detail {
         display: flex;
         flex-wrap: wrap;
-        font-size: 14px;
+        font-size: $font-size-origin;
         margin: 0 0 11px;
 
         span {
@@ -447,7 +448,7 @@
 
 .education {
     padding: 10px 0 0;
-    font-size: 14px;
+    font-size: $font-size-origin;
 
     .item {
         padding: 0 0 15px;
@@ -540,7 +541,7 @@
         .file-block-holder {
             background: $white;
             color: $grey;
-            font-size: 15px;
+            font-size: $font-size;
             line-height: normal;
             padding: 9px 10px;
             word-break: break-word;
@@ -637,7 +638,7 @@
     }
 
     p {
-        font-size: 14px;
+        font-size: $font-size-origin;
         margin: 0;
     }
 }
@@ -698,7 +699,7 @@
         color: $white;
         height: 129px;
         position: relative;
-        font-size: 15px;
+        font-size: $font-size;
 
         &:nth-child(3n) {
             margin-right: 0%;
@@ -777,7 +778,7 @@
     border-radius: 3px;
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
-    font-size: 15px;
+    font-size: $font-size;
     position: fixed;
     z-index: 6;
     left: 50%;
@@ -874,7 +875,7 @@
     border: dotted 2px $grey-border;
     background-color: $white;
     padding: 26px 20px;
-    font-size: 15px;
+    font-size: $font-size;
     display: flex;
     align-items: center;
     margin: 0 0 50px;
