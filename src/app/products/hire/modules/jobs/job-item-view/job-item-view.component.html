@@ -218,6 +218,7 @@
                         class="form-input"
                         formControlName="title"
                         (keydown)="onStageNameKeydown($event)"
+                        (blur)="createStageMode = false"
                     />
                 </div>
             </form>
