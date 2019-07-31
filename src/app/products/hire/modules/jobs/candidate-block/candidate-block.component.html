@@ -2,7 +2,7 @@
     class="warning-block"
     *ngIf="
         candidate &&
-        (!candidate.resume_file || (!candidate.applicaiton_completed || !candidate.applicaiton_completed[job.id]))
+        (!candidate.resume_file || (!candidate.application_completed || !candidate.application_completed[job.id]))
     "
 >
     <div class="warning-block-holder"><span>!</span></div>
@@ -23,14 +23,14 @@
     }"
     [hidden]="
         (candidate && (candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id])) ||
-        (!candidate.applicaiton_completed || !candidate.applicaiton_completed[job.id])
+        (!candidate.application_completed || !candidate.application_completed[job.id])
     "
 ></div>
 <span
     class="complience-value"
     [hidden]="
         (candidate && (candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id])) ||
-        (!candidate.applicaiton_completed || !candidate.applicaiton_completed[job.id])
+        (!candidate.application_completed || !candidate.application_completed[job.id])
     "
     >{{ candidate.score }}%</span
 >
