@@ -113,6 +113,9 @@ export class EmailModalComponent implements OnInit {
     }
 
     textChange(quill) {
+        quill.root.setAttribute('spellcheck', false);
+        quill.root.setAttribute('autocorrect', false);
+
         quill.on('text-change', (delta, oldContents, source) => {
             this.formateQuillTest(quill);
         });

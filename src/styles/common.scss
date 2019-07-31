@@ -1158,6 +1158,8 @@ p-chips {
 }
 
 .email-modal {
+    -webkit-user-drag: none;
+
     .ui-dialog.ui-widget {
         border: none;
         border-radius: 5px;
