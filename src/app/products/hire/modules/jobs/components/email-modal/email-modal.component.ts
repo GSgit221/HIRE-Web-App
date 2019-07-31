@@ -79,7 +79,6 @@ export class EmailModalComponent implements OnInit {
                 mix-blend-mode: multiply;
                 border-radius: 11px;
                 background-color: rgb(59, 178, 115);
-                line-height: 22px;
                 margin: 0 5px 3px;
                 display: inline-block;
                 padding: 0px 10px;
@@ -91,9 +90,11 @@ export class EmailModalComponent implements OnInit {
 
         try {
             for (let candidate of this.candidates) {
-                await this.jobService
-                    .sendEmailToCandidate(this.jobId, candidate[0], { ...formValue, content })
-                    .subscribe(console.log);
+                await new Promise((res, rej) =>
+                    this.jobService
+                        .sendEmailToCandidate(this.jobId, candidate[0], { ...formValue, content })
+                        .subscribe(res, rej)
+                );
             }
             this.onHideModal();
         } catch (e) {
