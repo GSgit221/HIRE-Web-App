@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RecruiterRoleGuard } from './guards/recruiter-role.guard';
 
-import { AuthGuard, BrowserGuard, UnauthGuard } from './../../../../core/guards';
+import { AuthGuard, UnauthGuard } from './../../../../core/guards';
 import { SharedModule } from './../../../../modules/shared/shared.module';
 import { ApplicationProgressComponent } from './components/application-progress/application-progress.component';
 import { OnboardingSidebarComponent } from './components/onboarding-sidebar/onboarding-sidebar.component';
@@ -24,7 +24,7 @@ const routes: Routes = [
     {
         path: 'onboarding',
         component: OnboardingComponent,
-        canActivateChild: [BrowserGuard, AuthGuard, RecruiterRoleGuard],
+        canActivateChild: [AuthGuard, RecruiterRoleGuard],
         children: [
             {
                 path: '',
@@ -38,7 +38,7 @@ const routes: Routes = [
     },
     {
         path: 'auth',
-        canActivateChild: [BrowserGuard, UnauthGuard],
+        canActivateChild: [UnauthGuard],
         component: RecruitersAuthComponent,
         children: [
             {

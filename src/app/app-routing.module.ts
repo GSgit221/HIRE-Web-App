@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { AuthGuard, BrowserGuard } from './core/guards';
+import { AuthGuard } from './core/guards';
 
 import { PageNotFoundComponent, UnsupportedBrowserComponent } from './core/components';
 import { StartComponent } from './core/components/start.component';
@@ -9,7 +9,7 @@ const appRoutes: Routes = [
     {
         path: '',
         pathMatch: 'full',
-        canActivate: [BrowserGuard, AuthGuard],
+        canActivate: [AuthGuard],
         component: StartComponent
     },
     {

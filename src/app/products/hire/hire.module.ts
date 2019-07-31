@@ -2,12 +2,12 @@ import { SharedModule } from './../../modules/shared/shared.module';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard, BrowserGuard, UserHasAccessGuard } from './../../core/guards';
+import { AuthGuard, UserHasAccessGuard } from './../../core/guards';
 
 const routes: Routes = [
     {
         path: '',
-        canActivateChild: [BrowserGuard, AuthGuard, UserHasAccessGuard],
+        canActivateChild: [AuthGuard, UserHasAccessGuard],
         loadChildren: './modules/dashboard/dashboard.module#DashboardModule'
     }
 ];

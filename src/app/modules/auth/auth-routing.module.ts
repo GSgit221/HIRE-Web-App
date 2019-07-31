@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { BrowserGuard, UnauthGuard } from './../../core/guards';
+import { UnauthGuard } from './../../core/guards';
 import { LayoutComponent } from './layout/layout.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { SetPasswordComponent } from './set-password/set-password.component';
@@ -14,7 +14,7 @@ const routes: Routes = [
     {
         path: '',
         component: LayoutComponent,
-        canActivate: [BrowserGuard, UnauthGuard],
+        canActivate: [UnauthGuard],
         children: [
             {
                 path: '',
