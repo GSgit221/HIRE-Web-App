@@ -1,3 +1,25 @@
-<p>
-    unsupported-browser works!
-</p>
+<div class="unsupported-browser-wrapper">
+    <div class="content">
+        <div class="header">
+            You seem to be using an unsupported browser
+        </div>
+        <div class="body">
+            <p>
+                Unfortunatly <b>Clevateam</b> does not run on <b>Internet Explorer</b>. Please copy the link below and
+                paste it into one of our supported browsers.
+            </p>
+            <div class="browsers">
+                <div *ngFor="let browser of browsers" class="browser" [ngClass]="{ disabled: browser.disabled }">
+                    <div class="img-holder">
+                        <img [src]="browser.img" [alt]="browser.name" />
+                    </div>
+                    {{ browser.name }}
+                </div>
+            </div>
+            <div class="copy">
+                <input #copyURL [value]="siteURL" readonly />
+                <button (click)="onCopy()" [disabled]="copied">{{ copied ? 'Copied' : 'Copy' }}</button>
+            </div>
+        </div>
+    </div>
+</div>
