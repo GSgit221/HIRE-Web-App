@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UtilitiesService } from '@app/core/services';
@@ -29,6 +29,7 @@ interface ISelect {
 export class JobItemViewComponent implements OnInit {
     @Input() job: Job;
     @Output() setEditMode = new EventEmitter<boolean>();
+    @ViewChild('stageInput') stageInput: ElementRef;
     initialLoad = false;
     statusOptions: SelectItem[];
     contentLoading = false;
@@ -597,5 +598,12 @@ export class JobItemViewComponent implements OnInit {
 
     onShowEmailModal(visible: boolean = true) {
         this.emailModalVisible = visible;
+    }
+
+    onCreateStage() {
+        this.createStageMode = true;
+        setTimeout(() => {
+            this.stageInput.nativeElement.focus();
+        }, 1);
     }
 }
