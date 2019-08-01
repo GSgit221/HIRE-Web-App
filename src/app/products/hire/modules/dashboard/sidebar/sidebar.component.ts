@@ -19,7 +19,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     usersSubscription: Subscription;
     user: User;
     users: User[];
-    settingsOpened = true;
+    settingsOpened = false;
     showMenu: boolean = false;
     showTakeover: boolean = false;
     @ViewChild('toggleButton') toggleButton: ElementRef;
