@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import * as fromUserSelectors from '@app/store/selectors';
 import { select, Store } from '@ngrx/store';
 import * as closest from 'closest';
-import { SelectItem } from 'primeng/api';
 
 import * as fromStore from '../store';
 import * as fromStoreActions from '../store/actions/jobs.action';

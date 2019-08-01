@@ -1,20 +1,6 @@
 <div class="container">
     <div class="header-block">
         <div class="status-dropdown-block" *ngIf="!job.pool">
-            <!-- <p-dropdown
-                [options]="statusOptions"
-                [(ngModel)]="job.status"
-                [style]="{ width: '47px' }"
-                class="status-dd status-dd-no-borders caret-down"
-                (onChange)="onJobStatusChange(job)"
-            >
-                <ng-template let-item pTemplate="selectedItem">
-                    <span class="status" [ngClass]="item.label.toLowerCase()"></span>
-                </ng-template>
-                <ng-template let-status pTemplate="item">
-                    <span class="status" [ngClass]="status.label.toLowerCase()"></span>
-                </ng-template>
-            </p-dropdown> -->
             <app-switch [value]="job.status === 'LIVE'" (onChange)="onJobStatusChange($event, job)"></app-switch>
         </div>
         <div class="heading">
