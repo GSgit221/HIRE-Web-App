@@ -148,8 +148,12 @@ export class JobItemViewComponent implements OnInit {
         };
     }
 
-    onJobStatusChange(item) {
-        this.jobService.updateJob(item.id, { status: item.status }).subscribe(() => console.log('updated'));
+    onJobStatusChange(event, item) {
+        const status = event ? 'LIVE' : 'BUILD';
+        this.jobService.updateJob(item.id, { status }).subscribe(() => {
+            console.log(`Job <${item.id}> status updated`);
+            item.status = status;
+        });
     }
 
     copyURL(val: string) {
