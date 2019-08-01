@@ -73,6 +73,7 @@ export class CandidateItemComponent implements OnInit {
     declineModalVisible: boolean = false;
     declineModalForm: FormGroup;
     modalSubmission: object = {};
+    emailModalVisible: boolean = false;
 
     constructor(
         private jobService: JobService,
@@ -282,6 +283,12 @@ export class CandidateItemComponent implements OnInit {
         this.declineModalForm = this.fb.group({
             emailTemplate: [null, Validators.required]
         });
+    }
+
+    get candidateNameOrEmail() {
+        if (!this.candidate) return '';
+        const { first_name, last_name, email } = this.candidate;
+        return { first_name, last_name, email };
     }
 
     allowShowFeedback() {
@@ -628,5 +635,9 @@ export class CandidateItemComponent implements OnInit {
                     }
                 );
         });
+    }
+
+    onShowEmailModal(visible = true) {
+        this.emailModalVisible = visible;
     }
 }

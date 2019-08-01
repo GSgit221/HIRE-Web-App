@@ -1,0 +1,67 @@
+<p-dialog
+    [(visible)]="visible"
+    (onHide)="onHideModal()"
+    [style]="{ width: '650px' }"
+    [modal]="true"
+    [resizable]="false"
+    [dismissableMask]="true"
+    [showHeader]="false"
+    class="email-modal"
+>
+    <div class="p-header">
+        New Email
+        <button class="btn white" (click)="onSend()">
+            Send
+        </button>
+    </div>
+    <div class="p-body">
+        <form [formGroup]="emailModalForm">
+            <div class="form-control">
+                <div class="label to">To:</div>
+                <div class="form-value to">
+                    <span *ngFor="let candidate of candidates">
+                        {{
+                            candidate[1].first_name
+                                ? (candidate[1].first_name | titlecase) + ' ' + (candidate[1].last_name | titlecase)
+                                : candidate[1].email
+                        }}
+                    </span>
+                </div>
+            </div>
+            <div class="form-control">
+                <div class="label subject">Subject:</div>
+                <div class="form-value subject">
+                    <input name="subject" formControlName="subject" class="form-input" placeholder="Subject" />
+                </div>
+            </div>
+            <div class="form-control">
+                <div class="label editor">Message:</div>
+                <div class="form-value editor">
+                    <app-editor #pEditor formControlName="content" [style]="{ height: 'auto' }">
+                        <p-header>
+                            <span class="ql-formats formatting">
+                                <select class="ql-size">
+                                    <option selected></option>
+                                    <option value="huge">Heading</option>
+                                    <option value="large">Subheading</option>
+                                </select>
+                                <button class="ql-bold" aria-label="Bold"></button>
+                                <button class="ql-italic" aria-label="Italic"></button>
+                                <button class="ql-underline" aria-label="Underline"></button>
+                            </span>
+                            <span class="ql-formats job_desc">
+                                <p-dropdown
+                                    formControlName="emailplaceholder"
+                                    [options]="InsertPlaceholders"
+                                    placeholder="Insert placeholder"
+                                    (onChange)="onChangePlaceholder($event)"
+                                    [style]="{ width: '100%' }"
+                                ></p-dropdown>
+                            </span>
+                        </p-header>
+                    </app-editor>
+                </div>
+            </div>
+        </form>
+    </div>
+</p-dialog>

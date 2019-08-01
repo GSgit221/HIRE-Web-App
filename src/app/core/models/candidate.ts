@@ -24,4 +24,5 @@ export class Candidate {
     created_at_rel?: any;
     updated_at_rel?: any;
     read?: string[];
+    application_completed?: any;
 }

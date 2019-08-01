@@ -75,7 +75,7 @@
                     </div>
                 </div>
                 <div class="actions">
-                    <button class="btn grey">
+                    <button class="btn grey" (click)="onShowEmailModal()">
                         <img src="/assets/images/icons/icons-email.svg" alt="" style="width: 14px; height: 11px;" />
                     </button>
                     <button class="btn grey" (click)="onShowModal()">
@@ -743,3 +743,10 @@
         </form>
     </div>
 </p-dialog>
+<app-email-modal
+    *ngIf="candidate && job"
+    [(visible)]="emailModalVisible"
+    [jobId]="[job.id]"
+    [candidates]="[[candidate.id, candidateNameOrEmail]]"
+    (onHide)="onShowEmailModal(false)"
+></app-email-modal>

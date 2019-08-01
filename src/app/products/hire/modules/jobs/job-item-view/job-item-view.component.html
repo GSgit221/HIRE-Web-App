@@ -68,6 +68,9 @@
                         </button>
                     </div>
                     <div class="stage-actions" *ngIf="hasSelection('applied')">
+                        <button class="btn grey" (click)="onShowEmailModal()">
+                            <img src="/assets/images/icons/icons-email.svg" alt="" style="width: 14px; height: 11px;" />
+                        </button>
                         <button class="btn danger" (click)="onShowModal()">
                             Decline
                         </button>
@@ -161,6 +164,9 @@
                         </button>
                     </div>
                     <div class="stage-actions" *ngIf="hasSelection(stage.id)">
+                        <button class="btn grey" (click)="onShowEmailModal()">
+                            <img src="/assets/images/icons/icons-email.svg" alt="" style="width: 14px; height: 11px;" />
+                        </button>
                         <button class="btn danger" (click)="onShowModal()">
                             Decline
                         </button>
@@ -201,20 +207,18 @@
             </div>
             <form [formGroup]="newJobStageForm" class="stage-column" *ngIf="!job.pool">
                 <div class="light-overlay" *ngIf="stageFormIsSaving"></div>
-                <button
-                    class="btn fw btn-dash-bordered tal mb10"
-                    (click)="createStageMode = true"
-                    *ngIf="!createStageMode"
-                >
+                <button class="btn fw btn-dash-bordered tal mb10" (click)="onCreateStage()" *ngIf="!createStageMode">
                     <svg-icon class="fill-black ml10 mr10" src="/assets/images/plus.svg"></svg-icon>
                     <span class="text">Add Stage</span>
                 </button>
-                <div class="stage-content" *ngIf="createStageMode">
+                <div class="stage-content" [ngStyle]="{ display: createStageMode ? 'inline-block' : 'none' }">
                     <input
+                        #stageInput
                         type="text"
                         class="form-input"
                         formControlName="title"
                         (keydown)="onStageNameKeydown($event)"
+                        (blur)="createStageMode = false"
                     />
                 </div>
             </form>
@@ -310,3 +314,10 @@
         </form>
     </div>
 </p-dialog>
+<app-email-modal
+    *ngIf="job"
+    [(visible)]="emailModalVisible"
+    [jobId]="job.id"
+    [candidates]="selectionEmails"
+    (onHide)="onShowEmailModal(false)"
+></app-email-modal>
