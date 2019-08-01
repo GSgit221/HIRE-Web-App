@@ -36,7 +36,7 @@
         width: 31.25%;
         max-width: 31.25%;
         color: $grey;
-        font-size: 13px;
+        font-size: $font-size-low;
         padding: 20px 20px 10px 0;
 
         p {
@@ -45,7 +45,7 @@
 
         .title {
             display: block;
-            font-size: 13px;
+            font-size: $font-size-low;
             font-weight: 700;
             color: $main-blue;
             margin: 0 0 10px;
@@ -120,7 +120,7 @@
 
     .form-block-label {
         display: block;
-        font-size: 13px;
+        font-size: $font-size-low;
         font-weight: 400;
         color: $main-blue;
         margin: 0 0 6px;
@@ -159,7 +159,7 @@
                 top: 1px;
                 width: 107px;
                 background: $light;
-                font-size: 13px;
+                font-size: $font-size-low;
                 line-height: 16px;
                 padding: 8px 2px 7px 10px;
             }

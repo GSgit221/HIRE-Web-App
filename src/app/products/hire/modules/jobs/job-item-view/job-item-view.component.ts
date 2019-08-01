@@ -5,7 +5,6 @@ import { UtilitiesService } from '@app/core/services';
 import { environment } from '@env/environment';
 import { select, Store } from '@ngrx/store';
 import { ToastrService } from 'ngx-toastr';
-import { SelectItem } from 'primeng/api';
 
 import { Candidate, EmailTemplate, Job, Stage, User } from '../../../../../core/models';
 import { CandidateService, EmailService, JobService } from '../../../../../core/services';
@@ -31,7 +30,6 @@ export class JobItemViewComponent implements OnInit {
     @Output() setEditMode = new EventEmitter<boolean>();
     @ViewChild('stageInput') stageInput: ElementRef;
     initialLoad = false;
-    statusOptions: SelectItem[];
     contentLoading = false;
     newJobStageForm: FormGroup;
     formIsSaving = false;
@@ -78,7 +76,6 @@ export class JobItemViewComponent implements OnInit {
         private utilities: UtilitiesService
     ) {
         this.baseUrl = this.utilities.getHireBaseUrl();
-        this.statusOptions = [{ label: 'LIVE', value: 'LIVE' }, { label: 'BUILD', value: 'BUILD' }];
 
         this.jobService.getUsers().subscribe((users: User[]) => {
             this.users = users || [];
@@ -148,8 +145,12 @@ export class JobItemViewComponent implements OnInit {
         };
     }
 
-    onJobStatusChange(item) {
-        this.jobService.updateJob(item.id, { status: item.status }).subscribe(() => console.log('updated'));
+    onJobStatusChange(event, item) {
+        const status = event ? 'LIVE' : 'BUILD';
+        this.jobService.updateJob(item.id, { status }).subscribe(() => {
+            console.log(`Job <${item.id}> status updated`);
+            item.status = status;
+        });
     }
 
     copyURL(val: string) {

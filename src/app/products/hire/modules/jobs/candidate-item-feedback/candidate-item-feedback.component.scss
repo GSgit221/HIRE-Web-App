@@ -9,7 +9,7 @@ textarea {
     border-radius: 2px;
     padding: 10px;
     margin: 6px 0 23px;
-    font-size: 13px;
+    font-size: $font-size-low;
     resize: none;
 }
 
@@ -181,7 +181,7 @@ h3 {
         border-radius: 2px;
         border: 1px solid $grey-border;
         background: rgba(255, 255, 255, 1);
-        font-size: 13px;
+        font-size: $font-size-low;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -215,7 +215,7 @@ h3 {
         border-radius: 2px;
         background: rgba(255, 255, 255, 0.5);
         border: 1px solid #d7dbdf;
-        font-size: 13px;
+        font-size: $font-size-low;
         width: 100%;
         padding: 10px 11px;
         margin: 0 0 4px;
@@ -336,7 +336,7 @@ h3 {
 
         .title {
             color: $main-blue;
-            font-size: 13px;
+            font-size: $font-size-low;
             flex: 0 0 80px;
         }
 
@@ -409,7 +409,7 @@ h3 {
 
         h5 {
             margin: 0 0 10px;
-            font-size: 13px;
+            font-size: $font-size-low;
             font-weight: bold;
         }
 

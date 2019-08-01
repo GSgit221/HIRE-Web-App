@@ -3,15 +3,12 @@ import { Router } from '@angular/router';
 import * as fromUserSelectors from '@app/store/selectors';
 import { select, Store } from '@ngrx/store';
 import * as closest from 'closest';
-import { SelectItem } from 'primeng/api';
 
 import * as fromStore from '../store';
 import * as fromStoreActions from '../store/actions/jobs.action';
 import * as fromStoreSelectors from '../store/selectors/jobs.selector';
-import { Job } from './../../../../../core/models/job';
-import { User } from './../../../../../core/models/user';
-import { JobService } from './../../../../../core/services/job.service';
-import { UtilitiesService } from './../../../../../core/services/utilities.service';
+import { Job, User } from './../../../../../core/models';
+import { JobService, UtilitiesService } from './../../../../../core/services';
 
 @Component({
     selector: 'app-jobs-list',
@@ -23,7 +20,6 @@ export class JobsListComponent implements OnInit {
     list = [];
     filteredList = [];
     filter = [];
-    statusOptions: SelectItem[];
     selectedAll = false;
     selectedItems = 0;
     users: User[] = [];
@@ -58,15 +54,12 @@ export class JobsListComponent implements OnInit {
         this.store.pipe(select(fromUserSelectors.getUsersEntities)).subscribe((users: User[]) => {
             this.users = users || [];
         });
-
-        this.statusOptions = [{ label: 'LIVE', value: 'LIVE' }, { label: 'BUILD', value: 'BUILD' }];
     }
 
     ngOnInit() {}
 
     onItemClick(event, item) {
         event.preventDefault();
-        const target = event.target;
         const escapeDD = closest(event.target, '[data-escape-click]');
         if (escapeDD) {
             // console.log('DO NOTHING');
@@ -76,9 +69,12 @@ export class JobsListComponent implements OnInit {
         }
     }
 
-    onJobStatusChange(item) {
-        // this.jobService.updateJob(item.id, { status: item.status }).subscribe(() => console.log('updated'));
-        this.store.dispatch(new fromStoreActions.UpdateJob({ id: item.id, data: item.status }));
+    onJobStatusChange(event, item) {
+        const status = event ? 'LIVE' : 'BUILD';
+        this.jobService.updateJob(item.id, { status }).subscribe(() => {
+            console.log(`Job <${item.id}> status updated`);
+            item.status = status;
+        });
     }
 
     onSelectAllChange() {
