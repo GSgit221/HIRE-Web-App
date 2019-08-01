@@ -23,7 +23,6 @@ export class JobsListComponent implements OnInit {
     list = [];
     filteredList = [];
     filter = [];
-    statusOptions: SelectItem[];
     selectedAll = false;
     selectedItems = 0;
     users: User[] = [];
@@ -58,8 +57,6 @@ export class JobsListComponent implements OnInit {
         this.store.pipe(select(fromUserSelectors.getUsersEntities)).subscribe((users: User[]) => {
             this.users = users || [];
         });
-
-        this.statusOptions = [{ label: 'LIVE', value: 'LIVE' }, { label: 'BUILD', value: 'BUILD' }];
     }
 
     ngOnInit() {}
