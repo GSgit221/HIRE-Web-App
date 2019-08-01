@@ -7,10 +7,8 @@ import * as closest from 'closest';
 import * as fromStore from '../store';
 import * as fromStoreActions from '../store/actions/jobs.action';
 import * as fromStoreSelectors from '../store/selectors/jobs.selector';
-import { Job } from './../../../../../core/models/job';
-import { User } from './../../../../../core/models/user';
-import { JobService } from './../../../../../core/services/job.service';
-import { UtilitiesService } from './../../../../../core/services/utilities.service';
+import { Job, User } from './../../../../../core/models';
+import { JobService, UtilitiesService } from './../../../../../core/services';
 
 @Component({
     selector: 'app-jobs-list',
