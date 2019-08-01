@@ -3,6 +3,7 @@ export class Job {
     id?: string;
     title: string;
     company: string;
+    ref: string;
     location: string;
     is_remote: boolean;
     job_type: string;
