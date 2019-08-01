@@ -2,8 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RecruiterRoleGuard } from './guards/recruiter-role.guard';
 
-import { AuthGuard } from './../../../../core/guards/auth.guard';
-import { UnauthGuard } from './../../../../core/guards/unauth.guard';
+import { AuthGuard, UnauthGuard } from './../../../../core/guards';
 import { SharedModule } from './../../../../modules/shared/shared.module';
 import { ApplicationProgressComponent } from './components/application-progress/application-progress.component';
 import { OnboardingSidebarComponent } from './components/onboarding-sidebar/onboarding-sidebar.component';

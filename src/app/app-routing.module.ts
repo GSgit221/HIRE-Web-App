@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from './core/guards/auth.guard';
+import { AuthGuard } from './core/guards';
 
-import { PageNotFoundComponent } from './core/components/page-not-found/page-not-found.component';
+import { PageNotFoundComponent, UnsupportedBrowserComponent } from './core/components';
 import { StartComponent } from './core/components/start.component';
 
 const appRoutes: Routes = [
@@ -24,6 +24,7 @@ const appRoutes: Routes = [
         path: 'recruiters',
         loadChildren: './products/hire/modules/recruiters/recruiters.module#RecruitersModule'
     },
+    { path: 'unsupported-browser', component: UnsupportedBrowserComponent },
     { path: 'not-found', component: PageNotFoundComponent },
     { path: '**', redirectTo: 'not-found' }
 ];
