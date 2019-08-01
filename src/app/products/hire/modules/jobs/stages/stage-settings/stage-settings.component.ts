@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Slider } from 'primeng/slider';
 import { Questionnaire } from './../../../../../../core/models/questionnaire';
 import { QuestionnaireService } from './../../../../../../core/services/questionnaire.service';
 
 import { UtilitiesService } from '@app/core/services';
+import { distinctUntilChanged } from 'rxjs/operators';
 import { Job } from '../../../../../../core/models/job';
 import { Stage } from '../../../../../../core/models/stage';
 import { FormHelperService } from './../../../../../../core/services/form-helper.service';
@@ -90,7 +91,11 @@ export class StageSettingsComponent implements OnInit {
                         ],
                         actions: this.fb.array(actions)
                     });
-                    this.stage.assessment ? this.populateAssessment(this.stage.assessment) : this.addAssessmentGroup();
+                    if (this.stage.assessment) {
+                        this.populateAssessment(this.stage.assessment);
+                    } else {
+                        this.addAssessmentGroup();
+                    }
                     this.questionnaireService.getAll().subscribe(
                         (response: Questionnaire[]) => {
                             this.contentLoading = false;
@@ -112,6 +117,32 @@ export class StageSettingsComponent implements OnInit {
                     setTimeout(() => {
                         this.onHcSliderChange();
                     }, 100);
+
+                    let assessmentValue = this.stageSettingsForm.get('assessment').value;
+                    this.stageSettingsForm
+                        .get('assessment')
+                        .valueChanges.pipe(distinctUntilChanged())
+                        .subscribe((val) => {
+                            if (val && val.length && !this.utilities.isEqual(val, assessmentValue)) {
+                                console.log('value changed', val);
+                                assessmentValue = val;
+                                const formArray = this.assessment;
+                                for (let fg of formArray.controls) {
+                                    const val = fg.value;
+                                    if (val.type.length || val.option.value) {
+                                        fg.get('type').setValidators([Validators.required]);
+                                        fg.get('option').setValidators([Validators.required]);
+                                        fg.get('type').updateValueAndValidity();
+                                        fg.get('option').updateValueAndValidity();
+                                    } else {
+                                        fg.get('type').clearValidators();
+                                        fg.get('option').clearValidators();
+                                        fg.get('type').updateValueAndValidity();
+                                        fg.get('option').updateValueAndValidity();
+                                    }
+                                }
+                            }
+                        });
                 }
             },
             (error) => {
@@ -227,8 +258,8 @@ export class StageSettingsComponent implements OnInit {
     addAssessmentGroup() {
         this.assessment.push(
             this.fb.group({
-                type: ['', Validators.required],
-                option: ['', Validators.required]
+                type: [''],
+                option: ['']
             })
         );
     }
