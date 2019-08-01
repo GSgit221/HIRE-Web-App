@@ -1125,7 +1125,7 @@ p-chips {
                     border: 0;
                     color: $white;
                     cursor: pointer;
-                    font-size: 13px;
+                    font-size: $font-size-low;
                     height: 36px;
                     line-height: 15px;
                     margin-left: 12px;
@@ -1182,7 +1182,7 @@ p-chips {
                     background: white;
                     border-radius: 3px;
                     color: $pink;
-                    font-size: 13px;
+                    font-size: $font-size-low;
                     line-height: normal;
                     padding: 10px 11px 11px;
                     width: 125px;
@@ -1267,7 +1267,7 @@ p-chips {
 
                                             p-dropdown .ui-dropdown {
                                                 .ui-dropdown-label {
-                                                    font-size: 13px;
+                                                    font-size: $font-size-low;
                                                     height: 26px;
                                                     line-height: 13px;
                                                     padding: 7px 10px 6px;

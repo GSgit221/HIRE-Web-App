@@ -42,7 +42,7 @@
         line-height: 30px;
 
         .subtitle {
-            font-size: 15px;
+            font-size: $font-size;
             line-height: 30px;
             font-weight: 400;
             color: $grey;
@@ -242,7 +242,7 @@
         border: 0;
         color: $white;
         cursor: pointer;
-        font-size: 13px;
+        font-size: $font-size-low;
         height: 36px;
         line-height: 15px;
         margin-left: 12px;

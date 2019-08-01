@@ -34,7 +34,7 @@
 
     .information-block {
         color: $grey;
-        font-size: 13px;
+        font-size: $font-size-low;
 
         p {
             margin: 0;
@@ -96,7 +96,7 @@
             border: 0;
             color: $white;
             cursor: pointer;
-            font-size: 13px;
+            font-size: $font-size-low;
             height: 36px;
             line-height: 15px;
             margin-left: 10px;
@@ -261,7 +261,7 @@
 
     p {
         line-height: 22px;
-        font-size: 13px;
+        font-size: $font-size-low;
         margin: 0 0 10px;
     }
 
@@ -429,7 +429,7 @@
     }
 
     .description {
-        font-size: 13px;
+        font-size: $font-size-low;
         padding: 0 0 0 18px;
         line-height: 22px;
         position: relative;
@@ -737,7 +737,7 @@
         transform: translate(-50%, -50%);
         color: $pink;
         font-weight: normal;
-        font-size: 13px;
+        font-size: $font-size-low;
         opacity: 0;
         z-index: -1;
         transition: 0.25s;
@@ -843,7 +843,7 @@
         background-color: $pink;
         text-align: center;
         font-weight: normal;
-        font-size: 13px;
+        font-size: $font-size-low;
         color: $white;
         margin: 0 0 0 auto;
         display: flex;
@@ -893,7 +893,7 @@
     border-radius: 5px;
     color: $grey;
     display: flex;
-    font-size: 13px;
+    font-size: $font-size-low;
     line-height: 15px;
     padding: 13px;
     margin-bottom: 24px;
