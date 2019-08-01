@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { NgxCurrencyModule } from 'ngx-currency';
+import { InputSwitchModule } from 'primeng/inputswitch';
 import { SharedModule } from './../../../../modules/shared/shared.module';
 
 import { CandidateBlockComponent } from './candidate-block/candidate-block.component';
@@ -10,6 +11,7 @@ import { CandidateItemFeedbackComponent } from './candidate-item-feedback/candid
 import { CandidateItemTimelineComponent } from './candidate-item-timeline/candidate-item-timeline.component';
 import { CandidateItemComponent } from './candidate-item/candidate-item.component';
 import { EmailModalComponent } from './components/email-modal/email-modal.component';
+import { SwitchComponent } from './components/switch/switch.component';
 import * as fromGuards from './guards';
 import { JobItemEditComponent } from './job-item-edit/job-item-edit.component';
 import { JobItemNewComponent } from './job-item-new/job-item-new.component';
@@ -53,13 +55,15 @@ const routes: Routes = [
         CandidateItemFeedbackComponent,
         CandidateItemTimelineComponent,
         CandidateBlockComponent,
-        EmailModalComponent
+        EmailModalComponent,
+        SwitchComponent
     ],
     providers: [...fromGuards.guards],
     imports: [
         SharedModule,
         RouterModule.forChild(routes),
         NgxCurrencyModule,
+        InputSwitchModule,
         StoreModule.forFeature('jobs', reducers),
         EffectsModule.forFeature(effects)
     ],

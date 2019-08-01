@@ -134,8 +134,8 @@
                                     ></p-checkbox>
                                 </div>
                             </div>
-                            <div class="col col2 flex-6 status-col">
-                                <p-dropdown
+                            <div class="col col2 flex-6 status-col" data-escape-click>
+                                <!-- <p-dropdown
                                     [options]="statusOptions"
                                     [(ngModel)]="item.status"
                                     [style]="{ width: '47px', opacity: '1' }"
@@ -150,7 +150,11 @@
                                     <ng-template let-status pTemplate="item">
                                         <span class="status" [ngClass]="status.label.toLowerCase()"></span>
                                     </ng-template>
-                                </p-dropdown>
+                                </p-dropdown> -->
+                                <app-switch
+                                    [value]="item.status === 'LIVE'"
+                                    (onChange)="onJobStatusChange($event, item)"
+                                ></app-switch>
                             </div>
                             <div class="col col3  flex-25 truncate-text-col">
                                 <p class="hc-content-p">{{ item.title }}</p>

@@ -66,7 +66,6 @@ export class JobsListComponent implements OnInit {
 
     onItemClick(event, item) {
         event.preventDefault();
-        const target = event.target;
         const escapeDD = closest(event.target, '[data-escape-click]');
         if (escapeDD) {
             // console.log('DO NOTHING');
@@ -76,9 +75,12 @@ export class JobsListComponent implements OnInit {
         }
     }
 
-    onJobStatusChange(item) {
-        // this.jobService.updateJob(item.id, { status: item.status }).subscribe(() => console.log('updated'));
-        this.store.dispatch(new fromStoreActions.UpdateJob({ id: item.id, data: item.status }));
+    onJobStatusChange(event, item) {
+        const status = event ? 'LIVE' : 'BUILD';
+        this.jobService.updateJob(item.id, { status }).subscribe(() => {
+            console.log(`Job <${item.id}> status updated`);
+            item.status = status;
+        });
     }
 
     onSelectAllChange() {
