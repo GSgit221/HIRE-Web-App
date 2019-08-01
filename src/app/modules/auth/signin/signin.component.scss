@@ -15,7 +15,7 @@
         }
     }
     .attention {
-        font-size: 15px;
+        font-size: $font-size;
         color: #72808d;
     }
     .checkbox-holder {
@@ -101,7 +101,7 @@
     }
     .sign-in-sso {
         font-family: Roboto;
-        font-size: 15px;
+        font-size: $font-size;
         text-align: center;
         text-decoration: underline;
         cursor: pointer;

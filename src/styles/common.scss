@@ -13,7 +13,8 @@ html {
 body {
     background: $main-background;
     color: $main-blue;
-    font: 14px/1.538 'Roboto', Helvetica, Arial, sans-serif;
+    font: $font-size-origin 'Roboto', Helvetica, Arial, sans-serif;
+    line-height: 1.538;
 }
 
 html,
@@ -93,7 +94,7 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
 
 .separator20 {
     width: 20px;
-    heigh: 1px;
+    height: 1px;
 }
 
 // Container
@@ -129,7 +130,7 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
         flex-direction: row;
         align-items: center;
         color: $grey;
-        font-size: 14px;
+        font-size: $font-size-origin;
         line-height: 1.357;
         margin: 0 15px;
 
@@ -169,7 +170,7 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
     .total-amount {
         display: inline-block;
         margin: 0 0 0 40px;
-        font-size: 14px;
+        font-size: $font-size-origin;
     }
 
     .controls-separator {
@@ -209,7 +210,7 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
         }
 
         .placeholder-content {
-            font-size: 14px;
+            font-size: $font-size-origin;
             line-height: 1.571;
             color: $grey;
             padding: 0 80px 40px 0;
@@ -293,7 +294,7 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
 // Buttons
 .btn {
     display: inline-block;
-    font-size: 14px;
+    font-size: $font-size-origin;
     line-height: 1.846;
     font-weight: 400;
     padding: 5px;
@@ -390,7 +391,7 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
         background: transparent;
         color: #fff;
         height: 46px;
-        font-size: 14px;
+        font-size: $font-size-origin;
         line-height: 2.57;
         padding: 4px 5px;
         color: $green;
@@ -407,7 +408,7 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
         // background: transparent;
         color: #fff;
         height: 46px;
-        font-size: 14px;
+        font-size: $font-size-origin;
         line-height: 2.57;
         padding: 5px;
         color: $green;
@@ -417,7 +418,7 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
         background: $dark;
         color: #fff;
         height: 46px;
-        font-size: 14px;
+        font-size: $font-size-origin;
         line-height: 2.57;
 
         &:hover {
@@ -877,7 +878,7 @@ p-chips {
         min-height: 36px;
         border-radius: 2px;
         color: $main-blue;
-        font-size: 14px;
+        font-size: $font-size-origin;
         line-height: 16px;
         padding: 2px 2px 2px 4px;
         border-radius: 3px;
@@ -898,7 +899,7 @@ p-chips {
         margin-bottom: 1px;
 
         &.ui-state-highlight {
-            font-size: 14px;
+            font-size: $font-size-origin;
             color: $black;
             background: $light-grey;
         }
@@ -972,7 +973,7 @@ p-chips {
 
     .editor-title {
         display: block;
-        font-size: 14px;
+        font-size: $font-size-origin;
         font-weight: 700;
         color: $pink;
         padding: 10px;
@@ -988,7 +989,7 @@ p-chips {
     .ql-toolbar.ql-snow + .ql-container.ql-snow {
         border: 0;
         min-height: 150px !important;
-        font-size: 14px;
+        font-size: $font-size-origin;
     }
 }
 
@@ -1097,7 +1098,7 @@ p-chips {
 
                 p {
                     color: $black;
-                    font-size: 15px;
+                    font-size: $font-size;
                     line-height: normal;
                     margin-bottom: 15px;
                 }
@@ -1158,6 +1159,8 @@ p-chips {
 }
 
 .email-modal {
+    -webkit-user-drag: none;
+
     .ui-dialog.ui-widget {
         border: none;
         border-radius: 5px;
@@ -1195,7 +1198,7 @@ p-chips {
 
                     .label {
                         color: $main-blue;
-                        font-size: 15px;
+                        font-size: $font-size;
                         font-weight: bold;
                         line-height: normal;
                         padding-top: 18px;
@@ -1220,7 +1223,7 @@ p-chips {
                                 border-radius: 2px;
                                 color: black;
                                 display: inline-block;
-                                font-size: 15px;
+                                font-size: $font-size;
                                 line-height: 26px;
                                 margin-bottom: 5px;
                                 margin-right: 10px;
@@ -1232,7 +1235,7 @@ p-chips {
                             .form-input {
                                 border: none;
                                 color: $main-blue;
-                                font-size: 15px;
+                                font-size: $font-size;
                                 height: auto;
                                 line-height: normal;
                                 padding: 16px 0;
@@ -1277,7 +1280,7 @@ p-chips {
                                         border: 0;
 
                                         .ql-editor {
-                                            font-size: 14px;
+                                            font-size: $font-size-origin;
                                             min-height: 514px;
                                             padding: 12px 0;
 

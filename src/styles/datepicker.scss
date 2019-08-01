@@ -1,3 +1,5 @@
+@import 'variables';
+
 body .ui-datepicker {
     padding: 0.857em;
     min-width: 20em;
@@ -94,7 +96,7 @@ body .ui-datepicker .ui-datepicker-header .ui-datepicker-title select {
 }
 
 body .ui-datepicker table {
-    font-size: 14px;
+    font-size: $font-size-origin;
     margin: 0.857em 0 0 0;
 }
 
