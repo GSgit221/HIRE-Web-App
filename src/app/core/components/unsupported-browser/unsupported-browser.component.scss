@@ -1,0 +1,111 @@
+@import 'variables';
+
+.unsupported-browser-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+    width: 100%;
+
+    .content {
+        background-color: #ffffff;
+        border-radius: 3px;
+        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
+        margin: 5%;
+        max-width: 684px;
+        overflow: hidden;
+        text-align: center;
+        width: 90%;
+
+        .header {
+            background-color: $dark-blue;
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 24px;
+            padding: 32px 32px 30.5px;
+        }
+
+        .body {
+            padding: 31.5px 32px 53px;
+
+            p {
+                color: $cyan-blue;
+                font-size: 16px;
+                line-height: 1.5;
+                margin: 0 auto 30px;
+                max-width: 549px;
+            }
+
+            .browsers {
+                display: flex;
+                align-items: flex-end;
+                flex-wrap: wrap;
+                justify-content: center;
+
+                .browser {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+
+                    color: $cyan-blue;
+                    font-size: 15px;
+                    line-height: normal;
+                    margin: 0 18px 41px;
+                    min-width: 54px;
+
+                    &.disabled {
+                        color: $grey-border;
+                    }
+
+                    .img-holder {
+                        display: flex;
+                        align-items: center;
+                        height: 41px;
+                        margin-bottom: 15px;
+                    }
+                }
+            }
+
+            .copy {
+                border: solid 1px $pink;
+                border-radius: 2px;
+                margin: 0 auto;
+                max-width: 490px;
+                overflow: hidden;
+                position: relative;
+
+                input {
+                    border: none;
+                    color: #000000;
+                    font-size: 15px;
+                    line-height: 18px;
+                    outline: none;
+                    padding: 14px 92px 14px 12px;
+                    width: 100%;
+                }
+
+                button {
+                    position: absolute;
+                    right: 0;
+                    background-color: $pink;
+                    border: none;
+                    color: #ffffff;
+                    cursor: pointer;
+                    font-size: 12px;
+                    font-weight: 500;
+                    height: 100%;
+                    width: 80px;
+                    outline: none;
+                    text-transform: uppercase;
+                    transition: all 0.3s;
+
+                    &[disabled] {
+                        background-color: $grey-border;
+                        cursor: not-allowed;
+                    }
+                }
+            }
+        }
+    }
+}

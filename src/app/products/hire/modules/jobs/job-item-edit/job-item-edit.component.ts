@@ -277,6 +277,7 @@ export class JobItemEditComponent implements OnInit {
         this.jobDetailsForm = this.fb.group({
             title: [''],
             company: [''],
+            ref: [''],
             location: [''],
             is_remote: [''],
             job_type: [''],
@@ -322,6 +323,7 @@ export class JobItemEditComponent implements OnInit {
         this.jobDetailsForm = this.fb.group({
             title: [this.job.title, Validators.required],
             company: [this.job.company, Validators.required],
+            ref: [this.job.ref],
             location: [
                 { value: this.job.location, disabled: false },
                 ConditionalValidator.validate(() => !this.job.is_remote, Validators.required)

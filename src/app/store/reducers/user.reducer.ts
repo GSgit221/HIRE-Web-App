@@ -38,6 +38,14 @@ export function reducer(state = initialState, action: fromUser.UserAction): User
                 entity
             };
         }
+
+        case fromUser.CLEAR_USER: {
+            return {
+                loading: false,
+                loaded: false,
+                entity: null
+            };
+        }
     }
 
     return state;

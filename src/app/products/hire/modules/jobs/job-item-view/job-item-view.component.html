@@ -1,25 +1,14 @@
 <div class="container">
     <div class="header-block">
         <div class="status-dropdown-block" *ngIf="!job.pool">
-            <p-dropdown
-                [options]="statusOptions"
-                [(ngModel)]="job.status"
-                [style]="{ width: '47px' }"
-                class="status-dd status-dd-no-borders caret-down"
-                (onChange)="onJobStatusChange(job)"
-            >
-                <ng-template let-item pTemplate="selectedItem">
-                    <span class="status" [ngClass]="item.label.toLowerCase()"></span>
-                </ng-template>
-                <ng-template let-status pTemplate="item">
-                    <span class="status" [ngClass]="status.label.toLowerCase()"></span>
-                </ng-template>
-            </p-dropdown>
+            <app-switch [value]="job.status === 'LIVE'" (onChange)="onJobStatusChange($event, job)"></app-switch>
         </div>
         <div class="heading">
             <div class="job-title-block">
                 <div class="view">
-                    <strong class="title">{{ job.title }}</strong>
+                    <strong class="title"
+                        >{{ job.title }} <span class="subtitle" *ngIf="job.ref"> - {{ job.ref }}</span></strong
+                    >
                     <button class="btn btn-round ml20" (click)="onEditJobClick($event)" *ngIf="!job.pool">
                         <img src="/assets/images/edit.svg" alt="" width="14" height="13" />
                     </button>

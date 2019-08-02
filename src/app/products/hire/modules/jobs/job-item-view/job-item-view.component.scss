@@ -19,12 +19,8 @@
 }
 
 .status-dropdown-block {
-    width: 47px;
-    height: 47px;
-    background: $white;
-    border-radius: 3px;
-    margin-right: 20px;
-    padding: 7px 0 0;
+    margin-right: 9px;
+    padding-top: 5px;
 }
 
 .heading {
@@ -44,6 +40,15 @@
         display: inline-block;
         font-size: 25px;
         line-height: 30px;
+
+        .subtitle {
+            font-size: $font-size;
+            line-height: 30px;
+            font-weight: 400;
+            color: $grey;
+            display: inline-block;
+            margin: 0 20px 0 2px;
+        }
     }
 
     .form-input-title {
@@ -237,7 +242,7 @@
         border: 0;
         color: $white;
         cursor: pointer;
-        font-size: 13px;
+        font-size: $font-size-low;
         height: 36px;
         line-height: 15px;
         margin-left: 12px;

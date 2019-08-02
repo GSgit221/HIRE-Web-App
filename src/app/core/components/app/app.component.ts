@@ -17,56 +17,82 @@ import { User } from './../../models/user';
 })
 export class AppComponent {
     contentLoading = false;
+    redirectURL = '/unsupported-browser';
+
     constructor(
         private authService: AuthService,
         private store: Store<fromStore.State>,
         private router: Router,
         public intercom: Intercom
     ) {
-        if (authService.isLoggedIn()) {
-            this.contentLoading = true;
-            this.store.dispatch(new fromStore.LoadUser());
-            this.store
-                .pipe(
-                    select(fromSelectors.getUserEntity),
-                    filter((user) => !!user)
-                )
-                .subscribe(
-                    (user: User) => {
-                        this.contentLoading = false;
-                        if (user && user.role === 'recruiter' && !user.activated) {
-                            this.router.navigateByUrl('/recruiters/onboarding');
-                        }
-                        console.log('INITIALIZING INTERCOM FOR AUTHENTICATED USER');
-                        this.intercom.boot({
-                            app_id: environment.intercomAppId,
-                            email: user.email,
-                            user_hash: user.user_hash,
-                            widget: {
-                                activator: '#intercom'
-                            }
-                        });
-                    },
-                    (errorResponse) => {
-                        console.error(errorResponse);
-                        this.contentLoading = false;
-                    }
-                );
+        if (this.detectIE()) {
+            this.router.navigate([this.redirectURL]);
         } else {
-            console.log('INITIALIZING INTERCOM FOR GUEST');
-            this.intercom.boot({
-                app_id: environment.intercomAppId,
-                widget: {
-                    activator: '#intercom'
+            if (authService.isLoggedIn()) {
+                this.contentLoading = true;
+                this.store.dispatch(new fromStore.LoadUser());
+                this.store
+                    .pipe(
+                        select(fromSelectors.getUserEntity),
+                        filter((user) => !!user)
+                    )
+                    .subscribe(
+                        (user: User) => {
+                            this.contentLoading = false;
+                            if (user && user.role === 'recruiter' && !user.activated) {
+                                this.router.navigateByUrl('/recruiters/onboarding');
+                            }
+                            console.log('INITIALIZING INTERCOM FOR AUTHENTICATED USER');
+                            this.intercom.boot({
+                                app_id: environment.intercomAppId,
+                                email: user.email,
+                                user_hash: user.user_hash,
+                                widget: {
+                                    activator: '#intercom'
+                                }
+                            });
+                        },
+                        (errorResponse) => {
+                            console.error(errorResponse);
+                            this.contentLoading = false;
+                        }
+                    );
+            } else {
+                console.log('INITIALIZING INTERCOM FOR GUEST');
+                this.intercom.boot({
+                    app_id: environment.intercomAppId,
+                    widget: {
+                        activator: '#intercom'
+                    }
+                });
+            }
+
+            this.authService.$unauthorized.subscribe((value) => {
+                if (value) {
+                    console.log('UNAUTHORIZED');
+                    this.contentLoading = false;
                 }
             });
         }
+    }
 
-        this.authService.$unauthorized.subscribe((value) => {
-            if (value) {
-                console.log('UNAUTHORIZED');
-                this.contentLoading = false;
-            }
-        });
+    detectIE() {
+        const ua = window.navigator.userAgent;
+
+        const msie = ua.indexOf('MSIE ');
+        if (msie > 0) {
+            // IE 10 or older => return version number
+            return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+        }
+
+        const trident = ua.indexOf('Trident/');
+        if (trident > 0) {
+            // IE 11 => return version number
+            const rv = ua.indexOf('rv:');
+            return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+        }
+
+        // other browser
+        return false;
     }
 }

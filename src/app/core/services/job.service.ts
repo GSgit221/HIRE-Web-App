@@ -23,6 +23,7 @@ export class JobService {
         if (id === 'new') {
             const newJob: Job = {
                 title: '',
+                ref: '',
                 company: '',
                 location: '',
                 is_remote: false,

@@ -11,7 +11,7 @@
     height: 36px;
     border-radius: 2px;
     border: 1px solid $grey-border;
-    font-size: 13px;
+    font-size: $font-size-low;
     line-height: 16px;
     color: $grey;
     padding: 9px 2px 9px 10px;
@@ -91,7 +91,7 @@
     width: 100%;
     border-radius: 2px;
     border: 1px solid $grey-border;
-    font-size: 13px;
+    font-size: $font-size-low;
     line-height: 16px;
     color: $grey;
     padding: 5px;
@@ -139,7 +139,7 @@
         height: 36px;
         border-radius: 2px;
         border: 1px solid $grey-border;
-        font-size: 13px;
+        font-size: $font-size-low;
         line-height: 16px;
         color: $grey;
         padding: 2px;

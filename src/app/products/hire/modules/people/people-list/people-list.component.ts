@@ -167,7 +167,7 @@ export class PeopleListComponent implements OnInit {
 
     onSelectAllChange() {
         if (this.selectedAll) {
-            this.filteredList.forEach((item) => (item.selected = true));
+            this.filteredList.forEach((item) => !item.active && (item.selected = true));
         } else {
             this.filteredList.forEach((item) => (item.selected = false));
         }

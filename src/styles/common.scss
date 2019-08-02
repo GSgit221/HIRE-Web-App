@@ -1125,7 +1125,7 @@ p-chips {
                     border: 0;
                     color: $white;
                     cursor: pointer;
-                    font-size: 13px;
+                    font-size: $font-size-low;
                     height: 36px;
                     line-height: 15px;
                     margin-left: 12px;
@@ -1182,7 +1182,7 @@ p-chips {
                     background: white;
                     border-radius: 3px;
                     color: $pink;
-                    font-size: 13px;
+                    font-size: $font-size-low;
                     line-height: normal;
                     padding: 10px 11px 11px;
                     width: 125px;
@@ -1267,7 +1267,7 @@ p-chips {
 
                                             p-dropdown .ui-dropdown {
                                                 .ui-dropdown-label {
-                                                    font-size: 13px;
+                                                    font-size: $font-size-low;
                                                     height: 26px;
                                                     line-height: 13px;
                                                     padding: 7px 10px 6px;
@@ -1309,6 +1309,47 @@ p-chips {
                     }
                 }
             }
+        }
+    }
+}
+
+// Switch
+.ui-inputswitch.ui-widget {
+    display: block;
+    width: 30px;
+    height: 18px;
+
+    &.ui-inputswitch-checked {
+        &.ui-inputswitch-focus .ui-inputswitch-slider {
+            box-shadow: 0px 0px 3px lighten($pink, 10%);
+        }
+        &:not(.ui-state-disabled):hover .ui-inputswitch-slider {
+            background-color: darken($pink, 10%);
+        }
+        .ui-inputswitch-slider {
+            background-color: $pink;
+            &:before {
+                transform: translateX(12px);
+            }
+        }
+    }
+
+    &.ui-inputswitch-focus .ui-inputswitch-slider {
+        box-shadow: 0px 0px 3px lighten($switch-grey, 10%);
+    }
+
+    &:not(.ui-state-disabled):hover .ui-inputswitch-slider {
+        background-color: darken($switch-grey, 10%);
+    }
+
+    .ui-inputswitch-slider {
+        background-color: $switch-grey;
+        &:before {
+            background-color: $white;
+            width: 14px;
+            height: 14px;
+            left: 2px;
+            bottom: 2px;
         }
     }
 }

@@ -5,6 +5,7 @@ import { select, Store } from '@ngrx/store';
 import { take } from 'rxjs/operators';
 import { User } from './../../core/models/user';
 import * as fromStore from './../../store';
+import * as fromUserActions from './../../store/actions/user.action';
 import * as fromUsersActions from './../../store/actions/users.action';
 import * as fromSelectors from './../../store/selectors';
 import { AuthService } from './auth.service';
@@ -32,7 +33,7 @@ export class SignoutComponent implements OnInit {
             .subscribe((user: User) => {
                 console.log('GOT USER', user);
                 if (user && user.name_id && user.session_index) {
-                    console.log('need to logout from provider');
+                    console.log('Need to logout from provider');
                     this.authService
                         .ssoSignOut({ name_id: user.name_id, session_index: user.session_index })
                         .subscribe((response: any) => {
@@ -41,10 +42,12 @@ export class SignoutComponent implements OnInit {
                         });
                     setTimeout(() => {
                         this.authService.logout();
+                        this.store.dispatch(new fromUserActions.ClearUser());
                         this.router.navigateByUrl('/auth/signin');
                     }, 1000);
                 } else {
                     this.authService.logout();
+                    this.store.dispatch(new fromUserActions.ClearUser());
                     this.router.navigateByUrl('/auth/signin');
                 }
             });

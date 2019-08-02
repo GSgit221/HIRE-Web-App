@@ -104,15 +104,29 @@
                             </div>
                         </div>
                         <div class="form-block">
-                            <div class="input-block">
-                                <label for="" class="form-block-label">Company</label>
-                                <input type="text" class="form-input" formControlName="company" />
-                            </div>
-                            <div
-                                class="error-message"
-                                *ngIf="!jobDetailsForm.get('company').valid && jobDetailsForm.get('company').touched"
-                            >
-                                Company name is required
+                            <div class="form-block-columns">
+                                <div class="form-block-col">
+                                    <div class="input-block">
+                                        <label for="" class="form-block-label">Company</label>
+                                        <input type="text" class="form-input" formControlName="company" />
+                                    </div>
+                                    <div
+                                        class="error-message"
+                                        *ngIf="
+                                            !jobDetailsForm.get('company').valid &&
+                                            jobDetailsForm.get('company').touched
+                                        "
+                                    >
+                                        Company name is required
+                                    </div>
+                                </div>
+                                <div class="form-block-col-separator"></div>
+                                <div class="form-block-col">
+                                    <div class="input-block">
+                                        <label for="" class="form-block-label">Reference / Job Number</label>
+                                        <input type="text" class="form-input" formControlName="ref" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="form-block">

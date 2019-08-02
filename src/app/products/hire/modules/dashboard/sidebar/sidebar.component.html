@@ -44,80 +44,78 @@
         </a>
     </div>
 </div>
-<div class="menu-separator"></div>
-<div class="sidebar-nav-oc">
-    <div class="sidebar-nav-oc-item" [attr.aria-expanded]="settingsOpened" routerLinkActive="active">
-        <div class="sidebar-nav-oc-item-header" (click)="onToggleOcItem($event)">
-            <span class="icon icon-settings"></span>
-            <span class="text">Settings</span>
-            <span class="ui-button-icon-left ui-clickable pi pi-chevron-down"></span>
-            <span class="ui-button-icon-left ui-clickable pi pi-chevron-up"></span>
-        </div>
-        <div class="sidebar-nav-oc-item-content">
-            <div class="sidebar-nav">
-                <div class="sidebar-nav-link">
-                    <a href="#" routerLink="{{ baseUrl }}/settings/users" routerLinkActive="active">
-                        <span class="icon icon-users"></span>
-                        <span class="text">Users</span>
-                    </a>
-                </div>
-                <div class="sidebar-nav-link" *ngIf="user && user.type === 'superadmin'">
-                    <a href="#" routerLink="{{ baseUrl }}/settings/agencies" routerLinkActive="active">
-                        <span class="icon"
-                            ><img src="/assets/images/users.svg" alt="Users icon" width="14" height="13"
-                        /></span>
-                        <span class="text">Recruitment Agencies</span>
-                    </a>
-                </div>
-                <div class="sidebar-nav-link">
-                    <a href="#" routerLink="{{ baseUrl }}/settings/billing" routerLinkActive="active">
-                        <span class="icon icon-billing"></span>
-                        <span class="text">Billing</span>
-                    </a>
-                </div>
-                <div class="sidebar-nav-link">
-                    <a href="#" routerLink="{{ baseUrl }}/settings/questionnaires" routerLinkActive="active">
-                        <span class="icon icon-questions"></span>
-                        <span class="text">Questions</span>
-                    </a>
-                </div>
-                <!-- <div class="sidebar-nav-link">
-                    <a href="#" routerLink="{{baseUrl}}/settings/scorecards" routerLinkActive="active">
-                        <span class="icon">
-                            <img
-                                src="/assets/images/sidebar-scorecards.svg"
-                                alt="Scorecards icon"
-                                width="14"
-                                height="12"
-                            />
-                        </span>
-                        <span class="text">Scorecards</span>
-                    </a>
-                </div> -->
-                <div class="sidebar-nav-link">
-                    <a href="#" routerLink="{{ baseUrl }}/settings/email-templates" routerLinkActive="active">
-                        <span class="icon icon-email-templates"></span>
-                        <span class="text">Email Templates</span>
-                    </a>
-                </div>
-                <div class="sidebar-nav-link">
-                    <a href="#" routerLink="{{ baseUrl }}/settings/theme" routerLinkActive="active">
-                        <span class="icon icon-theme"></span>
-                        <span class="text">Theme</span>
-                    </a>
-                </div>
-                <div class="sidebar-nav-link">
-                    <a href="#" routerLink="{{ baseUrl }}/settings/integrations" routerLinkActive="active">
-                        <span class="icon icon-integrations"></span>
-                        <span class="text">Integrations</span>
-                    </a>
+<ng-container *ngIf="user && (user.role === 'account_owner' || user.role === 'admin' || user.type === 'superadmin')">
+    <div class="menu-separator"></div>
+    <div class="sidebar-nav-oc">
+        <div class="sidebar-nav-oc-item" [attr.aria-expanded]="settingsOpened" routerLinkActive="active">
+            <div class="sidebar-nav-oc-item-header" (click)="onToggleOcItem($event)">
+                <span class="icon icon-settings"></span>
+                <span class="text">Settings</span>
+                <span class="ui-button-icon-left ui-clickable pi pi-chevron-down"></span>
+                <span class="ui-button-icon-left ui-clickable pi pi-chevron-up"></span>
+            </div>
+            <div class="sidebar-nav-oc-item-content">
+                <div class="sidebar-nav">
+                    <div class="sidebar-nav-link">
+                        <a href="#" routerLink="{{ baseUrl }}/settings/users" routerLinkActive="active">
+                            <span class="icon icon-users"></span>
+                            <span class="text">Users</span>
+                        </a>
+                    </div>
+                    <div class="sidebar-nav-link" *ngIf="user && user.type === 'superadmin'">
+                        <a href="#" routerLink="{{ baseUrl }}/settings/agencies" routerLinkActive="active">
+                            <span class="icon"
+                                ><img src="/assets/images/users.svg" alt="Users icon" width="14" height="13"
+                            /></span>
+                            <span class="text">Recruitment Agencies</span>
+                        </a>
+                    </div>
+                    <div class="sidebar-nav-link">
+                        <a href="#" routerLink="{{ baseUrl }}/settings/billing" routerLinkActive="active">
+                            <span class="icon icon-billing"></span>
+                            <span class="text">Billing</span>
+                        </a>
+                    </div>
+                    <div class="sidebar-nav-link">
+                        <a href="#" routerLink="{{ baseUrl }}/settings/questionnaires" routerLinkActive="active">
+                            <span class="icon icon-questions"></span>
+                            <span class="text">Questions</span>
+                        </a>
+                    </div>
+                    <!-- <div class="sidebar-nav-link">
+                        <a href="#" routerLink="{{baseUrl}}/settings/scorecards" routerLinkActive="active">
+                            <span class="icon">
+                                <img
+                                    src="/assets/images/sidebar-scorecards.svg"
+                                    alt="Scorecards icon"
+                                    width="14"
+                                    height="12"
+                                />
+                            </span>
+                            <span class="text">Scorecards</span>
+                        </a>
+                    </div> -->
+                    <div class="sidebar-nav-link">
+                        <a href="#" routerLink="{{ baseUrl }}/settings/email-templates" routerLinkActive="active">
+                            <span class="icon icon-email-templates"></span>
+                            <span class="text">Email Templates</span>
+                        </a>
+                    </div>
+                    <div class="sidebar-nav-link">
+                        <a href="#" routerLink="{{ baseUrl }}/settings/theme" routerLinkActive="active">
+                            <span class="icon icon-theme"></span>
+                            <span class="text">Theme</span>
+                        </a>
+                    </div>
+                    <div class="sidebar-nav-link">
+                        <a href="#" routerLink="{{ baseUrl }}/settings/integrations" routerLinkActive="active">
+                            <span class="icon icon-integrations"></span>
+                            <span class="text">Integrations</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</ng-container>
 <app-takeover *ngIf="user && user.type === 'superadmin'" [users]="users" [enable]="showTakeover"></app-takeover>
-<!-- <app-takeover *ngIf="user && user.type === 'superadmin'" [users]="users"></app-takeover> -->
-<!-- <div class="logout-link" pTooltip="Sign out" tooltipPosition="top" routerLink="/auth/signout">
-    <img src="/assets/images/logout.svg" alt="Logout" width="20" height="20" />
-</div> -->
