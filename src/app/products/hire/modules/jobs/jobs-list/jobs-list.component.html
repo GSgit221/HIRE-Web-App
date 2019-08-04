@@ -3,9 +3,11 @@
         <h1 class="page-title">Jobs</h1>
         <div class="controls-block" *ngIf="list.length">
             <app-list-filter
-                allItemsText="My Jobs"
+                [allItemsText]="ownerFilterLabel"
+                [allItems]="owners"
                 [filter]="filter"
                 (filterChange)="onFilterChanges($event)"
+                (ownerFilterChange)="onOwnerFilterChange($event)"
                 [availableFilters]="['city', 'country']"
             ></app-list-filter>
             <button class="btn btn-primary w140 mla btn-align" routerLink="{{ baseUrl }}/jobs/new">Add Job</button>
@@ -123,7 +125,7 @@
                 </div>
                 <div class="nr-list-content">
                     <div class="hc-blocker"></div>
-                    <div class="hc-list-row" *ngFor="let item of filteredList; let i = index">
+                    <div class="hc-list-row" *ngFor="let item of filterByOwner; let i = index">
                         <div class="hc-list-row-content" (click)="onItemClick($event, item)">
                             <div class="col col1 flex-4  hc-checkbox-col">
                                 <div class="hc-checkbox" data-escape-click>

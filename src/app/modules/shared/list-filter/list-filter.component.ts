@@ -11,11 +11,13 @@ export class ListFilterComponent implements OnInit {
     view = 'list';
     filterVisible = false;
     @Input() allItemsText: string;
+    @Input() allItems: any;
     @Input() availableFilters: string[] = [];
     filteredFilters: string[] = [];
 
     @Input() filter: any;
     @Output() filterChange = new EventEmitter<any>();
+    @Output() ownerFilterChange = new EventEmitter<string>();
     search: string;
 
     defaultState: any = {
@@ -87,16 +89,18 @@ export class ListFilterComponent implements OnInit {
     }
 
     onClearFilters() {
-        console.log('onClearFilters');
-        this.filter = [];
-        this.filterVisible = false;
-        this.filtersObj = { ...this.defaultState };
-        this.filterChange.emit([]);
+        this.view = 'category';
+        this.search = '';
+        this.filterVisible = !this.filterVisible;
+        // this.filter = [];
+        // this.filterVisible = false;
+        // this.filtersObj = { ...this.defaultState };
+        // this.filterChange.emit([]);
     }
 
-    onFilterToggle() {
+    onFilterToggle(view = 'list') {
         console.log('onFilterToggle');
-        this.view = 'list';
+        this.view = view;
         this.search = '';
         this.filterVisible = !this.filterVisible;
     }
@@ -187,5 +191,10 @@ export class ListFilterComponent implements OnInit {
             this.filterChange.emit(this.filter);
             this.filtersObj[type] = this.defaultState[type];
         }
+    }
+
+    onOwnerFilterChange(value) {
+        this.ownerFilterChange.emit(value);
+        this.filterVisible = false;
     }
 }
