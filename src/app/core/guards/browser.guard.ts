@@ -7,7 +7,6 @@ export class BrowserGuard implements CanActivate, CanActivateChild {
     constructor(private router: Router) {}
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        console.log(state.url);
         if (!this.detectIE()) {
             return true;
         }
@@ -21,7 +20,6 @@ export class BrowserGuard implements CanActivate, CanActivateChild {
     }
 
     canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        console.log(state.url);
         if (!this.detectIE()) {
             return true;
         }
