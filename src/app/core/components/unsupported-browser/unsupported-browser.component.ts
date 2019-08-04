@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 interface IBrowser {
     name: string;
@@ -16,7 +17,7 @@ export class UnsupportedBrowserComponent implements OnInit {
     browsers: IBrowser[];
     copied: boolean = false;
     siteURL: string = '';
-    constructor() {
+    constructor(private route: ActivatedRoute) {
         this.browsers = [
             {
                 name: 'Safari',
@@ -43,7 +44,8 @@ export class UnsupportedBrowserComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.siteURL = window.location.origin;
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        this.siteURL = window.location.origin + returnUrl;
     }
 
     onCopy() {
