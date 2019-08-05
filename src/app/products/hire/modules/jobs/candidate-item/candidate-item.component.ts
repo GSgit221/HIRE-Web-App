@@ -306,6 +306,10 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
         return { first_name, last_name, email };
     }
 
+    isKnockout(section): boolean {
+        return section === 'questions' && this.questionsAnswers && this.questionsAnswers.isKnockout;
+    }
+
     allowShowFeedback() {
         if (this.job && this.candidate && this.user) {
             console.log('check show feedback', this.job.owner, this.user.id);
