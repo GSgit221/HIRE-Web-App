@@ -55,7 +55,7 @@
     <strong
         class="title"
         *ngIf="candidate.first_name || candidate.last_name; else noFirstName"
-        [ngClass]="{ read: hasRead() }"
+        [ngClass]="{ read: candidate.read }"
         >{{ candidate.first_name | titlecase }} {{ candidate.last_name | titlecase }}</strong
     >
     <ng-template #noFirstName>

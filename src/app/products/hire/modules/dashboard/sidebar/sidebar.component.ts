@@ -26,7 +26,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
     @ViewChild('myDropdown') menu: ElementRef;
     baseUrl: string;
     constructor(
-        private userService: UserService,
         private store: Store<fromStore.State>,
         private renderer: Renderer2,
         private utilities: UtilitiesService
