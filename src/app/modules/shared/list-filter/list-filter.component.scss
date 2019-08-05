@@ -6,6 +6,7 @@
     color: $black;
     font-size: $font-size-origin;
     margin: 0 0 20px;
+    position: relative;
 
     .all-items {
         font-size: $font-size-origin;
@@ -14,7 +15,12 @@
         height: 36px;
         outline: none;
         margin: 0 10px 0 0;
+        padding: 5px 10px;
         border: none;
+
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
 
         &:hover {
             background: darken($light-grey, 10%);
@@ -56,6 +62,11 @@
         &.visible {
             display: block;
         }
+    }
+
+    > .filter-content {
+        top: 40px;
+        left: 0;
     }
 
     .filter-options {
