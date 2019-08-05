@@ -586,6 +586,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
             this.contentLoading = false;
             this.onShowModal(false);
+            this.groupCandidatesByStage();
             this.setAppliedCanidates(this.candidates);
         } else {
             this.modalSubmission['declineModalForm'] = true;
@@ -637,6 +638,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         this.contentLoading = false;
+        this.groupCandidatesByStage();
         this.setAppliedCanidates(this.candidates);
     }
 
