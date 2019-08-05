@@ -91,9 +91,14 @@
                     class="section-nav-link"
                     *ngFor="let section of sections"
                     (click)="onChangeSection(section)"
-                    [ngClass]="{ active: activeSection === section }"
+                    [ngClass]="{ active: activeSection === section, danger: isKnockout(section) }"
                 >
-                    {{ section | titlecase }}
+                    <img
+                        src="/assets/images/info.svg"
+                        alt=""
+                        style="width: 13px; height: 13px;"
+                        *ngIf="isKnockout(section)"
+                    />{{ section | titlecase }}
                 </div>
             </div>
             <div class="section-separator mb10"></div>
