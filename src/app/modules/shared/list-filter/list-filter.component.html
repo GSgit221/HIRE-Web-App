@@ -9,7 +9,9 @@
             </div>
             <ul class="filter-options">
                 <li *ngFor="let item of allItems" (click)="onOwnerFilterChange(item.value)">
-                    <div class="img-block"><img src="/assets/images/america.svg" [alt]="item.label" /></div>
+                    <div class="img-block">
+                        <img src="/assets/images/icons/personal-details.svg" [alt]="item.label" />
+                    </div>
                     <span>{{ item.label }}</span>
                 </li>
             </ul>

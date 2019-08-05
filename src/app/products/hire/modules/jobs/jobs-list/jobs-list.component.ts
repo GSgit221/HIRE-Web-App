@@ -74,9 +74,12 @@ export class JobsListComponent implements OnInit {
             this.store.pipe(select(fromUserSelectors.getUsersEntities)).subscribe((users: User[]) => {
                 this.users = users || [];
                 const filterRoles = ['admin', 'account_owner', 'hiring_manager', 'recruiter'];
+                const filterIDs = this.ownerFilters.map(({ value }) => value);
                 this.ownerFilters.push(
                     ...users
-                        .filter(({ id, role }) => filterRoles.includes(role) && user.id !== id)
+                        .filter(
+                            ({ id, role }) => filterRoles.includes(role) && user.id !== id && !filterIDs.includes(id)
+                        )
                         .map(({ id, first_name, last_name, email }) => ({
                             label: first_name ? `${first_name} ${last_name}` : email,
                             value: id,
