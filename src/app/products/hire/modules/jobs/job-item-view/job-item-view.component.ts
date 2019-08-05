@@ -21,6 +21,7 @@ import { Candidate, EmailTemplate, Job, Stage, User } from '../../../../../core/
 import { CandidateService, EmailService, JobService } from '../../../../../core/services';
 import * as fromStore from '../../../../../store';
 import * as fromJobsStore from '../store';
+import * as fromJobsStoreActions from '../store/actions/jobCandidates.action';
 import * as fromJobCandiatesSelector from '../store/selectors/jobCandidates.selector';
 import * as fromSelectors from './../../../../../store/selectors';
 
@@ -381,6 +382,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.contentLoading = true;
         this.jobService.deleteCandidate(this.job.id, candidateId).subscribe(() => {
             this.contentLoading = false;
+            this.jobsStore.dispatch(new fromJobsStoreActions.DeleteJobCandidate({ jobId: this.job.id, candidateId }));
             this.groupCandidatesByStage();
             const index = this.candidates.findIndex((c) => c.id === candidateId);
             this.candidates.splice(index, 1);
@@ -407,6 +409,9 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.appliedCandidates.visible.splice(visibleIndex, 1);
 
         this.appliedCandidates.total = this.appliedCandidates.visible.length + this.appliedCandidates.hidden.length;
+
+        this.jobsStore.dispatch(new fromJobsStoreActions.DeleteJobCandidate({ jobId: this.job.id, candidateId }));
+        this.groupCandidatesByStage();
     }
 
     onCandidateDrop(event, stageId) {

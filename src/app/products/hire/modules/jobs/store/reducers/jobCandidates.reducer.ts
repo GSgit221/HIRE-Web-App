@@ -43,14 +43,18 @@ export function reducer(state = {}, action: fromJobCandidatesActions.JobCandidat
             newState[jobId].loaded = true;
             return newState;
         }
+
+        case fromJobCandidatesActions.DELETE_JOB_CANDIDATE: {
+            const jobId = action.payload.jobId;
+            const candidateId = action.payload.candidateId;
+            const newState = { ...state };
+            if (newState[jobId]) {
+                const entities = newState[jobId].entities;
+                delete entities[candidateId];
+            }
+            return newState;
+        }
     }
 
     return state;
 }
-
-// export const getCandidatesLoading = (state: CandidatesListState, jobId: string) =>
-//     state[jobId] ? state[jobId].loading : null;
-// export const getCandidatesLoaded = (state: CandidatesListState, jobId: string) =>
-//     state[jobId] ? state[jobId].loaded : null;
-// export const getCandidatesEntities = (state: CandidatesListState, jobId: string) =>
-//     state[jobId] ? state[jobId].entities : null;
