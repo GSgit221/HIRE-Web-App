@@ -42,7 +42,10 @@ export class UsersComponent implements OnInit {
                     return { ...u, isVisible: false };
                 })
                 .filter((u) => {
-                    return u.role && ['superadmin', 'admin', 'account_owner', 'hiring_manager'].indexOf(u.role) !== -1;
+                    return (
+                        u.role &&
+                        ['superadmin', 'admin', 'account_owner', 'hiring_manager', 'recruiter'].indexOf(u.role) !== -1
+                    );
                 })
                 .sort((a, b) => (a.first_name > b.first_name ? 1 : b.first_name > a.first_name ? -1 : 0));
 

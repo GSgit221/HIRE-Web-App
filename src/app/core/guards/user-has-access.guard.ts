@@ -18,7 +18,7 @@ export class UserHasAccessGuard implements CanActivateChild {
     canActivateChild(): Observable<any> {
         return this.checkStore().pipe(
             switchMap((user: User) => {
-                if (user.role === 'recruiter') {
+                if (user.role === 'recruitment_agency') {
                     if (user.activated) {
                         console.log('RECRUITER IS ACTIVATED');
                         return of(true);
