@@ -212,6 +212,16 @@
 
     .sections-nav {
         padding: 18px 0 17px 0;
+
+        .danger {
+            color: $red;
+
+            img {
+                position: relative;
+                top: 2px;
+                margin-right: 5px;
+            }
+        }
     }
 }
 

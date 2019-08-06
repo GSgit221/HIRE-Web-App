@@ -1,14 +1,29 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UtilitiesService } from '@app/core/services';
 import { environment } from '@env/environment';
 import { select, Store } from '@ngrx/store';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 
 import { Candidate, EmailTemplate, Job, Stage, User } from '../../../../../core/models';
 import { CandidateService, EmailService, JobService } from '../../../../../core/services';
-import { getUserEntity, State as StoreState } from '../../../../../store';
+import * as fromStore from '../../../../../store';
+import * as fromJobsStore from '../store';
+import * as fromJobsStoreActions from '../store/actions/jobCandidates.action';
+import * as fromJobCandiatesSelector from '../store/selectors/jobCandidates.selector';
+import * as fromSelectors from './../../../../../store/selectors';
 
 interface IColumnSelection {
     columnId: string;
@@ -25,7 +40,7 @@ interface ISelect {
     templateUrl: './job-item-view.component.html',
     styleUrls: ['./job-item-view.component.scss']
 })
-export class JobItemViewComponent implements OnInit {
+export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input() job: Job;
     @Output() setEditMode = new EventEmitter<boolean>();
     @ViewChild('stageInput') stageInput: ElementRef;
@@ -46,7 +61,11 @@ export class JobItemViewComponent implements OnInit {
     candidates: Candidate[];
     draggedCandidate: Candidate;
     draggedFromStage: any = null;
-    appliedCandidates: any;
+    appliedCandidates: any = {
+        visible: [],
+        hidden: [],
+        total: 0
+    };
     resumeThreshold = 60;
     candidateIsDragged = false;
     draggedStage: any;
@@ -64,6 +83,11 @@ export class JobItemViewComponent implements OnInit {
     declineModalForm: FormGroup;
     modalSubmission: object = {};
     emailModalVisible: boolean = false;
+    candidatesByStage = {};
+
+    usersSubscription: Subscription;
+    userSubscription: Subscription;
+    candidatesSubscription: Subscription;
 
     constructor(
         private router: Router,
@@ -72,59 +96,54 @@ export class JobItemViewComponent implements OnInit {
         private candidateService: CandidateService,
         private emailService: EmailService,
         private toastr: ToastrService,
-        private store: Store<StoreState>,
+        private store: Store<fromStore.State>,
+        private jobsStore: Store<fromJobsStore.JobsState>,
         private utilities: UtilitiesService
     ) {
         this.baseUrl = this.utilities.getHireBaseUrl();
-
-        this.jobService.getUsers().subscribe((users: User[]) => {
-            this.users = users || [];
-        });
-
-        this.appliedCandidates = {
-            visible: [],
-            hidden: [],
-            total: 0
-        };
     }
+
     ngOnInit() {
-        this.resetSelection();
-        this.store.pipe(select(getUserEntity)).subscribe((user: User) => {
-            this.user = user;
+        // Get user and users
+        this.usersSubscription = this.store.pipe(select(fromSelectors.getUsersEntities)).subscribe((users: User[]) => {
+            this.users = [...users];
         });
+        this.userSubscription = this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
+            this.user = user;
+            if (this.user) {
+                console.log('🎩', this.user);
+            }
+        });
+
+        this.resetSelection();
         this.newJobStageForm = this.fb.group({
             title: ['']
         });
         this.appliedStage = this.job.stages.find((stage) => stage.id === 'applied');
         this.stages = this.job.stages.filter((stage) => stage.id !== 'applied').sort((a, b) => a.order - b.order);
-        this.jobService.getCandidates(this.job.id).subscribe((candidates: Candidate[]) => {
-            this.initialLoad = true;
-            this.candidates = candidates.map((c) => {
-                if (c.email.indexOf('dimensiondata') !== -1) {
-                    c.isDdEmployee = true;
-                }
-                if (
-                    c.employment_history &&
-                    c.employment_history.length &&
-                    c.employment_history[0].end_date &&
-                    c.employment_history[0].end_date.toLowerCase() === 'current'
-                ) {
-                    if (
-                        c.employment_history[0].title.toLowerCase().indexOf('dimension data') !== -1 ||
-                        c.employment_history[0].company.toLowerCase().indexOf('dimension data') !== -1
-                    ) {
-                        c.isDdEmployee = true;
-                    }
-                }
-                if (!c.read) c.read = [];
-                return c;
+
+        // Get candidates
+        this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.job.id));
+        this.candidatesSubscription = this.jobsStore
+            .pipe(select(fromJobCandiatesSelector.getJobCandidates, { jobId: this.job.id }))
+            .subscribe((candidates: any) => {
+                console.log('Candidates were loaded:', candidates);
+                this.initialLoad = true;
+                this.contentLoading = false;
+                this.candidates = candidates.map(this._isDD);
+                this.groupCandidatesByStage();
+                this.setAppliedCanidates(this.candidates);
             });
-            this.setAppliedCanidates(this.candidates);
-        });
+
+        // Resume treshhold
         this.resumeThreshold = this.getJobResumeMatchingThreshold();
+
+        // Application link
         this.href = `${environment.applicationPortalUrl}/tenant/${this.utilities.getTenant()}/applications/${
             this.job.id
         }/resume`;
+
+        // Email templates
         this.emailService.findAll().subscribe((emailTemplates: EmailTemplate[]) => {
             console.log('Email templates:', emailTemplates);
             if (emailTemplates && emailTemplates.length) {
@@ -133,10 +152,14 @@ export class JobItemViewComponent implements OnInit {
                     .map(({ id, title }) => ({ value: id, label: title }));
             }
         });
+
+        // Decline modal
         this.declineModalForm = this.fb.group({
             emailTemplate: [null, Validators.required]
         });
     }
+
+    ngAfterViewInit() {}
 
     resetSelection() {
         this.selection = {
@@ -189,13 +212,46 @@ export class JobItemViewComponent implements OnInit {
                     }
                 }
             });
+            // console.log('return stage candidates', stageName);
             return sC;
         } else {
             return [];
         }
     }
 
+    groupCandidatesByStage() {
+        console.time('group');
+        this.candidatesByStage = {};
+        this.candidates.forEach((c) => {
+            if (c.stage && c.stage[this.job.id]) {
+                const stageName = c.stage[this.job.id];
+                if (!this.candidatesByStage[stageName]) {
+                    this.candidatesByStage[stageName] = [];
+                }
+                this.candidatesByStage[stageName].push({
+                    resume_file: c.resume_file,
+                    resume_file_new: c.resume_file_new,
+                    application_completed: c.application_completed,
+                    markedAsUnsuccessful: c.markedAsUnsuccessful,
+                    score: c.score,
+                    profile_image: c.profile_image,
+                    id: c.id,
+                    email: c.email,
+                    employment_history: c.employment_history,
+                    created_at_rel: c.created_at_rel,
+                    updated_at_rel: c.updated_at_rel,
+                    first_name: c.first_name,
+                    last_name: c.last_name,
+                    read: c.read.findIndex((jId) => jId === this.job.id) !== -1
+                });
+            }
+        });
+        console.timeEnd('group');
+    }
+
     setAppliedCanidates(candidates: Candidate[]) {
+        console.log('set applied candidates');
+        console.time('set');
         const sC: Candidate[] = [];
         candidates.forEach((c) => {
             if (c.stage && c.stage[this.job.id]) {
@@ -223,9 +279,9 @@ export class JobItemViewComponent implements OnInit {
                 }
             }
         });
-
         this.appliedCandidates = applied;
         this.resetSelection();
+        console.timeEnd('set');
     }
 
     onLoadMore() {
@@ -235,7 +291,6 @@ export class JobItemViewComponent implements OnInit {
     }
 
     onLoadLess() {
-        console.log('onLoadLess');
         this.showMore = false;
         this.setAppliedCanidates(this.candidates);
     }
@@ -306,14 +361,8 @@ export class JobItemViewComponent implements OnInit {
     }
 
     onFinishedCandidatesCreation(event) {
-        this.jobService.getCandidates(this.job.id).subscribe((candidates: any[]) => {
-            // console.log(candidates);
-            this.candidates = candidates.map((c) => {
-                if (!c.read) c.read = [];
-                return c;
-            });
-            this.setAppliedCanidates(this.candidates);
-        });
+        this.contentLoading = true;
+        this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.job.id));
         this.createCandidateMode = false;
     }
 
@@ -332,6 +381,8 @@ export class JobItemViewComponent implements OnInit {
         this.contentLoading = true;
         this.jobService.deleteCandidate(this.job.id, candidateId).subscribe(() => {
             this.contentLoading = false;
+            this.jobsStore.dispatch(new fromJobsStoreActions.DeleteJobCandidate({ jobId: this.job.id, candidateId }));
+            this.groupCandidatesByStage();
             const index = this.candidates.findIndex((c) => c.id === candidateId);
             this.candidates.splice(index, 1);
 
@@ -357,6 +408,9 @@ export class JobItemViewComponent implements OnInit {
         this.appliedCandidates.visible.splice(visibleIndex, 1);
 
         this.appliedCandidates.total = this.appliedCandidates.visible.length + this.appliedCandidates.hidden.length;
+
+        this.jobsStore.dispatch(new fromJobsStoreActions.DeleteJobCandidate({ jobId: this.job.id, candidateId }));
+        this.groupCandidatesByStage();
     }
 
     onCandidateDrop(event, stageId) {
@@ -399,6 +453,7 @@ export class JobItemViewComponent implements OnInit {
                     );
             });
         }
+        this.groupCandidatesByStage();
         this.setAppliedCanidates(this.candidates);
     }
 
@@ -535,6 +590,7 @@ export class JobItemViewComponent implements OnInit {
 
             this.contentLoading = false;
             this.onShowModal(false);
+            this.groupCandidatesByStage();
             this.setAppliedCanidates(this.candidates);
         } else {
             this.modalSubmission['declineModalForm'] = true;
@@ -586,6 +642,7 @@ export class JobItemViewComponent implements OnInit {
         }
 
         this.contentLoading = false;
+        this.groupCandidatesByStage();
         this.setAppliedCanidates(this.candidates);
     }
 
@@ -606,5 +663,39 @@ export class JobItemViewComponent implements OnInit {
         setTimeout(() => {
             this.stageInput.nativeElement.focus();
         }, 1);
+    }
+
+    _isDD(c) {
+        if (c.email.indexOf('dimensiondata') !== -1) {
+            c.isDdEmployee = true;
+        }
+        if (
+            c.employment_history &&
+            c.employment_history.length &&
+            c.employment_history[0].end_date &&
+            c.employment_history[0].end_date.toLowerCase() === 'current'
+        ) {
+            if (
+                c.employment_history[0].title.toLowerCase().indexOf('dimension data') !== -1 ||
+                c.employment_history[0].company.toLowerCase().indexOf('dimension data') !== -1
+            ) {
+                c.isDdEmployee = true;
+            }
+        }
+        if (!c.read) c.read = [];
+        return c;
+    }
+
+    ngOnDestroy(): void {
+        if (this.userSubscription) {
+            this.userSubscription.unsubscribe();
+        }
+        if (this.usersSubscription) {
+            this.usersSubscription.unsubscribe();
+        }
+
+        if (this.candidatesSubscription) {
+            this.candidatesSubscription.unsubscribe();
+        }
     }
 }

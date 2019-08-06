@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
@@ -7,11 +7,13 @@ import { switchMap } from 'rxjs/operators';
 import { CandidateService } from './../../../../../core/services/candidate.service';
 
 import { UIChart } from 'primeng/chart';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, Subscription } from 'rxjs';
 import { Candidate, EmailTemplate, Job, Stage, User } from '../../../../../core/models';
+import * as fromJobsStore from '../store';
+import * as fromJobCandiatesSelector from '../store/selectors/jobCandidates.selector';
 import { EmailService, JobService, QuestionnaireService, UtilitiesService } from './../../../../../core/services';
 import * as fromStore from './../../../../../store';
-import { getUserEntity } from './../../../../../store/selectors';
+import * as fromSelectors from './../../../../../store/selectors';
 
 interface ISelect {
     label?: string;
@@ -23,7 +25,7 @@ interface ISelect {
     templateUrl: './candidate-item.component.html',
     styleUrls: ['./candidate-item.component.scss']
 })
-export class CandidateItemComponent implements OnInit {
+export class CandidateItemComponent implements OnInit, OnDestroy {
     sections: string[] = ['overview', 'details', 'assessments', 'attachments'];
     activeSection = 'overview';
     activeInteractivity = 'chat';
@@ -75,6 +77,9 @@ export class CandidateItemComponent implements OnInit {
     modalSubmission: object = {};
     emailModalVisible: boolean = false;
 
+    candidateSubscription: Subscription;
+    userSubscription: Subscription;
+
     constructor(
         private jobService: JobService,
         private fb: FormBuilder,
@@ -85,7 +90,7 @@ export class CandidateItemComponent implements OnInit {
         private utilities: UtilitiesService,
         private questionnaireService: QuestionnaireService,
         private store: Store<fromStore.State>,
-        private cd: ChangeDetectorRef
+        private jobsStore: Store<fromJobsStore.JobsState>
     ) {
         this.baseUrl = this.utilities.getHireBaseUrl();
         this.supportedFileTypes = [
@@ -153,124 +158,137 @@ export class CandidateItemComponent implements OnInit {
         this.jobId = this.route.snapshot.paramMap.get('jobId');
         this.candidateId = this.route.snapshot.paramMap.get('candidateId');
 
-        // Get job
-        const jobRequest = this.jobService.getJob(this.jobId).pipe(
-            switchMap((job: Job) => {
-                this.job = job;
-                this.stages = this.job.stages
-                    .filter((stage) => stage.id !== 'applied')
-                    .sort((a, b) => a.order - b.order);
-                if (this.job.questionnaire) {
-                    this.sections.splice(2, 0, 'questions');
-                    return this.questionnaireService.getQuestions(this.job.questionnaire);
-                } else {
-                    return of(false);
+        // Load Candidate from store
+        this.candidateSubscription = this.jobsStore
+            .pipe(
+                select(fromJobCandiatesSelector.getJobCandidate, { jobId: this.jobId, candidateId: this.candidateId })
+            )
+            .subscribe((candidate: Candidate) => {
+                if (!candidate) {
+                    console.log('REDIRECT');
+                    return this.router.navigateByUrl('/not-found');
                 }
-            })
-        );
-        const candidateRequest = this.jobService.getCandidate(this.jobId, this.candidateId);
-        const getVideoQuestions = this.questionnaireService.getVideoQuestions();
-        const getAllData = forkJoin([jobRequest, candidateRequest, getVideoQuestions]).subscribe((response: any) => {
-            setTimeout(() => (this.contentLoading = false), 200);
-
-            const questions = response[0];
-            const candidate: any = response[1];
-            const videoInterviewQuestions = response[2];
-
-            this.candidate = candidate;
-            if (videoInterviewQuestions) {
-                this.videoInterviewQuestions = videoInterviewQuestions;
-            }
-            if (questions) {
-                this.questions = questions;
-                this.prepareQuestionsAnswers();
-            }
-
-            this.allowShowFeedback();
-
-            // After all data is loaded
-            // Attachments
-            if (!this.candidate.resume_file && this.candidate.source !== 'application') {
-                this.activeSection = 'attachments';
-            }
-            if (this.candidate.resume_file && this.candidate.resume_file.length) {
-                this.candidateService
-                    .getResumeLink(this.candidate.resume_file)
-                    .subscribe(
-                        (response: string) => (this.candidate.resume_link = response),
-                        (errorResponse) => console.error(errorResponse)
-                    );
-            }
-            if (this.candidate.resume_file_new && this.candidate.resume_file_new.length) {
-                this.candidateService
-                    .getResumeLink(this.candidate.resume_file_new)
-                    .subscribe(
-                        (response: string) => (this.candidate.resume_link_new = response),
-                        (errorResponse) => console.error(errorResponse)
-                    );
-            }
-
-            // Get assessments
-            if (this.candidate.stages_data && this.candidate.stages_data[this.jobId]) {
-                const stagesData = this.candidate.stages_data[this.jobId];
-                for (const stageId in stagesData) {
-                    if (stagesData.hasOwnProperty(stageId)) {
-                        const stageData = stagesData[stageId];
-                        // Video
-                        if (stageData.videos && stageData.videos.links) {
-                            const videos = stageData.videos.links;
-                            this.videoInterviewQuestions.forEach((q) => {
-                                if (videos[q.id]) {
-                                    const video = videos[q.id];
-                                    video.id = q.id;
-                                    video.question = q.text;
-                                    if (video.rating) {
-                                        video.ratings = [];
-                                        for (let i = 0; i < 5; i++) {
-                                            i < video.rating ? video.ratings.push(video.rating) : video.ratings.push(0);
-                                        }
-                                    }
-                                    this.videos.push(video);
-                                }
-                            });
+                this.candidate = candidate;
+                // Get job
+                const jobRequest = this.jobService.getJob(this.jobId).pipe(
+                    switchMap((job: Job) => {
+                        this.job = job;
+                        this.stages = this.job.stages
+                            .filter((stage) => stage.id !== 'applied')
+                            .sort((a, b) => a.order - b.order);
+                        if (this.job.questionnaire) {
+                            this.sections.splice(2, 0, 'questions');
+                            return this.questionnaireService.getQuestions(this.job.questionnaire);
+                        } else {
+                            return of(false);
                         }
+                    })
+                );
+                const getVideoQuestions = this.questionnaireService.getVideoQuestions();
+                const getAllData = forkJoin([jobRequest, getVideoQuestions]).subscribe((response: any) => {
+                    setTimeout(() => (this.contentLoading = false), 200);
+                    const questions = response[0];
+                    const videoInterviewQuestions = response[1];
+                    if (videoInterviewQuestions) {
+                        this.videoInterviewQuestions = videoInterviewQuestions;
+                    }
+                    if (questions) {
+                        this.questions = questions;
+                        this.prepareQuestionsAnswers();
+                    }
 
-                        // Personal Profile
-                        if (stageData.personality_assessment) {
-                            const assessment = stageData.personality_assessment;
-                            this.personality_assessment = stageData.personality_assessment;
-                            this.personalityProfileScores[0].value = assessment[1].score;
-                            this.personalityProfileScores[1].value = assessment[3].score;
-                            this.personalityProfileScores[2].value = assessment[2].score;
-                            this.personalityProfileScores[3].value = assessment[4].score;
-                            this.personalityProfileScores[4].value = assessment[0].score;
-                            this.personalityProfileScores[0].scoreText = assessment[1].scoreText;
-                            this.personalityProfileScores[1].scoreText = assessment[3].scoreText;
-                            this.personalityProfileScores[2].scoreText = assessment[2].scoreText;
-                            this.personalityProfileScores[3].scoreText = assessment[4].scoreText;
-                            this.personalityProfileScores[4].scoreText = assessment[0].scoreText;
+                    this.allowShowFeedback();
 
-                            this.radar_chart_data.datasets[0].data = [
-                                assessment[1].score,
-                                assessment[3].score,
-                                assessment[4].score,
-                                assessment[0].score,
-                                assessment[2].score
-                            ];
-                            if (this.chart) {
-                                this.chart.refresh();
+                    // After all data is loaded
+                    // Attachments
+                    if (
+                        !this.candidate.resume_file &&
+                        !this.candidate.resume_file_new &&
+                        this.candidate.source !== 'application'
+                    ) {
+                        this.activeSection = 'attachments';
+                    }
+                    if (this.candidate.resume_file && this.candidate.resume_file.length) {
+                        this.candidateService
+                            .getResumeLink(this.candidate.resume_file)
+                            .subscribe(
+                                (response: string) => (this.candidate.resume_link = response),
+                                (errorResponse) => console.error(errorResponse)
+                            );
+                    }
+                    if (this.candidate.resume_file_new && this.candidate.resume_file_new.length) {
+                        this.candidateService
+                            .getResumeLink(this.candidate.resume_file_new)
+                            .subscribe(
+                                (response: string) => (this.candidate.resume_link_new = response),
+                                (errorResponse) => console.error(errorResponse)
+                            );
+                    }
+
+                    // Get assessments
+                    if (this.candidate.stages_data && this.candidate.stages_data[this.jobId]) {
+                        const stagesData = this.candidate.stages_data[this.jobId];
+                        for (const stageId in stagesData) {
+                            if (stagesData.hasOwnProperty(stageId)) {
+                                const stageData = stagesData[stageId];
+                                // Video
+                                if (stageData.videos && stageData.videos.links) {
+                                    const videos = stageData.videos.links;
+                                    this.videoInterviewQuestions.forEach((q) => {
+                                        if (videos[q.id]) {
+                                            const video = videos[q.id];
+                                            video.id = q.id;
+                                            video.question = q.text;
+                                            if (video.rating) {
+                                                video.ratings = [];
+                                                for (let i = 0; i < 5; i++) {
+                                                    i < video.rating
+                                                        ? video.ratings.push(video.rating)
+                                                        : video.ratings.push(0);
+                                                }
+                                            }
+                                            this.videos.push(video);
+                                        }
+                                    });
+                                }
+
+                                // Personal Profile
+                                if (stageData.personality_assessment) {
+                                    const assessment = stageData.personality_assessment;
+                                    this.personality_assessment = stageData.personality_assessment;
+                                    this.personalityProfileScores[0].value = assessment[1].score;
+                                    this.personalityProfileScores[1].value = assessment[3].score;
+                                    this.personalityProfileScores[2].value = assessment[2].score;
+                                    this.personalityProfileScores[3].value = assessment[4].score;
+                                    this.personalityProfileScores[4].value = assessment[0].score;
+                                    this.personalityProfileScores[0].scoreText = assessment[1].scoreText;
+                                    this.personalityProfileScores[1].scoreText = assessment[3].scoreText;
+                                    this.personalityProfileScores[2].scoreText = assessment[2].scoreText;
+                                    this.personalityProfileScores[3].scoreText = assessment[4].scoreText;
+                                    this.personalityProfileScores[4].scoreText = assessment[0].scoreText;
+
+                                    this.radar_chart_data.datasets[0].data = [
+                                        assessment[1].score,
+                                        assessment[3].score,
+                                        assessment[4].score,
+                                        assessment[0].score,
+                                        assessment[2].score
+                                    ];
+                                    if (this.chart) {
+                                        this.chart.refresh();
+                                    }
+                                }
                             }
                         }
+                    } else {
+                        console.log('No stages data for this job');
                     }
-                }
-            } else {
-                console.log('No stages data for this job');
-            }
-        });
+                });
+            });
     }
 
     ngOnInit() {
-        this.store.pipe(select(getUserEntity)).subscribe((user: User) => {
+        this.userSubscription = this.store.pipe(select(fromStore.getUserEntity)).subscribe((user: User) => {
             this.user = user;
         });
         this.emailService.findAll().subscribe((emailTemplates: EmailTemplate[]) => {
@@ -291,9 +309,13 @@ export class CandidateItemComponent implements OnInit {
         return { first_name, last_name, email };
     }
 
+    isKnockout(section): boolean {
+        return section === 'questions' && this.questionsAnswers && this.questionsAnswers.isKnockout;
+    }
+
     allowShowFeedback() {
         if (this.job && this.candidate && this.user) {
-            console.log('check show feedback', this.job.owner, this.user.id);
+            console.log('::: Check show feedback', this.job.owner, this.user.id);
             if (this.job.owner === this.user.id) {
                 this.showFeedback = true;
             } else if (this.job && typeof this.job.show_position_rating !== 'undefined') {
@@ -360,7 +382,7 @@ export class CandidateItemComponent implements OnInit {
 
     onChangeSection(section: string) {
         this.activeSection = section;
-        if (!this.candidate.resume_file) {
+        if (!this.candidate.resume_file && !this.candidate.resume_file_new) {
             this.activeSection = 'attachments';
         }
 
@@ -514,7 +536,7 @@ export class CandidateItemComponent implements OnInit {
             })
             .subscribe((response: any) => {
                 // DONE
-                console.log(this.videos, questionId, index);
+                // console.log(this.videos, questionId, index);
                 let video = this.videos.find((c) => {
                     if (c.id === questionId) {
                         return c;
@@ -589,14 +611,18 @@ export class CandidateItemComponent implements OnInit {
     }
 
     get isProgressable() {
-        const {
-            job: { id: jobId },
-            stages,
-            candidate: { stage }
-        } = this;
-        const stageId = stage[jobId];
-        const columnIndex = stages.findIndex(({ id }) => id === stageId);
-        return columnIndex + 1 < stages.length;
+        if (this.job && this.candidate) {
+            const {
+                job: { id: jobId },
+                stages,
+                candidate: { stage }
+            } = this;
+            const stageId = stage[jobId];
+            const columnIndex = stages.findIndex(({ id }) => id === stageId);
+            return columnIndex + 1 < stages.length;
+        } else {
+            return false;
+        }
     }
 
     onProgress() {
@@ -639,5 +665,14 @@ export class CandidateItemComponent implements OnInit {
 
     onShowEmailModal(visible = true) {
         this.emailModalVisible = visible;
+    }
+
+    ngOnDestroy(): void {
+        if (this.userSubscription) {
+            this.userSubscription.unsubscribe();
+        }
+        if (this.candidateSubscription) {
+            this.candidateSubscription.unsubscribe();
+        }
     }
 }

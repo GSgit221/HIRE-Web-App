@@ -18,7 +18,7 @@ export class JobItemComponent implements OnInit {
         let jobId = this.route.snapshot.paramMap.get('id');
         this.jobService.getJob(jobId).subscribe((job: Job) => {
             this.job = job;
-            setTimeout(() => (this.contentLoading = false), 200);
+            this.contentLoading = false;
             console.log('FROM ROUTE-------------------- JOB:', jobId, this.job);
 
             if (this.job && this.job.status && this.job.status === 'BUILD') {
@@ -32,7 +32,7 @@ export class JobItemComponent implements OnInit {
                 jobId = params.get('id');
                 this.jobService.getJob(jobId).subscribe((job: Job) => {
                     this.job = job;
-                    setTimeout(() => (this.contentLoading = false), 200);
+                    this.contentLoading = false;
                     console.log('FROM CHANGE-------------------- JOB:', jobId, this.job);
                 });
             }

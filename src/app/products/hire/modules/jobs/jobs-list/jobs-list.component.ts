@@ -8,7 +8,7 @@ import * as fromStore from '../store';
 import * as fromStoreActions from '../store/actions/jobs.action';
 import * as fromStoreSelectors from '../store/selectors/jobs.selector';
 import { Job, User } from './../../../../../core/models';
-import { JobService, UtilitiesService } from './../../../../../core/services';
+import { JobService, UserService, UtilitiesService } from './../../../../../core/services';
 
 @Component({
     selector: 'app-jobs-list',
@@ -22,15 +22,26 @@ export class JobsListComponent implements OnInit {
     filter = [];
     selectedAll = false;
     selectedItems = 0;
+    user: User;
     users: User[] = [];
     uploadJobSpecMode = false;
     droppedFiles: File[] = [];
     countries: any[] = [];
     baseUrl: string;
 
+    ownerFilters = [
+        {
+            label: 'All Jobs',
+            value: 'all',
+            capitalize: true
+        }
+    ];
+    ownerFilter = 'all';
+
     constructor(
         private router: Router,
         private jobService: JobService,
+        private userService: UserService,
         private utilities: UtilitiesService,
         private store: Store<fromStore.JobsState>
     ) {
@@ -51,12 +62,54 @@ export class JobsListComponent implements OnInit {
             }
         });
 
-        this.store.pipe(select(fromUserSelectors.getUsersEntities)).subscribe((users: User[]) => {
-            this.users = users || [];
+        this.store.pipe(select(fromUserSelectors.getUserEntity)).subscribe((user: User) => {
+            this.user = user;
+            this.ownerFilters.unshift({
+                label: 'My Jobs',
+                value: user.id,
+                capitalize: true
+            });
+            if (this.isAdmin) this.ownerFilter = user.id;
+
+            this.store.pipe(select(fromUserSelectors.getUsersEntities)).subscribe((users: User[]) => {
+                this.users = users || [];
+                const filterRoles = ['admin', 'account_owner', 'hiring_manager', 'recruiter'];
+                const filterIDs = this.ownerFilters.map(({ value }) => value);
+                this.ownerFilters.push(
+                    ...users
+                        .filter(
+                            ({ id, role }) => filterRoles.includes(role) && user.id !== id && !filterIDs.includes(id)
+                        )
+                        .map(({ id, first_name, last_name, email }) => ({
+                            label: first_name ? `${first_name} ${last_name}` : email,
+                            value: id,
+                            capitalize: !!first_name
+                        }))
+                );
+            });
         });
     }
 
     ngOnInit() {}
+
+    get isAdmin() {
+        return (
+            this.user &&
+            (this.user.role === 'account_owner' || this.user.role === 'admin' || this.user.type === 'superadmin')
+        );
+    }
+
+    get ownerFilterLabel(): string {
+        if (!this.isAdmin) return 'My Jobs';
+        const match = this.ownerFilters.find(({ value }) => value === this.ownerFilter);
+        if (match) return match.label;
+        return 'All Jobs';
+    }
+
+    get owners(): any {
+        if (this.isAdmin) return this.ownerFilters;
+        return null;
+    }
 
     onItemClick(event, item) {
         event.preventDefault();
@@ -125,6 +178,22 @@ export class JobsListComponent implements OnInit {
         console.log('onFilterChanges', value);
         this.filter = value;
         this.filterItems();
+    }
+
+    onOwnerFilterChange(value: string) {
+        this.ownerFilter = value;
+    }
+
+    get filterByOwner(): any[] {
+        if (this.ownerFilter === 'all') return this.filteredList;
+        if (this.ownerFilter === this.user.id)
+            return this.filteredList.filter(({ owner }) => owner === this.user.id || !owner);
+        return this.filteredList.filter(
+            ({ owner, recuriters, hiring_managers }) =>
+                owner === this.ownerFilter ||
+                (recuriters || []).includes(this.ownerFilter) ||
+                hiring_managers.includes(this.ownerFilter)
+        );
     }
 
     filterItems() {

@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         if (returnUrl.length > 1) {
             queryParams.returnUrl = returnUrl;
         }
-        this.router.navigate([this.signinURL], queryParams);
+        this.router.navigate([this.signinURL], { queryParams });
         return false;
     }
 
@@ -36,7 +36,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         if (returnUrl.length > 1) {
             queryParams.returnUrl = returnUrl;
         }
-        this.router.navigate([this.signinURL], queryParams);
+        this.router.navigate([this.signinURL], { queryParams });
         return false;
     }
 }

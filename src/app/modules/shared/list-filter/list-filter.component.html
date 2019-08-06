@@ -2,6 +2,21 @@
     <button class="btn all-items" [ngClass]="{ active: !filter.length }" (click)="onClearFilters()">
         {{ allItemsText }}
     </button>
+    <div class="filter-content" [ngClass]="{ visible: filterVisible }" *ngIf="allItems">
+        <ng-container *ngIf="view === 'category'">
+            <div class="search-text">
+                <input type="text" placeholder="Search Filters" (keyup)="onSearchKeyup($event)" [(ngModel)]="search" />
+            </div>
+            <ul class="filter-options">
+                <li *ngFor="let item of allItems" (click)="onOwnerFilterChange(item.value)">
+                    <div class="img-block">
+                        <img src="/assets/images/icons/personal-details.svg" [alt]="item.label" />
+                    </div>
+                    <span>{{ item.label }}</span>
+                </li>
+            </ul>
+        </ng-container>
+    </div>
     <ng-container *ngIf="filter && filter.length">
         <div class="filter-presentation-block" *ngFor="let f of filter">
             <div class="filter-presentation-name">{{ f.type | titlecase }}:</div>

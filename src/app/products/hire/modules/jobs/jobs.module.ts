@@ -35,7 +35,8 @@ const routes: Routes = [
     },
     {
         path: ':jobId/candidate/:candidateId',
-        component: CandidateItemComponent
+        component: CandidateItemComponent,
+        canActivate: [fromGuards.CandidatesGuard]
     },
     {
         path: ':id/stages/:stageId',

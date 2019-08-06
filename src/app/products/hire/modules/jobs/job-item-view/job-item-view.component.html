@@ -147,7 +147,7 @@
                 <div class="stage-column-holder">
                     <div class="stage-header" *ngIf="!hasSelection(stage.id)">
                         <h2 class="title">{{ stage.title }}</h2>
-                        <span class="counter">{{ stageCandidates(stage.id)?.length || '0' }}</span>
+                        <span class="counter">{{ (candidatesByStage[stage.id] || []).length }}</span>
                         <button class="btn settings-btn mla" (click)="onSettigsClick(stage.id)">
                             <img src="/assets/images/settings-dots.svg" alt="" width="2" height="10" />
                         </button>
@@ -173,7 +173,7 @@
                     >
                         <app-candidate-block
                             (click)="onCandidateClick(stage.id, candidate.id)"
-                            *ngFor="let candidate of stageCandidates(stage.id)"
+                            *ngFor="let candidate of candidatesByStage[stage.id] || []"
                             draggable
                             [dragScope]="['candidate']"
                             [dragData]="candidate"
