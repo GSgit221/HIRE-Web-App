@@ -159,9 +159,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
-    ngAfterViewInit() {
-        console.log('after view init');
-    }
+    ngAfterViewInit() {}
 
     resetSelection() {
         this.selection = {
@@ -232,6 +230,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
                 this.candidatesByStage[stageName].push({
                     resume_file: c.resume_file,
+                    resume_file_new: c.resume_file_new,
                     application_completed: c.application_completed,
                     markedAsUnsuccessful: c.markedAsUnsuccessful,
                     score: c.score,

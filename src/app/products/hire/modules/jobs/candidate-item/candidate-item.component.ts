@@ -187,9 +187,8 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                 const getVideoQuestions = this.questionnaireService.getVideoQuestions();
                 const getAllData = forkJoin([jobRequest, getVideoQuestions]).subscribe((response: any) => {
                     setTimeout(() => (this.contentLoading = false), 200);
-
                     const questions = response[0];
-                    const videoInterviewQuestions = response[2];
+                    const videoInterviewQuestions = response[1];
                     if (videoInterviewQuestions) {
                         this.videoInterviewQuestions = videoInterviewQuestions;
                     }
@@ -202,7 +201,11 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
 
                     // After all data is loaded
                     // Attachments
-                    if (!this.candidate.resume_file && this.candidate.source !== 'application') {
+                    if (
+                        !this.candidate.resume_file &&
+                        !this.candidate.resume_file_new &&
+                        this.candidate.source !== 'application'
+                    ) {
                         this.activeSection = 'attachments';
                     }
                     if (this.candidate.resume_file && this.candidate.resume_file.length) {
@@ -312,7 +315,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
 
     allowShowFeedback() {
         if (this.job && this.candidate && this.user) {
-            console.log('check show feedback', this.job.owner, this.user.id);
+            console.log('::: Check show feedback', this.job.owner, this.user.id);
             if (this.job.owner === this.user.id) {
                 this.showFeedback = true;
             } else if (this.job && typeof this.job.show_position_rating !== 'undefined') {
@@ -379,7 +382,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
 
     onChangeSection(section: string) {
         this.activeSection = section;
-        if (!this.candidate.resume_file) {
+        if (!this.candidate.resume_file && !this.candidate.resume_file_new) {
             this.activeSection = 'attachments';
         }
 
@@ -533,7 +536,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
             })
             .subscribe((response: any) => {
                 // DONE
-                console.log(this.videos, questionId, index);
+                // console.log(this.videos, questionId, index);
                 let video = this.videos.find((c) => {
                     if (c.id === questionId) {
                         return c;

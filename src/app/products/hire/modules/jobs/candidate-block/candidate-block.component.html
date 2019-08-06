@@ -2,10 +2,13 @@
     class="warning-block"
     *ngIf="
         candidate &&
-        (!candidate.resume_file || (!candidate.application_completed || !candidate.application_completed[job.id]))
+        ((!candidate.resume_file && !candidate.resume_file_new) ||
+            (!candidate.application_completed || !candidate.application_completed[job.id]))
     "
 >
-    <div class="warning-block-holder"><span>!</span></div>
+    <div class="warning-block-holder">
+        <span>!</span>
+    </div>
 </div>
 <div
     class="warning-block alert"
