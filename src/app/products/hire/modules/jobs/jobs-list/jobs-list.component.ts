@@ -31,6 +31,11 @@ export class JobsListComponent implements OnInit {
 
     ownerFilters = [
         {
+            label: 'My Jobs',
+            value: 'mine',
+            capitalize: true
+        },
+        {
             label: 'All Jobs',
             value: 'all',
             capitalize: true
@@ -64,21 +69,17 @@ export class JobsListComponent implements OnInit {
 
         this.store.pipe(select(fromUserSelectors.getUserEntity)).subscribe((user: User) => {
             this.user = user;
-            this.ownerFilters.unshift({
-                label: 'My Jobs',
-                value: user.id,
-                capitalize: true
-            });
-            if (this.isAdmin) this.ownerFilter = user.id;
+            if (this.isAdmin) this.ownerFilter = 'mine';
 
             this.store.pipe(select(fromUserSelectors.getUsersEntities)).subscribe((users: User[]) => {
                 this.users = users || [];
                 const filterRoles = ['admin', 'account_owner', 'hiring_manager', 'recruiter'];
-                const filterIDs = this.ownerFilters.map(({ value }) => value);
+                const filterIDs = [this.user.id, this.ownerFilters.map(({ value }) => value)];
                 this.ownerFilters.push(
                     ...users
                         .filter(
-                            ({ id, role }) => filterRoles.includes(role) && user.id !== id && !filterIDs.includes(id)
+                            ({ id, role, activated }) =>
+                                activated && filterRoles.includes(role) && user.id !== id && !filterIDs.includes(id)
                         )
                         .map(({ id, first_name, last_name, email }) => ({
                             label: first_name ? `${first_name} ${last_name}` : email,
@@ -186,8 +187,7 @@ export class JobsListComponent implements OnInit {
 
     get filterByOwner(): any[] {
         if (this.ownerFilter === 'all') return this.filteredList;
-        if (this.ownerFilter === this.user.id)
-            return this.filteredList.filter(({ owner }) => owner === this.user.id || !owner);
+        if (this.ownerFilter === 'mine') return this.filteredList.filter(({ owner }) => owner === this.user.id);
         return this.filteredList.filter(
             ({ owner, recuriters, hiring_managers }) =>
                 owner === this.ownerFilter ||
