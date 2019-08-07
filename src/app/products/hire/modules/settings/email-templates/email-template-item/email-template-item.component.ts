@@ -28,6 +28,7 @@ export class EmailTemplateItemComponent implements OnInit {
     itemForm: FormGroup;
     msgs: Message[] = [];
     InsertPlaceholders: SelectItem[];
+    InsertTitles: string[];
     fromOptions = [
         { label: 'Job Owner Email', value: 'owner' },
         { label: 'Recruiter Initiating Email', value: 'recruiter' }
@@ -76,16 +77,17 @@ export class EmailTemplateItemComponent implements OnInit {
         });
 
         this.InsertPlaceholders = [
-            { label: 'candidate_name', value: '{{candidate_name}}' },
-            { label: 'missing_fields', value: '{{missing_fields}}' },
-            { label: 'sender_email', value: '{{sender_email}}' },
-            { label: 'sender_name', value: '{{sender_name}}' },
-            { label: 'job_title', value: '{{job_title}}' },
-            { label: 'sender_company', value: '{{sender_company}}' },
-            { label: 'tenant_name', value: '{{tenant_name}}' },
-            { label: 'recruiter', value: '{{recruiter}}' },
-            { label: 'job_owner', value: '{{job_owner}}' }
+            { label: 'Candidate Name', value: '{{candidate_name}}', title: 'Candidate Name' },
+            { label: 'Missing Fields', value: '{{missing_fields}}', title: 'Missing Fields' },
+            { label: 'Sender Email', value: '{{sender_email}}', title: 'Sender Email' },
+            { label: 'Sender Name', value: '{{sender_name}}', title: 'Sender Name' },
+            { label: 'Job Title', value: '{{job_title}}', title: 'Job Title' },
+            { label: 'Sender Company', value: '{{sender_company}}', title: 'Sender Company' },
+            { label: 'Tenant Name', value: '{{tenant_name}}', title: 'Tenant Name' },
+            { label: 'Recruiter', value: '{{recruiter}}', title: 'Recruiter' },
+            { label: 'Job Owner', value: '{{job_owner}}', title: 'Job Owner' }
         ];
+        this.InsertTitles = this.InsertPlaceholders.filter(({ title }) => !!title).map(({ title }) => title);
     }
 
     @ViewChild('pEditor') pEditor: any;
@@ -165,31 +167,39 @@ export class EmailTemplateItemComponent implements OnInit {
 
     onChangePlaceholder(event) {
         let index: number = this.cursorPosition ? this.cursorPosition.index : 0;
-        this.quill.insertText(index, event.value, {}, 'user');
-        this.quill.insertText(index + event.value.length, ' ', 'user');
+        const placeholder = this.InsertPlaceholders.find(({ value }) => value === event.value);
+        const placeText = placeholder.title || placeholder.value;
+        this.quill.insertText(index, placeText, {}, 'user');
+        this.quill.insertText(index + placeText.length, ' ', 'user');
         //function of format {{}} variables
         this.formateQuillTest(this.quill);
     }
 
     onChangePlaceholderSec(event) {
         let index: number = this.cursorPosition ? this.cursorPosition.index : 0;
-        this.quillSec.insertText(index, event.value, {}, 'user');
-        this.quillSec.insertText(index + event.value.length, ' ', 'user');
+        const placeholder = this.InsertPlaceholders.find(({ value }) => value === event.value);
+        const placeText = placeholder.title || placeholder.value;
+        this.quillSec.insertText(index, placeText, {}, 'user');
+        this.quillSec.insertText(index + placeText.length, ' ', 'user');
         //function of format {{}} variables
         this.formateQuillTest(this.quillSec);
     }
 
     formateQuillTest(quill) {
         const inset = quill.getText();
-        let variables = FindVariables(inset);
+        let variables = FindVariables(inset, this.InsertTitles);
 
         for (let variable of variables) {
             quill.formatText(
                 variable.index,
                 variable.index + variable.name.length,
-                {
-                    color: '#8e8e93'
-                },
+                variable.isTitle
+                    ? {
+                          color: 'white'
+                      }
+                    : {
+                          color: '#8e8e93'
+                      },
                 'silent'
             );
 
