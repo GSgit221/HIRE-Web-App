@@ -173,10 +173,6 @@ h2 {
     border-radius: 5px;
     transition: all 0.3s ease;
 
-    &.over {
-        background: $grey-border;
-    }
-
     label {
         color: $pink;
         text-decoration: none;
