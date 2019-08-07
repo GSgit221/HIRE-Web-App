@@ -698,4 +698,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             this.candidatesSubscription.unsubscribe();
         }
     }
+
+    onBackClick() {
+        this.router.navigateByUrl(`${this.baseUrl}/jobs`);
+    }
 }

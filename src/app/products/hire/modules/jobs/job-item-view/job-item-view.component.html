@@ -1,4 +1,10 @@
 <div class="container">
+    <div class="pages-nav">
+        <button class="back-btn" (click)="onBackClick()">
+            <span class="icon"><img src="assets/images/left.svg" height="16px" alt="Left icon"/></span>
+            <span class="text">Back to Jobs</span>
+        </button>
+    </div>
     <div class="header-block">
         <div class="status-dropdown-block" *ngIf="!job.pool">
             <app-switch [value]="job.status === 'LIVE'" (onChange)="onJobStatusChange($event, job)"></app-switch>
