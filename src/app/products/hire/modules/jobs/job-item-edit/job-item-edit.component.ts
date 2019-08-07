@@ -381,6 +381,7 @@ export class JobItemEditComponent implements OnInit {
 
     onChangeSection(section: string) {
         this.activeSection = section;
+        this.editorAutofocusFix();
     }
 
     toggleSalaryField() {
@@ -435,6 +436,47 @@ export class JobItemEditComponent implements OnInit {
         });
     }
 
+    onSaveAll(event) {
+        event.preventDefault();
+        const dirtyForms = [];
+        this.sections.forEach((section) => {
+            const form = this.getActiveForm(section);
+            if (form.dirty) {
+                dirtyForms.push({ section, form });
+            }
+        });
+        let valid = true;
+        for (let { section, form } of dirtyForms) {
+            if (!form.valid) {
+                this.formHelper.markFormGroupTouched(form);
+                this.onChangeSection(section);
+                valid = false;
+                break;
+            }
+        }
+        if (!valid || dirtyForms.length === 0) return;
+
+        this.contentLoading = true;
+        Promise.all(
+            dirtyForms.map(
+                ({ section, form }) =>
+                    new Promise((resolve, reject) => {
+                        this.jobService
+                            .saveJob({ ...this.job, ...form.value }, section, true)
+                            .subscribe(resolve, reject);
+                    })
+            )
+        )
+            .then((values) => {
+                console.log(values);
+                this.router.navigateByUrl(`${this.baseUrl}/jobs`);
+            })
+            .catch((error) => {
+                console.log(error.message);
+                this.contentLoading = false;
+            });
+    }
+
     onLocationChange(address) {
         this.place = address;
         this.job.location = address && address.formatted_address ? this.locationInputRef.nativeElement.value : '';
@@ -454,9 +496,10 @@ export class JobItemEditComponent implements OnInit {
         }, 400);
     }
 
-    private getActiveForm() {
+    private getActiveForm(activeSection: string = '') {
+        const section = activeSection || this.activeSection;
         let form;
-        switch (this.activeSection) {
+        switch (section) {
             case 'job-details':
                 form = this.jobDetailsForm;
                 break;
@@ -492,5 +535,17 @@ export class JobItemEditComponent implements OnInit {
             }
         }
         return text;
+    }
+
+    get isNewOrDraft() {
+        return this.job.status === 'BUILD';
+    }
+
+    onBackClick() {
+        if (this.isNewOrDraft) {
+            this.router.navigateByUrl(`${this.baseUrl}/jobs`);
+        } else {
+            this.setEditMode.emit(false);
+        }
     }
 }
