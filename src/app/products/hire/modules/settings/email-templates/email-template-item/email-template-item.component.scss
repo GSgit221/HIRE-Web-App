@@ -3,6 +3,7 @@
 .action {
     background-color: #f9fafb;
     padding: 20px;
+    text-align: center;
     .action-btn {
         background-color: #8e8e93;
         margin-left: 65px;
@@ -37,5 +38,11 @@
         position: absolute;
         right: 10px;
         bottom: 12px;
+    }
+}
+
+.form-content-section {
+    .job_desc {
+        max-width: calc(100% - 372px);
     }
 }

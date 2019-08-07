@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content" appDragEnter (dropFile)="onDropFile($event)">
     <h2>Add candidate</h2>
     <form [formGroup]="form">
         <div class="emails-block" formArrayName="emails">
@@ -48,6 +48,7 @@
                             required
                             email
                         />
+                        <label>{{ uploadItem.file.name }}</label>
                         <div class="light-overlay" *ngIf="uploadItem.uploadStarted && !uploadItem.uploadFinished"></div>
                     </form>
                     <app-progress-circle
@@ -75,7 +76,7 @@
             </div>
 
             <div class="upload-block">
-                <div class="drop-zone mb10" appDragEnter (dropFile)="onDropFile($event)">
+                <div class="drop-zone mb10">
                     <div class="upload-text">Drop document or <label for="uploader">click to upload</label></div>
                     <input
                         class="file"
@@ -105,3 +106,4 @@
         </div>
     </form>
 </div>
+<div class="dropzone" appDragEnter (dropFile)="onDropFile($event)"></div>

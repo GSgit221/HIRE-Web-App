@@ -7,7 +7,7 @@
             <div class="job-title-block">
                 <div class="view">
                     <strong class="title"
-                        >{{ job.title }} <span class="subtitle" *ngIf="job.ref"> - {{ job.ref }}</span></strong
+                        >{{ job.title }} <span class="subtitle" *ngIf="job.ref"> - ({{ job.ref }})</span></strong
                     >
                     <button class="btn btn-round ml20" (click)="onEditJobClick($event)" *ngIf="!job.pool">
                         <img src="/assets/images/edit.svg" alt="" width="14" height="13" />
