@@ -241,8 +241,10 @@ a {
         color: black;
         padding: 7.1px 12px 8px;
         text-decoration: none;
-        display: block;
-        text-align: left;
+
+        transition: none;
+        display: flex;
+        align-items: center;
 
         &:hover {
             background-color: $pink;
