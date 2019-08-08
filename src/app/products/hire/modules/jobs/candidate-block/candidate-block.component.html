@@ -62,7 +62,7 @@
         >{{ candidate.first_name | titlecase }} {{ candidate.last_name | titlecase }}</strong
     >
     <ng-template #noFirstName>
-        <strong class="title" [ngClass]="{ read: hasRead() }">{{ candidate.email }}</strong>
+        <strong class="title" [ngClass]="{ read: hasRead }">{{ candidate.email }}</strong>
     </ng-template>
     <span class="position" *ngIf="candidate.employment_history"
         >{{ candidate.employment_history[0].title | titlecase }}

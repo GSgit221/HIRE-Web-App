@@ -48,11 +48,8 @@
                         </div>
                         <div class="form-block">
                             <label class="form-block-label">From</label>
-                            <p-dropdown
-                                [options]="fromOptions"
-                                formControlName="from"
-                                [style]="{ width: '100%' }"
-                            ></p-dropdown>
+                            <p-dropdown [options]="fromOptions" formControlName="from" [style]="{ width: '100%' }">
+                            </p-dropdown>
                         </div>
                         <div class="form-block">
                             <label class="form-block-label">Delayed Sending</label>
@@ -82,7 +79,8 @@
                                     binary="true"
                                     label="Send an SMS message with this email"
                                     formControlName="hasSMS"
-                                ></p-checkbox>
+                                >
+                                </p-checkbox>
                             </div>
                         </div>
                         <div class="form-content-box-bottom" *ngIf="hasSMS">
@@ -107,7 +105,12 @@
                     <div class="form-content-box">
                         <div class="form-block">
                             <div class="editors-container">
-                                <app-editor #pEditor formControlName="content" [style]="{ height: 'auto' }">
+                                <app-editor
+                                    #pEditor
+                                    formControlName="content"
+                                    [style]="{ height: 'auto' }"
+                                    [ngClass]="{ active: editor }"
+                                >
                                     <p-header>
                                         <span class="ql-formats">
                                             <select class="ql-size">
@@ -134,7 +137,7 @@
                                         <span class="ql-formats">
                                             <button aria-label="Remove Styles" class="ql-clean" type="button"></button>
                                         </span>
-                                        <span class="ql-formats job_desc">
+                                        <span class="ql-formats job_desc" (click)="onFocus(true)">
                                             <p-dropdown
                                                 formControlName="emailplaceholder"
                                                 [options]="InsertPlaceholders"
@@ -186,7 +189,7 @@
                                                     type="button"
                                                 ></button>
                                             </span>
-                                            <span class="ql-formats job_desc">
+                                            <span class="ql-formats job_desc" (click)="onFocus(false)">
                                                 <p-dropdown
                                                     formControlName="emailplaceholder"
                                                     [options]="InsertPlaceholders"

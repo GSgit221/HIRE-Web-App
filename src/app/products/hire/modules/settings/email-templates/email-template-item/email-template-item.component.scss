@@ -46,3 +46,7 @@
         max-width: calc(100% - 372px);
     }
 }
+
+.editors-container.pEditor > app-editor .ql-toolbar.ql-snow {
+    z-index: 3;
+}
