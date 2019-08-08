@@ -1397,3 +1397,13 @@ app-editor {
         }
     }
 }
+
+.over {
+    .stages-section {
+        overflow: visible !important;
+
+        .drop-overlay {
+            display: flex !important;
+        }
+    }
+}
