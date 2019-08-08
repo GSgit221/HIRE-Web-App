@@ -521,6 +521,12 @@
     }
 }
 
+.over {
+    .drop-overlay {
+        display: flex;
+    }
+}
+
 .drop-overlay {
     position: fixed;
     left: 0;
@@ -546,14 +552,6 @@
             width: 212px;
             height: 212px;
             margin: 0 0 30px;
-        }
-    }
-}
-
-.stages-section {
-    &.over {
-        .drop-overlay {
-            display: flex;
         }
     }
 }

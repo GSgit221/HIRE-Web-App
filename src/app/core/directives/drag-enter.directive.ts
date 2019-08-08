@@ -8,6 +8,9 @@ export class DragEnterDirective implements OnInit {
     @Input() appDragEnterParentClass: string;
     @Output() dropFile = new EventEmitter<File>();
     supportedFileTypes: string[];
+    first: boolean = false;
+    second: boolean = false;
+
     constructor(private _elementRef: ElementRef) {
         this.supportedFileTypes = [
             'application/pdf',
@@ -20,20 +23,42 @@ export class DragEnterDirective implements OnInit {
 
     ngOnInit() {
         // Get the current element
-        const el = this._elementRef.nativeElement;
+        const el = this.appDragEnter === 'body' ? document.body : this._elementRef.nativeElement;
 
         // Add a style to indicate that this element is a drop target
         el.addEventListener('dragenter', (e) => {
             // console.log('dragenter', e);
             // el.classList.add('over');
+            const type = e.dataTransfer.types && e.dataTransfer.types[0] ? e.dataTransfer.types[0] : null;
+            if (type === 'Files') {
+                if (this.first) this.second = true;
+                else this.first = true;
+                el.classList.add('over');
+                if (e.preventDefault) {
+                    e.preventDefault();
+                }
+                e.dataTransfer.dropEffect = 'move';
+                return false;
+            }
         });
 
         // Remove the style
         el.addEventListener('dragleave', (e) => {
-            const leaveTarget = e.target;
-            el.classList.remove('over');
-            if (this.appDragEnterParentClass) {
-                el.parentNode.classList.remove(this.appDragEnterParentClass);
+            const type = e.dataTransfer.types && e.dataTransfer.types[0] ? e.dataTransfer.types[0] : null;
+            if (type === 'Files') {
+                if (this.second) this.second = false;
+                else if (this.first) this.first = false;
+
+                if (!this.first && !this.second) {
+                    el.classList.remove('over');
+                }
+            } else {
+                const leaveTarget = e.target;
+                console.log(leaveTarget);
+                el.classList.remove('over');
+                if (this.appDragEnterParentClass) {
+                    el.parentNode.classList.remove(this.appDragEnterParentClass);
+                }
             }
         });
 

@@ -10,12 +10,14 @@ import { JobService } from './../../../../../core/services/job.service';
     styleUrls: ['./job-item.component.scss']
 })
 export class JobItemComponent implements OnInit {
+    jobId: string;
     job: Job;
     contentLoading = true;
     editMode = false;
 
     constructor(private route: ActivatedRoute, private jobService: JobService, private router: Router) {
         let jobId = this.route.snapshot.paramMap.get('id');
+        this.jobId = jobId;
         this.jobService.getJob(jobId).subscribe((job: Job) => {
             this.job = job;
             this.contentLoading = false;
@@ -51,5 +53,17 @@ export class JobItemComponent implements OnInit {
 
     onSetEditMode(value) {
         this.editMode = this.job.status === 'BUILD' ? false : value;
+    }
+
+    onJobUpdate() {
+        this.jobService.getJob(this.jobId).subscribe((job: Job) => {
+            this.job = job;
+            this.contentLoading = false;
+            console.log('FROM ROUTE-------------------- JOB:', this.jobId, this.job);
+
+            if (this.job && this.job.status && this.job.status === 'BUILD') {
+                this.editMode = true;
+            }
+        });
     }
 }
