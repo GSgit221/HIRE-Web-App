@@ -40,6 +40,7 @@ export class EmailTemplateItemComponent implements OnInit {
         { label: '1 day', value: 3600 * 24 },
         { label: '7 days', value: 3600 * 24 * 7 }
     ];
+    editor: boolean = true;
     constructor(
         private emailService: EmailService,
         private router: Router,
@@ -48,6 +49,19 @@ export class EmailTemplateItemComponent implements OnInit {
         private formHelper: FormHelperService,
         private store: Store<fromStore.EmailsState>
     ) {
+        this.InsertPlaceholders = [
+            { label: 'Candidate Name', value: '{{candidate_name}}', title: 'Candidate Name' },
+            { label: 'Missing Fields', value: '{{missing_fields}}', title: 'Missing Fields' },
+            { label: 'Sender Email', value: '{{sender_email}}', title: 'Sender Email' },
+            { label: 'Sender Name', value: '{{sender_name}}', title: 'Sender Name' },
+            { label: 'Job Title', value: '{{job_title}}', title: 'Job Title' },
+            { label: 'Sender Company', value: '{{sender_company}}', title: 'Sender Company' },
+            { label: 'Tenant Name', value: '{{tenant_name}}', title: 'Tenant Name' },
+            { label: 'Recruiter', value: '{{recruiter}}', title: 'Recruiter' },
+            { label: 'Job Owner', value: '{{job_owner}}', title: 'Job Owner' }
+        ];
+        this.InsertTitles = this.InsertPlaceholders.filter(({ title }) => !!title).map(({ title }) => title);
+
         this.emailTemplateId = this.route.snapshot.url[0].path;
         this.itemForm = this.fb.group({
             title: ['', Validators.required],
@@ -75,19 +89,6 @@ export class EmailTemplateItemComponent implements OnInit {
                 this.initialLoad = false;
             }
         });
-
-        this.InsertPlaceholders = [
-            { label: 'Candidate Name', value: '{{candidate_name}}', title: 'Candidate Name' },
-            { label: 'Missing Fields', value: '{{missing_fields}}', title: 'Missing Fields' },
-            { label: 'Sender Email', value: '{{sender_email}}', title: 'Sender Email' },
-            { label: 'Sender Name', value: '{{sender_name}}', title: 'Sender Name' },
-            { label: 'Job Title', value: '{{job_title}}', title: 'Job Title' },
-            { label: 'Sender Company', value: '{{sender_company}}', title: 'Sender Company' },
-            { label: 'Tenant Name', value: '{{tenant_name}}', title: 'Tenant Name' },
-            { label: 'Recruiter', value: '{{recruiter}}', title: 'Recruiter' },
-            { label: 'Job Owner', value: '{{job_owner}}', title: 'Job Owner' }
-        ];
-        this.InsertTitles = this.InsertPlaceholders.filter(({ title }) => !!title).map(({ title }) => title);
     }
 
     @ViewChild('pEditor') pEditor: any;
@@ -125,6 +126,7 @@ export class EmailTemplateItemComponent implements OnInit {
         quill.on('text-change', (delta, oldContents, source) => {
             this.formateQuillTest(quill);
         });
+        this.formateQuillTest(quill);
 
         quill.on('selection-change', (range, oldRange, source) => {
             this.cursorPosition = oldRange;
@@ -137,12 +139,18 @@ export class EmailTemplateItemComponent implements OnInit {
             subject: [item.subject || '', Validators.required],
             from: [item.from || 'owner', Validators.required],
             delayed: [item.delayed || 'none', Validators.required],
-            content: [item.content || '', Validators.required],
-            email_content: [item.email_content || ''],
+            content: [this.replacePlaceholder(item.content) || '', Validators.required],
+            email_content: [this.replacePlaceholder(item.email_content) || ''],
             emailplaceholder: [item.emailplaceholder || ''],
             hasSMS: [item.hasSMS || false],
             messageContent: [item.messageContent || '', [Validators.minLength(10), Validators.maxLength(120)]]
         });
+    }
+
+    replacePlaceholder(content: string): string {
+        let ret = content;
+        this.InsertPlaceholders.forEach(({ value, title }) => (ret = ret.replace(new RegExp(value), title)));
+        return ret;
     }
 
     onSave() {
@@ -188,21 +196,66 @@ export class EmailTemplateItemComponent implements OnInit {
         this.formateQuillTest(this.quillSec);
     }
 
+    onFocus(event) {
+        this.editor = event;
+    }
+
     formateQuillTest(quill) {
+        const { ops: origin } = quill.getContents();
+
+        let i = 0;
+        let offset = 0;
+
+        while (origin[i]) {
+            const d = origin[i];
+            if (d.attributes) {
+                if (d.attributes.color === 'white') {
+                    const placeholder = this.InsertPlaceholders.find(({ title }) => title === d.insert);
+                    if (!placeholder) {
+                        quill.removeFormat(offset, d.insert.length);
+                        break;
+                    }
+                } else {
+                    quill.removeFormat(offset, d.insert.length);
+                    break;
+                }
+            } else {
+                offset += (d.insert || '').length;
+            }
+            i++;
+        }
+        if (origin[i]) return;
+
         const inset = quill.getText();
         let variables = FindVariables(inset, this.InsertTitles);
+
+        offset = 0;
+        for (let { isTitle, ...variable } of variables) {
+            if (!isTitle) {
+                const placeholder = this.InsertPlaceholders.find(({ value }) => value === variable.name);
+                if (placeholder && placeholder.title) {
+                    const delta = { ops: [] };
+                    const off = placeholder.title.length - variable.name.length;
+                    delta.ops.push(
+                        { retain: variable.index - offset },
+                        { delete: variable.name.length },
+                        { insert: placeholder.title + ' ' }
+                    );
+                    quill.updateContents(delta);
+                    offset += off;
+                }
+                break;
+            }
+        }
+        if (offset < 0) return;
 
         for (let variable of variables) {
             quill.formatText(
                 variable.index,
                 variable.index + variable.name.length,
-                variable.isTitle
-                    ? {
-                          color: 'white'
-                      }
-                    : {
-                          color: '#8e8e93'
-                      },
+                {
+                    color: 'white'
+                },
                 'silent'
             );
 
