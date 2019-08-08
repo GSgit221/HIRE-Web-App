@@ -38,11 +38,10 @@ export class JobItemEditComponent implements OnInit {
 
     user: User;
     users: User[];
-    jobdescriptions: JobCatalogue[];
     accountOwners: SelectItem[] = [];
     recruitersDefaults: SelectItem[] = [];
     recruiters: User[] = [];
-    descriptions = [];
+    descriptions: JobCatalogue[] = [];
     // hiringManagers: SelectItem[] = [];
     // unprivilegedUsers: User[] = [];
 
@@ -236,31 +235,32 @@ export class JobItemEditComponent implements OnInit {
         }
     }
 
-    onChangeJob(event) {
-        this.str_array = [];
-        this.req_str_array = [];
-        this.selectedJob = event.value;
-        const job_des = this.descriptions.filter((x) => x.Role === event.value);
-        console.log(job_des);
-        const res = job_des[0].Responsibilities.split('.');
-        const req = job_des[0].Requirements.split('.');
-        res.pop();
-        req.pop();
+    defineBullets(...args: string[]) {
+        const str_array = [];
+        const req_str_array = [];
+        const removeOld = new RegExp('<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</p>', 'g');
+        const res = args[0].replace(removeOld, '').split('● ');
+        const req = args[1].replace(removeOld, '').split('● ');
+        const prefix = res
+            .shift()
+            .split('  ')
+            .join('<br>');
+        const old = req.shift().trim();
         for (let i of res) {
-            this.str_array.push('<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + i + '.</p>');
+            str_array.push('<li>' + i + '</li>');
         }
         for (let i of req) {
-            this.req_str_array.push('<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + i + '.</p>');
+            req_str_array.push('<li>' + i + '</li>');
         }
-        const str_array = this.str_array.toString();
-        const req_str_array = this.req_str_array.toString();
-        const regex = new RegExp('</p>,', 'g');
-        const st_array = str_array.replace(regex, '');
-        const req_st_array = req_str_array.replace(regex, '');
-        const description = `${job_des[0].Overview}  ${job_des[0].Description}  ${st_array}`;
-        this.jobDetailsForm.patchValue({ description: `${description}` });
-        this.jobDetailsForm.patchValue({ requirements: `${req_st_array}` });
-        // console.log(job_des);
+        this.jobDetailsForm.patchValue({ description: `${prefix}<ul>${str_array.join('')}</ul>` });
+        this.jobDetailsForm.patchValue({ requirements: `${old}<ul>${req_str_array.join('')}</ul>` });
+    }
+
+    onChangeJob(event) {
+        this.selectedJob = event.value;
+        const job_des = this.descriptions.filter((x) => x.Role === event.value);
+        const description = `${job_des[0].Overview}  ${job_des[0].Description}  ${job_des[0].Responsibilities}`;
+        this.defineBullets(description, job_des[0].Requirements);
     }
 
     // TEMPORARY (till Quill fixes it)
@@ -339,10 +339,11 @@ export class JobItemEditComponent implements OnInit {
             // ConditionalValidator.validate(() => !this.job.single_salary, Validators.required)
             salary_period: [this.job.salary_period],
             hide_salary: [this.job.hide_salary || false],
-            description: [this.job.description],
-            requirements: [this.job.requirements],
+            description: [''],
+            requirements: [''],
             job_role: [this.job.job_role]
         });
+        this.defineBullets(this.job.description, this.job.requirements);
         this.inputAddress = this.job.location;
         this.applicationsForm = this.fb.group({
             job_listing: ['default'],
@@ -442,7 +443,7 @@ export class JobItemEditComponent implements OnInit {
         const dirtyForms = [];
         this.sections.forEach((section) => {
             const form = this.getActiveForm(section);
-            if (form.dirty) {
+            if (form.dirty || form.touched) {
                 dirtyForms.push({ section, form });
             }
         });
