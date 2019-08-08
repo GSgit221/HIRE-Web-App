@@ -20,6 +20,14 @@
     top: 0;
     bottom: 0;
     padding: 40px;
+
+    .close {
+        cursor: pointer;
+        position: absolute;
+        right: 40px;
+        top: 40px;
+        display: flex;
+    }
 }
 
 .content {

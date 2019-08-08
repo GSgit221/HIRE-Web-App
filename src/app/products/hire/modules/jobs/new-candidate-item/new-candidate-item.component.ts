@@ -94,9 +94,9 @@ export class NewCandidateItemComponent implements OnInit {
         }
     }
 
-    onFinishClicked(event) {
+    onFinishClicked(event, save = true) {
         event.preventDefault();
-        if (this.emails.length) {
+        if (this.emails.length && save) {
             this.jobService
                 .setCandidatesEmailNotifications(this.jobId, this.emails)
                 .subscribe((response) => console.log(response), (error) => console.error(error));
