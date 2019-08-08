@@ -386,7 +386,7 @@
                                                 ></button>
                                             </span>
                                         </div>
-                                        <span class="ql-formats job_desc">
+                                        <span class="ql-formats job_desc" *ngIf="isNewOrDraft">
                                             <p-dropdown
                                                 [options]="JobDescriptionOptions"
                                                 formControlName="job_role"
@@ -397,7 +397,6 @@
                                                 [(ngModel)]="selectedJob"
                                                 filterBy="label,value.role"
                                                 [editable]="disableEdit"
-                                                [disabled]="disableDropdown"
                                             ></p-dropdown>
                                         </span>
                                     </p-header>
@@ -423,7 +422,7 @@
                                                 ></button>
                                             </span>
                                         </div>
-                                        <span class="ql-formats job_desc">
+                                        <span class="ql-formats job_desc" *ngIf="isNewOrDraft">
                                             <p-dropdown
                                                 [options]="JobDescriptionOptions"
                                                 formControlName="job_role"
@@ -434,7 +433,6 @@
                                                 filterBy="label,value.role"
                                                 [(ngModel)]="selectedJob"
                                                 [editable]="disableEdit"
-                                                [disabled]="disableDropdown"
                                             ></p-dropdown>
                                         </span>
                                     </p-header>
