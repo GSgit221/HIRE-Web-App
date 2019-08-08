@@ -423,8 +423,8 @@ export class JobItemEditComponent implements OnInit {
             return;
         }
         // VALID
-        console.log({ ...this.job, ...form.value });
-
+        console.log(this.job);
+        console.log(form.value);
         this.jobService.saveJob({ ...this.job, ...form.value }, this.activeSection, true).subscribe((job: Job) => {
             console.log('RESPONSE FROM SAVE CALL:', job);
             this.contentLoading = false;
