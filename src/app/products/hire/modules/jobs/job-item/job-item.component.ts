@@ -50,6 +50,6 @@ export class JobItemComponent implements OnInit {
     ngOnInit() {}
 
     onSetEditMode(value) {
-        this.editMode = value;
+        this.editMode = this.job.status === 'BUILD' ? false : value;
     }
 }

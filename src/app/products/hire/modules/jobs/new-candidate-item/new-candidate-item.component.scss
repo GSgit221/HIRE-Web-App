@@ -173,10 +173,6 @@ h2 {
     border-radius: 5px;
     transition: all 0.3s ease;
 
-    &.over {
-        background: $grey-border;
-    }
-
     label {
         color: $pink;
         text-decoration: none;
@@ -209,6 +205,8 @@ h2 {
     flex: 1;
     margin: 0 50px 0 0;
     position: relative;
+    display: flex;
+    flex-direction: column;
 
     input {
         background: transparent;
@@ -229,4 +227,18 @@ h2 {
             line-height: normal;
         }
     }
+
+    label {
+        font-size: 12px;
+        color: #637381;
+    }
+}
+
+.dropzone {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
 }
