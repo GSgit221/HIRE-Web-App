@@ -1,4 +1,7 @@
 <div class="dropzone" appDragEnter (dropFile)="onDropFile($event)">
+    <div class="close" (click)="onFinishClicked($event, false)">
+        <img src="/assets/images/icons-8-delete-sign.svg" alt="" />
+    </div>
     <div class="content">
         <h2>Add candidate</h2>
         <form [formGroup]="form">
