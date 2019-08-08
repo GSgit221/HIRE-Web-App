@@ -34,6 +34,7 @@ export class JobItemEditComponent implements OnInit {
     titleMaxLength = 250;
 
     @Output() setEditMode = new EventEmitter<boolean>();
+    @Output() onJobUpdate = new EventEmitter<boolean>();
 
     user: User;
     users: User[];
@@ -469,7 +470,8 @@ export class JobItemEditComponent implements OnInit {
         )
             .then((values) => {
                 console.log(values);
-                this.router.navigateByUrl(`${this.baseUrl}/jobs`);
+                this.onJobUpdate.emit();
+                this.contentLoading = false;
             })
             .catch((error) => {
                 console.log(error.message);
