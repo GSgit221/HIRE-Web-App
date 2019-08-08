@@ -48,7 +48,6 @@ export class UsersComponent implements OnInit {
                     );
                 })
                 .sort((a, b) => (a.first_name > b.first_name ? 1 : b.first_name > a.first_name ? -1 : 0));
-
             this.calculateSelectedUsers();
         });
 

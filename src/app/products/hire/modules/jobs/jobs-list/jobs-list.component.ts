@@ -87,6 +87,7 @@ export class JobsListComponent implements OnInit {
                             capitalize: !!first_name
                         }))
                 );
+                console.log(this.ownerFilters);
             });
         });
     }

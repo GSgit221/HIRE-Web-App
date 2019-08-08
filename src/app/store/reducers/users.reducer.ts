@@ -56,13 +56,7 @@ export function reducer(state = initialState, action: fromUsers.UsersAction): Us
 
         case fromUsers.BULK_DELETE_USERS_SUCCESS: {
             const ids = action.payload;
-            const entities = [...state.entities];
-            ids.forEach((id) => {
-                const itemIndex = entities.findIndex((val) => val.id === id);
-                if (itemIndex > -1) {
-                    entities.splice(itemIndex);
-                }
-            });
+            const entities = [...state.entities].filter((item) => ids.indexOf(item.id) === -1);
             return { ...state, entities, error: null };
         }
 
