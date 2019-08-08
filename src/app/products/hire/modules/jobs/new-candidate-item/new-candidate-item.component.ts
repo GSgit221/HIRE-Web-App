@@ -49,7 +49,6 @@ export class NewCandidateItemComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.jobId);
         this.form = this.fb.group({
             // send_email: [true],
             file: [''],

@@ -33,4 +33,10 @@ export class CandidateBlockComponent implements OnInit {
         event.stopPropagation();
         this.onSelect.next(candidateId);
     }
+
+    get hasRead() {
+        const jobId = this.job.id;
+        const { read = [] } = this.candidate;
+        return read.length ? read.findIndex((jId) => jId === jobId) !== -1 : false;
+    }
 }
