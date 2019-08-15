@@ -1,12 +1,116 @@
 <div class="light-overlay" *ngIf="contentLoading"></div>
 <div class="message-form">
+    <div class="tags-container">
+        <img src="/assets/images/tags/tags.svg" />
+        <div
+            class="tag"
+            *ngFor="let tag of candidate.tags || []"
+            [style.color]="getTagStyle(tag.color).color"
+            [style.background]="getTagStyle(tag.color).background"
+        >
+            {{ titleCase(tag.hash) }}
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="8"
+                height="8"
+                viewBox="0 0 8 8"
+                (click)="onDeleteTag(tag.hash)"
+            >
+                <path
+                    [style.fill]="getTagStyle(tag.color).color"
+                    fill-rule="nonzero"
+                    d="M.5.029L.029.5l.237.234L3.529 4l-3.5 3.5.471.471 3.5-3.5 3.263 3.266.237.234.471-.471-.234-.237L4.471 4l3.5-3.5L7.5.029 4 3.529.734.266z"
+                />
+            </svg>
+        </div>
+    </div>
     <form [formGroup]="commentForm">
-        <textarea name="message" formControlName="description"></textarea>
+        <div style="position: relative;">
+            <app-editor #pEditor formControlName="description"> </app-editor>
+            <div
+                class="hash-suggestion"
+                [style.top.px]="suggestionPosition.top"
+                [style.left.px]="suggestionPosition.left"
+                *ngIf="!createMode && currentHash && tagWithTitles.length > 0"
+            >
+                <p
+                    class="hash"
+                    *ngFor="let tag of tagWithTitles"
+                    (click)="placeHash(tag)"
+                    [style.color]="getTagStyle(tag.color).color"
+                    [style.background]="getTagStyle(tag.color).background"
+                >
+                    {{ tag.title }}
+                </p>
+            </div>
+            <div
+                class="create-new hash-suggestion"
+                [style.top.px]="suggestionPosition.top"
+                [style.left.px]="suggestionPosition.left"
+                *ngIf="!createMode && tagWithTitles.length === 0"
+                (click)="onCreateNew()"
+            >
+                <img src="/assets/images/tags/plus.svg" />Create a new tag
+            </div>
+            <div
+                class="hash-colors"
+                [style.top.px]="suggestionPosition.top"
+                [style.left.px]="suggestionPosition.left"
+                *ngIf="createMode"
+            >
+                <div
+                    class="hash-color"
+                    *ngFor="let color of hashColors"
+                    [style.background]="color"
+                    (click)="onChangeHashColor(color)"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="12"
+                        viewBox="0 0 16 12"
+                        *ngIf="lastHash && lastHash.color === color"
+                    >
+                        <path
+                            [style.fill]="getTagStyle(color).color"
+                            fill-rule="nonzero"
+                            d="M14.5.793l-9 9-3.648-3.645-.352-.355-.707.707.355.352L5.5 11.207 15.207 1.5z"
+                        />
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <label>@ to mention, # to tag</label>
         <button class="btn btn-primary" [disabled]="!commentForm.valid" (click)="onSaveComment()">Add</button>
     </form>
 </div>
 <div class="audit">
     <div class="audit-item" *ngFor="let item of audit; let ind = index" [ngClass]="{ last: ind === audit.length - 1 }">
+        <ng-container *ngIf="item.type === 'tags'">
+            <div class="audit-item-img">
+                <div *ngIf="item.image_url" class="inner">
+                    <img [src]="item.image_url" height="20" [alt]="item.last_name" />
+                </div>
+                <div class="initial" *ngIf="!item.image_url">{{ item.user | initials }}</div>
+            </div>
+            <div class="audit-item-content">
+                <div class="audit-item-header">
+                    <div class="audit-item-heading">
+                        <p>
+                            <strong>Clevateam </strong> added {{ getTags(item.text).length > 1 ? 'tags' : 'a tag' }}
+                            <span
+                                class="tag"
+                                *ngFor="let tag of getTags(item.text)"
+                                [style.color]="getTagStyle(tag.color).color"
+                                [style.background]="getTagStyle(tag.color).background"
+                                >{{ titleCase(tag.hash) }}</span
+                            >
+                        </p>
+                    </div>
+                    <em class="date">{{ item.created_at_rel }}</em>
+                </div>
+            </div>
+        </ng-container>
         <ng-container *ngIf="item.type === 'comment'">
             <div class="audit-item-img">
                 <div *ngIf="item.image_url" class="inner">
@@ -32,7 +136,9 @@
         <ng-container *ngIf="item.type === 'created'">
             <div class="audit-item last">
                 <div class="audit-item-img">
-                    <div class="inner"><div class="dot"></div></div>
+                    <div class="inner">
+                        <div class="dot"></div>
+                    </div>
                 </div>
                 <div class="audit-item-content">
                     <div class="audit-item-header">
