@@ -220,6 +220,13 @@ export class JobService {
         );
     }
 
+    updateCandidateTags(jobId: string, candidateId: string, data: any) {
+        return this.http.put(
+            `${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/${candidateId}`,
+            { data }
+        );
+    }
+
     readCandidate(jobId: string, candidateId: string, read: string[]) {
         return this.http.put(
             `${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/${candidateId}`,

@@ -1,3 +1,5 @@
+import { ITag } from './job';
+
 export class Candidate {
     id?: string;
     first_name: string;
@@ -25,4 +27,5 @@ export class Candidate {
     updated_at_rel?: any;
     read?: string[];
     application_completed?: any;
+    tags?: ITag[];
 }
