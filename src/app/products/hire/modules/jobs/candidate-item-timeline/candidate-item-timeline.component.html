@@ -87,7 +87,7 @@
 <div class="audit">
     <div class="audit-item" *ngFor="let item of audit; let ind = index" [ngClass]="{ last: ind === audit.length - 1 }">
         <ng-container *ngIf="item.type === 'tags'">
-            <div class="audit-item-img">
+            <div class="audit-item-img" style="margin-top: 0;">
                 <div *ngIf="item.image_url" class="inner">
                     <img [src]="item.image_url" height="20" [alt]="item.last_name" />
                 </div>
@@ -97,13 +97,14 @@
                 <div class="audit-item-header">
                     <div class="audit-item-heading">
                         <p>
-                            <strong>Clevateam </strong> added {{ getTags(item.text).length > 1 ? 'tags' : 'a tag' }}
+                            <strong style="line-height: 22px;">Clevateam </strong> {{ item.param || 'added' }}
+                            {{ getTags(item.text).length > 1 ? 'tags' : 'a tag' }}
                             <span
                                 class="tag"
                                 *ngFor="let tag of getTags(item.text)"
                                 [style.color]="getTagStyle(tag.color).color"
                                 [style.background]="getTagStyle(tag.color).background"
-                                >{{ titleCase(tag.hash) }}</span
+                                >{{ titleCase(tag.hash) }}&nbsp;</span
                             >
                         </p>
                     </div>
