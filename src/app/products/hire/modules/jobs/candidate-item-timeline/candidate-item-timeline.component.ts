@@ -77,7 +77,6 @@ export class CandidateItemTimelineComponent implements OnInit {
         this.commentForm = this.fb.group({
             description: ['', Validators.required]
         });
-        console.log(this.candidate.tags);
     }
 
     ngAfterViewInit() {
@@ -196,13 +195,33 @@ export class CandidateItemTimelineComponent implements OnInit {
 
     async onDeleteTag(deleteHash) {
         this.contentLoading = true;
+        const removeTag = this.candidate.tags.find(({ hash }) => hash === deleteHash);
         this.candidate.tags = this.candidate.tags.filter(({ hash }) => hash !== deleteHash);
         await new Promise((resolve, reject) => {
             this.jobService
                 .updateCandidateTags(this.job.id, this.candidate.id, { tags: this.candidate.tags })
                 .subscribe(resolve, reject);
         });
-        this.contentLoading = false;
+        const comment = {
+            id: this.utilities.generateUID(10).toLowerCase(),
+            text: JSON.stringify([removeTag]),
+            param: 'removed',
+            created_at: new Date().getTime(),
+            user_id: this.user.id,
+            type: 'tags'
+        };
+        this.candidateService.addToAudit(this.job.id, this.candidate.id, comment).subscribe(
+            (response) => {
+                this.commentForm.reset();
+                this.contentLoading = false;
+                this.auditData.push(comment);
+                this.audit = this.transformAudit(this.auditData);
+            },
+            (errorResponse) => {
+                console.error(errorResponse);
+                this.contentLoading = false;
+            }
+        );
     }
 
     onChangeHashColor(color: string) {
@@ -335,7 +354,7 @@ export class CandidateItemTimelineComponent implements OnInit {
             e.created_at_rel = this.utilities.fromNow(e.created_at);
             e.job_title = this.job.title;
             e.candidate_name = this.candidate.first_name + ' ' + this.candidate.last_name;
-            if (e.type === 'comment') {
+            if (e.type === 'comment' || e.type === 'tags') {
                 const author = this.users.find((u) => u.id === e.user_id);
                 if (author) {
                     e.user = author;
@@ -377,35 +396,46 @@ export class CandidateItemTimelineComponent implements OnInit {
         if (this.commentForm.valid) {
             const visits = {};
             (this.candidate.tags || []).forEach(({ hash }) => (visits[hash] = true));
+            const { ops: origin } = this.quill.getContents();
             const description = this.commentForm.value.description.replace(/<p>/i, '').replace(/<\/p>/i, '');
-            const tags = description
-                .split('</span>')
-                .map((item) => {
-                    const word = (item.split('>')[1] || '').trim();
-                    const hashIndex = this.tags.findIndex(({ hash }) => this.titleCase(hash) === word || hash === word);
-                    const tag = this.tags[hashIndex];
-                    if (hashIndex === -1 || visits[tag.hash]) return null;
-                    visits[tag.hash] = true;
-                    return tag;
-                })
-                .filter((tag) => tag);
-            console.log(tags, this.newHashes);
+            const newTags = [];
+            origin.forEach(({ insert: word }) => {
+                const hashIndex = this.tags.findIndex(({ hash }) => this.titleCase(hash) === word || hash === word);
+                if (hashIndex !== -1 && !visits[this.tags[hashIndex].hash]) {
+                    visits[this.tags[hashIndex].hash] = true;
+                    newTags.push(this.tags[hashIndex]);
+                }
+            });
+            const tags = this.newHashes;
             if (tags.length > 0) {
+                await new Promise((resolve, reject) => {
+                    this.jobService
+                        .updateJobTags(this.job.id, [...(this.job.tags || []), ...tags])
+                        .subscribe(resolve, reject);
+                });
+                this.job.tags ? this.job.tags.push(...tags) : (this.job.tags = tags);
+            }
+            if (newTags.length > 0) {
+                await new Promise((resolve, reject) => {
+                    this.jobService
+                        .updateCandidateTags(this.job.id, this.candidate.id, {
+                            tags: [...(this.candidate.tags || []), ...newTags]
+                        })
+                        .subscribe(resolve, reject);
+                });
                 const comment = {
                     id: this.utilities.generateUID(10).toLowerCase(),
-                    text: JSON.stringify(tags),
+                    text: JSON.stringify(newTags),
+                    param: 'added',
                     created_at: new Date().getTime(),
                     user_id: this.user.id,
                     type: 'tags'
                 };
-                await new Promise((resolve, reject) => {
-                    this.jobService
-                        .updateCandidateTags(this.job.id, this.candidate.id, {
-                            tags: [...(this.candidate.tags || []), tags]
-                        })
-                        .subscribe(resolve, reject);
-                });
-                this.candidate.tags.push(...tags);
+                this.newHashes = [];
+                this.lastHash = null;
+                this.currentHash = '';
+                this.createMode = false;
+                this.candidate.tags ? this.candidate.tags.push(...newTags) : (this.candidate.tags = newTags);
                 this.candidateService.addToAudit(this.job.id, this.candidate.id, comment).subscribe(
                     (response) => {
                         this.commentForm.reset();
@@ -418,7 +448,7 @@ export class CandidateItemTimelineComponent implements OnInit {
                         this.contentLoading = false;
                     }
                 );
-            } else {
+            } else if (newTags.length === 0) {
                 const comment = {
                     id: this.utilities.generateUID(10).toLowerCase(),
                     text: description,
@@ -438,6 +468,8 @@ export class CandidateItemTimelineComponent implements OnInit {
                         this.contentLoading = false;
                     }
                 );
+            } else {
+                this.contentLoading = false;
             }
         }
     }

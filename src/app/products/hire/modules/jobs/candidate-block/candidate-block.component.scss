@@ -8,11 +8,11 @@
     background: $white;
     box-shadow: 0 0 5px 0 rgba($color: #000000, $alpha: 0.1);
     margin: 0 0 10px;
-    padding: 14px 15px 10px 10px;
+    padding: 30px 15px 10px 10px;
     position: relative;
     transition: all 0.4s ease;
     overflow: hidden;
-    height: 75px;
+    // height: 75px;
 
     &:hover {
         cursor: pointer;
@@ -45,6 +45,23 @@
             position: absolute;
             left: 10px;
             top: 0;
+        }
+    }
+
+    .tags-block {
+        position: absolute;
+        left: 10px;
+        top: 7px;
+        width: calc(100% - 20px);
+        height: 8px;
+        display: flex;
+        overflow: hidden;
+
+        .tag {
+            width: 35px;
+            height: 100%;
+            border-radius: 5px;
+            margin-right: 8px;
         }
     }
 }
@@ -219,6 +236,7 @@
     color: $white;
     text-align: center;
     border-radius: 5px 0 0 0;
+    z-index: 1;
 
     .warning-block-holder {
         width: 28px;

@@ -16,6 +16,9 @@
 >
     <div class="warning-block-holder"><span>!</span></div>
 </div>
+<div class="tags-block">
+    <div *ngFor="let tag of candidate.tags || []" class="tag" [style.background]="tag.color"></div>
+</div>
 <div
     class="compliance-rate"
     [attr.data-score]="candidate.score"

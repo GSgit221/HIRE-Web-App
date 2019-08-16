@@ -96,19 +96,13 @@
             font-size: 11px;
             line-height: 13px;
 
-            display: flex;
-            flex-wrap: wrap;
-
             .tag {
                 margin-left: 6px;
                 padding: 4px 9px;
                 font-size: 12px;
                 line-height: 14px;
                 border-radius: 11px;
-            }
-
-            > * {
-                margin-left: 5px;
+                white-space: nowrap;
             }
         }
     }
