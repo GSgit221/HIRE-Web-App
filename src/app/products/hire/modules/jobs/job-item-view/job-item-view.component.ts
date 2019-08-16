@@ -242,7 +242,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     updated_at_rel: c.updated_at_rel,
                     first_name: c.first_name,
                     last_name: c.last_name,
-                    read: c.read.findIndex((jId) => jId === this.job.id) !== -1
+                    read: c.read.findIndex((jId) => jId === this.job.id) !== -1,
+                    tags: c.tags
                 });
             }
         });
