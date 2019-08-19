@@ -26,6 +26,14 @@ export class CandidateBlockComponent implements OnInit {
         return this.personalityAssessment;
     }
 
+    titleCase(str: string) {
+        return str
+            .replace(/#/g, '')
+            .split(/[-|_]/g)
+            .join(' ')
+            .replace(/\w*\S/g, (t) => t[0].toUpperCase() + t.substr(1));
+    }
+
     onDeleteCandidateClick(event, candidateId) {
         event.preventDefault();
         event.stopPropagation();

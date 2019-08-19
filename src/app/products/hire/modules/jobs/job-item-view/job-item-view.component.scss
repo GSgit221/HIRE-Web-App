@@ -12,6 +12,7 @@
 .header-block {
     display: flex;
     flex-direction: row;
+    margin-bottom: 7px;
 
     .add-btn {
         height: 36px;
@@ -25,7 +26,7 @@
 
 .heading {
     .job-title-block {
-        margin: 0 0 2px;
+        margin-bottom: 4px;
 
         .view,
         .edit {
@@ -72,10 +73,11 @@
     }
 
     .address {
-        font-size: $font-size-origin;
-        line-height: 14px;
+        font-size: 13px;
+        line-height: 15px;
         color: $grey;
-        vertical-align: top;
+        display: flex;
+        align-items: center;
 
         .ico,
         span {

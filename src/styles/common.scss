@@ -442,7 +442,7 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
     align-items: center;
     justify-content: center;
     line-height: 30px;
-    background: #525f7f;
+    background: $sapphire-blue;
     padding: 0;
 
     img {
@@ -452,7 +452,7 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
 
     &:hover {
         cursor: pointer;
-        background: darken(#525f7f, 10%);
+        background: darken($sapphire-blue, 10%);
     }
 
     &:active {
@@ -1569,6 +1569,28 @@ app-editor {
                 cursor: pointer;
                 margin-left: 8px;
             }
+        }
+    }
+}
+
+.ui-tooltip {
+    .ui-tooltip-text {
+        background-color: $sapphire-blue;
+        border-radius: 2px;
+        box-shadow: none;
+        font-size: 13px;
+        line-height: 15px;
+        padding: 1px 5px;
+    }
+
+    &.ui-tooltip-top {
+        padding-bottom: 4px;
+
+        .ui-tooltip-arrow {
+            margin-left: -6px;
+            border-width: 7px 7px 0;
+            border-top-color: $sapphire-blue;
+            z-index: -1;
         }
     }
 }
