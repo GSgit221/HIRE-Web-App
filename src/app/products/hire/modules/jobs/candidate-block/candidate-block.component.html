@@ -1,23 +1,47 @@
-<div
-    class="warning-block"
-    *ngIf="
-        candidate &&
-        ((!candidate.resume_file && !candidate.resume_file_new) ||
-            (!candidate.application_completed || !candidate.application_completed[job.id]))
-    "
->
-    <div class="warning-block-holder">
-        <span>!</span>
+<div class="tags-block" *ngIf="(candidate.tags || []).length > 0">
+    <div
+        *ngFor="let tag of candidate.tags || []"
+        class="tag"
+        [style.background]="tag.color"
+        [pTooltip]="titleCase(tag.hash)"
+        tooltipPosition="top"
+    ></div>
+</div>
+<div class="candidate-info">
+    <div class="ava-column">
+        <div class="ava">
+            <img [src]="candidate.profile_image" alt="profile image" *ngIf="candidate.profile_image" />
+            <div class="ava-placeholder" *ngIf="!candidate.profile_image">
+                {{ candidate | initials }}
+            </div>
+            <div
+                class="check-wrapper"
+                [ngClass]="{ checked: selected }"
+                (click)="onSelectCandidateClick($event, candidate.id)"
+            >
+                <div class="check-box">
+                    <img src="/assets/images/check.svg" />
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-<div
-    class="warning-block alert"
-    *ngIf="candidate && candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id]"
->
-    <div class="warning-block-holder"><span>!</span></div>
-</div>
-<div class="tags-block">
-    <div *ngFor="let tag of candidate.tags || []" class="tag" [style.background]="tag.color"></div>
+    <div class="block-content">
+        <strong
+            class="title"
+            *ngIf="candidate.first_name || candidate.last_name; else noFirstName"
+            [ngClass]="{ read: candidate.read }"
+            >{{ candidate.first_name | titlecase }} {{ candidate.last_name | titlecase }}</strong
+        >
+        <ng-template #noFirstName>
+            <strong class="title" [ngClass]="{ read: hasRead }">{{ candidate.email }}</strong>
+        </ng-template>
+        <span class="position" *ngIf="candidate.employment_history"
+            >{{ candidate.employment_history[0].title | titlecase }}
+            @
+            {{ candidate.employment_history[0].company | titlecase }}</span
+        >
+        <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
+    </div>
 </div>
 <div class="candidate-footer">
     <div class="score">
@@ -27,8 +51,14 @@
             [attr.data-score]="candidate.score"
             [ngClass]="{
                 green: candidate.score >= resumeThreshold,
-                orange: candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold,
-                red: candidate.score < resumeThreshold - 15
+                orange:
+                    (candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold) ||
+                    (candidate &&
+                        ((!candidate.resume_file && !candidate.resume_file_new) ||
+                            (!candidate.application_completed || !candidate.application_completed[job.id]))),
+                red:
+                    candidate.score < resumeThreshold - 15 ||
+                    (candidate && candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id])
             }"
         ></div>
         <div
@@ -50,38 +80,4 @@
             }"
         ></div>
     </div>
-</div>
-<div class="ava-column">
-    <div class="ava">
-        <img [src]="candidate.profile_image" alt="profile image" *ngIf="candidate.profile_image" />
-        <div class="ava-placeholder" *ngIf="!candidate.profile_image">
-            {{ candidate | initials }}
-        </div>
-        <div
-            class="check-wrapper"
-            [ngClass]="{ checked: selected }"
-            (click)="onSelectCandidateClick($event, candidate.id)"
-        >
-            <div class="check-box">
-                <img src="/assets/images/check.svg" />
-            </div>
-        </div>
-    </div>
-</div>
-<div class="block-content">
-    <strong
-        class="title"
-        *ngIf="candidate.first_name || candidate.last_name; else noFirstName"
-        [ngClass]="{ read: candidate.read }"
-        >{{ candidate.first_name | titlecase }} {{ candidate.last_name | titlecase }}</strong
-    >
-    <ng-template #noFirstName>
-        <strong class="title" [ngClass]="{ read: hasRead }">{{ candidate.email }}</strong>
-    </ng-template>
-    <span class="position" *ngIf="candidate.employment_history"
-        >{{ candidate.employment_history[0].title | titlecase }}
-        @
-        {{ candidate.employment_history[0].company | titlecase }}</span
-    >
-    <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
 </div>

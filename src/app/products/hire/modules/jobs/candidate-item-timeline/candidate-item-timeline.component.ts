@@ -118,10 +118,11 @@ export class CandidateItemTimelineComponent implements OnInit {
 
     getTagStyle(color: string) {
         function getTextColor(color: string): string {
-            const r = parseInt(color.substr(1, 2), 16);
-            const g = parseInt(color.substr(3, 2), 16);
-            const b = parseInt(color.substr(5, 2), 16);
-            return (r * 299 + g * 587 + b * 114) / 1000 > 138 ? 'black' : 'white';
+            return color === '#f6f8f9' ? 'black' : 'white';
+            // const r = parseInt(color.substr(1, 2), 16);
+            // const g = parseInt(color.substr(3, 2), 16);
+            // const b = parseInt(color.substr(5, 2), 16);
+            // return (r * 299 + g * 587 + b * 114) / 1000 > 138 ? 'black' : 'white';
         }
         return {
             background: color,
