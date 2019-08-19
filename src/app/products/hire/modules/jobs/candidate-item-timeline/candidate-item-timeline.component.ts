@@ -2,6 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { FindVariables } from 'app/libs/util';
+import { ToastrService } from 'ngx-toastr';
 import { Candidate, ITag, Job, User } from './../../../../../core/models';
 import { CandidateService, JobService, UserService, UtilitiesService } from './../../../../../core/services';
 import * as fromStore from './../../../../../store';
@@ -40,6 +41,7 @@ export class CandidateItemTimelineComponent implements OnInit {
         private candidateService: CandidateService,
         private jobService: JobService,
         private userService: UserService,
+        private toastr: ToastrService,
         private store: Store<fromStore.State>,
         private utilities: UtilitiesService
     ) {
@@ -142,6 +144,13 @@ export class CandidateItemTimelineComponent implements OnInit {
 
         quill.on('selection-change', (range, oldRange, source) => {
             this.cursorPosition = oldRange;
+        });
+
+        quill.keyboard.bindings[13].splice(0, 0, {
+            key: 13,
+            ctrlKey: true,
+            collapsed: true,
+            handler: this.onSaveComment.bind(this)
         });
     }
 
@@ -392,8 +401,8 @@ export class CandidateItemTimelineComponent implements OnInit {
     }
 
     async onSaveComment() {
-        this.contentLoading = true;
         if (this.commentForm.valid) {
+            this.contentLoading = true;
             const visits = {};
             (this.candidate.tags || []).forEach(({ hash }) => (visits[hash] = true));
             const { ops: origin } = this.quill.getContents();
@@ -411,7 +420,11 @@ export class CandidateItemTimelineComponent implements OnInit {
                 await new Promise((resolve, reject) => {
                     this.jobService
                         .updateJobTags(this.job.id, [...(this.job.tags || []), ...tags])
-                        .subscribe(resolve, reject);
+                        .subscribe(resolve, (err) => {
+                            this.contentLoading = false;
+                            this.toastr.error(err.message);
+                            reject(err);
+                        });
                 });
                 this.job.tags ? this.job.tags.push(...tags) : (this.job.tags = tags);
             }
@@ -421,7 +434,11 @@ export class CandidateItemTimelineComponent implements OnInit {
                         .updateCandidateTags(this.job.id, this.candidate.id, {
                             tags: [...(this.candidate.tags || []), ...newTags]
                         })
-                        .subscribe(resolve, reject);
+                        .subscribe(resolve, (err) => {
+                            this.contentLoading = false;
+                            this.toastr.error(err.message);
+                            reject(err);
+                        });
                 });
                 const comment = {
                     id: this.utilities.generateUID(10).toLowerCase(),
