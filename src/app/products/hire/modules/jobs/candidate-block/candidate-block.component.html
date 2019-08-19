@@ -19,19 +19,38 @@
 <div class="tags-block">
     <div *ngFor="let tag of candidate.tags || []" class="tag" [style.background]="tag.color"></div>
 </div>
-<div
-    class="compliance-rate"
-    [attr.data-score]="candidate.score"
-    [ngClass]="{
-        green: candidate.score >= resumeThreshold,
-        orange: candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold,
-        red: candidate.score < resumeThreshold - 15
-    }"
-    [hidden]="
-        (candidate && (candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id])) ||
-        (!candidate.application_completed || !candidate.application_completed[job.id])
-    "
-></div>
+<div class="candidate-footer">
+    <div class="score">
+        Application
+        <div
+            class="compliance-rate"
+            [attr.data-score]="candidate.score"
+            [ngClass]="{
+                green: candidate.score >= resumeThreshold,
+                orange: candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold,
+                red: candidate.score < resumeThreshold - 15
+            }"
+        ></div>
+        <div
+            class="compliance-rate"
+            [ngClass]="{
+                grey: !candidate.questions || !candidate.questions[job.id],
+                green: !questionAnswer,
+                red: questionAnswer
+            }"
+        ></div>
+    </div>
+    <div class="stage">
+        Current Stage
+        <div
+            class="compliance-rate"
+            [ngClass]="{
+                grey: !hasStageData,
+                green: hasStageData
+            }"
+        ></div>
+    </div>
+</div>
 <span
     class="complience-value"
     [hidden]="
