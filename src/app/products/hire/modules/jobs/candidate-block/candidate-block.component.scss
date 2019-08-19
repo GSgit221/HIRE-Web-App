@@ -2,13 +2,13 @@
 
 :host {
     display: flex;
-    flex-direction: row;
+    align-items: center;
     width: 100%;
     border-radius: 5px;
     background: $white;
     box-shadow: 0 0 5px 0 rgba($color: #000000, $alpha: 0.1);
-    margin: 0 0 10px;
-    padding: 30px 10px 25px;
+    margin-bottom: 10px;
+    padding: 31px 10px;
     position: relative;
     transition: all 0.4s ease;
     overflow: hidden;
@@ -35,45 +35,32 @@
         }
     }
 
-    &.dd {
-        &:before {
-            width: 30px;
-            height: 5px;
-            border-radius: 0 0 5px 5px;
-            background: $green;
-            content: '';
-            position: absolute;
-            left: 10px;
-            top: 0;
-        }
-    }
-
     .tags-block {
         position: absolute;
         left: 10px;
-        top: 7px;
+        top: 8px;
         width: calc(100% - 20px);
-        height: 8px;
+        height: 10px;
         display: flex;
         overflow: hidden;
 
         .tag {
-            width: 35px;
+            width: 40px;
             height: 100%;
             border-radius: 5px;
-            margin-right: 8px;
+            margin-right: 10px;
         }
     }
 
     .candidate-footer {
         position: absolute;
-        bottom: 8px;
+        bottom: 9px;
         display: flex;
         width: calc(100% - 20px);
         font-size: 10px;
         text-transform: uppercase;
         justify-content: space-between;
-        line-height: 12px;
+        line-height: 11px;
         color: $grey;
 
         .score,
@@ -83,7 +70,7 @@
         }
 
         .compliance-rate {
-            margin-left: 10px;
+            margin-left: 8px;
             width: 10px;
             height: 10px;
             border-radius: 50%;
@@ -101,21 +88,20 @@
             }
 
             &.grey {
-                background: $grey-border;
+                background: $grey3;
             }
         }
     }
 }
 
 .ava-column {
-    width: 30px;
-    margin: -3px 10px 0 0;
+    margin-right: 7px;
 }
 
 .ava {
     display: block;
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background: $grey-border;
     overflow: hidden;
@@ -123,8 +109,8 @@
 
     img {
         display: block;
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         margin: 0;
     }
@@ -176,8 +162,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
+    height: 100%;
     font-size: $font-size-origin;
     color: $main-blue;
 }
@@ -191,8 +176,9 @@
     color: $pink;
     display: block;
     font-size: $font-size-origin;
-    line-height: 15px;
-    margin: 0 0 4px;
+    font-weight: normal;
+    line-height: 16px;
+    margin-bottom: 2px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -205,8 +191,8 @@
 
 .position {
     display: block;
-    font-size: $font-size-origin;
-    line-height: 15px;
+    font-size: 11px;
+    line-height: 13px;
     color: $grey;
     margin: 0 0 0;
     overflow: hidden;
@@ -235,15 +221,6 @@
     .icon {
         margin: 0 5px 0 0;
     }
-}
-
-.complience-value {
-    position: absolute;
-    right: 29px;
-    top: 12px;
-    font-size: 10px;
-    line-height: 1.4;
-    font-weight: bold;
 }
 
 .warning-block {
