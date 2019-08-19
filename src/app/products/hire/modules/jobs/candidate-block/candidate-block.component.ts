@@ -12,12 +12,19 @@ export class CandidateBlockComponent implements OnInit {
     @Input() job: Job;
     @Input() resumeThreshold: number;
     @Input() selected: boolean;
+    @Input() questionAnswer: Candidate;
+    @Input() personalityAssessment: Candidate;
+    @Input() video: Candidate;
     @Output() onDeleting = new EventEmitter<boolean>();
     @Output() deleted = new EventEmitter<string>();
     @Output() onSelect = new EventEmitter<string>();
     constructor(private jobService: JobService) {}
 
     ngOnInit() {}
+
+    get hasStageData() {
+        return this.personalityAssessment;
+    }
 
     onDeleteCandidateClick(event, candidateId) {
         event.preventDefault();

@@ -15,10 +15,10 @@ import { UtilitiesService } from '@app/core/services';
 import { environment } from '@env/environment';
 import { select, Store } from '@ngrx/store';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
+import { forkJoin, of, Subscription } from 'rxjs';
 
 import { Candidate, EmailTemplate, Job, Stage, User } from '../../../../../core/models';
-import { CandidateService, EmailService, JobService } from '../../../../../core/services';
+import { CandidateService, EmailService, JobService, QuestionnaireService } from '../../../../../core/services';
 import * as fromStore from '../../../../../store';
 import * as fromJobsStore from '../store';
 import * as fromJobsStoreActions from '../store/actions/jobCandidates.action';
@@ -89,12 +89,19 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     userSubscription: Subscription;
     candidatesSubscription: Subscription;
 
+    questions: any[] = [];
+    videoInterviewQuestions: any[] = [];
+    videos: any = {};
+    personalityAssessments: any = {};
+    questionsAnswers: any = {};
+
     constructor(
         private router: Router,
         private fb: FormBuilder,
         private jobService: JobService,
         private candidateService: CandidateService,
         private emailService: EmailService,
+        private questionnaireService: QuestionnaireService,
         private toastr: ToastrService,
         private store: Store<fromStore.State>,
         private jobsStore: Store<fromJobsStore.JobsState>,
@@ -133,6 +140,61 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.candidates = candidates.map(this._isDD);
                 this.groupCandidatesByStage();
                 this.setAppliedCanidates(this.candidates);
+
+                // Get job
+                const jobRequest = this.questionnaireService.getQuestions(this.job.questionnaire);
+                const getVideoQuestions = this.questionnaireService.getVideoQuestions();
+                const getAllData = forkJoin([jobRequest, getVideoQuestions]).subscribe((response: any) => {
+                    const questions = response[0];
+                    const videoInterviewQuestions = response[1];
+                    if (videoInterviewQuestions) {
+                        this.videoInterviewQuestions = videoInterviewQuestions;
+                    }
+                    if (questions) {
+                        this.questions = questions;
+                        this.prepareQuestionsAnswers();
+                    }
+
+                    // After all data is loaded
+                    // Attachments
+                    this.candidates.forEach((candidate) => {
+                        this.videos[candidate.id] = [];
+                        // Get assessments
+                        if (candidate.stages_data && candidate.stages_data[this.job.id]) {
+                            const stagesData = candidate.stages_data[this.job.id];
+                            for (const stageId in stagesData) {
+                                if (stagesData.hasOwnProperty(stageId)) {
+                                    const stageData = stagesData[stageId];
+                                    // Video
+                                    if (stageData.videos && stageData.videos.links) {
+                                        const videos = stageData.videos.links;
+                                        this.videoInterviewQuestions.forEach((q) => {
+                                            if (videos[q.id]) {
+                                                const video = videos[q.id];
+                                                video.id = q.id;
+                                                video.question = q.text;
+                                                if (video.rating) {
+                                                    video.ratings = [];
+                                                    for (let i = 0; i < 5; i++) {
+                                                        i < video.rating
+                                                            ? video.ratings.push(video.rating)
+                                                            : video.ratings.push(0);
+                                                    }
+                                                }
+                                                this.videos[candidate.id].push(video);
+                                            }
+                                        });
+                                    }
+
+                                    // Personal Profile
+                                    if (stageData.personality_assessment) {
+                                        this.personalityAssessments[candidate.id] = stageData.personality_assessment;
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
             });
 
         // Resume treshhold
@@ -160,6 +222,48 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit() {}
+
+    prepareQuestionsAnswers() {
+        this.candidates.forEach((candidate) => {
+            if (this.job && candidate && this.questions) {
+                const questionsAnswers = [];
+                let isKnockout = false;
+                const candidateQuestions =
+                    candidate.questions && candidate.questions[this.job.id] ? candidate.questions[this.job.id] : null;
+                this.questions.forEach((q) => {
+                    const obj = {
+                        isKnockout: ''
+                    };
+                    function applyKnockout(answer) {
+                        if (answer.is_knockout !== undefined && this.isKnockout !== 'knockout wrong') {
+                            this.isKnockout = !answer.is_knockout ? 'knockout' : 'knockout wrong';
+                            if (!isKnockout && answer.is_knockout) isKnockout = true;
+                        }
+                    }
+                    if (candidateQuestions && candidateQuestions[q.id]) {
+                        if (q.answers) {
+                            if (Array.isArray(candidateQuestions[q.id])) {
+                                candidateQuestions[q.id].forEach((qa) => {
+                                    const answer = q.answers.find((a) => a.id === qa);
+                                    if (answer) {
+                                        applyKnockout.call(obj, answer);
+                                    }
+                                });
+                            } else {
+                                const qa = candidateQuestions[q.id];
+                                const answer = q.answers.find((a) => a.id === qa);
+                                if (answer) {
+                                    applyKnockout.call(obj, answer);
+                                }
+                            }
+                        }
+                    }
+                    questionsAnswers.push(obj);
+                });
+                this.questionsAnswers[candidate.id] = isKnockout;
+            }
+        });
+    }
 
     resetSelection() {
         this.selection = {
@@ -243,7 +347,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     first_name: c.first_name,
                     last_name: c.last_name,
                     read: c.read.findIndex((jId) => jId === this.job.id) !== -1,
-                    tags: c.tags
+                    tags: c.tags,
+                    questions: c.questions
                 });
             }
         });
