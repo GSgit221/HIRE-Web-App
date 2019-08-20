@@ -149,7 +149,6 @@ export class CandidateItemTimelineComponent implements OnInit {
 
         quill.keyboard.bindings[13].splice(0, 0, {
             key: 13,
-            ctrlKey: true,
             collapsed: true,
             handler: this.onSaveComment.bind(this)
         });
@@ -237,6 +236,7 @@ export class CandidateItemTimelineComponent implements OnInit {
     onChangeHashColor(color: string) {
         this.lastHash.color = color;
         this.formatQuill(this.quill);
+        this.createMode = false;
     }
 
     formatQuill(quill: any) {
@@ -403,7 +403,6 @@ export class CandidateItemTimelineComponent implements OnInit {
 
     async onSaveComment() {
         if (this.commentForm.valid) {
-            this.contentLoading = true;
             const visits = {};
             (this.candidate.tags || []).forEach(({ hash }) => (visits[hash] = true));
             const { ops: origin } = this.quill.getContents();
@@ -422,7 +421,6 @@ export class CandidateItemTimelineComponent implements OnInit {
                     this.jobService
                         .updateJobTags(this.job.id, [...(this.job.tags || []), ...tags])
                         .subscribe(resolve, (err) => {
-                            this.contentLoading = false;
                             this.toastr.error(err.message);
                             reject(err);
                         });
@@ -436,7 +434,6 @@ export class CandidateItemTimelineComponent implements OnInit {
                             tags: [...(this.candidate.tags || []), ...newTags]
                         })
                         .subscribe(resolve, (err) => {
-                            this.contentLoading = false;
                             this.toastr.error(err.message);
                             reject(err);
                         });
@@ -457,13 +454,11 @@ export class CandidateItemTimelineComponent implements OnInit {
                 this.candidateService.addToAudit(this.job.id, this.candidate.id, comment).subscribe(
                     (response) => {
                         this.commentForm.reset();
-                        this.contentLoading = false;
                         this.auditData.push(comment);
                         this.audit = this.transformAudit(this.auditData);
                     },
                     (errorResponse) => {
                         console.error(errorResponse);
-                        this.contentLoading = false;
                     }
                 );
             } else if (newTags.length === 0) {
@@ -477,17 +472,13 @@ export class CandidateItemTimelineComponent implements OnInit {
                 this.candidateService.addToAudit(this.job.id, this.candidate.id, comment).subscribe(
                     (response) => {
                         this.commentForm.reset();
-                        this.contentLoading = false;
                         this.auditData.push(comment);
                         this.audit = this.transformAudit(this.auditData);
                     },
                     (errorResponse) => {
                         console.error(errorResponse);
-                        this.contentLoading = false;
                     }
                 );
-            } else {
-                this.contentLoading = false;
             }
         }
     }
