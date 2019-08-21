@@ -9,7 +9,7 @@
             <div class="select-dd-menu" *ngIf="menuIsVisible">
                 <div
                     class="menu-item"
-                    *ngFor="let item of (_items | sortByOrder: 'first_name')"
+                    *ngFor="let item of _items | sortByOrder: 'first_name'"
                     (click)="onSelectItem(item)"
                     [ngClass]="{ selected: item.selected }"
                 >
@@ -28,6 +28,7 @@
             <button class="btn btn-primary-inversed btn-w60 ml20" (click)="onCancelAddNewItem($event)">Cancel</button>
             <div class="light-overlay" *ngIf="contentLoading"></div>
         </form>
+        <p-messages [(value)]="msgs"></p-messages>
     </div>
 </div>
 <div class="form-content-box-bottom" *ngIf="selectedItems && selectedItems.length">
