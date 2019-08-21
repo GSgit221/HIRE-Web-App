@@ -223,6 +223,11 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngAfterViewInit() {}
 
+    get isHiringManager() {
+        if (!this.user) return true;
+        return this.user.role === 'hiring_manager';
+    }
+
     prepareQuestionsAnswers() {
         this.candidates.forEach((candidate) => {
             if (this.job && candidate && this.questions) {
