@@ -1,10 +1,10 @@
-import { Component, ElementRef, EventEmitter, forwardRef, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, forwardRef, HostListener, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
+import { Message } from 'primeng/api';
 import { FormHelperService } from './../../../core/services/form-helper.service';
 
 import { User } from '../../../core/models/user';
-import { UserService } from './../../../core/services/user.service';
 import * as fromStore from './../../../store';
 import * as fromActions from './../../../store/actions/users.action';
 import * as fromSelectors from './../../../store/selectors';
@@ -32,11 +32,11 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
     _items: any[] = [];
     @Input() inviteUsers: boolean;
     @Input() userType: string;
+    msgs: Message[] = [];
 
     constructor(
         private elRef: ElementRef,
         private fb: FormBuilder,
-        private userService: UserService,
         private formHelper: FormHelperService,
         private store: Store<fromStore.State>
     ) {
@@ -76,6 +76,9 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
                         this.selectedItems.push(u);
                     }
                 });
+                if (this.selectedItems.length > 0) {
+                    this.propagateChange([...this.selectedValue, ...this.selectedItems.map((si) => si.id)]);
+                }
             } else {
                 users.forEach((user) => {
                     const u = { ...user };
@@ -86,6 +89,14 @@ export class MultiSelectComponent implements ControlValueAccessor, OnInit {
             }
 
             this.setSelected();
+        });
+        this.store.pipe(select(fromSelectors.getUsersError)).subscribe((error: any) => {
+            this.contentLoading = false;
+            if (error) {
+                this.msgs.push({ severity: 'error', detail: error.error.error || 'Error' });
+            } else {
+                this.msgs = [];
+            }
         });
     }
 

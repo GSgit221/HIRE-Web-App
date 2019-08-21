@@ -38,6 +38,7 @@
     .tags-block {
         height: 10px;
         display: flex;
+        flex-wrap: wrap;
         overflow: hidden;
         margin-bottom: 10px;
 
@@ -71,7 +72,7 @@
             border-radius: 50%;
 
             &.green {
-                background: $light-green;
+                background: $pink;
             }
 
             &.orange {
