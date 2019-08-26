@@ -13,7 +13,7 @@ import * as fromJobsStore from '../store';
 import * as fromJobCandiatesSelector from '../store/selectors/jobCandidates.selector';
 import { EmailService, JobService, QuestionnaireService, UtilitiesService } from './../../../../../core/services';
 import * as fromStore from './../../../../../store';
-import * as fromSelectors from './../../../../../store/selectors';
+import * as fromSeflectors from './../../../../../store/selectors';
 
 interface ISelect {
     label?: string;
@@ -364,6 +364,14 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                         } else {
                             const qa = candidateQuestions[q.id];
                             const answer = q.answers.find((a) => a.id === qa);
+                            if (qa.selectedItems) {
+                                qa.selectedItems.forEach((c) => {
+                                    let answer = q.answers.find((b) => b.id === c);
+                                    if (answer) {
+                                        obj.answers.push(answer.text);
+                                    }
+                                });
+                            }
                             if (answer) {
                                 applyKnockout.call(obj, answer);
                                 obj.answers.push(answer.text);
