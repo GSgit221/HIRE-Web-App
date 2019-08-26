@@ -620,9 +620,14 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                 stages,
                 candidate: { stage }
             } = this;
-            const stageId = stage[jobId];
-            const columnIndex = stages.findIndex(({ id }) => id === stageId);
-            return columnIndex + 1 < stages.length;
+
+            if (stage) {
+                const stageId = stage[jobId];
+                const columnIndex = stages.findIndex(({ id }) => id === stageId);
+                return columnIndex + 1 < stages.length;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
