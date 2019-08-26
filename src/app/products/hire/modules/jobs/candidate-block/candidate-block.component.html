@@ -1,12 +1,5 @@
-<div
-    class="warning-block"
-    *ngIf="
-        candidate &&
-        ((!candidate.resume_file && !candidate.resume_file_new) ||
-            (!candidate.application_completed || !candidate.application_completed[job.id]))
-    "
->
-    <div class="warning-block-holder">
+<div class="warning-block" *ngIf="candidate && (!candidate.resume_file && !candidate.resume_file_new)">
+    <div class="warning-block-holder" data-reason="no resume or application not completed">
         <span>!</span>
     </div>
 </div>
@@ -14,7 +7,7 @@
     class="warning-block alert"
     *ngIf="candidate && candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id]"
 >
-    <div class="warning-block-holder"><span>!</span></div>
+    <div class="warning-block-holder" data-reason="marked unsuccessul"><span>!</span></div>
 </div>
 <div
     class="compliance-rate"
@@ -24,17 +17,11 @@
         orange: candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold,
         red: candidate.score < resumeThreshold - 15
     }"
-    [hidden]="
-        (candidate && (candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id])) ||
-        (!candidate.application_completed || !candidate.application_completed[job.id])
-    "
+    [hidden]="candidate && (candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id])"
 ></div>
 <span
     class="complience-value"
-    [hidden]="
-        (candidate && (candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id])) ||
-        (!candidate.application_completed || !candidate.application_completed[job.id])
-    "
+    [hidden]="candidate && (candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id])"
     >{{ candidate.score }}%</span
 >
 <div class="ava-column">
