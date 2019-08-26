@@ -71,12 +71,12 @@
             height: 10px;
             border-radius: 50%;
 
-            &.green {
-                background: $pink;
-            }
-
             &.orange {
                 background: $orange;
+            }
+
+            &.green {
+                background: $pink;
             }
 
             &.red {
