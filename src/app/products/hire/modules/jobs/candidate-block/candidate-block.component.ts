@@ -26,6 +26,15 @@ export class CandidateBlockComponent implements OnInit {
         return this.personalityAssessment;
     }
 
+    get hasQuestion() {
+        return (
+            this.candidate &&
+            this.candidate.job_specific &&
+            this.candidate.job_specific.questions &&
+            this.candidate.job_specific.questions[this.job.id]
+        );
+    }
+
     titleCase(str: string) {
         return str
             .replace(/#/g, '')

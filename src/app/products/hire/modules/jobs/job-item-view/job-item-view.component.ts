@@ -234,7 +234,11 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 const questionsAnswers = [];
                 let isKnockout = false;
                 const candidateQuestions =
-                    candidate.questions && candidate.questions[this.job.id] ? candidate.questions[this.job.id] : null;
+                    candidate.job_specific &&
+                    candidate.job_specific.questions &&
+                    candidate.job_specific.questions[this.job.id]
+                        ? candidate.job_specific.questions[this.job.id]
+                        : null;
                 this.questions.forEach((q) => {
                     const obj = {
                         isKnockout: ''
@@ -353,7 +357,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     last_name: c.last_name,
                     read: c.read.findIndex((jId) => jId === this.job.id) !== -1,
                     tags: c.tags,
-                    questions: c.questions
+                    questions: c.questions,
+                    job_specific: c.job_specific || {}
                 });
             }
         });

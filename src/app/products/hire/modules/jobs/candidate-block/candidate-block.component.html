@@ -64,9 +64,9 @@
         <div
             class="compliance-rate"
             [ngClass]="{
-                grey: !candidate.questions || !candidate.questions[job.id],
-                green: !questionAnswer,
-                red: questionAnswer
+                grey: !hasQuestion,
+                green: hasQuestion && !questionAnswer,
+                red: hasQuestion && questionAnswer
             }"
         ></div>
     </div>
