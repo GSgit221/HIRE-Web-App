@@ -177,6 +177,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     copyURL(val: string) {
+        val = `${environment.jobsPortalUrl}/jobs/${this.job.id}`;
         console.log(val);
         this.showTick = true;
         this.showCopyBoard = false;
