@@ -12,9 +12,9 @@ export class CandidateBlockComponent implements OnInit {
     @Input() job: Job;
     @Input() resumeThreshold: number;
     @Input() selected: boolean;
-    @Input() questionAnswer: Candidate;
-    @Input() personalityAssessment: Candidate;
-    @Input() video: Candidate;
+    @Input() questionAnswer: any;
+    @Input() personalityAssessment: any;
+    @Input() video: any;
     @Output() onDeleting = new EventEmitter<boolean>();
     @Output() deleted = new EventEmitter<string>();
     @Output() onSelect = new EventEmitter<string>();
@@ -23,7 +23,9 @@ export class CandidateBlockComponent implements OnInit {
     ngOnInit() {}
 
     get hasStageData() {
-        return this.personalityAssessment;
+        return this.personalityAssessment === 'applied'
+            ? this.hasQuestion && !this.questionAnswer && this.candidate.score >= this.resumeThreshold
+            : this.personalityAssessment;
     }
 
     get hasQuestion() {
