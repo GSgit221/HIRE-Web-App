@@ -111,7 +111,7 @@
                             [selected]="selection.columnId === 'applied' && selection.candidates[candidate.id]"
                             (onSelect)="onCandidateSelect('applied', $event)"
                             [questionAnswer]="questionsAnswers[candidate.id]"
-                            [personalityAssessment]="personalityAssessments[candidate.id]"
+                            [personalityAssessment]="'applied'"
                             [video]="videos[candidate.id]"
                         >
                         </app-candidate-block>
