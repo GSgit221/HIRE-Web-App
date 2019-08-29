@@ -249,4 +249,21 @@ export class UtilitiesService {
     isBottomOfPage() {
         return window.innerHeight + Math.ceil(window.pageYOffset + 1) >= document.body.offsetHeight;
     }
+
+    arrayMove(arr, old_index, new_index) {
+        while (old_index < 0) {
+            old_index += arr.length;
+        }
+        while (new_index < 0) {
+            new_index += arr.length;
+        }
+        if (new_index >= arr.length) {
+            var k = new_index - arr.length + 1;
+            while (k--) {
+                arr.push(undefined);
+            }
+        }
+        arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+        return arr;
+    }
 }
