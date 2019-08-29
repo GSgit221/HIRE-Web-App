@@ -67,7 +67,7 @@ export class CandidateBlockComponent implements OnInit {
     }
 
     getComplianceRateClass() {
-        if (!this.candidate.hasUser) {
+        if (this.candidate.hasUser) {
             if (this.candidate.score >= this.resumeThreshold) {
                 return 'green';
             } else if (
