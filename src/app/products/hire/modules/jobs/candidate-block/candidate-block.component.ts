@@ -67,19 +67,12 @@ export class CandidateBlockComponent implements OnInit {
     }
 
     getComplianceRateClass() {
-        if (this.candidate.hasUser) {
-            if (this.candidate.score >= this.resumeThreshold) {
-                return 'green';
-            } else if (
-                this.candidate.score >= this.resumeThreshold - 15 &&
-                this.candidate.score < this.resumeThreshold
-            ) {
-                return 'orange';
-            } else {
-                return 'red';
-            }
+        if (this.candidate.score >= this.resumeThreshold) {
+            return 'green';
+        } else if (this.candidate.score >= this.resumeThreshold - 15 && this.candidate.score < this.resumeThreshold) {
+            return 'orange';
         } else {
-            return 'grey';
+            return 'red';
         }
         // } else if(candidate.score < this.resumeThreshold - 15 ||
         //     (candidate && candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[this.job.id])) {
@@ -87,13 +80,17 @@ export class CandidateBlockComponent implements OnInit {
         // }
     }
 
-    getQuestionsStatus() {
-        return this.candidate &&
-            this.candidate.job_specific &&
-            this.candidate.job_specific.questions &&
-            this.candidate.job_specific.questions[this.job.id]
-            ? 'green'
-            : 'red';
+    getQuestionsClass() {
+        if (this.candidate.hasUser) {
+            return this.candidate &&
+                this.candidate.job_specific &&
+                this.candidate.job_specific.questions &&
+                this.candidate.job_specific.questions[this.job.id]
+                ? 'green'
+                : 'red';
+        } else {
+            return 'grey';
+        }
     }
 
     getCurrentStageClass(candidate) {
@@ -141,7 +138,7 @@ export class CandidateBlockComponent implements OnInit {
         } else {
             // APPLIED STAGE
             const complienceRate = this.getComplianceRateClass();
-            const questionsStatus = this.job.questionnaire ? this.getQuestionsStatus() : null;
+            const questionsStatus = this.job.questionnaire ? this.getQuestionsClass() : null;
             const values = [];
             values.push(this._getClassValue(complienceRate));
             if (questionsStatus) {

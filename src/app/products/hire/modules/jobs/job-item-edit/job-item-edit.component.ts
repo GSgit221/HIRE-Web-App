@@ -221,6 +221,14 @@ export class JobItemEditComponent implements OnInit {
                     });
                 }
             });
+
+            if (this.user) {
+                // sort this list
+                const currentUserIndex = this.accountOwners.findIndex((ao) => ao.value === this.user.id);
+                if (currentUserIndex !== -1) {
+                    this.accountOwners = this.utilities.arrayMove(this.accountOwners, currentUserIndex, 0);
+                }
+            }
         });
 
         this.populateForms();

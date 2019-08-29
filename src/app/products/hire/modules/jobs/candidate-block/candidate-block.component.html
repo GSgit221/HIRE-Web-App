@@ -47,7 +47,7 @@
     <div class="score">
         Application
         <div class="compliance-rate" [attr.data-score]="candidate.score" [ngClass]="getComplianceRateClass()"></div>
-        <div class="compliance-rate" *ngIf="job.questionnaire" [ngClass]="getQuestionsStatus()"></div>
+        <div class="compliance-rate" *ngIf="job.questionnaire" [ngClass]="getQuestionsClass()"></div>
     </div>
     <div class="stage">
         Current Stage
