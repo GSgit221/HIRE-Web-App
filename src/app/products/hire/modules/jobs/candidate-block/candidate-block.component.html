@@ -1,78 +1,83 @@
-<div class="warning-block" *ngIf="candidate && (!candidate.resume_file && !candidate.resume_file_new)">
-    <div class="warning-block-holder" data-reason="no resume or application not completed">
-        <span>!</span>
-    </div>
+<div class="tags-block" *ngIf="(candidate.tags || []).length > 0">
+    <div
+        *ngFor="let tag of candidate.tags || []"
+        class="tag"
+        [style.background]="tag.color"
+        [pTooltip]="titleCase(tag.hash)"
+        tooltipPosition="top"
+    ></div>
 </div>
-<div
-    class="warning-block alert"
-    *ngIf="candidate && candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id]"
->
-    <div class="warning-block-holder" data-reason="marked unsuccessul"><span>!</span></div>
-</div>
-<div
-    class="compliance-rate"
-    [attr.data-score]="candidate.score"
-    [ngClass]="{
-        green: candidate.score >= resumeThreshold,
-        orange: candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold,
-        red: candidate.score < resumeThreshold - 15
-    }"
-    [hidden]="candidate && (candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id])"
-></div>
-<span
-    class="complience-value"
-    [hidden]="candidate && (candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id])"
-    >{{ candidate.score }}%</span
->
-<div class="ava-column">
-    <div class="ava">
-        <img [src]="candidate.profile_image" alt="profile image" *ngIf="candidate.profile_image" />
-        <div class="ava-placeholder" *ngIf="!candidate.profile_image">
-            {{ candidate | initials }}
-        </div>
-        <div
-            class="check-wrapper"
-            [ngClass]="{ checked: selected }"
-            (click)="onSelectCandidateClick($event, candidate.id)"
-        >
-            <div class="check-box">
-                <img src="/assets/images/check.svg" />
+<div class="candidate-info">
+    <div class="ava-column">
+        <div class="ava">
+            <img [src]="candidate.profile_image" alt="profile image" *ngIf="candidate.profile_image" />
+            <div class="ava-placeholder" *ngIf="!candidate.profile_image">
+                {{ candidate | initials }}
+            </div>
+            <div
+                class="check-wrapper"
+                [ngClass]="{ checked: selected }"
+                (click)="onSelectCandidateClick($event, candidate.id)"
+            >
+                <div class="check-box">
+                    <img src="/assets/images/check.svg" />
+                </div>
             </div>
         </div>
     </div>
+    <div class="block-content">
+        <strong
+            class="title"
+            *ngIf="candidate.first_name || candidate.last_name; else noFirstName"
+            [ngClass]="{ read: candidate.read }"
+            >{{ candidate.first_name | titlecase }} {{ candidate.last_name | titlecase }}</strong
+        >
+        <ng-template #noFirstName>
+            <strong class="title" [ngClass]="{ read: hasRead }">{{ candidate.email }}</strong>
+        </ng-template>
+        <span class="position" *ngIf="candidate.employment_history"
+            >{{ candidate.employment_history[0].title | titlecase }}
+            @
+            {{ candidate.employment_history[0].company | titlecase }}</span
+        >
+        <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
+    </div>
 </div>
-<div class="block-content">
-    <strong
-        class="title"
-        *ngIf="candidate.first_name || candidate.last_name; else noFirstName"
-        [ngClass]="{ read: candidate.read }"
-        >{{ candidate.first_name | titlecase }} {{ candidate.last_name | titlecase }}</strong
-    >
-    <ng-template #noFirstName>
-        <strong class="title" [ngClass]="{ read: hasRead }">{{ candidate.email }}</strong>
-    </ng-template>
-    <span class="position" *ngIf="candidate.employment_history"
-        >{{ candidate.employment_history[0].title | titlecase }}
-        @
-        {{ candidate.employment_history[0].company | titlecase }}</span
-    >
-    <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
-    <div class="stats-actions-block">
-        <div class="text-with-icon flex-row flex-aic" *ngIf="candidate.created_at_rel">
-            <img src="/assets/images/time.svg" class="icon" alt="" width="10" height="10" />
-            <p>{{ candidate.created_at_rel }}</p>
-        </div>
-        <div class="text-with-icon flex-row flex-aic ml20" *ngIf="candidate.updated_at_rel">
-            <img src="/assets/images/update.svg" class="icon" alt="" width="12" height="13" />
-            <p>{{ candidate.updated_at_rel }}</p>
-        </div>
-        <div class="actions mla">
-            <!-- <span class="icon-btn">
-                                                            <img src="/assets/images/refresh.svg" alt="" width="10" height="10">
-                                                        </span> -->
-            <span class="icon-btn ml10" (click)="onDeleteCandidateClick($event, candidate.id)">
-                <img src="/assets/images/delete.svg" alt="" width="10" height="10" />
-            </span>
-        </div>
+<div class="candidate-footer">
+    <div class="score">
+        Application
+        <div
+            class="compliance-rate"
+            [attr.data-score]="candidate.score"
+            [ngClass]="{
+                green: candidate.score >= resumeThreshold,
+                orange:
+                    (candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold) ||
+                    (candidate &&
+                        ((!candidate.resume_file && !candidate.resume_file_new) ||
+                            (!candidate.application_completed || !candidate.application_completed[job.id]))),
+                red:
+                    candidate.score < resumeThreshold - 15 ||
+                    (candidate && candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id])
+            }"
+        ></div>
+        <div
+            class="compliance-rate"
+            [ngClass]="{
+                grey: !hasQuestion,
+                green: hasQuestion && !questionAnswer,
+                red: hasQuestion && questionAnswer
+            }"
+        ></div>
+    </div>
+    <div class="stage">
+        Current Stage
+        <div
+            class="compliance-rate"
+            [ngClass]="{
+                grey: !hasStageData,
+                green: hasStageData
+            }"
+        ></div>
     </div>
 </div>

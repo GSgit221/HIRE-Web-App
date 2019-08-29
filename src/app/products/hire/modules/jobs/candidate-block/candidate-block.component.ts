@@ -12,12 +12,38 @@ export class CandidateBlockComponent implements OnInit {
     @Input() job: Job;
     @Input() resumeThreshold: number;
     @Input() selected: boolean;
+    @Input() questionAnswer: any;
+    @Input() personalityAssessment: any;
+    @Input() video: any;
     @Output() onDeleting = new EventEmitter<boolean>();
     @Output() deleted = new EventEmitter<string>();
     @Output() onSelect = new EventEmitter<string>();
     constructor(private jobService: JobService) {}
 
     ngOnInit() {}
+
+    get hasStageData() {
+        return this.personalityAssessment === 'applied'
+            ? this.hasQuestion && !this.questionAnswer && this.candidate.score >= this.resumeThreshold
+            : this.personalityAssessment;
+    }
+
+    get hasQuestion() {
+        return (
+            this.candidate &&
+            this.candidate.job_specific &&
+            this.candidate.job_specific.questions &&
+            this.candidate.job_specific.questions[this.job.id]
+        );
+    }
+
+    titleCase(str: string) {
+        return str
+            .replace(/#/g, '')
+            .split(/[-|_]/g)
+            .join(' ')
+            .replace(/\w*\S/g, (t) => t[0].toUpperCase() + t.substr(1));
+    }
 
     onDeleteCandidateClick(event, candidateId) {
         event.preventDefault();

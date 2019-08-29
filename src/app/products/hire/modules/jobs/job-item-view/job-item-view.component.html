@@ -15,7 +15,11 @@
                     <strong class="title"
                         >{{ job.title }} <span class="subtitle" *ngIf="job.ref"> - ({{ job.ref }})</span></strong
                     >
-                    <button class="btn btn-round ml20" (click)="onEditJobClick($event)" *ngIf="!job.pool">
+                    <button
+                        class="btn btn-round ml20"
+                        (click)="onEditJobClick($event)"
+                        *ngIf="!job.pool && !isHiringManager"
+                    >
                         <img src="/assets/images/edit.svg" alt="" width="14" height="13" />
                     </button>
                     <button class="btn btn-round ml20" (click)="copyURL(href)" *ngIf="!job.pool && showCopyBoard">
@@ -37,14 +41,19 @@
                 <img *ngIf="getHm(hm) && getHm(hm).icon_url_small" [src]="getHm(hm).icon_url_small" alt="" />
                 <span *ngIf="getHm(hm) && !getHm(hm).icon_url_small">{{ getHm(hm) | initials }}</span>
             </div>
-            <button class="btn btn-round btn-grey" (click)="onAddHiringManagerClick($event)" title="Add Hiring Manager">
+            <button
+                class="btn btn-round btn-grey"
+                (click)="onAddHiringManagerClick($event)"
+                title="Add Hiring Manager"
+                *ngIf="!isHiringManager"
+            >
                 <svg-icon class="fill-black" src="/assets/images/plus.svg"></svg-icon>
             </button>
         </div>
         <!-- <button class="btn btn-primary w140 mla add-btn" (click)="onAddCandidateClick()">Add Candidate</button> -->
     </div>
     <div class="blocks-separator mt10 mb10"></div>
-    <div class="stages-section" appDragEnter (dropFile)="onDropFile($event)">
+    <div class="stages-section" appDragEnter="body" (dropFile)="onDropFile($event)">
         <div class="stages-holder">
             <div class="stage-column">
                 <div class="stage-column-holder">
@@ -101,6 +110,9 @@
                             [resumeThreshold]="resumeThreshold"
                             [selected]="selection.columnId === 'applied' && selection.candidates[candidate.id]"
                             (onSelect)="onCandidateSelect('applied', $event)"
+                            [questionAnswer]="questionsAnswers[candidate.id]"
+                            [personalityAssessment]="'applied'"
+                            [video]="videos[candidate.id]"
                         >
                         </app-candidate-block>
                         <!-- NO MATCHES -->
@@ -195,6 +207,9 @@
                             [resumeThreshold]="resumeThreshold"
                             [selected]="selection.columnId === stage.id && selection.candidates[candidate.id]"
                             (onSelect)="onCandidateSelect(stage.id, $event)"
+                            [questionAnswer]="questionsAnswers[candidate.id]"
+                            [personalityAssessment]="personalityAssessments[candidate.id]"
+                            [video]="videos[candidate.id]"
                         ></app-candidate-block>
                         <div class="drop-holder"></div>
                     </div>

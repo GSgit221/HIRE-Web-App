@@ -110,7 +110,7 @@
                             <img src="/assets/images/sort_asc.svg" alt="" width="14" height="13" />
                         </span>
                     </div>
-                    <div class="col col4 flex-15">Location</div>
+                    <div class="col col4 flex-20">Location</div>
                     <div class="col col5 flex-10 tac">Type</div>
                     <div class="col col6 flex-10 tac">
                         <img src="/assets/images/applications.svg" alt="" width="16" height="10" />
@@ -121,7 +121,7 @@
                     <div class="col col8 flex-10 tac">
                         <img src="/assets/images/recent.svg" alt="" width="14" height="12" />
                     </div>
-                    <div class="col col9 flex-10">Hiring Team</div>
+                    <div class="col col9 flex-5"></div>
                 </div>
                 <div class="nr-list-content">
                     <div class="hc-blocker"></div>
@@ -147,7 +147,7 @@
                                     <span *ngIf="item.ref">({{ item.ref }}) - </span>{{ item.title }}
                                 </p>
                             </div>
-                            <div class="col col4  flex-15 truncate-text-col">
+                            <div class="col col4  flex-20 truncate-text-col">
                                 <p class="hc-content-p">{{ item.location }}</p>
                             </div>
                             <div class="col col5 flex-10 tac truncate-text-col">
@@ -175,8 +175,8 @@
                             <div class="col col8 flex-10 tac truncate-text-col">
                                 <p class="hc-content-p">{{ item.last_candidate }}</p>
                             </div>
-                            <div class="col col9 flex-10 ">
-                                <div *ngIf="users" class="flex-row">
+                            <div class="col col9 flex-5 ">
+                                <!-- <div *ngIf="users" class="flex-row">
                                     <div
                                         class="ava"
                                         data-escape-click
@@ -195,8 +195,9 @@
                                         </ng-container>
                                     </div>
                                     <span class="mla" *ngIf="item.hiring_managers.length > 3">...</span>
-                                </div>
+                                </div> -->
                                 <!-- <button class="add-btn" data-escape-click></button> -->
+                                <img src="/assets/images/more.svg" alt="" />
                             </div>
                         </div>
                     </div>

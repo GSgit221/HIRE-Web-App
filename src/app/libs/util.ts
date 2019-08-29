@@ -1,5 +1,5 @@
-export function FindVariables(value: string, titles: string[] = []): any {
-    let regex = new RegExp(`{{(.*?)}}${titles.length ? '|' : ''}${titles.join('|')}`, 'gi');
+export function FindVariables(value: string, titles: string[] = [], variableRegex = '{{(.*?)}}'): any {
+    let regex = new RegExp(`${variableRegex}${titles.length ? '|' : ''}${titles.join('|')}`, 'g');
     let vars: any;
 
     let matches: any[] = [];

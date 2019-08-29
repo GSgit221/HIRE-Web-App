@@ -2,17 +2,17 @@
 
 :host {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 100%;
     border-radius: 5px;
     background: $white;
     box-shadow: 0 0 5px 0 rgba($color: #000000, $alpha: 0.1);
-    margin: 0 0 10px;
-    padding: 14px 15px 10px 10px;
+    margin-bottom: 10px;
+    padding: 8px 10px 9px;
     position: relative;
     transition: all 0.4s ease;
     overflow: hidden;
-    height: 75px;
+    // height: 75px;
 
     &:hover {
         cursor: pointer;
@@ -35,29 +35,76 @@
         }
     }
 
-    &.dd {
-        &:before {
-            width: 30px;
-            height: 5px;
-            border-radius: 0 0 5px 5px;
-            background: $green;
-            content: '';
-            position: absolute;
-            left: 10px;
-            top: 0;
+    .tags-block {
+        height: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        overflow: hidden;
+        margin-bottom: 10px;
+
+        .tag {
+            width: 40px;
+            height: 100%;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+    }
+
+    .candidate-footer {
+        display: flex;
+        font-size: 10px;
+        text-transform: uppercase;
+        justify-content: space-between;
+        line-height: 11px;
+        margin-top: 12px;
+        color: $grey;
+
+        .score,
+        .stage {
+            display: flex;
+            align-items: center;
+        }
+
+        .compliance-rate {
+            margin-left: 8px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+
+            &.orange {
+                background: $orange;
+            }
+
+            &.green {
+                background: $pink;
+            }
+
+            &.red {
+                background: $red;
+            }
+
+            &.grey {
+                background: $grey3;
+            }
         }
     }
 }
 
+.candidate-info {
+    display: flex;
+    align-items: center;
+    margin-top: 4px;
+    width: 100%;
+}
+
 .ava-column {
-    width: 30px;
-    margin: -3px 10px 0 0;
+    margin-right: 7px;
 }
 
 .ava {
     display: block;
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background: $grey-border;
     overflow: hidden;
@@ -65,8 +112,8 @@
 
     img {
         display: block;
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         margin: 0;
     }
@@ -118,8 +165,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
+    height: 100%;
     font-size: $font-size-origin;
     color: $main-blue;
 }
@@ -133,8 +179,9 @@
     color: $pink;
     display: block;
     font-size: $font-size-origin;
-    line-height: 15px;
-    margin: 0 0 4px;
+    font-weight: normal;
+    line-height: 16px;
+    margin-bottom: 2px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -147,8 +194,8 @@
 
 .position {
     display: block;
-    font-size: $font-size-origin;
-    line-height: 15px;
+    font-size: 11px;
+    line-height: 13px;
     color: $grey;
     margin: 0 0 0;
     overflow: hidden;
@@ -179,36 +226,6 @@
     }
 }
 
-.compliance-rate {
-    position: absolute;
-    right: 15px;
-    top: 14px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-
-    &.green {
-        background: $light-green;
-    }
-
-    &.orange {
-        background: $orange;
-    }
-
-    &.red {
-        background: $red;
-    }
-}
-
-.complience-value {
-    position: absolute;
-    right: 29px;
-    top: 12px;
-    font-size: 10px;
-    line-height: 1.4;
-    font-weight: bold;
-}
-
 .warning-block {
     width: 28px;
     height: 28px;
@@ -219,6 +236,7 @@
     color: $white;
     text-align: center;
     border-radius: 5px 0 0 0;
+    z-index: 1;
 
     .warning-block-holder {
         width: 28px;

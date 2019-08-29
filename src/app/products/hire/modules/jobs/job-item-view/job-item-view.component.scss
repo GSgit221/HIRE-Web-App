@@ -12,6 +12,7 @@
 .header-block {
     display: flex;
     flex-direction: row;
+    margin-bottom: 7px;
 
     .add-btn {
         height: 36px;
@@ -25,7 +26,7 @@
 
 .heading {
     .job-title-block {
-        margin: 0 0 2px;
+        margin-bottom: 4px;
 
         .view,
         .edit {
@@ -72,10 +73,11 @@
     }
 
     .address {
-        font-size: $font-size-origin;
-        line-height: 14px;
+        font-size: 13px;
+        line-height: 15px;
         color: $grey;
-        vertical-align: top;
+        display: flex;
+        align-items: center;
 
         .ico,
         span {
@@ -153,9 +155,9 @@
 }
 
 .stage-column {
-    min-width: 265px;
-    max-width: 265px;
-    width: 265px;
+    min-width: 300px;
+    max-width: 300px;
+    width: 300px;
     border-radius: 3px;
     margin: 0 30px 0 0;
     position: relative;
@@ -521,6 +523,12 @@
     }
 }
 
+.over {
+    .drop-overlay {
+        display: flex;
+    }
+}
+
 .drop-overlay {
     position: fixed;
     left: 0;
@@ -546,14 +554,6 @@
             width: 212px;
             height: 212px;
             margin: 0 0 30px;
-        }
-    }
-}
-
-.stages-section {
-    &.over {
-        .drop-overlay {
-            display: flex;
         }
     }
 }

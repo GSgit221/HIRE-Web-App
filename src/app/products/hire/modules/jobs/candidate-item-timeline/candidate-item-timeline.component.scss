@@ -5,7 +5,7 @@
 }
 
 .message-form {
-    margin: 0 0 25px;
+    margin-bottom: 36px;
 
     textarea {
         color: $grey;
@@ -95,6 +95,15 @@
             margin: 0;
             font-size: 11px;
             line-height: 13px;
+
+            .tag {
+                margin-left: 6px;
+                padding: 4px 9px;
+                font-size: 12px;
+                line-height: 14px;
+                border-radius: 11px;
+                white-space: nowrap;
+            }
         }
     }
 

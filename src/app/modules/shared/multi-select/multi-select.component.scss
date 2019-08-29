@@ -119,6 +119,7 @@
 .selected-items-block {
     width: 100%;
     overflow: hidden;
+    margin: -5px 0;
 
     .selected-items-holder {
         margin: 0 -10px;
@@ -136,13 +137,12 @@
         align-items: center;
         width: 100%;
         background: $white;
-        height: 36px;
         border-radius: 2px;
         border: 1px solid $grey-border;
         font-size: $font-size-low;
         line-height: 16px;
-        color: $grey;
-        padding: 2px;
+        color: $main-blue;
+        padding: 5px 10px;
         box-shadow: none;
         outline: none;
         position: relative;

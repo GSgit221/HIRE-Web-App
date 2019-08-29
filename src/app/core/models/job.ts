@@ -1,4 +1,11 @@
 import { Stage } from './stage';
+
+export interface ITag {
+    hash: string;
+    color: string;
+    label?: string;
+}
+
 export class Job {
     id?: string;
     title: string;
@@ -45,4 +52,5 @@ export class Job {
     location_city?: string;
     location_country?: string;
     pool?: boolean;
+    tags?: ITag[];
 }

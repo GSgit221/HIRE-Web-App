@@ -13,7 +13,7 @@ import * as fromJobsStore from '../store';
 import * as fromJobCandiatesSelector from '../store/selectors/jobCandidates.selector';
 import { EmailService, JobService, QuestionnaireService, UtilitiesService } from './../../../../../core/services';
 import * as fromStore from './../../../../../store';
-import * as fromSelectors from './../../../../../store/selectors';
+import * as fromSeflectors from './../../../../../store/selectors';
 
 interface ISelect {
     label?: string;
@@ -173,6 +173,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                 const jobRequest = this.jobService.getJob(this.jobId).pipe(
                     switchMap((job: Job) => {
                         this.job = job;
+                        if (!this.job.tags) this.job.tags = [];
                         this.stages = this.job.stages
                             .filter((stage) => stage.id !== 'applied')
                             .sort((a, b) => a.order - b.order);
@@ -331,8 +332,10 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
             const questionsAnswers = [];
             let isKnockout = false;
             const candidateQuestions =
-                this.candidate.questions && this.candidate.questions[this.jobId]
-                    ? this.candidate.questions[this.jobId]
+                this.candidate.job_specific &&
+                this.candidate.job_specific.questions &&
+                this.candidate.job_specific.questions[this.jobId]
+                    ? this.candidate.job_specific.questions[this.jobId]
                     : null;
             this.questions.forEach((q) => {
                 const obj = {
@@ -361,6 +364,14 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                         } else {
                             const qa = candidateQuestions[q.id];
                             const answer = q.answers.find((a) => a.id === qa);
+                            if (qa.selectedItems) {
+                                qa.selectedItems.forEach((c) => {
+                                    let answer = q.answers.find((b) => b.id === c);
+                                    if (answer) {
+                                        obj.answers.push(answer.text);
+                                    }
+                                });
+                            }
                             if (answer) {
                                 applyKnockout.call(obj, answer);
                                 obj.answers.push(answer.text);
@@ -617,9 +628,14 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                 stages,
                 candidate: { stage }
             } = this;
-            const stageId = stage[jobId];
-            const columnIndex = stages.findIndex(({ id }) => id === stageId);
-            return columnIndex + 1 < stages.length;
+
+            if (stage) {
+                const stageId = stage[jobId];
+                const columnIndex = stages.findIndex(({ id }) => id === stageId);
+                return columnIndex + 1 < stages.length;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
