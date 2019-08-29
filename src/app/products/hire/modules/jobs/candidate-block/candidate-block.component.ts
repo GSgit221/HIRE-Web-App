@@ -20,9 +20,7 @@ export class CandidateBlockComponent implements OnInit {
     @Output() onSelect = new EventEmitter<string>();
     constructor(private jobService: JobService) {}
 
-    ngOnInit() {
-        console.log('CANDIDATE', this.candidate.first_name, { ...this.candidate });
-    }
+    ngOnInit() {}
 
     // get hasStageData() {
     //     return this.personalityAssessment === 'applied'
