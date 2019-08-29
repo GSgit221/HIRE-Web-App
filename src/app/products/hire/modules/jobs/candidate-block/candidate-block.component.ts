@@ -20,9 +20,7 @@ export class CandidateBlockComponent implements OnInit {
     @Output() onSelect = new EventEmitter<string>();
     constructor(private jobService: JobService) {}
 
-    ngOnInit() {
-        console.log('CANDIDATE', this.candidate.first_name, { ...this.candidate });
-    }
+    ngOnInit() {}
 
     // get hasStageData() {
     //     return this.personalityAssessment === 'applied'
@@ -69,12 +67,19 @@ export class CandidateBlockComponent implements OnInit {
     }
 
     getComplianceRateClass() {
-        if (this.candidate.score >= this.resumeThreshold) {
-            return 'green';
-        } else if (this.candidate.score >= this.resumeThreshold - 15 && this.candidate.score < this.resumeThreshold) {
-            return 'orange';
+        if (!this.candidate.hasUser) {
+            if (this.candidate.score >= this.resumeThreshold) {
+                return 'green';
+            } else if (
+                this.candidate.score >= this.resumeThreshold - 15 &&
+                this.candidate.score < this.resumeThreshold
+            ) {
+                return 'orange';
+            } else {
+                return 'red';
+            }
         } else {
-            return 'red';
+            return 'grey';
         }
         // } else if(candidate.score < this.resumeThreshold - 15 ||
         //     (candidate && candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[this.job.id])) {
