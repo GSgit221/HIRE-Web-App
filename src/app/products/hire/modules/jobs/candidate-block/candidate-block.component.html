@@ -46,38 +46,11 @@
 <div class="candidate-footer">
     <div class="score">
         Application
-        <div
-            class="compliance-rate"
-            [attr.data-score]="candidate.score"
-            [ngClass]="{
-                green: candidate.score >= resumeThreshold,
-                orange:
-                    (candidate.score >= resumeThreshold - 15 && candidate.score < resumeThreshold) ||
-                    (candidate &&
-                        ((!candidate.resume_file && !candidate.resume_file_new) ||
-                            (!candidate.application_completed || !candidate.application_completed[job.id]))),
-                red:
-                    candidate.score < resumeThreshold - 15 ||
-                    (candidate && candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[job.id])
-            }"
-        ></div>
-        <div
-            class="compliance-rate"
-            [ngClass]="{
-                grey: !hasQuestion,
-                green: hasQuestion && !questionAnswer,
-                red: hasQuestion && questionAnswer
-            }"
-        ></div>
+        <div class="compliance-rate" [attr.data-score]="candidate.score" [ngClass]="getComplianceRateClass()"></div>
+        <div class="compliance-rate" *ngIf="job.questionnaire" [ngClass]="getQuestionsStatus()"></div>
     </div>
     <div class="stage">
         Current Stage
-        <div
-            class="compliance-rate"
-            [ngClass]="{
-                grey: !hasStageData,
-                green: hasStageData
-            }"
-        ></div>
+        <div class="compliance-rate" [ngClass]="getCurrentStageClass(candidate)"></div>
     </div>
 </div>
