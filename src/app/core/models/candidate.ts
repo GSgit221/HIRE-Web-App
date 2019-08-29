@@ -29,4 +29,6 @@ export class Candidate {
     read?: string[];
     application_completed?: any;
     tags?: ITag[];
+    hasUser: boolean;
+    hasUserReviewed: boolean;
 }
