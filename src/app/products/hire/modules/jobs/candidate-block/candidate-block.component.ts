@@ -81,7 +81,7 @@ export class CandidateBlockComponent implements OnInit {
     }
 
     getQuestionsClass() {
-        if (this.candidate.hasUser) {
+        if (this.candidate.hasUser && this.candidate.hasUserReviewed) {
             return this.candidate &&
                 this.candidate.job_specific &&
                 this.candidate.job_specific.questions &&
