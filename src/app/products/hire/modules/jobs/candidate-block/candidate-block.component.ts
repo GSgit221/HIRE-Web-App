@@ -87,7 +87,7 @@ export class CandidateBlockComponent implements OnInit {
                 this.candidate.job_specific.questions &&
                 this.candidate.job_specific.questions[this.job.id]
                 ? 'green'
-                : 'red';
+                : 'grey';
         } else {
             return 'grey';
         }
