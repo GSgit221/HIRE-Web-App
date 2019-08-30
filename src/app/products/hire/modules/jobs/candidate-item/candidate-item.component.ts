@@ -173,7 +173,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                 const jobRequest = this.jobService.getJob(this.jobId).pipe(
                     switchMap((job: Job) => {
                         this.job = job;
-                        this.stageId = this.candidate.stage[this.jobId];
+                        this.stageId = this.candidate && this.candidate.stage ? this.candidate.stage[this.jobId] : null;
                         if (!this.job.tags) this.job.tags = [];
                         this.stages = this.job.stages
                             .filter((stage) => stage.id !== 'applied')
