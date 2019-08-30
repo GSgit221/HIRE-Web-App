@@ -124,7 +124,7 @@
                 <div class="audit-item-header">
                     <div class="audit-item-heading">
                         <p>
-                            <strong>{{ user.first_name }} {{ user.last_name }} </strong> on
+                            <strong>{{ item?.user?.first_name }} {{ item?.user?.last_name }} </strong> on
                             <strong>{{ item.candidate_name }}</strong>
                         </p>
                     </div>
@@ -167,7 +167,7 @@
                 <div class="audit-item-header">
                     <div class="audit-item-heading">
                         <p>
-                            <strong>{{ user.first_name }} {{ user.last_name }} </strong> moved
+                            <strong>{{ item?.user?.first_name }} {{ item?.user?.last_name }} </strong> moved
                             <strong>{{ item.candidate_name }}</strong> from
                             <strong>{{ item.stage_from_title }}</strong> stage to
                             <strong>{{ item.stage_to_title }}</strong> stage.
