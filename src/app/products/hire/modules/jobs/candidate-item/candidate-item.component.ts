@@ -164,6 +164,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                 select(fromJobCandiatesSelector.getJobCandidate, { jobId: this.jobId, candidateId: this.candidateId })
             )
             .subscribe((candidate: Candidate) => {
+                console.log(candidate);
                 if (!candidate) {
                     console.log('REDIRECT');
                     return this.router.navigateByUrl('/not-found');
@@ -173,7 +174,11 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                 const jobRequest = this.jobService.getJob(this.jobId).pipe(
                     switchMap((job: Job) => {
                         this.job = job;
-                        this.stageId = this.candidate && this.candidate.stage ? this.candidate.stage[this.jobId] : null;
+
+                        if (this.candidate.stage && this.candidate.stage[this.jobId]) {
+                            this.stageId = this.candidate.stage[this.jobId];
+                        }
+
                         if (!this.job.tags) this.job.tags = [];
                         this.stages = this.job.stages
                             .filter((stage) => stage.id !== 'applied')
