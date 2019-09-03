@@ -12,30 +12,19 @@ export class CandidateBlockComponent implements OnInit {
     @Input() job: Job;
     @Input() resumeThreshold: number;
     @Input() selected: boolean;
-    @Input() questionAnswer: any;
     @Input() personalityAssessment: any;
     @Input() video: any;
     @Output() onDeleting = new EventEmitter<boolean>();
     @Output() deleted = new EventEmitter<string>();
     @Output() onSelect = new EventEmitter<string>();
+    _candidateQuestions: any;
+    @Input('candidateQuestions')
+    set candidateQuestions(value: boolean) {
+        this._candidateQuestions = value;
+    }
     constructor(private jobService: JobService) {}
 
     ngOnInit() {}
-
-    // get hasStageData() {
-    //     return this.personalityAssessment === 'applied'
-    //         ? this.hasQuestion && !this.questionAnswer && this.candidate.score >= this.resumeThreshold
-    //         : this.personalityAssessment;
-    // }
-
-    // get hasQuestion() {
-    //     return (
-    //         this.candidate &&
-    //         this.candidate.job_specific &&
-    //         this.candidate.job_specific.questions &&
-    //         this.candidate.job_specific.questions[this.job.id]
-    //     );
-    // }
 
     titleCase(str: string) {
         return str
@@ -74,20 +63,15 @@ export class CandidateBlockComponent implements OnInit {
         } else {
             return 'red';
         }
-        // } else if(candidate.score < this.resumeThreshold - 15 ||
-        //     (candidate && candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[this.job.id])) {
-        //     return 'red';
-        // }
     }
 
     getQuestionsClass() {
         if (this.candidate.hasUser && this.candidate.hasUserReviewed) {
-            return this.candidate &&
-                this.candidate.job_specific &&
-                this.candidate.job_specific.questions &&
-                this.candidate.job_specific.questions[this.job.id]
-                ? 'green'
-                : 'grey';
+            if (this._candidateQuestions && this._candidateQuestions.hasAnswers) {
+                return this._candidateQuestions.knockoutIncorrect ? 'red' : 'green';
+            } else {
+                return 'grey';
+            }
         } else {
             return 'grey';
         }
