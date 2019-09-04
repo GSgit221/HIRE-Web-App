@@ -12,6 +12,7 @@
     position: relative;
     transition: all 0.4s ease;
     overflow: hidden;
+
     // height: 75px;
 
     &:hover {
@@ -51,41 +52,71 @@
     }
 
     .candidate-footer {
-        display: flex;
-        font-size: 10px;
-        text-transform: uppercase;
-        justify-content: space-between;
-        line-height: 11px;
-        margin-top: 12px;
-        color: $grey;
+        margin: 10px -10px -9px;
+        background: #f9fafb;
 
-        .score,
-        .stage {
+        .candidate-footer-holder {
             display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
+            padding: 9px 10px 5px;
+        }
+
+        .block {
+            flex: 1;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
             align-items: center;
         }
 
-        .compliance-rate {
-            margin-left: 8px;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
+        .block-separator {
+            width: 1px;
+            height: 35px;
+            background: #979797;
+        }
 
-            &.orange {
-                background: $orange;
+        .icon-holder {
+            width: 15px;
+            height: 15px;
+            margin: 0 0 2px;
+
+            .status-icon {
+                display: none;
             }
 
             &.green {
-                background: $pink;
+                .status-icon.success {
+                    display: block;
+                }
+            }
+
+            &.orange {
+                .status-icon.warning {
+                    display: block;
+                }
             }
 
             &.red {
-                background: $red;
+                .status-icon.error {
+                    display: block;
+                }
             }
 
             &.grey {
-                background: $grey3;
+                .status-icon.empty {
+                    display: block;
+                }
             }
+        }
+
+        .block-title {
+            font-size: 10px;
+            line-height: 12px;
+            text-transform: uppercase;
+            color: $grey;
+            display: block;
         }
     }
 }
@@ -120,13 +151,11 @@
 
     .check-wrapper {
         background-color: $pink;
-
         position: absolute;
         left: 0;
         right: 0;
         top: 0;
         bottom: 0;
-
         display: none;
         align-items: center;
         justify-content: center;
