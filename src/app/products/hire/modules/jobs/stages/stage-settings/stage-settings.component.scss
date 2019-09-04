@@ -145,3 +145,99 @@
         height: 13px;
     }
 }
+
+// .form-content-section {
+//     .form-block-label {
+//         font-size: 13px;
+//     }
+// }
+.individual-category {
+    .input-block {
+        display: flex;
+    }
+    .hc-slider-block {
+        flex: 1;
+        padding: 10px 50px 0 20px;
+    }
+    &.form-content-section {
+        .form-content-box {
+            padding: 18px 20px 10px;
+        }
+        .form-block {
+            margin: 0 0 5px;
+        }
+        .form-block-label {
+            font-size: 13px;
+            flex: 0 0 123px;
+        }
+    }
+    .form-block-value {
+        text-align: left;
+        flex: 0 0 34px;
+        font-weight: bold;
+    }
+}
+.form-content-box {
+    .subtitle {
+        margin: 0 0 10px;
+        display: flex;
+        .icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            border: solid 1px $pink;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 6px 0 0;
+        }
+    }
+    .title {
+        font-size: 14px;
+        font-weight: bold;
+        margin: 0 0 20px;
+    }
+    .assessment-list {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        text-align: center;
+        margin: 0 0 34px;
+        &:last-child {
+            margin: 0 0 10px;
+        }
+    }
+    .assessment-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        border: solid 1px $light-grey;
+        margin: 0 auto 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .assessment-item {
+        margin: 0;
+        flex: 0 0 99px;
+        cursor: pointer;
+        &:hover {
+            color: $pink;
+            .assessment-img {
+                border-color: $pink;
+            }
+        }
+        p {
+            margin: 0;
+        }
+        &.active {
+            color: $pink;
+            .assessment-img {
+                border-color: $pink;
+            }
+        }
+    }
+    svg-icon {
+        display: flex;
+    }
+}

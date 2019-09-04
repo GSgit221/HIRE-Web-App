@@ -64,6 +64,166 @@
                     </div>
                 </div>
             </div>
+            <div class="section-separator mb10 mt10"></div>
+            <div class="form-content-section individual-category">
+                <div class="description">
+                    <div class="title">Individual Category Weighting</div>
+                    <p>Adjust the importance of each category here. This will affect how each match is scored.</p>
+                </div>
+                <div class="form-content-holder" formGroupName="individual_category">
+                    <div class="form-content-box">
+                        <div class="form-block">
+                            <div class="input-block">
+                                <label class="form-block-label">Education</label>
+                                <div class="hc-slider-block">
+                                    <p-slider
+                                        styleClass="hc-slider"
+                                        formControlName="education"
+                                        [animate]="true"
+                                        [min]="0"
+                                        [max]="100"
+                                        [step]="5"
+                                        (onChange)="onHcSliderChangeIndividual($event, '.education')"
+                                    ></p-slider>
+                                </div>
+                                <div class="form-block-value education">
+                                    <span>{{
+                                        stage?.individual_category?.education
+                                            ? stage?.individual_category?.education
+                                            : 0
+                                    }}</span
+                                    >%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-block">
+                            <div class="input-block">
+                                <label class="form-block-label">Job Titles</label>
+                                <div class="hc-slider-block">
+                                    <p-slider
+                                        styleClass="hc-slider"
+                                        formControlName="job_titles"
+                                        [animate]="true"
+                                        [min]="0"
+                                        [max]="100"
+                                        [step]="5"
+                                        (onChange)="onHcSliderChangeIndividual($event, '.job-titles')"
+                                    ></p-slider>
+                                </div>
+                                <div class="form-block-value job-titles">
+                                    <span
+                                        >{{
+                                            stage?.individual_category?.job_titles
+                                                ? stage?.individual_category?.job_titles
+                                                : 0
+                                        }} </span
+                                    >%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-block">
+                            <div class="input-block">
+                                <label class="form-block-label">Skills</label>
+                                <div class="hc-slider-block">
+                                    <p-slider
+                                        styleClass="hc-slider"
+                                        formControlName="skilles"
+                                        [animate]="true"
+                                        [min]="0"
+                                        [max]="100"
+                                        [step]="5"
+                                        (onChange)="onHcSliderChangeIndividual($event, '.skilles')"
+                                    ></p-slider>
+                                </div>
+                                <div class="form-block-value skilles">
+                                    <span
+                                        >{{
+                                            stage?.individual_category?.skilles
+                                                ? stage?.individual_category?.skilles
+                                                : 0
+                                        }} </span
+                                    >%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-block">
+                            <div class="input-block">
+                                <label class="form-block-label">Industries</label>
+                                <div class="hc-slider-block">
+                                    <p-slider
+                                        styleClass="hc-slider"
+                                        formControlName="industries"
+                                        [animate]="true"
+                                        [min]="0"
+                                        [max]="100"
+                                        [step]="5"
+                                        (onChange)="onHcSliderChangeIndividual($event, '.industries')"
+                                    ></p-slider>
+                                </div>
+                                <div class="form-block-value industries">
+                                    <span
+                                        >{{
+                                            stage?.individual_category?.industries
+                                                ? stage?.individual_category?.industries
+                                                : 0
+                                        }} </span
+                                    >%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-block">
+                            <div class="input-block">
+                                <label class="form-block-label">Certifications</label>
+                                <div class="hc-slider-block">
+                                    <p-slider
+                                        styleClass="hc-slider"
+                                        formControlName="certifications"
+                                        [animate]="true"
+                                        [min]="0"
+                                        [max]="100"
+                                        [step]="5"
+                                        (onChange)="onHcSliderChangeIndividual($event, '.certifications')"
+                                    ></p-slider>
+                                </div>
+                                <div class="form-block-value certifications">
+                                    <span
+                                        >{{
+                                            stage?.individual_category?.certifications
+                                                ? stage?.individual_category?.certifications
+                                                : 0
+                                        }} </span
+                                    >%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-block">
+                            <div class="input-block">
+                                <label class="form-block-label">Management Level</label>
+                                <div class="hc-slider-block">
+                                    <p-slider
+                                        styleClass="hc-slider"
+                                        formControlName="management_level"
+                                        [animate]="true"
+                                        [min]="0"
+                                        [max]="100"
+                                        [step]="5"
+                                        (onChange)="onHcSliderChangeIndividual($event, '.management_level')"
+                                    ></p-slider>
+                                </div>
+                                <div class="form-block-value management_level">
+                                    <span
+                                        >{{
+                                            stage?.individual_category?.management_level
+                                                ? stage?.individual_category?.management_level
+                                                : 0
+                                        }} </span
+                                    >%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
         <form [formGroup]="stageSettingsForm" *ngIf="stage && stage.id !== 'applied'">
             <div class="form-content-section">
@@ -91,17 +251,39 @@
                 </div>
             </div>
             <div class="section-separator mb20 mt20"></div>
+
             <div class="form-content-section">
                 <div class="description">
                     <strong class="title">Select an Assessment</strong>
                     <p>Select from the list of assessments that the candidate should complete at this stage.</p>
                 </div>
                 <div class="form-content-holder assessment-holder" formArrayName="assessment">
-                    <div
-                        class="form-content-box"
-                        *ngFor="let ass of stageSettingsForm.controls.assessment.controls; let i = index"
-                    >
-                        <div class="form-block fdr" [formGroupName]="i">
+                    <ng-container *ngFor="let ass of stageSettingsForm.controls.assessment.controls; let i = index">
+                        <div class="form-content-box" *ngIf="ass['controls'].type.value === 'personality'">
+                            <div class="subtitle">
+                                <div class="icon">
+                                    <svg-icon
+                                        [svgStyle]="{ 'width.px': 8 }"
+                                        src="/assets/images/icon-people.svg"
+                                    ></svg-icon>
+                                </div>
+
+                                Personality Profile
+                            </div>
+                            <div class="form-block" [formGroupName]="i">
+                                <div class="input-block">
+                                    <label class="form-block-label">Deadline</label>
+                                    <div class="input-holder">
+                                        <p-dropdown
+                                            [options]="assessmentDeadlineOptions"
+                                            formControlName="deadline"
+                                            [style]="{ width: '100%' }"
+                                        ></p-dropdown>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="form-block fdr">
+                            
                             <div class="input-block flex50p">
                                 <label class="form-block-label">Assessment Type</label>
                                 <div class="input-holder">
@@ -114,14 +296,14 @@
                                 </div>
                             </div>
                             <div class="separator20"></div>
-                            <div class="input-block flex50p" *ngIf="ass.get('type').value === 'personality'">
+                            <div class="input-block flex50p">
                                 <label class="form-block-label">Assessment Benchmark</label>
                                 <div class="input-holder">
                                     <p-dropdown
-                                        [options]="assessmentBenchmarkOptions"
-                                        formControlName="option"
+                                        [options]="assessmentDeadlineOptions"
+                                        formControlName="deadline"
                                         [style]="{ width: '100%' }"
-                                        placeholder="Please select assessment benchmark"
+                                        placeholder=""
                                     ></p-dropdown>
                                 </div>
                             </div>
@@ -136,15 +318,165 @@
                                     ></p-dropdown>
                                 </div>
                             </div>
+                        </div> -->
+                        </div>
+                        <div class="form-content-box" *ngIf="ass['controls'].type.value === 'video-interview'">
+                            <div class="subtitle">
+                                <div class="icon">
+                                    <svg-icon
+                                        [svgStyle]="{ 'width.px': 8 }"
+                                        src="/assets/images/icon-rec.svg"
+                                    ></svg-icon>
+                                </div>
+                                One Way Video Interview
+                            </div>
+                            <div class="form-block fdr" [formGroupName]="i">
+                                <div class="input-block flex50p">
+                                    <label class="form-block-label">Questions</label>
+                                    <div class="input-holder">
+                                        <p-dropdown
+                                            [options]="questionnaireOptions"
+                                            formControlName="option"
+                                            [style]="{ width: '100%' }"
+                                            placeholder="Please select questionnaire"
+                                        ></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="separator20"></div>
+
+                                <div class="input-block flex50p">
+                                    <label class="form-block-label">Deadline</label>
+                                    <div class="input-holder">
+                                        <p-dropdown
+                                            [options]="assessmentDeadlineOptions"
+                                            formControlName="deadline"
+                                            [style]="{ width: '100%' }"
+                                        ></p-dropdown>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-content-box" *ngIf="ass['controls'].type.value === 'logic-test'">
+                            <div class="subtitle">
+                                <div class="icon">
+                                    <svg-icon
+                                        [svgStyle]="{ 'width.px': 8 }"
+                                        src="/assets/images/icon-brain.svg"
+                                    ></svg-icon>
+                                </div>
+                                Simple Logic Test
+                            </div>
+                            <div class="form-block" [formGroupName]="i">
+                                <div class="input-block">
+                                    <label class="form-block-label">Deadline</label>
+                                    <div class="input-holder">
+                                        <p-dropdown
+                                            [options]="assessmentDeadlineOptions"
+                                            formControlName="deadline"
+                                            [style]="{ width: '100%' }"
+                                        ></p-dropdown>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-content-box" *ngIf="ass['controls'].type.value === 'devskiller'">
+                            <div class="subtitle">
+                                <div class="icon">
+                                    <img width="8" src="/assets/images/devskiller.jpg" />
+                                </div>
+                                Devskiller
+                            </div>
+                            <div class="form-block fdr" [formGroupName]="i">
+                                <div class="input-block flex50p">
+                                    <label class="form-block-label">Assessment</label>
+                                    <div class="input-holder">
+                                        <p-dropdown
+                                            [options]="questionnaireOptions"
+                                            formControlName="option"
+                                            [style]="{ width: '100%' }"
+                                            placeholder="Please select questionnaire"
+                                        ></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="separator20"></div>
+                                <div class="input-block flex50p">
+                                    <label class="form-block-label">Deadline</label>
+                                    <div class="input-holder">
+                                        <p-dropdown
+                                            [options]="assessmentDeadlineOptions"
+                                            formControlName="deadline"
+                                            [style]="{ width: '100%' }"
+                                        ></p-dropdown>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <div class="form-content-box">
+                        <div class="title">Clevateam Assessments</div>
+                        <div class="assessment-list">
+                            <div
+                                class="assessment-item"
+                                [ngClass]="{ active: defineAssessmentStatus('personality') }"
+                                (click)="onAddAssessment('personality')"
+                            >
+                                <div class="assessment-img">
+                                    <svg-icon src="/assets/images/icon-people.svg"></svg-icon>
+                                </div>
+                                <p>Personality Profile</p>
+                            </div>
+                            <div
+                                class="assessment-item"
+                                [ngClass]="{ active: defineAssessmentStatus('video-interview') }"
+                                (click)="onAddAssessment('video-interview')"
+                            >
+                                <div class="assessment-img">
+                                    <svg-icon src="/assets/images/icon-rec.svg"></svg-icon>
+                                </div>
+                                <p>One Way Video Interview</p>
+                            </div>
+                            <div
+                                class="assessment-item"
+                                [ngClass]="{ active: defineAssessmentStatus('logic-test') }"
+                                (click)="onAddAssessment('logic-test')"
+                            >
+                                <div class="assessment-img">
+                                    <svg-icon src="/assets/images/icon-brain.svg"></svg-icon>
+                                </div>
+                                <p>Simple Logic Test</p>
+                            </div>
+                            <div
+                                class="assessment-item"
+                                [ngClass]="{ active: defineAssessmentStatus('document') }"
+                                (click)="onAddAssessment('document')"
+                            >
+                                <div class="assessment-img">
+                                    <svg-icon src="/assets/images/icon-doc.svg"></svg-icon>
+                                </div>
+                                <p>Document Request</p>
+                            </div>
+                        </div>
+                        <div class="title">Thirdparty Integrations</div>
+                        <div class="assessment-list">
+                            <div
+                                class="assessment-item"
+                                [ngClass]="{ active: defineAssessmentStatus('devskiller') }"
+                                (click)="onAddAssessment('devskiller')"
+                            >
+                                <div class="assessment-img">
+                                    <img src="/assets/images/devskiller.jpg" width="36" />
+                                </div>
+                                <p>Devskiller</p>
+                            </div>
                         </div>
                     </div>
-                    <div
+                    <!-- <div
                         class="form-content-box add-assessment"
                         (click)="onAddAssessment()"
-                        *ngIf="stageSettingsForm?.get('assessment')['controls']?.length < 2"
+                        
                     >
                         <span>+</span> Add another assessment
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <!-- <div class="form-content-section">

@@ -42,6 +42,12 @@ export class StageSettingsComponent implements OnInit {
     ];
 
     assessmentBenchmarkOptions = [{ label: 'Systems Engineer (JF5593)', value: 'system_engeneer' }];
+    assessmentDeadlineOptions = [
+        { label: 'Default - 5 Days', value: '5' },
+        { label: '10 Days', value: '10' },
+        { label: '15 Days', value: '15' },
+        { label: '20 Days', value: '20' }
+    ];
     baseUrl: string;
 
     constructor(
@@ -69,8 +75,27 @@ export class StageSettingsComponent implements OnInit {
                         resume_matching_threshold: [this.stage.resume_matching_threshold],
                         automatically_progress_matching_threshold: [
                             this.stage.automatically_progress_matching_threshold
-                        ]
+                        ],
+                        individual_category: this.fb.group({
+                            education: [],
+                            job_titles: [],
+                            skilles: [],
+                            industries: [],
+                            certifications: [],
+                            management_level: []
+                        })
                     });
+                    if (this.stage.individual_category) {
+                        this.stageSettingsForm.get('individual_category').patchValue({
+                            education: [this.stage.individual_category.education],
+                            job_titles: [this.stage.individual_category.job_titles],
+                            skilles: [this.stage.individual_category.skilles],
+                            industries: [this.stage.individual_category.industries],
+                            certifications: [this.stage.individual_category.certifications],
+                            management_level: [this.stage.individual_category.management_level]
+                        });
+                    }
+                    console.log(this.stageSettingsForm.get('individual_category'));
 
                     setTimeout(() => {
                         this.onHcSliderChange();
@@ -92,9 +117,11 @@ export class StageSettingsComponent implements OnInit {
                         actions: this.fb.array(actions)
                     });
                     if (this.stage.assessment) {
+                        console.log(this.stage);
                         this.populateAssessment(this.stage.assessment);
+                        console.log(this.stageSettingsForm.get('assessment')['controls'][0]['controls'].type);
                     } else {
-                        this.addAssessmentGroup();
+                        // this.addAssessmentGroup();
                     }
                     this.questionnaireService.getAll().subscribe(
                         (response: Questionnaire[]) => {
@@ -158,6 +185,10 @@ export class StageSettingsComponent implements OnInit {
             resume_matching_threshold: [60],
             automatically_progress_matching_threshold: [true]
         });
+
+        setTimeout(() => {
+            console.log(this.stageSettingsForm);
+        }, 3000);
     }
 
     onHcSliderChange() {
@@ -171,6 +202,11 @@ export class StageSettingsComponent implements OnInit {
                 handler.innerHTML = value;
             }
         }
+    }
+
+    onHcSliderChangeIndividual(e, type) {
+        // console.log(e, 'onHcSliderChangeIndividual', document.querySelector(type));
+        document.querySelector(type).children[0].innerHTML = e.value;
     }
 
     onSave() {
@@ -255,13 +291,15 @@ export class StageSettingsComponent implements OnInit {
         return this.stageSettingsForm && (this.stageSettingsForm.controls['assessment'] as FormArray);
     }
 
-    addAssessmentGroup() {
+    addAssessmentGroup(type) {
         this.assessment.push(
             this.fb.group({
-                type: [''],
-                option: ['']
+                type: [type],
+                option: ['' || '-'],
+                deadline: []
             })
         );
+        console.log(this.assessment);
     }
 
     populateAssessment(assessment) {
@@ -269,16 +307,23 @@ export class StageSettingsComponent implements OnInit {
             this.assessment.push(
                 this.fb.group({
                     type: [c.type, Validators.required],
-                    option: [c.option, Validators.required]
+                    option: [c.option, Validators.required],
+                    deadline: []
                 })
             );
         });
     }
-    onAddAssessment() {
-        if (this.stageSettingsForm.get('assessment').valid) {
-            this.addAssessmentGroup();
-        } else {
-            this.formHelper.markFormGroupTouched(this.stageSettingsForm);
-        }
+    onAddAssessment(type) {
+        console.log('type', type, this.stageSettingsForm.get('assessment').valid);
+        this.addAssessmentGroup(type);
+        // if (this.stageSettingsForm.get('assessment').valid) {
+        //     this.addAssessmentGroup(type);
+        // } else {
+        //     this.formHelper.markFormGroupTouched(this.stageSettingsForm);
+        // }
+    }
+
+    defineAssessmentStatus(type) {
+        return this.assessment['controls'].find((c) => c['controls'].type.value === type);
     }
 }

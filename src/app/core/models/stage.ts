@@ -8,4 +8,5 @@ export class Stage {
     order?: number;
     actions?: any;
     assessment?: any[];
+    individual_category?: any;
 }
