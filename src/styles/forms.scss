@@ -297,6 +297,20 @@ p-messages {
     padding: 4px 0;
 }
 
+.individual-category p-slider {
+    .hc-slider {
+        &.ui-slider-horizontal .ui-slider-handle {
+            top: -4px !important;
+            margin-left: -5px;
+        }
+        .ui-slider-handle {
+            width: 10px !important;
+            height: 10px !important;
+            background-color: #3bb273 !important;
+            border-radius: 50%;
+        }
+    }
+}
 p-slider {
     .hc-slider {
         background: $grey-border;
@@ -799,5 +813,31 @@ body p-calendar {
 
     &.ng-touched.ng-invalid .ui-inputtext {
         border-color: $red !important;
+    }
+}
+
+.form-content-box {
+    .assessment-item {
+        &:hover {
+            svg {
+                path {
+                    fill: $pink;
+                }
+            }
+        }
+        &.active {
+            svg {
+                path {
+                    fill: $pink;
+                }
+            }
+        }
+    }
+    .subtitle {
+        svg {
+            path {
+                fill: $pink;
+            }
+        }
     }
 }
