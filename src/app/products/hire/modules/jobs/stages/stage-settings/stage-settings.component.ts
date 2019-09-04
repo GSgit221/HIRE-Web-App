@@ -40,6 +40,7 @@ export class StageSettingsComponent implements OnInit {
         { label: 'Personality Assessment', value: 'personality' },
         { label: 'One Way Video Interview', value: 'video-interview' }
     ];
+    devslillerOptions = [];
 
     assessmentBenchmarkOptions = [{ label: 'Systems Engineer (JF5593)', value: 'system_engeneer' }];
     assessmentDeadlineOptions = [
@@ -63,6 +64,12 @@ export class StageSettingsComponent implements OnInit {
         this.jobId = this.route.snapshot.paramMap.get('id');
         this.stageId = this.route.snapshot.paramMap.get('stageId');
         this.contentLoading = true;
+        this.jobService.getDevskillerTest().subscribe((res: any) => {
+            console.log(res);
+            res.forEach((c) => {
+                this.devslillerOptions.push({ label: c.name, value: c.id });
+            });
+        });
 
         this.jobService.getJob(this.jobId).subscribe((job: Job) => (this.job = job));
         this.jobService.getStage(this.jobId, this.stageId).subscribe(
@@ -117,9 +124,7 @@ export class StageSettingsComponent implements OnInit {
                         actions: this.fb.array(actions)
                     });
                     if (this.stage.assessment) {
-                        console.log(this.stage);
                         this.populateAssessment(this.stage.assessment);
-                        console.log(this.stageSettingsForm.get('assessment')['controls'][0]['controls'].type);
                     } else {
                         // this.addAssessmentGroup();
                     }
