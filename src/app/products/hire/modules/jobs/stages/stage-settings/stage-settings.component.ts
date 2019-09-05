@@ -83,7 +83,7 @@ export class StageSettingsComponent implements OnInit {
                         automatically_progress_matching_threshold: [
                             this.stage.automatically_progress_matching_threshold
                         ],
-                        individual_category: this.fb.group({
+                        weighting: this.fb.group({
                             education: [],
                             job_titles: [],
                             skilles: [],
@@ -92,17 +92,17 @@ export class StageSettingsComponent implements OnInit {
                             management_level: []
                         })
                     });
-                    if (this.stage.individual_category) {
-                        this.stageSettingsForm.get('individual_category').patchValue({
-                            education: [this.stage.individual_category.education],
-                            job_titles: [this.stage.individual_category.job_titles],
-                            skilles: [this.stage.individual_category.skilles],
-                            industries: [this.stage.individual_category.industries],
-                            certifications: [this.stage.individual_category.certifications],
-                            management_level: [this.stage.individual_category.management_level]
+                    if (this.stage.weighting) {
+                        this.stageSettingsForm.get('weighting').patchValue({
+                            education: [this.stage.weighting.education],
+                            job_titles: [this.stage.weighting.job_titles],
+                            skilles: [this.stage.weighting.skilles],
+                            industries: [this.stage.weighting.industries],
+                            certifications: [this.stage.weighting.certifications],
+                            management_level: [this.stage.weighting.management_level]
                         });
                     }
-                    console.log(this.stageSettingsForm.get('individual_category'));
+                    console.log(this.stageSettingsForm.get('weighting'));
 
                     setTimeout(() => {
                         this.onHcSliderChange();
@@ -209,8 +209,8 @@ export class StageSettingsComponent implements OnInit {
         }
     }
 
-    onHcSliderChangeIndividual(e, type) {
-        // console.log(e, 'onHcSliderChangeIndividual', document.querySelector(type));
+    onHcSliderChangeWeighting(e, type) {
+        // console.log(e, 'onHcSliderChangeWeighting', document.querySelector(type));
         document.querySelector(type).children[0].innerHTML = e.value;
     }
 
