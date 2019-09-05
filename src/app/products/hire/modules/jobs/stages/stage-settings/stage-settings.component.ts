@@ -44,10 +44,10 @@ export class StageSettingsComponent implements OnInit {
 
     assessmentBenchmarkOptions = [{ label: 'Systems Engineer (JF5593)', value: 'system_engeneer' }];
     assessmentDeadlineOptions = [
-        { label: 'Default - 5 Days', value: '5' },
-        { label: '10 Days', value: '10' },
-        { label: '15 Days', value: '15' },
-        { label: '20 Days', value: '20' }
+        { label: 'Default - 5 Days', value: 5 },
+        { label: '10 Days', value: 10 },
+        { label: '15 Days', value: 15 },
+        { label: '20 Days', value: 20 }
     ];
     baseUrl: string;
 
@@ -86,7 +86,7 @@ export class StageSettingsComponent implements OnInit {
                         weighting: this.fb.group({
                             education: [],
                             job_titles: [],
-                            skilles: [],
+                            skills: [],
                             industries: [],
                             certifications: [],
                             management_level: []
@@ -309,11 +309,12 @@ export class StageSettingsComponent implements OnInit {
 
     populateAssessment(assessment) {
         assessment.forEach((c) => {
+            console.log(c);
             this.assessment.push(
                 this.fb.group({
                     type: [c.type, Validators.required],
                     option: [c.option, Validators.required],
-                    deadline: []
+                    deadline: [c.deadline || null]
                 })
             );
         });
