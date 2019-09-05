@@ -127,20 +127,18 @@
                                 <div class="hc-slider-block">
                                     <p-slider
                                         styleClass="hc-slider"
-                                        formControlName="skilles"
+                                        formControlName="skills"
                                         [animate]="true"
                                         [min]="0"
                                         [max]="100"
                                         [step]="5"
-                                        (onChange)="onHcSliderChangeIndividual($event, '.skilles')"
+                                        (onChange)="onHcSliderChangeIndividual($event, '.skills')"
                                     ></p-slider>
                                 </div>
-                                <div class="form-block-value skilles">
+                                <div class="form-block-value skills">
                                     <span
                                         >{{
-                                            stage?.individual_category?.skilles
-                                                ? stage?.individual_category?.skilles
-                                                : 0
+                                            stage?.individual_category?.skills ? stage?.individual_category?.skills : 0
                                         }} </span
                                     >%
                                 </div>
