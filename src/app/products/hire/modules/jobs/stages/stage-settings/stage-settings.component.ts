@@ -297,13 +297,18 @@ export class StageSettingsComponent implements OnInit {
     }
 
     addAssessmentGroup(type) {
+        let option = [''];
+        if (type !== 'video-interview' && type !== 'devskiller') {
+            option = ['-'];
+        }
         this.assessment.push(
             this.fb.group({
                 type: [type],
-                option: ['' || '-'],
+                option,
                 deadline: []
             })
         );
+
         console.log(this.assessment);
     }
 
