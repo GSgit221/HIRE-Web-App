@@ -318,7 +318,7 @@ export class StageSettingsComponent implements OnInit {
                 this.fb.group({
                     type: [c.type, Validators.required],
                     option: [c.option, Validators.required],
-                    deadline: [c.deadline || null]
+                    deadline: [c.deadline || 5]
                 })
             );
         });
