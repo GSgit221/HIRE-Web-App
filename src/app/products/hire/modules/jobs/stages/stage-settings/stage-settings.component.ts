@@ -296,13 +296,18 @@ export class StageSettingsComponent implements OnInit {
     }
 
     addAssessmentGroup(type) {
+        let option = [''];
+        if (type !== 'video-interview' && type !== 'devskiller') {
+            option = ['-'];
+        }
         this.assessment.push(
             this.fb.group({
                 type: [type],
-                option: ['' || '-'],
+                option,
                 deadline: []
             })
         );
+
         console.log(this.assessment);
     }
 
@@ -319,13 +324,12 @@ export class StageSettingsComponent implements OnInit {
         });
     }
     onAddAssessment(type) {
-        console.log('type', type, this.stageSettingsForm.get('assessment').valid);
-        this.addAssessmentGroup(type);
-        // if (this.stageSettingsForm.get('assessment').valid) {
-        //     this.addAssessmentGroup(type);
-        // } else {
-        //     this.formHelper.markFormGroupTouched(this.stageSettingsForm);
-        // }
+        let index = this.assessment['controls'].findIndex((c) => c['controls'].type.value === type);
+        if (index >= 0) {
+            this.assessment.removeAt(index);
+        } else {
+            this.addAssessmentGroup(type);
+        }
     }
 
     defineAssessmentStatus(type) {

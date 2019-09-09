@@ -321,6 +321,11 @@ $steps: 3 4 5 6 8 10 15 20 25 30 33 35 40 45 50 60 75;
         min-width: 140px;
     }
 
+    &.w120 {
+        width: 120px;
+        min-width: 120px;
+    }
+
     &.w60 {
         width: 60px;
         min-width: 60px;

@@ -11,10 +11,10 @@
             <button class="btn btn-remove" (click)="onDelete()">
                 <img src="/assets/images/delete.svg" alt="Delete" />
             </button>
-            <button class="btn btn-primary ml20 w140" (click)="onSave()">Save</button>
+            <button class="btn btn-primary ml20 w120" (click)="onSave()">Save</button>
         </div>
     </div>
-    <div class="section-separator mb20"></div>
+    <div class="section-separator mb10"></div>
     <div class="content-section">
         <form [formGroup]="stageSettingsForm" *ngIf="stage && stage.id === 'applied'">
             <div class="form-content-section">
@@ -224,7 +224,7 @@
                     </div>
                 </div>
             </div>
-            <div class="section-separator mb20 mt20"></div>
+            <div class="section-separator mb10 mt10"></div>
 
             <div class="form-content-section">
                 <div class="description">
@@ -339,6 +339,29 @@
                                     ></svg-icon>
                                 </div>
                                 Simple Logic Test
+                            </div>
+                            <div class="form-block" [formGroupName]="i">
+                                <div class="input-block">
+                                    <label class="form-block-label">Deadline</label>
+                                    <div class="input-holder">
+                                        <p-dropdown
+                                            [options]="assessmentDeadlineOptions"
+                                            formControlName="deadline"
+                                            [style]="{ width: '100%' }"
+                                        ></p-dropdown>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-content-box" *ngIf="ass['controls'].type.value === 'document'">
+                            <div class="subtitle">
+                                <div class="icon">
+                                    <svg-icon
+                                        [svgStyle]="{ 'width.px': 8 }"
+                                        src="/assets/images/icon-doc.svg"
+                                    ></svg-icon>
+                                </div>
+                                Document Request
                             </div>
                             <div class="form-block" [formGroupName]="i">
                                 <div class="input-block">
