@@ -65,7 +65,6 @@ export class StageSettingsComponent implements OnInit {
         this.stageId = this.route.snapshot.paramMap.get('stageId');
         this.contentLoading = true;
         this.jobService.getDevskillerTest().subscribe((res: any) => {
-            console.log(res);
             if (res) {
                 res.forEach((c) => {
                     this.devslillerOptions.push({ label: c.name, value: c.id });
@@ -325,7 +324,6 @@ export class StageSettingsComponent implements OnInit {
 
     populateAssessment(assessment) {
         assessment.forEach((c) => {
-            console.log(c);
             this.assessment.push(
                 this.fb.group({
                     type: [c.type, Validators.required],
