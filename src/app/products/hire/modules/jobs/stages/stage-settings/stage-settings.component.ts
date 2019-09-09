@@ -65,10 +65,16 @@ export class StageSettingsComponent implements OnInit {
         this.stageId = this.route.snapshot.paramMap.get('stageId');
         this.contentLoading = true;
         this.jobService.getDevskillerTest().subscribe((res: any) => {
-            console.log(res);
-            res.forEach((c) => {
-                this.devslillerOptions.push({ label: c.name, value: c.id });
-            });
+            if (res) {
+                res.forEach((c) => {
+                    this.devslillerOptions.push({ label: c.name, value: c.id });
+                });
+                if (this.assessment) {
+                    let control = this.assessment['controls'].find((c) => c['controls'].type.value === 'devskiller');
+                    let assessment = this.stage.assessment.find((c) => c.type === 'devskiller');
+                    control['controls'].option.patchValue(assessment.option);
+                }
+            }
         });
 
         this.jobService.getJob(this.jobId).subscribe((job: Job) => (this.job = job));
@@ -89,7 +95,7 @@ export class StageSettingsComponent implements OnInit {
                             skills: [28],
                             industries: [14],
                             certifications: [7],
-                            management_level: [7]
+                            management_level: [6]
                         })
                     });
                     if (this.stage.weighting) {
@@ -99,10 +105,10 @@ export class StageSettingsComponent implements OnInit {
                             skills: this.stage.weighting.skills || 28,
                             industries: this.stage.weighting.industries || 14,
                             certifications: this.stage.weighting.certifications || 7,
-                            management_level: this.stage.weighting.management_level || 7
+                            management_level: this.stage.weighting.management_level || 6
                         });
                     }
-                    console.log(this.stageSettingsForm.get('weighting'));
+                    console.log(this.stage, this.stageSettingsForm.get('weighting'));
                     setTimeout(() => {
                         this.onHcSliderChange();
                     }, 100);
@@ -208,9 +214,10 @@ export class StageSettingsComponent implements OnInit {
         }
     }
 
-    onHcSliderChangeWeighting(e, type) {
-        // console.log(e, 'onHcSliderChangeWeighting', document.querySelector(type));
-        document.querySelector(type).children[0].innerHTML = e.value;
+    onHcSliderChangeWeighting(e) {
+        console.log(e);
+        // e.event.preventDefault();
+        // e.event.stopPropagation();
     }
 
     onSave() {
@@ -295,6 +302,10 @@ export class StageSettingsComponent implements OnInit {
         return this.stageSettingsForm && (this.stageSettingsForm.controls['assessment'] as FormArray);
     }
 
+    get weighting(): FormArray {
+        return this.stageSettingsForm && (this.stageSettingsForm.controls['weighting']['controls'] as FormArray);
+    }
+
     addAssessmentGroup(type) {
         let option = [''];
         if (type !== 'video-interview' && type !== 'devskiller') {
@@ -313,7 +324,6 @@ export class StageSettingsComponent implements OnInit {
 
     populateAssessment(assessment) {
         assessment.forEach((c) => {
-            console.log(c);
             this.assessment.push(
                 this.fb.group({
                     type: [c.type, Validators.required],
