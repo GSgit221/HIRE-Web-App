@@ -214,10 +214,24 @@ export class StageSettingsComponent implements OnInit {
         }
     }
 
-    onHcSliderChangeWeighting(e) {
-        console.log(e);
-        // e.event.preventDefault();
-        // e.event.stopPropagation();
+    onHcSliderChangeWeighting(e, input) {
+        const val = e.value;
+        const points = this.pointsAvailable();
+        if (points < 0) {
+            const correctValue = val + points;
+            this.stageSettingsForm.get('weighting').patchValue({
+                [input]: correctValue
+            });
+        }
+    }
+
+    pointsAvailable() {
+        const val = this.stageSettingsForm.get('weighting').value;
+        let total = 100;
+        Object.keys(val).forEach((v) => {
+            total = total - val[v];
+        });
+        return total;
     }
 
     onSave() {
