@@ -84,26 +84,25 @@ export class StageSettingsComponent implements OnInit {
                             this.stage.automatically_progress_matching_threshold
                         ],
                         weighting: this.fb.group({
-                            education: [],
-                            job_titles: [],
-                            skills: [],
-                            industries: [],
-                            certifications: [],
-                            management_level: []
+                            education: [17],
+                            job_titles: [28],
+                            skills: [28],
+                            industries: [14],
+                            certifications: [7],
+                            management_level: [7]
                         })
                     });
                     if (this.stage.weighting) {
                         this.stageSettingsForm.get('weighting').patchValue({
-                            education: [this.stage.weighting.education],
-                            job_titles: [this.stage.weighting.job_titles],
-                            skilles: [this.stage.weighting.skilles],
-                            industries: [this.stage.weighting.industries],
-                            certifications: [this.stage.weighting.certifications],
-                            management_level: [this.stage.weighting.management_level]
+                            education: this.stage.weighting.education || 17,
+                            job_titles: this.stage.weighting.job_titles || 28,
+                            skills: this.stage.weighting.skills || 28,
+                            industries: this.stage.weighting.industries || 14,
+                            certifications: this.stage.weighting.certifications || 7,
+                            management_level: this.stage.weighting.management_level || 7
                         });
                     }
                     console.log(this.stageSettingsForm.get('weighting'));
-
                     setTimeout(() => {
                         this.onHcSliderChange();
                     }, 100);

@@ -38,7 +38,7 @@
                                         [animate]="true"
                                         [min]="0"
                                         [max]="100"
-                                        [step]="5"
+                                        [step]="1"
                                         (onChange)="onHcSliderChange()"
                                         #hcSlider
                                     ></p-slider>
@@ -82,7 +82,7 @@
                                         [animate]="true"
                                         [min]="0"
                                         [max]="100"
-                                        [step]="5"
+                                        [step]="1"
                                         (onChange)="onHcSliderChangeWeighting($event, '.education')"
                                     ></p-slider>
                                 </div>
@@ -102,7 +102,7 @@
                                         [animate]="true"
                                         [min]="0"
                                         [max]="100"
-                                        [step]="5"
+                                        [step]="1"
                                         (onChange)="onHcSliderChangeWeighting($event, '.job-titles')"
                                     ></p-slider>
                                 </div>
@@ -121,12 +121,12 @@
                                         [animate]="true"
                                         [min]="0"
                                         [max]="100"
-                                        [step]="5"
-                                        (onChange)="onHcSliderChangeWeighting($event, '.skilles')"
+                                        [step]="1"
+                                        (onChange)="onHcSliderChangeWeighting($event, '.skills')"
                                     ></p-slider>
                                 </div>
-                                <div class="form-block-value skilles">
-                                    <span>{{ stage?.weighting?.skilles ? stage?.weighting?.skilles : 0 }} </span>%
+                                <div class="form-block-value skills">
+                                    <span>{{ stage?.weighting?.skills ? stage?.weighting?.skills : 0 }} </span>%
                                 </div>
                             </div>
                         </div>
@@ -140,7 +140,7 @@
                                         [animate]="true"
                                         [min]="0"
                                         [max]="100"
-                                        [step]="5"
+                                        [step]="1"
                                         (onChange)="onHcSliderChangeWeighting($event, '.industries')"
                                     ></p-slider>
                                 </div>
@@ -159,7 +159,7 @@
                                         [animate]="true"
                                         [min]="0"
                                         [max]="100"
-                                        [step]="5"
+                                        [step]="1"
                                         (onChange)="onHcSliderChangeWeighting($event, '.certifications')"
                                     ></p-slider>
                                 </div>
@@ -182,7 +182,7 @@
                                         [animate]="true"
                                         [min]="0"
                                         [max]="100"
-                                        [step]="5"
+                                        [step]="1"
                                         (onChange)="onHcSliderChangeWeighting($event, '.management_level')"
                                     ></p-slider>
                                 </div>
@@ -617,7 +617,7 @@
                                         [animate]="true"
                                         [min]="0"
                                         [max]="100"
-                                        [step]="5"
+                                        [step]="1"
                                         (onChange)="onHcSliderChange()"
                                         #hcSlider
                                     ></p-slider>
