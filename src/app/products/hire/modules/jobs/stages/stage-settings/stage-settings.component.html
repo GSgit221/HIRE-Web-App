@@ -83,11 +83,11 @@
                                         [min]="0"
                                         [max]="100"
                                         [step]="1"
-                                        (onChange)="onHcSliderChangeWeighting($event, '.education')"
+                                        (onChange)="onHcSliderChangeWeighting($event)"
                                     ></p-slider>
                                 </div>
-                                <div class="form-block-value education">
-                                    <span>{{ stage?.weighting?.education ? stage?.weighting?.education : 0 }}</span
+                                <div class="form-block-value">
+                                    <span>{{ weighting?.education.value }}</span
                                     >%
                                 </div>
                             </div>
@@ -103,11 +103,11 @@
                                         [min]="0"
                                         [max]="100"
                                         [step]="1"
-                                        (onChange)="onHcSliderChangeWeighting($event, '.job-titles')"
+                                        (onChange)="onHcSliderChangeWeighting($event)"
                                     ></p-slider>
                                 </div>
-                                <div class="form-block-value job-titles">
-                                    <span>{{ stage?.weighting?.job_titles ? stage?.weighting?.job_titles : 0 }} </span>%
+                                <div class="form-block-value">
+                                    <span>{{ weighting?.job_titles.value }} </span>%
                                 </div>
                             </div>
                         </div>
@@ -122,11 +122,11 @@
                                         [min]="0"
                                         [max]="100"
                                         [step]="1"
-                                        (onChange)="onHcSliderChangeWeighting($event, '.skills')"
+                                        (onChange)="onHcSliderChangeWeighting($event)"
                                     ></p-slider>
                                 </div>
-                                <div class="form-block-value skills">
-                                    <span>{{ stage?.weighting?.skills ? stage?.weighting?.skills : 0 }} </span>%
+                                <div class="form-block-value">
+                                    <span>{{ weighting?.skills.value }} </span>%
                                 </div>
                             </div>
                         </div>
@@ -141,11 +141,11 @@
                                         [min]="0"
                                         [max]="100"
                                         [step]="1"
-                                        (onChange)="onHcSliderChangeWeighting($event, '.industries')"
+                                        (onChange)="onHcSliderChangeWeighting($event)"
                                     ></p-slider>
                                 </div>
-                                <div class="form-block-value industries">
-                                    <span>{{ stage?.weighting?.industries ? stage?.weighting?.industries : 0 }} </span>%
+                                <div class="form-block-value">
+                                    <span>{{ weighting?.industries.value }} </span>%
                                 </div>
                             </div>
                         </div>
@@ -160,15 +160,11 @@
                                         [min]="0"
                                         [max]="100"
                                         [step]="1"
-                                        (onChange)="onHcSliderChangeWeighting($event, '.certifications')"
+                                        (onChange)="onHcSliderChangeWeighting($event)"
                                     ></p-slider>
                                 </div>
-                                <div class="form-block-value certifications">
-                                    <span
-                                        >{{
-                                            stage?.weighting?.certifications ? stage?.weighting?.certifications : 0
-                                        }} </span
-                                    >%
+                                <div class="form-block-value">
+                                    <span>{{ weighting?.certifications.value }} </span>%
                                 </div>
                             </div>
                         </div>
@@ -183,15 +179,11 @@
                                         [min]="0"
                                         [max]="100"
                                         [step]="1"
-                                        (onChange)="onHcSliderChangeWeighting($event, '.management_level')"
+                                        (onChange)="onHcSliderChangeWeighting($event)"
                                     ></p-slider>
                                 </div>
-                                <div class="form-block-value management_level">
-                                    <span
-                                        >{{
-                                            stage?.weighting?.management_level ? stage?.weighting?.management_level : 0
-                                        }} </span
-                                    >%
+                                <div class="form-block-value">
+                                    <span>{{ weighting?.management_level.value }} </span>%
                                 </div>
                             </div>
                         </div>
