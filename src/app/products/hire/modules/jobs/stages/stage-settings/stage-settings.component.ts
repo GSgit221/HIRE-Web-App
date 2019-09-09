@@ -66,9 +66,16 @@ export class StageSettingsComponent implements OnInit {
         this.contentLoading = true;
         this.jobService.getDevskillerTest().subscribe((res: any) => {
             console.log(res);
-            res.forEach((c) => {
-                this.devslillerOptions.push({ label: c.name, value: c.id });
-            });
+            if (res) {
+                res.forEach((c) => {
+                    this.devslillerOptions.push({ label: c.name, value: c.id });
+                });
+                if (this.assessment) {
+                    let control = this.assessment['controls'].find((c) => c['controls'].type.value === 'devskiller');
+                    let assessment = this.stage.assessment.find((c) => c.type === 'devskiller');
+                    control['controls'].option.patchValue(assessment.option);
+                }
+            }
         });
 
         this.jobService.getJob(this.jobId).subscribe((job: Job) => (this.job = job));
@@ -323,7 +330,7 @@ export class StageSettingsComponent implements OnInit {
                 this.fb.group({
                     type: [c.type, Validators.required],
                     option: [c.option, Validators.required],
-                    deadline: [c.deadline || null]
+                    deadline: [c.deadline || 5]
                 })
             );
         });
