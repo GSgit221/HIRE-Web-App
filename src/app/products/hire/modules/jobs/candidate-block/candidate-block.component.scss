@@ -93,6 +93,12 @@
             }
 
             &.orange {
+                .status-icon.acceptable {
+                    display: block;
+                }
+            }
+
+            &.yellow {
                 .status-icon.warning {
                     display: block;
                 }
