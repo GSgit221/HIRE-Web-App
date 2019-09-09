@@ -56,12 +56,19 @@ export class CandidateBlockComponent implements OnInit {
     }
 
     getComplianceRateClass() {
-        if (this.candidate.score >= this.resumeThreshold) {
-            return 'green';
-        } else if (this.candidate.score >= this.resumeThreshold - 15 && this.candidate.score < this.resumeThreshold) {
-            return 'orange';
+        if (this.candidate.hasUser && this.candidate.hasUserReviewed) {
+            if (this.candidate.score >= this.resumeThreshold) {
+                return 'green';
+            } else if (
+                this.candidate.score >= this.resumeThreshold - 15 &&
+                this.candidate.score < this.resumeThreshold
+            ) {
+                return 'orange';
+            } else {
+                return 'red';
+            }
         } else {
-            return 'red';
+            return 'yellow';
         }
     }
 
