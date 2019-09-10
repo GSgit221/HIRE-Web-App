@@ -68,6 +68,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
     stageId: string = '';
     videos: any[] = [];
     videoInterviewQuestions: any[] = [];
+    logicTest;
     @ViewChild('chart') chart: UIChart;
     baseUrl: string;
 
@@ -235,6 +236,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                     // Get assessments
                     if (this.candidate.stages_data && this.candidate.stages_data[this.jobId]) {
                         const stagesData = this.candidate.stages_data[this.jobId];
+                        console.log(stagesData);
                         for (const stageId in stagesData) {
                             if (stagesData.hasOwnProperty(stageId)) {
                                 const stageData = stagesData[stageId];
@@ -284,6 +286,11 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                                     if (this.chart) {
                                         this.chart.refresh();
                                     }
+                                }
+
+                                // Logic test
+                                if (stageData['logic-test']) {
+                                    this.logicTest = stageData['logic-test'];
                                 }
                             }
                         }

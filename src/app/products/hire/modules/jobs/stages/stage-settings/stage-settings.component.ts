@@ -72,7 +72,9 @@ export class StageSettingsComponent implements OnInit {
                 if (this.assessment) {
                     let control = this.assessment['controls'].find((c) => c['controls'].type.value === 'devskiller');
                     let assessment = this.stage.assessment.find((c) => c.type === 'devskiller');
-                    control['controls'].option.patchValue(assessment.option);
+                    if (control && assessment) {
+                        control['controls'].option.patchValue(assessment.option);
+                    }
                 }
             }
         });
@@ -218,6 +220,7 @@ export class StageSettingsComponent implements OnInit {
         const val = e.value;
         const points = this.pointsAvailable();
         if (points < 0) {
+            console.log(val, points);
             const correctValue = val + points;
             this.stageSettingsForm.get('weighting').patchValue({
                 [input]: correctValue
