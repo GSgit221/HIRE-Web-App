@@ -12,6 +12,11 @@ import { Stage } from '../../../../../../core/models/stage';
 import { FormHelperService } from './../../../../../../core/services/form-helper.service';
 import { JobService } from './../../../../../../core/services/job.service';
 
+import * as fromJobsStore from '../../store';
+import * as fromJobCandiatesSelector from '../../store/selectors/jobCandidates.selector';
+
+import { select, Store } from '@ngrx/store';
+
 @Component({
     selector: 'app-stage-settings',
     templateUrl: './stage-settings.component.html',
@@ -40,7 +45,8 @@ export class StageSettingsComponent implements OnInit {
         { label: 'Personality Assessment', value: 'personality' },
         { label: 'One Way Video Interview', value: 'video-interview' }
     ];
-    devslillerOptions = [];
+    devskillerOptions = [];
+    assessmentList = [];
 
     assessmentBenchmarkOptions = [{ label: 'Systems Engineer (JF5593)', value: 'system_engeneer' }];
     assessmentDeadlineOptions = [
@@ -50,6 +56,7 @@ export class StageSettingsComponent implements OnInit {
         { label: '20 Days', value: 20 }
     ];
     baseUrl: string;
+    stageHasCandidate = true;
 
     constructor(
         private jobService: JobService,
@@ -58,7 +65,8 @@ export class StageSettingsComponent implements OnInit {
         private fb: FormBuilder,
         private formHelper: FormHelperService,
         private questionnaireService: QuestionnaireService,
-        private utilities: UtilitiesService
+        private utilities: UtilitiesService,
+        private jobsStore: Store<fromJobsStore.JobsState>
     ) {
         this.baseUrl = this.utilities.getHireBaseUrl();
         this.jobId = this.route.snapshot.paramMap.get('id');
@@ -67,17 +75,31 @@ export class StageSettingsComponent implements OnInit {
         this.jobService.getDevskillerTest().subscribe((res: any) => {
             if (res) {
                 res.forEach((c) => {
-                    this.devslillerOptions.push({ label: c.name, value: c.id });
+                    this.devskillerOptions.push({ label: c.name, value: c.id });
                 });
-                if (this.assessment) {
+                if (this.assessment && this.stage.assessment) {
                     let control = this.assessment['controls'].find((c) => c['controls'].type.value === 'devskiller');
                     let assessment = this.stage.assessment.find((c) => c.type === 'devskiller');
-                    control['controls'].option.patchValue(assessment.option);
+                    if (control && assessment) {
+                        control['controls'].option.patchValue(assessment.option);
+                    }
                 }
             }
         });
 
-        this.jobService.getJob(this.jobId).subscribe((job: Job) => (this.job = job));
+        this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.jobId));
+        this.jobsStore
+            .pipe(select(fromJobCandiatesSelector.getJobCandidates, { jobId: this.jobId }))
+            .subscribe((candidates: any) => {
+                console.log(candidates);
+                this.stageHasCandidate = candidates.some((c) => c.stage[this.jobId] === this.stageId);
+                console.log(this.stageHasCandidate);
+            });
+
+        this.jobService.getJob(this.jobId).subscribe((job: Job) => {
+            this.job = job;
+            this.defineAssessmentStatus2();
+        });
         this.jobService.getStage(this.jobId, this.stageId).subscribe(
             (stage: Stage) => {
                 this.contentLoading = false;
@@ -109,6 +131,7 @@ export class StageSettingsComponent implements OnInit {
                         });
                     }
                     console.log(this.stage, this.stageSettingsForm.get('weighting'));
+
                     setTimeout(() => {
                         this.onHcSliderChange();
                     }, 100);
@@ -321,6 +344,7 @@ export class StageSettingsComponent implements OnInit {
     }
 
     addAssessmentGroup(type) {
+        console.log(type);
         let option = [''];
         if (type !== 'video-interview' && type !== 'devskiller') {
             option = ['-'];
@@ -332,8 +356,11 @@ export class StageSettingsComponent implements OnInit {
                 deadline: []
             })
         );
+        this.assessmentList.push({
+            type
+        });
 
-        console.log(this.assessment);
+        console.log(this.assessment, this.assessmentList);
     }
 
     populateAssessment(assessment) {
@@ -346,17 +373,74 @@ export class StageSettingsComponent implements OnInit {
                 })
             );
         });
+        // setTimeout(() => {
+        //     this.filterDevskillerOptions();
+        // }, 400)
     }
-    onAddAssessment(type) {
+
+    onDeleteAssessment(type) {
         let index = this.assessment['controls'].findIndex((c) => c['controls'].type.value === type);
-        if (index >= 0) {
-            this.assessment.removeAt(index);
-        } else {
-            this.addAssessmentGroup(type);
+        this.assessment.removeAt(index);
+
+        let index2 = this.assessmentList.findIndex((c) => c.type === type);
+        console.log(this.assessmentList, index2);
+
+        this.assessmentList.splice(index2, 1);
+    }
+
+    onAddAssessment(type) {
+        const form = this.stageSettingsForm;
+        if (!form.valid) {
+            this.formHelper.markFormGroupTouched(form);
+            console.log('FORM IS INVALID:', form, form.value);
+            return;
         }
+        this.addAssessmentGroup(type);
+        // if (index >= 0) {
+        //     this.assessment.removeAt(index);
+        // } else {
+        //     this.addAssessmentGroup(type);
+        // }
+    }
+
+    defineAssessmentStatus2() {
+        if (this.job && this.job.stages) {
+            this.job.stages.forEach((c) => {
+                if (c.assessment) {
+                    c.assessment.forEach((b) => {
+                        // console.log(b.type);
+                        if (b.type === 'devskiller') {
+                            let devskillerOption = this.devskillerOptions.find((c) => c.value === b.option);
+                            b.options = devskillerOption;
+                            this.assessmentList.push(b);
+                        } else if (b.type) {
+                            this.assessmentList.push(b);
+                            // return false;
+                        }
+                    });
+                }
+            });
+        }
+        console.log(this.assessmentList);
     }
 
     defineAssessmentStatus(type) {
-        return this.assessment['controls'].find((c) => c['controls'].type.value === type);
+        return this.assessmentList.find((c) => {
+            if (type === 'devskiller') {
+                // console.log(type)
+            }
+            return c.type === type;
+        });
+    }
+
+    filterDevskillerOptions() {
+        this.assessment['controls'].forEach((c) => {
+            if (c.value.type === 'devskiller') {
+                // console.log(c, this.devskillerOptions);
+                this.devskillerOptions = this.devskillerOptions.filter((a) => a.value !== c.value.option);
+                // console.log(c, this.devskillerOptions);
+            }
+        });
+        // this.devslillerOptions = this.devslillerOptions.
     }
 }

@@ -194,6 +194,18 @@
     .subtitle {
         margin: 0 0 10px;
         display: flex;
+        position: relative;
+        .btn-delete {
+            position: absolute;
+            right: 0;
+            color: #d7dbdf;
+            background: transparent;
+            transform: rotate(45deg);
+            height: auto;
+            font-size: 24px;
+            line-height: 1;
+            padding: 0 4px;
+        }
         .icon {
             width: 20px;
             height: 20px;
@@ -212,7 +224,7 @@
     }
     .assessment-list {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         font-size: 14px;
         text-align: center;
         margin: 0 0 34px;
@@ -233,6 +245,7 @@
     .assessment-item {
         margin: 0;
         flex: 0 0 99px;
+        margin-right: 15.5%;
         cursor: pointer;
         &:hover {
             color: $pink;
@@ -245,6 +258,7 @@
         }
         &.active {
             color: $pink;
+            display: none;
             .assessment-img {
                 border-color: $pink;
             }
