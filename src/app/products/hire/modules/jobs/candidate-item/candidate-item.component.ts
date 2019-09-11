@@ -238,15 +238,11 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                     }
 
                     // Get assessments
-                    if (this.job && this.job.stages) {
-                        this.job.stages.forEach((a) => {
-                            if (a.assessment) {
-                                a.assessment.forEach((n) => {
-                                    this.available_assessment[n.type] = true;
-                                });
-                            }
+                    if (this.candidate && this.candidate.assignments && this.candidate.assignments[this.jobId]) {
+                        this.candidate.assignments[this.jobId].forEach((a) => {
+                            this.available_assessment[a.type] = true;
                         });
-                        console.log(this.available_assessment);
+                        console.log(this.available_assessment, this.job.stages, this.candidate);
                     }
                     if (this.candidate.stages_data && this.candidate.stages_data[this.jobId]) {
                         const stagesData = this.candidate.stages_data[this.jobId];
@@ -308,7 +304,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                                     console.log(this.candidate.assignments);
                                     this.logicTest = stageData['logic-test'];
                                     this.logicTest.completed = moment
-                                        .unix(this.logicTest.completed_at / 1000)
+                                        .unix(this.logicTest.completed_at)
                                         .format('DD MMMM  YYYY');
                                     this.logicTest.invited_at = this.candidate.assignments[this.jobId].find(
                                         (c) => c.type === 'logic-test'
