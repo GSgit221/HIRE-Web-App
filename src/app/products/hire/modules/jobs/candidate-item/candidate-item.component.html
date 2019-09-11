@@ -401,8 +401,8 @@
                                 <div class="form-content-section">
                                     <div class="description-assessment">
                                         <strong class="title">Clevateam Logic Assessment</strong>
-                                        <p>Invitation sent: 08 September 2019</p>
-                                        <p>Assessment complete: 10 September 2019</p>
+                                        <p>Invitation sent: {{ logicTest?.invited }}</p>
+                                        <p>Assessment complete: {{ logicTest?.completed }}</p>
                                     </div>
                                     <div class="form-content-holder assessment-holder">
                                         <div class="assessment-result" [ngClass]="{ low: false }">

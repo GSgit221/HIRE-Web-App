@@ -15,6 +15,8 @@ import { EmailService, JobService, QuestionnaireService, UtilitiesService } from
 import * as fromStore from './../../../../../store';
 import * as fromSeflectors from './../../../../../store/selectors';
 
+import * as moment from 'moment';
+
 interface ISelect {
     label?: string;
     value: number | string;
@@ -241,7 +243,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                         stage.assessment.forEach((n) => {
                             this.available_assessment[n.type] = true;
                         });
-                        console.log(this.available_assessment);
+                        console.log(this.available_assessment, this.candidate);
                     }
                     if (this.candidate.stages_data && this.candidate.stages_data[this.jobId]) {
                         const stagesData = this.candidate.stages_data[this.jobId];
@@ -301,6 +303,17 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                                 // Logic test
                                 if (stageData['logic-test']) {
                                     this.logicTest = stageData['logic-test'];
+                                    this.logicTest.completed = moment
+                                        .unix(this.logicTest.completed_at / 1000)
+                                        .format('DD MMMM  YYYY');
+                                    this.logicTest.invited_at = this.candidate.assignments[this.jobId].find(
+                                        (c) => c.type === 'logic-test'
+                                    ).added_at;
+                                    this.logicTest.invited = moment
+                                        .unix(this.logicTest.invited_at)
+                                        .format('DD MMMM YYYY');
+
+                                    console.log(this.logicTest);
                                 }
                             }
                         }
