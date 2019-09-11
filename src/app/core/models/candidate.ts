@@ -31,4 +31,5 @@ export class Candidate {
     tags?: ITag[];
     hasUser: boolean;
     hasUserReviewed: boolean;
+    assignments?: any;
 }
