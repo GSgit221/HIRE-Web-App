@@ -263,7 +263,7 @@ export class StageSettingsComponent implements OnInit {
         if (points < 0) {
             const pointsToTake = Math.ceil(Math.abs(points) / 5);
             const currentValue = this.stageSettingsForm.get('weighting').value;
-            const keys = this._shuffle(Object.keys(currentValue).filter((k) => k !== input));
+            const keys = Object.keys(currentValue).filter((k) => k !== input);
             // console.log(val, points, '-', 'need to TAKE from others', pointsToTake);
             keys.forEach((key, index) => {
                 if (index !== keys.length - 1) {
@@ -312,7 +312,7 @@ export class StageSettingsComponent implements OnInit {
         } else if (points > 0) {
             const pointsToAdd = Math.ceil(Math.abs(points) / 5);
             const currentValue = this.stageSettingsForm.get('weighting').value;
-            const keys = this._shuffle(Object.keys(currentValue).filter((k) => k !== input));
+            const keys = Object.keys(currentValue).filter((k) => k !== input);
             // console.log(val, points, '-', 'need to ADD to others', pointsToAdd);
             keys.forEach((key, index) => {
                 if (index !== keys.length - 1) {
