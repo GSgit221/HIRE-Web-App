@@ -91,9 +91,7 @@ export class StageSettingsComponent implements OnInit {
         this.jobsStore
             .pipe(select(fromJobCandiatesSelector.getJobCandidates, { jobId: this.jobId }))
             .subscribe((candidates: any) => {
-                console.log(candidates);
                 this.stageHasCandidate = candidates.some((c) => c.stage[this.jobId] === this.stageId);
-                console.log(this.stageHasCandidate);
             });
 
         this.jobService.getJob(this.jobId).subscribe((job: Job) => {
@@ -104,7 +102,7 @@ export class StageSettingsComponent implements OnInit {
             (stage: Stage) => {
                 this.contentLoading = false;
                 this.stage = stage;
-                console.log(this.stage);
+                // console.log(this.stage);
                 if (this.stage.id === 'applied') {
                     this.stageSettingsForm = this.fb.group({
                         resume_matching_threshold: [this.stage.resume_matching_threshold],
@@ -130,7 +128,7 @@ export class StageSettingsComponent implements OnInit {
                             management_level: this.stage.weighting.management_level || 6
                         });
                     }
-                    console.log(this.stage, this.stageSettingsForm.get('weighting'));
+                    // console.log(this.stage, this.stageSettingsForm.get('weighting'));
 
                     setTimeout(() => {
                         this.onHcSliderChange();
@@ -220,7 +218,7 @@ export class StageSettingsComponent implements OnInit {
         });
 
         setTimeout(() => {
-            console.log(this.stageSettingsForm);
+            // console.log(this.stageSettingsForm);
         }, 3000);
     }
 
@@ -237,16 +235,137 @@ export class StageSettingsComponent implements OnInit {
         }
     }
 
+    _shuffle(array) {
+        let currentIndex = array.length;
+        let temporaryValue;
+        let randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    }
+
     onHcSliderChangeWeighting(e, input) {
         const val = e.value;
-        const points = this.pointsAvailable();
+        let points = this.pointsAvailable();
         if (points < 0) {
-            const correctValue = val + points;
-            this.stageSettingsForm.get('weighting').patchValue({
-                [input]: correctValue
+            const pointsToTake = Math.ceil(Math.abs(points) / 5);
+            const currentValue = this.stageSettingsForm.get('weighting').value;
+            const keys = this._shuffle(Object.keys(currentValue).filter((k) => k !== input));
+            // console.log(val, points, '-', 'need to TAKE from others', pointsToTake);
+            keys.forEach((key, index) => {
+                if (index !== keys.length - 1) {
+                    if (points) {
+                        // console.log('+', index, key, currentValue[key], pointsToTake, currentValue[key] - pointsToTake);
+                        if (currentValue[key] - pointsToTake >= 0) {
+                            this.stageSettingsForm.get('weighting').patchValue({
+                                [key]: currentValue[key] - pointsToTake
+                            });
+                            points = points + pointsToTake;
+                            // console.log(points);
+                        } else {
+                            // console.log(
+                            //     '-',
+                            //     index,
+                            //     key,
+                            //     currentValue[key],
+                            //     pointsToTake,
+                            //     currentValue[key] - pointsToTake
+                            // );
+                            const diff = currentValue[key] - pointsToTake;
+                            this.stageSettingsForm.get('weighting').patchValue({
+                                [key]: 0
+                            });
+                            points = points + diff;
+                            // console.log(points);
+                        }
+                    }
+                } else {
+                    // console.log('last one', index, key, currentValue[key], points);
+                    if (points) {
+                        if (currentValue[key] - points >= 0) {
+                            this.stageSettingsForm.get('weighting').patchValue({
+                                [key]: currentValue[key] - points
+                            });
+                            points = 0;
+                        } else {
+                            this.stageSettingsForm.get('weighting').patchValue({
+                                [key]: 0
+                            });
+                            points = 0;
+                        }
+                    }
+                }
+            });
+        } else if (points > 0) {
+            const pointsToAdd = Math.ceil(Math.abs(points) / 5);
+            const currentValue = this.stageSettingsForm.get('weighting').value;
+            const keys = this._shuffle(Object.keys(currentValue).filter((k) => k !== input));
+            // console.log(val, points, '-', 'need to ADD to others', pointsToAdd);
+            keys.forEach((key, index) => {
+                if (index !== keys.length - 1) {
+                    if (points) {
+                        // console.log('+', index, key, currentValue[key], pointsToAdd, currentValue[key] + pointsToAdd);
+                        if (currentValue[key] + pointsToAdd <= 100) {
+                            this.stageSettingsForm.get('weighting').patchValue({
+                                [key]: currentValue[key] + pointsToAdd
+                            });
+                            points = points - pointsToAdd;
+                            // console.log(points);
+                        } else {
+                            // console.log(
+                            //     '-',
+                            //     index,
+                            //     key,
+                            //     currentValue[key],
+                            //     pointsToAdd,
+                            //     currentValue[key] - pointsToAdd
+                            // );
+                            const diff = currentValue[key] + pointsToAdd - 100;
+                            this.stageSettingsForm.get('weighting').patchValue({
+                                [key]: 100
+                            });
+                            points = points - (pointsToAdd + diff);
+                            // console.log(points);
+                        }
+                    }
+                } else {
+                    // console.log('last one', index, key, currentValue[key], points);
+                    if (points) {
+                        if (currentValue[key] + points <= 100) {
+                            this.stageSettingsForm.get('weighting').patchValue({
+                                [key]: currentValue[key] + points
+                            });
+                            points = 0;
+                        } else {
+                            this.stageSettingsForm.get('weighting').patchValue({
+                                [key]: 100
+                            });
+                            points = 0;
+                        }
+                    }
+                }
             });
         }
+        // if (points < 0) {
+        //     const correctValue = val + points;
+        //     this.stageSettingsForm.get('weighting').patchValue({
+        //         [input]: correctValue
+        //     });
+        // }
     }
+
+    onHcSliderSlideEnd(e, input) {}
 
     pointsAvailable() {
         const val = this.stageSettingsForm.get('weighting').value;
@@ -421,7 +540,7 @@ export class StageSettingsComponent implements OnInit {
                 }
             });
         }
-        console.log(this.assessmentList);
+        // console.log(this.assessmentList);
     }
 
     defineAssessmentStatus(type) {

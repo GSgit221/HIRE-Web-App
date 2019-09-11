@@ -168,28 +168,30 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                             const stagesData = candidate.stages_data[this.job.id];
                             for (const stageId in stagesData) {
                                 const stage = this.stages.find(({ id }) => id === stageId);
-                                if (stagesData.hasOwnProperty(stageId)) {
-                                    const stageData = stagesData[stageId];
-                                    if (stage.assessment && stage.assessment.length > 0) {
-                                        this.personalityAssessments[candidate.id] = true;
-                                        stage.assessment.forEach(({ type }) => {
-                                            if (!this.personalityAssessments[candidate.id]) return;
-                                            if (type === 'personality' && !stageData.personality_assessment)
-                                                this.personalityAssessments[candidate.id] = false;
-                                            if (
-                                                type === 'video-interview' &&
-                                                (!stageData.videos || !stageData.videos.completed)
-                                            )
-                                                this.personalityAssessments[candidate.id] = false;
-                                        });
+                                if (stage) {
+                                    if (stagesData.hasOwnProperty(stageId)) {
+                                        const stageData = stagesData[stageId];
+                                        if (stage.assessment && stage.assessment.length > 0) {
+                                            this.personalityAssessments[candidate.id] = true;
+                                            stage.assessment.forEach(({ type }) => {
+                                                if (!this.personalityAssessments[candidate.id]) return;
+                                                if (type === 'personality' && !stageData.personality_assessment)
+                                                    this.personalityAssessments[candidate.id] = false;
+                                                if (
+                                                    type === 'video-interview' &&
+                                                    (!stageData.videos || !stageData.videos.completed)
+                                                )
+                                                    this.personalityAssessments[candidate.id] = false;
+                                            });
+                                        } else {
+                                            this.personalityAssessments[candidate.id] = true;
+                                        }
+                                        // console.log(candidate, stageData);
                                     } else {
-                                        this.personalityAssessments[candidate.id] = true;
+                                        this.personalityAssessments[candidate.id] = !(
+                                            stage.assessment && stage.assessment.length > 0
+                                        );
                                     }
-                                    // console.log(candidate, stageData);
-                                } else {
-                                    this.personalityAssessments[candidate.id] = !(
-                                        stage.assessment && stage.assessment.length > 0
-                                    );
                                 }
                             }
                         }
