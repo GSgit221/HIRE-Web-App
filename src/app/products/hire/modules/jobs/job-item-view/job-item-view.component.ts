@@ -359,6 +359,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     resume_file_new: c.resume_file_new,
                     application_completed: c.application_completed,
                     markedAsUnsuccessful: c.markedAsUnsuccessful,
+                    assignments: c.assignments,
                     score: c.score,
                     profile_image: c.profile_image,
                     id: c.id,

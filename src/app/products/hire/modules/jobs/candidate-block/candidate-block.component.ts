@@ -93,12 +93,20 @@ export class CandidateBlockComponent implements OnInit {
                 const stage = this.job.stages.find((s) => s.id === stageId);
                 if (stage && stage.assessment && stage.assessment.length) {
                     if (
-                        candidate.stages_data &&
-                        candidate.stages_data[this.job.id] &&
-                        candidate.stages_data[this.job.id][stageId]
+                        (candidate.stages_data &&
+                            candidate.stages_data[this.job.id] &&
+                            candidate.stages_data[this.job.id][stageId]) ||
+                        (candidate.assignments &&
+                            candidate.assignments[this.job.id] &&
+                            candidate.assignments[this.job.id].find((ass) => ass.stageId === stageId))
                     ) {
                         const completed = [];
-                        const stageData = candidate.stages_data[this.job.id][stageId];
+                        const stageData =
+                            candidate.stages_data &&
+                            candidate.stages_data[this.job.id] &&
+                            candidate.stages_data[this.job.id][stageId]
+                                ? candidate.stages_data[this.job.id][stageId]
+                                : {};
                         stage.assessment.forEach((ass) => {
                             if (ass.type === 'personality') {
                                 if (stageData.personality_assessment) {
@@ -109,6 +117,25 @@ export class CandidateBlockComponent implements OnInit {
                             }
                             if (ass.type === 'video-interview') {
                                 if (stageData.videos && stageData.videos.completed) {
+                                    completed.push(true);
+                                } else {
+                                    completed.push(false);
+                                }
+                            }
+
+                            if (ass.type === 'logic-test') {
+                                if (stageData['logic-test']) {
+                                    completed.push(true);
+                                } else {
+                                    completed.push(false);
+                                }
+                            }
+
+                            if (ass.type === 'devskiller') {
+                                const devAss = candidate.assignments[this.job.id].find(
+                                    (a) => a.stageId === stageId && ass.type === 'devskiller'
+                                );
+                                if (devAss.completed) {
                                     completed.push(true);
                                 } else {
                                     completed.push(false);
