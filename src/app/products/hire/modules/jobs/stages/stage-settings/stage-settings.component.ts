@@ -91,7 +91,9 @@ export class StageSettingsComponent implements OnInit {
         this.jobsStore
             .pipe(select(fromJobCandiatesSelector.getJobCandidates, { jobId: this.jobId }))
             .subscribe((candidates: any) => {
-                this.stageHasCandidate = candidates.some((c) => c.stage[this.jobId] === this.stageId);
+                this.stageHasCandidate = candidates.some(
+                    (c) => c.stage && c.stage[this.jobId] && c.stage[this.jobId] === this.stageId
+                );
             });
 
         this.jobService.getJob(this.jobId).subscribe((job: Job) => {
