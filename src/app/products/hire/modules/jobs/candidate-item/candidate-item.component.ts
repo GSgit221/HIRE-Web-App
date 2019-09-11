@@ -236,16 +236,17 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                     }
 
                     // Get assessments
+                    if (this.job && this.job.stages && this.candidate.stage && this.candidate.stage[this.jobId]) {
+                        let stage = this.job.stages.find((c) => c.id === this.candidate.stage[this.jobId]);
+                        stage.assessment.forEach((n) => {
+                            this.available_assessment[n.type] = true;
+                        });
+                        console.log(this.available_assessment);
+                    }
                     if (this.candidate.stages_data && this.candidate.stages_data[this.jobId]) {
                         const stagesData = this.candidate.stages_data[this.jobId];
                         console.log(stagesData, this.candidate);
-                        if (this.job && this.job.stages && this.candidate.stage && this.candidate.stage[this.jobId]) {
-                            let stage = this.job.stages.find((c) => c.id === this.candidate.stage[this.jobId]);
-                            stage.assessment.forEach((n) => {
-                                this.available_assessment[n.type] = true;
-                            });
-                            console.log(this.available_assessment);
-                        }
+
                         for (const stageId in stagesData) {
                             if (stagesData.hasOwnProperty(stageId)) {
                                 const stageData = stagesData[stageId];
