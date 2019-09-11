@@ -64,6 +64,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
     questionsAnswers: any = {};
 
     personality_assessment: any = null;
+    available_assessment = {};
 
     stageId: string = '';
     videos: any[] = [];
@@ -175,7 +176,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                 const jobRequest = this.jobService.getJob(this.jobId).pipe(
                     switchMap((job: Job) => {
                         this.job = job;
-
+                        console.log(this.job);
                         if (this.candidate.stage && this.candidate.stage[this.jobId]) {
                             this.stageId = this.candidate.stage[this.jobId];
                         }
@@ -195,6 +196,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                 const getVideoQuestions = this.questionnaireService.getVideoQuestions();
                 const getAllData = forkJoin([jobRequest, getVideoQuestions]).subscribe((response: any) => {
                     setTimeout(() => (this.contentLoading = false), 200);
+                    console.log(response);
                     const questions = response[0];
                     const videoInterviewQuestions = response[1];
                     if (videoInterviewQuestions) {
@@ -236,7 +238,14 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                     // Get assessments
                     if (this.candidate.stages_data && this.candidate.stages_data[this.jobId]) {
                         const stagesData = this.candidate.stages_data[this.jobId];
-                        console.log(stagesData);
+                        console.log(stagesData, this.candidate);
+                        if (this.job && this.job.stages && this.candidate.stage && this.candidate.stage[this.jobId]) {
+                            let stage = this.job.stages.find((c) => c.id === this.candidate.stage[this.jobId]);
+                            stage.assessment.forEach((n) => {
+                                this.available_assessment[n.type] = true;
+                            });
+                            console.log(this.available_assessment);
+                        }
                         for (const stageId in stagesData) {
                             if (stagesData.hasOwnProperty(stageId)) {
                                 const stageData = stagesData[stageId];

@@ -235,6 +235,13 @@
                                 </div>
 
                                 Personality Profile
+                                <button
+                                    *ngIf="!stageHasCandidate"
+                                    class="btn btn-delete"
+                                    (click)="onDeleteAssessment('personality')"
+                                >
+                                    +
+                                </button>
                             </div>
                             <div class="form-block" [formGroupName]="i">
                                 <div class="input-block">
@@ -295,6 +302,13 @@
                                     ></svg-icon>
                                 </div>
                                 One Way Video Interview
+                                <button
+                                    *ngIf="!stageHasCandidate"
+                                    class="btn btn-delete"
+                                    (click)="onDeleteAssessment('video')"
+                                >
+                                    +
+                                </button>
                             </div>
                             <div class="form-block fdr" [formGroupName]="i">
                                 <div class="input-block flex50p">
@@ -331,6 +345,13 @@
                                     ></svg-icon>
                                 </div>
                                 Simple Logic Test
+                                <button
+                                    *ngIf="!stageHasCandidate"
+                                    class="btn btn-delete"
+                                    (click)="onDeleteAssessment('logic-test')"
+                                >
+                                    +
+                                </button>
                             </div>
                             <div class="form-block" [formGroupName]="i">
                                 <div class="input-block">
@@ -354,6 +375,13 @@
                                     ></svg-icon>
                                 </div>
                                 Document Request
+                                <button
+                                    *ngIf="!stageHasCandidate"
+                                    class="btn btn-delete"
+                                    (click)="onDeleteAssessment('document')"
+                                >
+                                    +
+                                </button>
                             </div>
                             <div class="form-block" [formGroupName]="i">
                                 <div class="input-block">
@@ -374,13 +402,20 @@
                                     <img width="8" src="/assets/images/devskiller.jpg" />
                                 </div>
                                 Devskiller
+                                <button
+                                    *ngIf="!stageHasCandidate"
+                                    class="btn btn-delete"
+                                    (click)="onDeleteAssessment('devskiller')"
+                                >
+                                    +
+                                </button>
                             </div>
                             <div class="form-block fdr" [formGroupName]="i">
                                 <div class="input-block flex50p">
                                     <label class="form-block-label">Assessment</label>
                                     <div class="input-holder">
                                         <p-dropdown
-                                            [options]="devslillerOptions"
+                                            [options]="devskillerOptions"
                                             formControlName="option"
                                             [style]="{ width: '100%' }"
                                             placeholder="Please select test"
@@ -415,6 +450,7 @@
                                 <p>Personality Profile</p>
                             </div>
                             <div
+                                *ngIf="true"
                                 class="assessment-item"
                                 [ngClass]="{ active: defineAssessmentStatus('video-interview') }"
                                 (click)="onAddAssessment('video-interview')"
