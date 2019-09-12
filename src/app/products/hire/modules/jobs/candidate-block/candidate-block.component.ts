@@ -12,30 +12,19 @@ export class CandidateBlockComponent implements OnInit {
     @Input() job: Job;
     @Input() resumeThreshold: number;
     @Input() selected: boolean;
-    @Input() questionAnswer: any;
     @Input() personalityAssessment: any;
     @Input() video: any;
     @Output() onDeleting = new EventEmitter<boolean>();
     @Output() deleted = new EventEmitter<string>();
     @Output() onSelect = new EventEmitter<string>();
+    _candidateQuestions: any;
+    @Input('candidateQuestions')
+    set candidateQuestions(value: boolean) {
+        this._candidateQuestions = value;
+    }
     constructor(private jobService: JobService) {}
 
     ngOnInit() {}
-
-    // get hasStageData() {
-    //     return this.personalityAssessment === 'applied'
-    //         ? this.hasQuestion && !this.questionAnswer && this.candidate.score >= this.resumeThreshold
-    //         : this.personalityAssessment;
-    // }
-
-    // get hasQuestion() {
-    //     return (
-    //         this.candidate &&
-    //         this.candidate.job_specific &&
-    //         this.candidate.job_specific.questions &&
-    //         this.candidate.job_specific.questions[this.job.id]
-    //     );
-    // }
 
     titleCase(str: string) {
         return str
@@ -67,27 +56,29 @@ export class CandidateBlockComponent implements OnInit {
     }
 
     getComplianceRateClass() {
-        if (this.candidate.score >= this.resumeThreshold) {
-            return 'green';
-        } else if (this.candidate.score >= this.resumeThreshold - 15 && this.candidate.score < this.resumeThreshold) {
-            return 'orange';
+        if (this.candidate.hasUser && this.candidate.hasUserReviewed) {
+            if (this.candidate.score >= this.resumeThreshold) {
+                return 'green';
+            } else if (
+                this.candidate.score >= this.resumeThreshold - 15 &&
+                this.candidate.score < this.resumeThreshold
+            ) {
+                return 'orange';
+            } else {
+                return 'red';
+            }
         } else {
-            return 'red';
+            return 'yellow';
         }
-        // } else if(candidate.score < this.resumeThreshold - 15 ||
-        //     (candidate && candidate.markedAsUnsuccessful && candidate.markedAsUnsuccessful[this.job.id])) {
-        //     return 'red';
-        // }
     }
 
     getQuestionsClass() {
         if (this.candidate.hasUser && this.candidate.hasUserReviewed) {
-            return this.candidate &&
-                this.candidate.job_specific &&
-                this.candidate.job_specific.questions &&
-                this.candidate.job_specific.questions[this.job.id]
-                ? 'green'
-                : 'red';
+            if (this._candidateQuestions && this._candidateQuestions.hasAnswers) {
+                return this._candidateQuestions.knockoutIncorrect ? 'red' : 'green';
+            } else {
+                return 'grey';
+            }
         } else {
             return 'grey';
         }
@@ -102,12 +93,20 @@ export class CandidateBlockComponent implements OnInit {
                 const stage = this.job.stages.find((s) => s.id === stageId);
                 if (stage && stage.assessment && stage.assessment.length) {
                     if (
-                        candidate.stages_data &&
-                        candidate.stages_data[this.job.id] &&
-                        candidate.stages_data[this.job.id][stageId]
+                        (candidate.stages_data &&
+                            candidate.stages_data[this.job.id] &&
+                            candidate.stages_data[this.job.id][stageId]) ||
+                        (candidate.assignments &&
+                            candidate.assignments[this.job.id] &&
+                            candidate.assignments[this.job.id].find((ass) => ass.stageId === stageId))
                     ) {
                         const completed = [];
-                        const stageData = candidate.stages_data[this.job.id][stageId];
+                        const stageData =
+                            candidate.stages_data &&
+                            candidate.stages_data[this.job.id] &&
+                            candidate.stages_data[this.job.id][stageId]
+                                ? candidate.stages_data[this.job.id][stageId]
+                                : {};
                         stage.assessment.forEach((ass) => {
                             if (ass.type === 'personality') {
                                 if (stageData.personality_assessment) {
@@ -118,6 +117,25 @@ export class CandidateBlockComponent implements OnInit {
                             }
                             if (ass.type === 'video-interview') {
                                 if (stageData.videos && stageData.videos.completed) {
+                                    completed.push(true);
+                                } else {
+                                    completed.push(false);
+                                }
+                            }
+
+                            if (ass.type === 'logic-test') {
+                                if (stageData['logic-test']) {
+                                    completed.push(true);
+                                } else {
+                                    completed.push(false);
+                                }
+                            }
+
+                            if (ass.type === 'devskiller') {
+                                const devAss = candidate.assignments[this.job.id].find(
+                                    (a) => a.stageId === stageId && ass.type === 'devskiller'
+                                );
+                                if (devAss.completed) {
                                     completed.push(true);
                                 } else {
                                     completed.push(false);

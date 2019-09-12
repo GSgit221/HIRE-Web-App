@@ -94,6 +94,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     videos: any = {};
     personalityAssessments: any = {};
     questionsAnswers: any = {};
+    candidateQuestions: any = {};
 
     constructor(
         private router: Router,
@@ -141,10 +142,13 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.groupCandidatesByStage();
                 this.setAppliedCanidates(this.candidates);
 
-                // Get job
-                const jobRequest = this.questionnaireService.getQuestions(this.job.questionnaire);
+                // Get questions
+
+                const getQuestions = this.job.questionnaire
+                    ? this.questionnaireService.getQuestions(this.job.questionnaire)
+                    : of([]);
                 const getVideoQuestions = this.questionnaireService.getVideoQuestions();
-                const getAllData = forkJoin([jobRequest, getVideoQuestions]).subscribe((response: any) => {
+                const getAllData = forkJoin([getQuestions, getVideoQuestions]).subscribe((response: any) => {
                     const questions = response[0];
                     const videoInterviewQuestions = response[1];
                     if (videoInterviewQuestions) {
@@ -164,28 +168,30 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                             const stagesData = candidate.stages_data[this.job.id];
                             for (const stageId in stagesData) {
                                 const stage = this.stages.find(({ id }) => id === stageId);
-                                if (stagesData.hasOwnProperty(stageId)) {
-                                    const stageData = stagesData[stageId];
-                                    if (stage.assessment && stage.assessment.length > 0) {
-                                        this.personalityAssessments[candidate.id] = true;
-                                        stage.assessment.forEach(({ type }) => {
-                                            if (!this.personalityAssessments[candidate.id]) return;
-                                            if (type === 'personality' && !stageData.personality_assessment)
-                                                this.personalityAssessments[candidate.id] = false;
-                                            if (
-                                                type === 'video-interview' &&
-                                                (!stageData.videos || !stageData.videos.completed)
-                                            )
-                                                this.personalityAssessments[candidate.id] = false;
-                                        });
+                                if (stage) {
+                                    if (stagesData.hasOwnProperty(stageId)) {
+                                        const stageData = stagesData[stageId];
+                                        if (stage.assessment && stage.assessment.length > 0) {
+                                            this.personalityAssessments[candidate.id] = true;
+                                            stage.assessment.forEach(({ type }) => {
+                                                if (!this.personalityAssessments[candidate.id]) return;
+                                                if (type === 'personality' && !stageData.personality_assessment)
+                                                    this.personalityAssessments[candidate.id] = false;
+                                                if (
+                                                    type === 'video-interview' &&
+                                                    (!stageData.videos || !stageData.videos.completed)
+                                                )
+                                                    this.personalityAssessments[candidate.id] = false;
+                                            });
+                                        } else {
+                                            this.personalityAssessments[candidate.id] = true;
+                                        }
+                                        // console.log(candidate, stageData);
                                     } else {
-                                        this.personalityAssessments[candidate.id] = true;
+                                        this.personalityAssessments[candidate.id] = !(
+                                            stage.assessment && stage.assessment.length > 0
+                                        );
                                     }
-                                    console.log(candidate, stageData);
-                                } else {
-                                    this.personalityAssessments[candidate.id] = !(
-                                        stage.assessment && stage.assessment.length > 0
-                                    );
                                 }
                             }
                         }
@@ -227,6 +233,10 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     prepareQuestionsAnswers() {
         this.candidates.forEach((candidate) => {
             if (this.job && candidate && this.questions) {
+                const candidateQ = {
+                    hasAnswers: false,
+                    knockoutIncorrect: false
+                };
                 const questionsAnswers = [];
                 let isKnockout = false;
                 const candidateQuestions =
@@ -235,6 +245,10 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     candidate.job_specific.questions[this.job.id]
                         ? candidate.job_specific.questions[this.job.id]
                         : null;
+
+                if (candidateQuestions && Object.keys(candidateQuestions).length === this.questions.length) {
+                    candidateQ.hasAnswers = true;
+                }
                 this.questions.forEach((q) => {
                     const obj = {
                         isKnockout: ''
@@ -265,7 +279,9 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     }
                     questionsAnswers.push(obj);
                 });
+                candidateQ.knockoutIncorrect = isKnockout;
                 this.questionsAnswers[candidate.id] = isKnockout;
+                this.candidateQuestions[candidate.id] = candidateQ;
             }
         });
     }
@@ -330,7 +346,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     groupCandidatesByStage() {
-        console.time('group');
+        // console.time('group');
         this.candidatesByStage = {};
         this.candidates.forEach((c) => {
             if (c.stage && c.stage[this.job.id]) {
@@ -343,6 +359,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     resume_file_new: c.resume_file_new,
                     application_completed: c.application_completed,
                     markedAsUnsuccessful: c.markedAsUnsuccessful,
+                    assignments: c.assignments,
                     score: c.score,
                     profile_image: c.profile_image,
                     id: c.id,
@@ -363,12 +380,12 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 });
             }
         });
-        console.timeEnd('group');
+        // console.timeEnd('group');
     }
 
     setAppliedCanidates(candidates: Candidate[]) {
-        console.log('set applied candidates');
-        console.time('set');
+        // console.log('set applied candidates');
+        // console.time('set');
         const sC: Candidate[] = [];
         candidates.forEach((c) => {
             if (c.stage && c.stage[this.job.id]) {
@@ -398,7 +415,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         });
         this.appliedCandidates = applied;
         this.resetSelection();
-        console.timeEnd('set');
+        // console.timeEnd('set');
     }
 
     onLoadMore() {
@@ -562,7 +579,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     })
                     .subscribe(
                         (response) => {
-                            console.log(response);
+                            // console.log(response);
                         },
                         (errorResponse) => {
                             console.error(errorResponse);
@@ -585,7 +602,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onCandidateDragStart(candidate, stageId) {
         this.candidateIsDragged = true;
-        console.log('candidate', candidate, stageId);
+        // console.log('candidate', candidate, stageId);
         this.draggedFromStage = stageId;
     }
 

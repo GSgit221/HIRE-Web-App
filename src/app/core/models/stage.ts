@@ -8,4 +8,5 @@ export class Stage {
     order?: number;
     actions?: any;
     assessment?: any[];
+    weighting?: any;
 }

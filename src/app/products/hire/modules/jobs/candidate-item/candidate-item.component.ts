@@ -15,6 +15,8 @@ import { EmailService, JobService, QuestionnaireService, UtilitiesService } from
 import * as fromStore from './../../../../../store';
 import * as fromSeflectors from './../../../../../store/selectors';
 
+import * as moment from 'moment';
+
 interface ISelect {
     label?: string;
     value: number | string;
@@ -64,10 +66,12 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
     questionsAnswers: any = {};
 
     personality_assessment: any = null;
+    available_assessment = {};
 
     stageId: string = '';
     videos: any[] = [];
     videoInterviewQuestions: any[] = [];
+    logicTest;
     @ViewChild('chart') chart: UIChart;
     baseUrl: string;
 
@@ -174,7 +178,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                 const jobRequest = this.jobService.getJob(this.jobId).pipe(
                     switchMap((job: Job) => {
                         this.job = job;
-
+                        console.log(this.job);
                         if (this.candidate.stage && this.candidate.stage[this.jobId]) {
                             this.stageId = this.candidate.stage[this.jobId];
                         }
@@ -194,6 +198,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                 const getVideoQuestions = this.questionnaireService.getVideoQuestions();
                 const getAllData = forkJoin([jobRequest, getVideoQuestions]).subscribe((response: any) => {
                     setTimeout(() => (this.contentLoading = false), 200);
+                    console.log(response);
                     const questions = response[0];
                     const videoInterviewQuestions = response[1];
                     if (videoInterviewQuestions) {
@@ -233,8 +238,16 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                     }
 
                     // Get assessments
+                    if (this.candidate && this.candidate.assignments && this.candidate.assignments[this.jobId]) {
+                        this.candidate.assignments[this.jobId].forEach((a) => {
+                            this.available_assessment[a.type] = true;
+                        });
+                        console.log(this.available_assessment, this.job.stages, this.candidate);
+                    }
                     if (this.candidate.stages_data && this.candidate.stages_data[this.jobId]) {
                         const stagesData = this.candidate.stages_data[this.jobId];
+                        console.log(stagesData, this.candidate);
+
                         for (const stageId in stagesData) {
                             if (stagesData.hasOwnProperty(stageId)) {
                                 const stageData = stagesData[stageId];
@@ -284,6 +297,23 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                                     if (this.chart) {
                                         this.chart.refresh();
                                     }
+                                }
+
+                                // Logic test
+                                if (stageData['logic-test']) {
+                                    console.log(this.candidate.assignments);
+                                    this.logicTest = stageData['logic-test'];
+                                    this.logicTest.completed = moment
+                                        .unix(this.logicTest.completed_at)
+                                        .format('DD MMMM  YYYY');
+                                    this.logicTest.invited_at = this.candidate.assignments[this.jobId].find(
+                                        (c) => c.type === 'logic-test'
+                                    ).added_at;
+                                    this.logicTest.invited = moment
+                                        .unix(this.logicTest.invited_at)
+                                        .format('DD MMMM YYYY');
+
+                                    console.log(this.logicTest);
                                 }
                             }
                         }

@@ -54,7 +54,7 @@ export class DragEnterDirective implements OnInit {
                 }
             } else {
                 const leaveTarget = e.target;
-                console.log(leaveTarget);
+                // console.log(leaveTarget);
                 el.classList.remove('over');
                 if (this.appDragEnterParentClass) {
                     el.parentNode.classList.remove(this.appDragEnterParentClass);

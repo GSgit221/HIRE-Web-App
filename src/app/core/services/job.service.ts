@@ -253,4 +253,8 @@ export class JobService {
             data
         );
     }
+
+    getDevskillerTest() {
+        return this.http.get(`${this.apiURL}/devskiller-tests`);
+    }
 }

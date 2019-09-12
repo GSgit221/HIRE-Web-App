@@ -440,6 +440,7 @@
 
     .description {
         font-size: $font-size-low;
+        flex: 0 0 31%;
         padding: 0 0 0 18px;
         line-height: 22px;
         position: relative;
@@ -662,6 +663,7 @@
     .interview-title {
         margin: 0 0 34px;
         font-weight: 500;
+        position: relative;
     }
 }
 
@@ -926,4 +928,82 @@
         margin-top: 6px;
         margin-bottom: 15px;
     }
+}
+
+.assessment-result {
+    width: 142px;
+    height: 71px;
+    border-radius: 5px;
+    border: solid 1px $pink;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 14px;
+    padding: 14px 0 0;
+    margin: -6px 0 0 auto;
+    &.low {
+        border-color: #e02020;
+    }
+    span {
+        font-size: 35px;
+        line-height: 33px;
+    }
+    p {
+        margin: 0 0 4px;
+    }
+}
+.form-content-section {
+    .description-assessment {
+        flex: 0 0 60%;
+        p {
+            margin: 0 0 1px;
+            color: $grey;
+        }
+        strong {
+            margin: 0 0 3px;
+            display: block;
+        }
+    }
+}
+
+.devskiller-skills {
+    width: 100%;
+    margin: 20px 0 20px;
+    .item-skill {
+        display: flex;
+        align-items: center;
+        margin: 0 0 9px;
+    }
+    .name {
+        flex: 0 0 22%;
+    }
+    .slider {
+        flex: 1;
+        height: 3px;
+        background: $grey-border;
+        margin: 0 0 0 10px;
+        border-radius: 10px;
+        span {
+            height: 7px;
+            width: 40%;
+            background: $pink;
+            display: block;
+            border-radius: 10px;
+            position: relative;
+            top: -2px;
+        }
+    }
+    .result {
+        flex: 0 0 50px;
+        text-align: right;
+    }
+}
+.report-link {
+    position: absolute;
+    right: 0;
+    font-size: 14px;
+    font-weight: normal;
+    text-decoration: underline;
 }
