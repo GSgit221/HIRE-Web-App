@@ -35,7 +35,7 @@
         <ng-template #noFirstName>
             <strong class="title" [ngClass]="{ read: hasRead }">{{ candidate.email }}</strong>
         </ng-template>
-        <span class="position" *ngIf="candidate.employment_history"
+        <span class="position" *ngIf="candidate.employment_history && candidate.employment_history[0]"
             >{{ candidate.employment_history[0].title | titlecase }}
             @
             {{ candidate.employment_history[0].company | titlecase }}</span
