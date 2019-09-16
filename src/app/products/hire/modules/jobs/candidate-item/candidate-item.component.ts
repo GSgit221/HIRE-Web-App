@@ -309,6 +309,9 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                                     this.logicTest.invited_at = this.candidate.assignments[this.jobId].find(
                                         (c) => c.type === 'logic-test'
                                     ).added_at;
+                                    if (this.logicTest.score && this.logicTest.score > 10) {
+                                        this.logicTest.score = 10;
+                                    }
                                     this.logicTest.invited = moment
                                         .unix(this.logicTest.invited_at)
                                         .format('DD MMMM YYYY');
