@@ -401,7 +401,9 @@
                                 <div class="form-content-section">
                                     <div class="description-assessment">
                                         <strong class="title">Clevateam Logic Assessment</strong>
-                                        <p>Invitation sent: {{ logicTest?.invited }}</p>
+                                        <p *ngIf="logicTest && logicTest.invited">
+                                            Invitation sent: {{ logicTest.invited }}
+                                        </p>
                                         <p>Assessment complete: {{ logicTest?.completed }}</p>
                                     </div>
                                     <div class="form-content-holder assessment-holder">
