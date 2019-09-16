@@ -376,7 +376,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     stage: c.stage || {},
                     stages_data: c.stages_data || {},
                     hasUser: c.hasUser || false,
-                    hasUserReviewed: c.hasUserReviewed || false
+                    hasUserReviewed: c.hasUserReviewed || false,
+                    matching: c.matching || null
                 });
             }
         });
