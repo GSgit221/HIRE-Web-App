@@ -56,7 +56,7 @@ export class CandidateBlockComponent implements OnInit {
     }
 
     getComplianceRateClass() {
-        if (this.candidate.hasUser && this.candidate.hasUserReviewed) {
+        if ((this.candidate.hasUser && this.candidate.hasUserReviewed) || this.candidate.matching) {
             if (this.candidate.score >= this.resumeThreshold) {
                 return 'green';
             } else if (
@@ -73,7 +73,7 @@ export class CandidateBlockComponent implements OnInit {
     }
 
     getQuestionsClass() {
-        if (this.candidate.hasUser && this.candidate.hasUserReviewed) {
+        if ((this.candidate.hasUser && this.candidate.hasUserReviewed) || this.candidate.matching) {
             if (this._candidateQuestions && this._candidateQuestions.hasAnswers) {
                 return this._candidateQuestions.knockoutIncorrect ? 'red' : 'green';
             } else {
