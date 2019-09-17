@@ -17,7 +17,7 @@ import { select, Store } from '@ngrx/store';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin, of, Subscription } from 'rxjs';
 
-import { Candidate, EmailTemplate, Job, Stage, User } from '../../../../../core/models';
+import { Candidate, Job, Stage, User } from '../../../../../core/models';
 import { CandidateService, EmailService, JobService, QuestionnaireService } from '../../../../../core/services';
 import * as fromStore from '../../../../../store';
 import * as fromJobsStore from '../store';
@@ -78,7 +78,6 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         columnId: 'applied',
         candidates: {}
     };
-    emailTemplates: ISelect[];
     declineModalVisible: boolean = false;
     declineModalForm: FormGroup;
     modalSubmission: object = {};
@@ -207,20 +206,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             this.job.id
         }/resume`;
 
-        // Email templates
-        this.emailService.findAll().subscribe((emailTemplates: EmailTemplate[]) => {
-            console.log('Email templates:', emailTemplates);
-            if (emailTemplates && emailTemplates.length) {
-                this.emailTemplates = emailTemplates
-                    .filter(({ type }) => type && type.indexOf('decline_template_') !== -1)
-                    .map(({ id, title }) => ({ value: id, label: title }));
-            }
-        });
-
         // Decline modal
-        this.declineModalForm = this.fb.group({
-            emailTemplate: [null, Validators.required]
-        });
+        this.declineModalForm = this.fb.group({});
     }
 
     ngAfterViewInit() {}
@@ -698,7 +685,6 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     async onSelectionDecline() {
         if (this.declineModalForm.valid) {
-            const { emailTemplate: emailTemplateId } = this.declineModalForm.value;
             const {
                 job: { id: jobId },
                 selection: { candidates }
@@ -708,7 +694,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             this.contentLoading = true;
             for (let candidateId of candidateIds) {
                 await new Promise((res, rej) =>
-                    this.jobService.deleteCandidate(jobId, candidateId, emailTemplateId).subscribe(() => {
+                    this.jobService.deleteCandidate(jobId, candidateId).subscribe(() => {
                         console.log(`Candidate <${candidateId}> was declined`);
                         const index = this.candidates.findIndex(({ id }) => id === candidateId);
                         this.candidates.splice(index, 1);
