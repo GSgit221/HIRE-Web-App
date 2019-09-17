@@ -132,9 +132,12 @@ export class CandidateBlockComponent implements OnInit {
                             }
 
                             if (ass.type === 'devskiller') {
-                                const devAss = candidate.assignments[this.job.id].find(
-                                    (a) => a.stageId === stageId && ass.type === 'devskiller'
-                                );
+                                const devAss =
+                                    candidate.assignments && candidate.assignments[this.job.id]
+                                        ? candidate.assignments[this.job.id].find(
+                                              (a) => a.stageId === stageId && ass.type === 'devskiller'
+                                          )
+                                        : {};
                                 if (devAss.completed) {
                                     completed.push(true);
                                 } else {
