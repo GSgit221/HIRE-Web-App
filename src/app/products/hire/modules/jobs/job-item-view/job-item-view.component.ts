@@ -148,7 +148,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     ? this.questionnaireService.getQuestions(this.job.questionnaire)
                     : of([]);
                 const getVideoQuestions = this.questionnaireService.getVideoQuestions();
-                const getAllData = forkJoin([getQuestions, getVideoQuestions]).subscribe((response: any) => {
+                forkJoin([getQuestions, getVideoQuestions]).subscribe((response: any) => {
                     const questions = response[0];
                     const videoInterviewQuestions = response[1];
                     if (videoInterviewQuestions) {
