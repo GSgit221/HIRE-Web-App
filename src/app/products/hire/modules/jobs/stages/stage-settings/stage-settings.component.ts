@@ -57,6 +57,7 @@ export class StageSettingsComponent implements OnInit {
     ];
     baseUrl: string;
     stageHasCandidate = true;
+    errorModalVisible = false;
 
     constructor(
         private jobService: JobService,
@@ -401,17 +402,25 @@ export class StageSettingsComponent implements OnInit {
 
     onDelete() {
         console.log('onDelete');
-        this.contentLoading = true;
-        this.jobService.removeStage(this.jobId, this.stageId).subscribe(
-            () => {
-                this.contentLoading = false;
-                this.router.navigateByUrl(`${this.baseUrl}/jobs/${this.jobId}`);
-            },
-            (error) => {
-                console.log(error);
-                this.contentLoading = false;
-            }
-        );
+        if (this.stageHasCandidate) {
+            this.errorModalVisible = true;
+        } else {
+            this.contentLoading = true;
+            this.jobService.removeStage(this.jobId, this.stageId).subscribe(
+                () => {
+                    this.contentLoading = false;
+                    this.router.navigateByUrl(`${this.baseUrl}/jobs/${this.jobId}`);
+                },
+                (error) => {
+                    console.log(error);
+                    this.contentLoading = false;
+                }
+            );
+        }
+    }
+
+    onShowModal(visible) {
+        this.errorModalVisible = visible;
     }
 
     get actions(): FormArray {

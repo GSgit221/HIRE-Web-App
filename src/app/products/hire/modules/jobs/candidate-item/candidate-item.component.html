@@ -829,22 +829,11 @@
     </div>
     <div class="p-body">
         <p>
-            You are about to decline <b>this</b> candidate from <b>{{ job.job_role }}</b> role. Please select the email
-            template you’d like to use to decline them
+            You are about to decline <b>this</b> candidate from <b>{{ job.job_role }}</b> role.
         </p>
         <form [formGroup]="declineModalForm" class="action">
             <div class="input-block">
-                <div class="input-holder">
-                    <p-dropdown
-                        [options]="emailTemplates"
-                        formControlName="emailTemplate"
-                        [style]="{ width: '100%' }"
-                        placeholder="Please select decline email template"
-                    ></p-dropdown>
-                    <div class="error-message" *ngIf="isValidField('declineModalForm', 'emailTemplate')">
-                        Email template is required
-                    </div>
-                </div>
+                <div class="input-holder"></div>
             </div>
             <button class="btn danger" (click)="onDecline()">
                 Decline
