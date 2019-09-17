@@ -348,7 +348,56 @@
                                 Devskiller Assessment
                                 <a href="" *ngIf="false" class="report-link">View report on Devskiller</a>
                             </h3>
-                            <ng-template #waitingForDEvskiller>
+                            <div
+                                class="interview-holder"
+                                *ngIf="
+                                    devskillerTest &&
+                                        devskillerTest.completed &&
+                                        devskillerTest.candidate &&
+                                        devskillerTest.results;
+                                    else waitingForDevskiller
+                                "
+                            >
+                                <div class="form-content-section">
+                                    <div class="description-assessment">
+                                        <strong class="title">{{ devskillerTest.exam.name }}</strong>
+                                        <p>Invitation code: {{ devskillerTest.invitationCode }}</p>
+                                        <p>Invitation sent: {{ devskillerTest.invitationSent }}</p>
+                                        <p>Assessment complete: {{ devskillerTest.assessmentComplete }}</p>
+                                    </div>
+                                    <div class="form-content-holder assessment-holder">
+                                        <div class="assessment-result" [ngClass]="{ low: true }">
+                                            <span
+                                                >{{
+                                                    math.round(
+                                                        ((devskillerTest.results.scoredPoints || 0) /
+                                                            devskillerTest.results.maxPoints) *
+                                                            100
+                                                    )
+                                                }}%</span
+                                            >
+                                            <p>
+                                                {{ devskillerTest.results.scoredPoints || 0 }} of
+                                                {{ devskillerTest.results.maxPoints }} points
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="devskiller-skills">
+                                    <div class="item-skill" *ngFor="let skill of devskillerTest.results.skills">
+                                        <div class="name">{{ skill.name }}</div>
+                                        <div class="slider">
+                                            <span
+                                                [ngStyle]="{ width: (skill.scoredPoints / skill.maxPoints) * 100 }"
+                                            ></span>
+                                        </div>
+                                        <div class="result">
+                                            {{ math.round((skill.scoredPoints / skill.maxPoints) * 100) }}%
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <ng-template #waitingForDevskiller>
                                 <div class="candidate-attention">
                                     <img
                                         alt="warning"
@@ -360,40 +409,6 @@
                                     <span>Waiting for the candidate to submit their Devskiller Test</span>
                                 </div>
                             </ng-template>
-                            <div class="interview-holder" *ngIf="false; else waitingForDEvskiller">
-                                <div class="form-content-section">
-                                    <div class="description-assessment">
-                                        <strong class="title"
-                                            >Middle C# Developer | ASP.NET | RESTful Reservations Application</strong
-                                        >
-                                        <p>Invitation code: E7UU-WUER-PFET</p>
-                                        <p>Invitation sent: 08 September 2019</p>
-                                        <p>Assessment complete: 10 September 2019</p>
-                                    </div>
-                                    <div class="form-content-holder assessment-holder">
-                                        <div class="assessment-result" [ngClass]="{ low: true }">
-                                            <span>46%</span>
-                                            <p>26 of 57 points</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="devskiller-skills">
-                                    <div class="item-skill">
-                                        <div class="name">ASP.NET</div>
-                                        <div class="slider">
-                                            <span></span>
-                                        </div>
-                                        <div class="result">73%</div>
-                                    </div>
-                                    <div class="item-skill">
-                                        <div class="name">REST REST REST REST REST REST RESTRESTREST</div>
-                                        <div class="slider">
-                                            <span></span>
-                                        </div>
-                                        <div class="result">73%</div>
-                                    </div>
-                                </div>
-                            </div>
                         </ng-container>
                         <ng-container *ngIf="available_assessment['logic-test']">
                             <h3 class="interview-title">Logic Assessment</h3>

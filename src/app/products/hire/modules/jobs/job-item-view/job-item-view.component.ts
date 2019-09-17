@@ -239,12 +239,18 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 };
                 const questionsAnswers = [];
                 let isKnockout = false;
-                const candidateQuestions =
+                let candidateQuestions = null;
+                if (
                     candidate.job_specific &&
                     candidate.job_specific.questions &&
                     candidate.job_specific.questions[this.job.id]
-                        ? candidate.job_specific.questions[this.job.id]
-                        : null;
+                ) {
+                    candidateQuestions = candidate.job_specific.questions[this.job.id];
+                }
+
+                if (candidate && candidate.questions && candidate.questions[this.job.id]) {
+                    candidateQuestions = candidate.questions[this.job.id];
+                }
 
                 if (candidateQuestions && Object.keys(candidateQuestions).length === this.questions.length) {
                     candidateQ.hasAnswers = true;
