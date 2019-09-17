@@ -150,7 +150,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     ? this.questionnaireService.getQuestions(this.job.questionnaire)
                     : of([]);
                 const getVideoQuestions = this.questionnaireService.getVideoQuestions();
-                const getAllData = forkJoin([getQuestions, getVideoQuestions]).subscribe((response: any) => {
+                forkJoin([getQuestions, getVideoQuestions]).subscribe((response: any) => {
                     const questions = response[0];
                     const videoInterviewQuestions = response[1];
                     if (videoInterviewQuestions) {
@@ -229,12 +229,18 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 };
                 const questionsAnswers = [];
                 let isKnockout = false;
-                const candidateQuestions =
+                let candidateQuestions = null;
+                if (
                     candidate.job_specific &&
                     candidate.job_specific.questions &&
                     candidate.job_specific.questions[this.job.id]
-                        ? candidate.job_specific.questions[this.job.id]
-                        : null;
+                ) {
+                    candidateQuestions = candidate.job_specific.questions[this.job.id];
+                }
+
+                if (candidate && candidate.questions && candidate.questions[this.job.id]) {
+                    candidateQuestions = candidate.questions[this.job.id];
+                }
 
                 if (candidateQuestions && Object.keys(candidateQuestions).length === this.questions.length) {
                     candidateQ.hasAnswers = true;
