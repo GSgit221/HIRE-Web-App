@@ -408,12 +408,19 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
         if (this.job && this.candidate && this.questions) {
             const questionsAnswers = [];
             let isKnockout = false;
-            const candidateQuestions =
+
+            let candidateQuestions = null;
+            if (
                 this.candidate.job_specific &&
                 this.candidate.job_specific.questions &&
-                this.candidate.job_specific.questions[this.jobId]
-                    ? this.candidate.job_specific.questions[this.jobId]
-                    : null;
+                this.candidate.job_specific.questions[this.job.id]
+            ) {
+                candidateQuestions = this.candidate.job_specific.questions[this.job.id];
+            }
+
+            if (this.candidate && this.candidate.questions && this.candidate.questions[this.job.id]) {
+                candidateQuestions = this.candidate.questions[this.job.id];
+            }
             this.questions.forEach((q) => {
                 const obj = {
                     text: q.text,
