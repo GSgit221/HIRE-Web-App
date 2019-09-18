@@ -275,12 +275,6 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                             //     this.assignments.push(ass);
                             // }
                         });
-                        // console.log(this.available_assessment, this.job.stages, this.candidate);
-                        console.log(this.available_assessment);
-                        console.log(this.devskillerTest);
-
-                        // console.log('ASSIGNMENTS');
-                        // console.log(this.assignments);
                     }
                     if (this.candidate.stages_data && this.candidate.stages_data[this.jobId]) {
                         const stagesData = this.candidate.stages_data[this.jobId];

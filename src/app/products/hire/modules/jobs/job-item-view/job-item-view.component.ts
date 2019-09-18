@@ -135,10 +135,10 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.candidatesSubscription = this.jobsStore
             .pipe(select(fromJobCandiatesSelector.getJobCandidates, { jobId: this.job.id }))
             .subscribe((candidates: any) => {
-                console.log('Candidates were loaded:', candidates);
+                console.log('Job candidates:', candidates);
                 this.initialLoad = true;
                 this.contentLoading = false;
-                this.candidates = candidates.map(this._isDD);
+                this.candidates = candidates;
                 this.groupCandidatesByStage();
                 this.setAppliedCanidates(this.candidates);
 
@@ -804,27 +804,6 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         setTimeout(() => {
             this.stageInput.nativeElement.focus();
         }, 1);
-    }
-
-    _isDD(c) {
-        if (c.email.indexOf('dimensiondata') !== -1) {
-            c.isDdEmployee = true;
-        }
-        if (
-            c.employment_history &&
-            c.employment_history.length &&
-            c.employment_history[0].end_date &&
-            c.employment_history[0].end_date.toLowerCase() === 'current'
-        ) {
-            if (
-                c.employment_history[0].title.toLowerCase().indexOf('dimension data') !== -1 ||
-                c.employment_history[0].company.toLowerCase().indexOf('dimension data') !== -1
-            ) {
-                c.isDdEmployee = true;
-            }
-        }
-        if (!c.read) c.read = [];
-        return c;
     }
 
     ngOnDestroy(): void {
