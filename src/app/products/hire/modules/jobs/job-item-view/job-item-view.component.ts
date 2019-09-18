@@ -17,7 +17,7 @@ import { select, Store } from '@ngrx/store';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin, of, Subscription } from 'rxjs';
 
-import { Candidate, EmailTemplate, Job, Stage, User } from '../../../../../core/models';
+import { Candidate, Job, Stage, User } from '../../../../../core/models';
 import { CandidateService, EmailService, JobService, QuestionnaireService } from '../../../../../core/services';
 import * as fromStore from '../../../../../store';
 import * as fromJobsStore from '../store';
@@ -59,7 +59,6 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     uploadError: string;
     droppedFiles: File[] = [];
     candidates: Candidate[];
-    draggedCandidate: Candidate;
     draggedFromStage: any = null;
     appliedCandidates: any = {
         visible: [],
@@ -78,7 +77,6 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         columnId: 'applied',
         candidates: {}
     };
-    emailTemplates: ISelect[];
     declineModalVisible: boolean = false;
     declineModalForm: FormGroup;
     modalSubmission: object = {};
@@ -95,6 +93,10 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     personalityAssessments: any = {};
     questionsAnswers: any = {};
     candidateQuestions: any = {};
+
+    draggedCandidate: Candidate;
+    droppedStage: string;
+    confirmModalVisible: boolean = false;
 
     constructor(
         private router: Router,
@@ -135,10 +137,10 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.candidatesSubscription = this.jobsStore
             .pipe(select(fromJobCandiatesSelector.getJobCandidates, { jobId: this.job.id }))
             .subscribe((candidates: any) => {
-                console.log('Candidates were loaded:', candidates);
+                console.log('Job candidates:', candidates);
                 this.initialLoad = true;
                 this.contentLoading = false;
-                this.candidates = candidates.map(this._isDD);
+                this.candidates = candidates;
                 this.groupCandidatesByStage();
                 this.setAppliedCanidates(this.candidates);
 
@@ -207,20 +209,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             this.job.id
         }/resume`;
 
-        // Email templates
-        this.emailService.findAll().subscribe((emailTemplates: EmailTemplate[]) => {
-            console.log('Email templates:', emailTemplates);
-            if (emailTemplates && emailTemplates.length) {
-                this.emailTemplates = emailTemplates
-                    .filter(({ type }) => type && type.indexOf('decline_template_') !== -1)
-                    .map(({ id, title }) => ({ value: id, label: title }));
-            }
-        });
-
         // Decline modal
-        this.declineModalForm = this.fb.group({
-            emailTemplate: [null, Validators.required]
-        });
+        this.declineModalForm = this.fb.group({});
     }
 
     ngAfterViewInit() {}
@@ -558,6 +548,22 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         // console.log('drop', event.dragData, stageId);
         this.candidateIsDragged = false;
         const candidate = event.dragData;
+
+        this.draggedCandidate = candidate;
+        this.droppedStage = stageId;
+
+        if (this.getStageCompletion(candidate)) {
+            this.proceedCandidate();
+        } else {
+            this.confirmModalVisible = true;
+        }
+    }
+
+    proceedCandidate() {
+        this.confirmModalVisible = false;
+        const candidate = this.draggedCandidate;
+        const stageId = this.droppedStage;
+
         const candidateIndex = this.candidates.findIndex((c) => c.id === candidate.id);
         if (!this.candidates[candidateIndex].stage) {
             this.candidates[candidateIndex].stage = { [this.job.id]: 'applied' };
@@ -596,6 +602,149 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         this.groupCandidatesByStage();
         this.setAppliedCanidates(this.candidates);
+    }
+
+    getStageCompletion(candidate) {
+        return this.getCurrentStageClass(candidate) === 'green';
+    }
+
+    getComplianceRateClass(candidate) {
+        if ((candidate.hasUser && candidate.hasUserReviewed) || candidate.matching) {
+            if (candidate.score >= this.resumeThreshold) {
+                return 'green';
+            } else if (candidate.score >= this.resumeThreshold - 15 && candidate.score < this.resumeThreshold) {
+                return 'orange';
+            } else {
+                return 'red';
+            }
+        } else {
+            return 'yellow';
+        }
+    }
+
+    getQuestionsClass(candidate) {
+        if ((candidate.hasUser && candidate.hasUserReviewed) || candidate.matching) {
+            const _candidateQuestions = this.candidateQuestions[candidate.id];
+            if (_candidateQuestions && _candidateQuestions.hasAnswers) {
+                return _candidateQuestions.knockoutIncorrect ? 'red' : 'green';
+            } else {
+                return 'grey';
+            }
+        } else {
+            return 'grey';
+        }
+    }
+
+    getCurrentStageClass(candidate) {
+        //define stage
+        if (candidate.stage && candidate.stage[this.job.id] && candidate.stage[this.job.id] !== 'applied') {
+            const stageId = candidate.stage[this.job.id];
+            // need to check stages data
+            if (this.job && this.job.stages && this.job.stages.find((s) => s.id === stageId)) {
+                const stage = this.job.stages.find((s) => s.id === stageId);
+                if (stage && stage.assessment && stage.assessment.length) {
+                    if (
+                        (candidate.stages_data &&
+                            candidate.stages_data[this.job.id] &&
+                            candidate.stages_data[this.job.id][stageId]) ||
+                        (candidate.assignments &&
+                            candidate.assignments[this.job.id] &&
+                            candidate.assignments[this.job.id].find((ass) => ass.stageId === stageId))
+                    ) {
+                        const completed = [];
+                        const stageData =
+                            candidate.stages_data &&
+                            candidate.stages_data[this.job.id] &&
+                            candidate.stages_data[this.job.id][stageId]
+                                ? candidate.stages_data[this.job.id][stageId]
+                                : {};
+                        stage.assessment.forEach((ass) => {
+                            if (ass.type === 'personality') {
+                                if (stageData.personality_assessment) {
+                                    completed.push(true);
+                                } else {
+                                    completed.push(false);
+                                }
+                            }
+                            if (ass.type === 'video-interview') {
+                                if (stageData.videos && stageData.videos.completed) {
+                                    completed.push(true);
+                                } else {
+                                    completed.push(false);
+                                }
+                            }
+
+                            if (ass.type === 'logic-test') {
+                                if (stageData['logic-test']) {
+                                    completed.push(true);
+                                } else {
+                                    completed.push(false);
+                                }
+                            }
+
+                            if (ass.type === 'devskiller') {
+                                const devAss =
+                                    candidate.assignments && candidate.assignments[this.job.id]
+                                        ? candidate.assignments[this.job.id].find(
+                                              (a) => a.stageId === stageId && ass.type === 'devskiller'
+                                          )
+                                        : {};
+                                if (devAss.completed) {
+                                    completed.push(true);
+                                } else {
+                                    completed.push(false);
+                                }
+                            }
+                        });
+                        // console.log(candidate.id, candidate.first_name, completed);
+                        return completed.every((c) => c) ? 'green' : 'grey';
+                    } else {
+                        return 'grey';
+                    }
+                } else {
+                    return 'green';
+                }
+            } else {
+                return 'green';
+            }
+        } else {
+            // APPLIED STAGE
+            const complienceRate = this.getComplianceRateClass(candidate);
+            const questionsStatus = this.job.questionnaire ? this.getQuestionsClass(candidate) : null;
+            const values = [];
+            values.push(this._getClassValue(complienceRate));
+            if (questionsStatus) {
+                values.push(this._getClassValue(questionsStatus));
+            }
+            const minValue = Math.min(...values);
+            return this._getClassFromValue(minValue);
+        }
+    }
+
+    _getClassValue(className) {
+        switch (className) {
+            case 'green':
+                return 3;
+            case 'orange':
+                return 2;
+            case 'red':
+                return 1;
+            default:
+                return 0;
+        }
+    }
+
+    _getClassFromValue(value) {
+        switch (value) {
+            case 3:
+                return 'green';
+            case 2:
+                return 'orange';
+            case 1:
+                return 'red';
+            default:
+                return 'grey';
+        }
     }
 
     getJobResumeMatchingThreshold() {
@@ -704,7 +853,6 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     async onSelectionDecline() {
         if (this.declineModalForm.valid) {
-            const { emailTemplate: emailTemplateId } = this.declineModalForm.value;
             const {
                 job: { id: jobId },
                 selection: { candidates }
@@ -714,7 +862,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             this.contentLoading = true;
             for (let candidateId of candidateIds) {
                 await new Promise((res, rej) =>
-                    this.jobService.deleteCandidate(jobId, candidateId, emailTemplateId).subscribe(() => {
+                    this.jobService.deleteCandidate(jobId, candidateId).subscribe(() => {
                         console.log(`Candidate <${candidateId}> was declined`);
                         const index = this.candidates.findIndex(({ id }) => id === candidateId);
                         this.candidates.splice(index, 1);
@@ -787,12 +935,12 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.setAppliedCanidates(this.candidates);
     }
 
-    onShowModal(visible = true) {
-        if (visible) {
+    onShowModal(visible = true, modal = 'decline') {
+        if (visible && modal === 'decline') {
             this.declineModalForm.reset();
             delete this.modalSubmission['declineModalForm'];
         }
-        this.declineModalVisible = visible;
+        this[`${modal}ModalVisible`] = visible;
     }
 
     onShowEmailModal(visible: boolean = true) {
@@ -804,27 +952,6 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         setTimeout(() => {
             this.stageInput.nativeElement.focus();
         }, 1);
-    }
-
-    _isDD(c) {
-        if (c.email.indexOf('dimensiondata') !== -1) {
-            c.isDdEmployee = true;
-        }
-        if (
-            c.employment_history &&
-            c.employment_history.length &&
-            c.employment_history[0].end_date &&
-            c.employment_history[0].end_date.toLowerCase() === 'current'
-        ) {
-            if (
-                c.employment_history[0].title.toLowerCase().indexOf('dimension data') !== -1 ||
-                c.employment_history[0].company.toLowerCase().indexOf('dimension data') !== -1
-            ) {
-                c.isDdEmployee = true;
-            }
-        }
-        if (!c.read) c.read = [];
-        return c;
     }
 
     ngOnDestroy(): void {
