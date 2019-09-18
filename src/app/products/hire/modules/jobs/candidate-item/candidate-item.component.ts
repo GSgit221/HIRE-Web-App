@@ -8,7 +8,7 @@ import { CandidateService } from './../../../../../core/services/candidate.servi
 
 import { UIChart } from 'primeng/chart';
 import { forkJoin, of, Subscription } from 'rxjs';
-import { Candidate, EmailTemplate, Job, Stage, User } from '../../../../../core/models';
+import { Candidate, Job, Stage, User } from '../../../../../core/models';
 import * as fromJobsStore from '../store';
 import * as fromJobCandiatesSelector from '../store/selectors/jobCandidates.selector';
 import { EmailService, JobService, QuestionnaireService, UtilitiesService } from './../../../../../core/services';
@@ -78,7 +78,6 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
     @ViewChild('chart') chart: UIChart;
     baseUrl: string;
 
-    emailTemplates: ISelect[];
     declineModalVisible: boolean = false;
     declineModalForm: FormGroup;
     modalSubmission: object = {};
@@ -363,16 +362,8 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
         this.userSubscription = this.store.pipe(select(fromStore.getUserEntity)).subscribe((user: User) => {
             this.user = user;
         });
-        this.emailService.findAll().subscribe((emailTemplates: EmailTemplate[]) => {
-            if (emailTemplates && emailTemplates.length) {
-                this.emailTemplates = emailTemplates
-                    .filter(({ type }) => type && type.indexOf('decline_template_') !== -1)
-                    .map(({ id, title }) => ({ value: id, label: title }));
-            }
-        });
-        this.declineModalForm = this.fb.group({
-            emailTemplate: [null, Validators.required]
-        });
+
+        this.declineModalForm = this.fb.group({});
     }
 
     get candidateNameOrEmail() {
@@ -669,14 +660,13 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
 
     onDecline() {
         if (this.declineModalForm.valid) {
-            const { emailTemplate: emailTemplateId } = this.declineModalForm.value;
             const {
                 job: { id: jobId },
                 candidate: { id: candidateId }
             } = this;
 
             this.contentLoading = true;
-            this.jobService.deleteCandidate(jobId, candidateId, emailTemplateId).subscribe(
+            this.jobService.deleteCandidate(jobId, candidateId).subscribe(
                 () => {
                     console.log(`Candidate <${candidateId}> was declined`);
                     this.onBackClick();

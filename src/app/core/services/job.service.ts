@@ -193,11 +193,9 @@ export class JobService {
         );
     }
 
-    deleteCandidate(jobId: string, candidateId: string, emailTemplateId?: string) {
+    deleteCandidate(jobId: string, candidateId: string) {
         return this.http.delete(
-            `${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/${candidateId}${
-                emailTemplateId ? `?template=${emailTemplateId}` : ''
-            }`
+            `${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/${candidateId}`
         );
     }
 
