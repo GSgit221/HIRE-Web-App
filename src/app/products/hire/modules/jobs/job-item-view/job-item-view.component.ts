@@ -148,16 +148,9 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.setAppliedCanidates(this.candidates);
 
                 // Get questions
-                const getQuestions = this.job.questionnaire
-                    ? this.questionnaireService.getQuestions(this.job.questionnaire)
-                    : of([]);
-                getQuestions.subscribe((response: any) => {
-                    const questions = response;
-                    if (questions) {
-                        this.questions = questions;
-                        this.prepareQuestionsAnswers();
-                    }
-                });
+                if (this.job.questions && this.job.questions.length) {
+                    this.prepareQuestionsAnswers();
+                }
             });
 
         // Decline modal
@@ -173,7 +166,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     prepareQuestionsAnswers() {
         this.candidates.forEach((candidate) => {
-            if (this.job && candidate && this.questions) {
+            if (this.job && candidate && this.job.questions) {
                 const candidateQ = {
                     hasAnswers: false,
                     knockoutIncorrect: false
@@ -193,10 +186,10 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     candidateQuestions = candidate.questions[this.job.id];
                 }
 
-                if (candidateQuestions && Object.keys(candidateQuestions).length === this.questions.length) {
+                if (candidateQuestions && Object.keys(candidateQuestions).length === this.job.questions.length) {
                     candidateQ.hasAnswers = true;
                 }
-                this.questions.forEach((q) => {
+                this.job.questions.forEach((q) => {
                     const obj = {
                         isKnockout: ''
                     };
