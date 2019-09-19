@@ -12,8 +12,6 @@ export class CandidateBlockComponent implements OnInit {
     @Input() job: Job;
     @Input() resumeThreshold: number;
     @Input() selected: boolean;
-    @Input() personalityAssessment: any;
-    @Input() video: any;
     @Output() onDeleting = new EventEmitter<boolean>();
     @Output() deleted = new EventEmitter<string>();
     @Output() onSelect = new EventEmitter<string>();
@@ -56,7 +54,7 @@ export class CandidateBlockComponent implements OnInit {
     }
 
     getComplianceRateClass() {
-        if (this.candidate.hasUser && this.candidate.hasUserReviewed) {
+        if ((this.candidate.hasUser && this.candidate.hasUserReviewed) || this.candidate.matching) {
             if (this.candidate.score >= this.resumeThreshold) {
                 return 'green';
             } else if (
@@ -73,7 +71,7 @@ export class CandidateBlockComponent implements OnInit {
     }
 
     getQuestionsClass() {
-        if (this.candidate.hasUser && this.candidate.hasUserReviewed) {
+        if ((this.candidate.hasUser && this.candidate.hasUserReviewed) || this.candidate.matching) {
             if (this._candidateQuestions && this._candidateQuestions.hasAnswers) {
                 return this._candidateQuestions.knockoutIncorrect ? 'red' : 'green';
             } else {
@@ -132,9 +130,12 @@ export class CandidateBlockComponent implements OnInit {
                             }
 
                             if (ass.type === 'devskiller') {
-                                const devAss = candidate.assignments[this.job.id].find(
-                                    (a) => a.stageId === stageId && ass.type === 'devskiller'
-                                );
+                                const devAss =
+                                    candidate.assignments && candidate.assignments[this.job.id]
+                                        ? candidate.assignments[this.job.id].find(
+                                              (a) => a.stageId === stageId && ass.type === 'devskiller'
+                                          )
+                                        : {};
                                 if (devAss.completed) {
                                     completed.push(true);
                                 } else {

@@ -1134,7 +1134,7 @@ p-chips {
                     height: 36px;
                     line-height: 15px;
                     margin-left: 12px;
-                    width: 175px;
+                    flex: 0 0 125px;
 
                     &:hover {
                         background: darken($pink, 10%);
@@ -1142,6 +1142,16 @@ p-chips {
 
                     &.danger {
                         background-color: $red;
+
+                        &.outline {
+                            background-color: $white;
+                            border: 1px solid $red;
+                            color: $red;
+
+                            &:hover {
+                                background: darken($white, 10%);
+                            }
+                        }
 
                         &:hover {
                             background: darken($red, 10%);

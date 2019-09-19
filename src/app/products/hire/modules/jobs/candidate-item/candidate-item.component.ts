@@ -8,7 +8,7 @@ import { CandidateService } from './../../../../../core/services/candidate.servi
 
 import { UIChart } from 'primeng/chart';
 import { forkJoin, of, Subscription } from 'rxjs';
-import { Candidate, EmailTemplate, Job, Stage, User } from '../../../../../core/models';
+import { Candidate, Job, Stage, User } from '../../../../../core/models';
 import * as fromJobsStore from '../store';
 import * as fromJobCandiatesSelector from '../store/selectors/jobCandidates.selector';
 import { EmailService, JobService, QuestionnaireService, UtilitiesService } from './../../../../../core/services';
@@ -28,6 +28,7 @@ interface ISelect {
     styleUrls: ['./candidate-item.component.scss']
 })
 export class CandidateItemComponent implements OnInit, OnDestroy {
+    math = Math;
     sections: string[] = ['overview', 'details', 'assessments', 'attachments'];
     activeSection = 'overview';
     activeInteractivity = 'chat';
@@ -67,15 +68,16 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
 
     personality_assessment: any = null;
     available_assessment = {};
+    assignments = [];
 
     stageId: string = '';
     videos: any[] = [];
     videoInterviewQuestions: any[] = [];
     logicTest;
+    devskillerTest;
     @ViewChild('chart') chart: UIChart;
     baseUrl: string;
 
-    emailTemplates: ISelect[];
     declineModalVisible: boolean = false;
     declineModalForm: FormGroup;
     modalSubmission: object = {};
@@ -198,7 +200,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                 const getVideoQuestions = this.questionnaireService.getVideoQuestions();
                 const getAllData = forkJoin([jobRequest, getVideoQuestions]).subscribe((response: any) => {
                     setTimeout(() => (this.contentLoading = false), 200);
-                    console.log(response);
+                    // console.log(response);
                     const questions = response[0];
                     const videoInterviewQuestions = response[1];
                     if (videoInterviewQuestions) {
@@ -239,14 +241,43 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
 
                     // Get assessments
                     if (this.candidate && this.candidate.assignments && this.candidate.assignments[this.jobId]) {
-                        this.candidate.assignments[this.jobId].forEach((a) => {
-                            this.available_assessment[a.type] = true;
+                        this.candidate.assignments[this.jobId].forEach((ass) => {
+                            this.available_assessment[ass.type] = true;
+                            if (ass.type === 'devskiller') {
+                                this.devskillerTest = ass;
+                                this.devskillerTest.invitationCode = this.devskillerTest.candidate.examUrl.split(
+                                    '?'
+                                )[1];
+
+                                this.devskillerTest.invitationSent = moment
+                                    .unix(this.devskillerTest.added_at)
+                                    .format('DD MMMM YYYY');
+
+                                this.devskillerTest.assessmentComplete = moment(
+                                    this.devskillerTest.candidate.testFinishDate
+                                ).format('DD MMMM YYYY');
+                            }
+                            // if (ass.type === 'logic-test') {
+                            //     if (
+                            //         !ass.data &&
+                            //         this.candidate.stages_data &&
+                            //         this.candidate.stages_data[this.jobId] &&
+                            //         this.candidate.stages_data[this.jobId]['logic-test']
+                            //     ) {
+                            //         ass.data = this.candidate.stages_data[this.jobId]['logic-test'];
+                            //     }
+
+                            //     this.assignments.push(ass);
+                            // }
+
+                            // if (ass.type === 'devskiller') {
+                            //     this.assignments.push(ass);
+                            // }
                         });
-                        console.log(this.available_assessment, this.job.stages, this.candidate);
                     }
                     if (this.candidate.stages_data && this.candidate.stages_data[this.jobId]) {
                         const stagesData = this.candidate.stages_data[this.jobId];
-                        console.log(stagesData, this.candidate);
+                        // console.log(stagesData, this.candidate);
 
                         for (const stageId in stagesData) {
                             if (stagesData.hasOwnProperty(stageId)) {
@@ -301,7 +332,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
 
                                 // Logic test
                                 if (stageData['logic-test']) {
-                                    console.log(this.candidate.assignments);
+                                    // console.log(this.candidate.assignments);
                                     this.logicTest = stageData['logic-test'];
                                     this.logicTest.completed = moment
                                         .unix(this.logicTest.completed_at)
@@ -309,11 +340,14 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                                     this.logicTest.invited_at = this.candidate.assignments[this.jobId].find(
                                         (c) => c.type === 'logic-test'
                                     ).added_at;
+                                    if (this.logicTest.score && this.logicTest.score > 10) {
+                                        this.logicTest.score = 10;
+                                    }
                                     this.logicTest.invited = moment
                                         .unix(this.logicTest.invited_at)
                                         .format('DD MMMM YYYY');
 
-                                    console.log(this.logicTest);
+                                    // console.log(this.logicTest);
                                 }
                             }
                         }
@@ -328,16 +362,8 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
         this.userSubscription = this.store.pipe(select(fromStore.getUserEntity)).subscribe((user: User) => {
             this.user = user;
         });
-        this.emailService.findAll().subscribe((emailTemplates: EmailTemplate[]) => {
-            if (emailTemplates && emailTemplates.length) {
-                this.emailTemplates = emailTemplates
-                    .filter(({ type }) => type && type.indexOf('decline_template_') !== -1)
-                    .map(({ id, title }) => ({ value: id, label: title }));
-            }
-        });
-        this.declineModalForm = this.fb.group({
-            emailTemplate: [null, Validators.required]
-        });
+
+        this.declineModalForm = this.fb.group({});
     }
 
     get candidateNameOrEmail() {
@@ -367,12 +393,19 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
         if (this.job && this.candidate && this.questions) {
             const questionsAnswers = [];
             let isKnockout = false;
-            const candidateQuestions =
+
+            let candidateQuestions = null;
+            if (
                 this.candidate.job_specific &&
                 this.candidate.job_specific.questions &&
-                this.candidate.job_specific.questions[this.jobId]
-                    ? this.candidate.job_specific.questions[this.jobId]
-                    : null;
+                this.candidate.job_specific.questions[this.job.id]
+            ) {
+                candidateQuestions = this.candidate.job_specific.questions[this.job.id];
+            }
+
+            if (this.candidate && this.candidate.questions && this.candidate.questions[this.job.id]) {
+                candidateQuestions = this.candidate.questions[this.job.id];
+            }
             this.questions.forEach((q) => {
                 const obj = {
                     text: q.text,
@@ -627,14 +660,13 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
 
     onDecline() {
         if (this.declineModalForm.valid) {
-            const { emailTemplate: emailTemplateId } = this.declineModalForm.value;
             const {
                 job: { id: jobId },
                 candidate: { id: candidateId }
             } = this;
 
             this.contentLoading = true;
-            this.jobService.deleteCandidate(jobId, candidateId, emailTemplateId).subscribe(
+            this.jobService.deleteCandidate(jobId, candidateId).subscribe(
                 () => {
                     console.log(`Candidate <${candidateId}> was declined`);
                     this.onBackClick();

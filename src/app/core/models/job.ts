@@ -40,6 +40,7 @@ export class Job {
     application_field_education: string;
     application_field_cover_letter: string;
     questionnaire: string;
+    questions?: any[];
     hiring_managers: string[];
     recruiters: string[];
     default_email_name: string;
