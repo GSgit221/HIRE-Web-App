@@ -261,26 +261,27 @@ export class StageSettingsComponent implements OnInit {
     getWeighting(type) {
         const currentValue = this.stageSettingsForm.get('weighting').value;
         if (!currentValue) return 0;
-        const ret = Math.round(currentValue[type]);
-        let min = '';
-        let max = '';
-        const offset = 100 - this.totalWeighting;
-        if (offset !== 0) {
-            Object.keys(currentValue).forEach((key) => {
-                const value = currentValue[key];
-                if (value === 0) return;
-                if (value + offset < 0 || value + offset > 100) return;
-                if (min) {
-                    const round = Math.round(value);
-                    if (currentValue[min] > value - round) min = key;
-                } else min = key;
-                if (max) {
-                    const round = Math.round(value);
-                    if (currentValue[max] < value - round) max = key;
-                } else max = key;
-            });
-            if ((offset < 0 && min === type) || (offset > 0 && max === type)) return ret + offset;
+        let ret = Math.round(currentValue[type]);
+        let offset = 100 - this.totalWeighting;
+        const keys = Object.keys(currentValue).sort((a, b) => {
+            const offsetA = Math.round(currentValue[a]) - currentValue[a];
+            const offsetB = Math.round(currentValue[b]) - currentValue[b];
+            return offsetA - offsetB;
+        });
+
+        if (offset < 0) keys.reverse();
+        let i = 0;
+        const step = offset > 0 ? -1 : 1;
+        while (offset !== 0) {
+            if (keys[i] === type) {
+                ret -= step;
+                offset = 0;
+            } else {
+                offset += step;
+                i++;
+            }
         }
+
         return ret;
     }
 
