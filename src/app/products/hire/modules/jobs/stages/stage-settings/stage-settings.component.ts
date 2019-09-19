@@ -258,114 +258,58 @@ export class StageSettingsComponent implements OnInit {
         return array;
     }
 
+    getWeighting(type) {
+        const currentValue = this.stageSettingsForm.get('weighting').value;
+        if (!currentValue) return 0;
+        const ret = Math.round(currentValue[type]);
+        let min = '';
+        let max = '';
+        const offset = 100 - this.totalWeighting;
+        if (offset !== 0) {
+            Object.keys(currentValue).forEach((key) => {
+                const value = currentValue[key];
+                if (value === 0) return;
+                if (value + offset < 0 || value + offset > 100) return;
+                if (min) {
+                    const round = Math.round(value);
+                    if (currentValue[min] > value - round) min = key;
+                } else min = key;
+                if (max) {
+                    const round = Math.round(value);
+                    if (currentValue[max] < value - round) max = key;
+                } else max = key;
+            });
+            if ((offset < 0 && min === type) || (offset > 0 && max === type)) return ret + offset;
+        }
+        return ret;
+    }
+
+    get totalWeighting() {
+        const currentValue = this.stageSettingsForm.get('weighting').value;
+        return Object.keys(currentValue).reduce((a, c) => (a += Math.round(currentValue[c])), 0);
+    }
+
     onHcSliderChangeWeighting(e, input) {
         const val = e.value;
-        let points = this.pointsAvailable();
-        if (points < 0) {
-            const pointsToTake = Math.ceil(Math.abs(points) / 5);
-            const currentValue = this.stageSettingsForm.get('weighting').value;
-            const keys = Object.keys(currentValue).filter((k) => k !== input);
-            // console.log(val, points, '-', 'need to TAKE from others', pointsToTake);
-            keys.forEach((key, index) => {
-                if (index !== keys.length - 1) {
-                    if (points) {
-                        // console.log('+', index, key, currentValue[key], pointsToTake, currentValue[key] - pointsToTake);
-                        if (currentValue[key] - pointsToTake >= 0) {
-                            this.stageSettingsForm.get('weighting').patchValue({
-                                [key]: currentValue[key] - pointsToTake
-                            });
-                            points = points + pointsToTake;
-                            // console.log(points);
-                        } else {
-                            // console.log(
-                            //     '-',
-                            //     index,
-                            //     key,
-                            //     currentValue[key],
-                            //     pointsToTake,
-                            //     currentValue[key] - pointsToTake
-                            // );
-                            const diff = currentValue[key] - pointsToTake;
-                            this.stageSettingsForm.get('weighting').patchValue({
-                                [key]: 0
-                            });
-                            points = points + diff;
-                            // console.log(points);
-                        }
-                    }
-                } else {
-                    // console.log('last one', index, key, currentValue[key], points);
-                    if (points) {
-                        if (currentValue[key] - points >= 0) {
-                            this.stageSettingsForm.get('weighting').patchValue({
-                                [key]: currentValue[key] - points
-                            });
-                            points = 0;
-                        } else {
-                            this.stageSettingsForm.get('weighting').patchValue({
-                                [key]: 0
-                            });
-                            points = 0;
-                        }
-                    }
-                }
+        const currentValue = this.stageSettingsForm.get('weighting').value;
+        const keys = Object.keys(currentValue).filter((k) => k !== input);
+        let points = keys.reduce((a, c) => (a += currentValue[c]), 0) + val;
+
+        if (points === 100) return;
+        points -= val;
+
+        if (points > 0) {
+            keys.forEach((key) => {
+                currentValue[key] = (currentValue[key] / points) * (100 - val + 0.00001);
             });
-        } else if (points > 0) {
-            const pointsToAdd = Math.ceil(Math.abs(points) / 5);
-            const currentValue = this.stageSettingsForm.get('weighting').value;
-            const keys = Object.keys(currentValue).filter((k) => k !== input);
-            // console.log(val, points, '-', 'need to ADD to others', pointsToAdd);
-            keys.forEach((key, index) => {
-                if (index !== keys.length - 1) {
-                    if (points) {
-                        // console.log('+', index, key, currentValue[key], pointsToAdd, currentValue[key] + pointsToAdd);
-                        if (currentValue[key] + pointsToAdd <= 100) {
-                            this.stageSettingsForm.get('weighting').patchValue({
-                                [key]: currentValue[key] + pointsToAdd
-                            });
-                            points = points - pointsToAdd;
-                            // console.log(points);
-                        } else {
-                            // console.log(
-                            //     '-',
-                            //     index,
-                            //     key,
-                            //     currentValue[key],
-                            //     pointsToAdd,
-                            //     currentValue[key] - pointsToAdd
-                            // );
-                            const diff = currentValue[key] + pointsToAdd - 100;
-                            this.stageSettingsForm.get('weighting').patchValue({
-                                [key]: 100
-                            });
-                            points = points - (pointsToAdd + diff);
-                            // console.log(points);
-                        }
-                    }
-                } else {
-                    // console.log('last one', index, key, currentValue[key], points);
-                    if (points) {
-                        if (currentValue[key] + points <= 100) {
-                            this.stageSettingsForm.get('weighting').patchValue({
-                                [key]: currentValue[key] + points
-                            });
-                            points = 0;
-                        } else {
-                            this.stageSettingsForm.get('weighting').patchValue({
-                                [key]: 100
-                            });
-                            points = 0;
-                        }
-                    }
-                }
+        } else {
+            const average = (100 - val) / keys.length;
+            keys.forEach((key) => {
+                currentValue[key] = average;
             });
         }
-        // if (points < 0) {
-        //     const correctValue = val + points;
-        //     this.stageSettingsForm.get('weighting').patchValue({
-        //         [input]: correctValue
-        //     });
-        // }
+
+        this.stageSettingsForm.get('weighting').patchValue(currentValue);
     }
 
     onHcSliderSlideEnd(e, input) {}
