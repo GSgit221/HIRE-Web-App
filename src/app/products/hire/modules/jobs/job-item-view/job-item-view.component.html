@@ -111,8 +111,6 @@
                             [selected]="selection.columnId === 'applied' && selection.candidates[candidate.id]"
                             (onSelect)="onCandidateSelect('applied', $event)"
                             [candidateQuestions]="candidateQuestions[candidate.id]"
-                            [personalityAssessment]="'applied'"
-                            [video]="videos[candidate.id]"
                         >
                         </app-candidate-block>
                         <!-- NO MATCHES -->
@@ -208,8 +206,6 @@
                             [selected]="selection.columnId === stage.id && selection.candidates[candidate.id]"
                             (onSelect)="onCandidateSelect(stage.id, $event)"
                             [candidateQuestions]="candidateQuestions[candidate.id]"
-                            [personalityAssessment]="personalityAssessments[candidate.id]"
-                            [video]="videos[candidate.id]"
                         ></app-candidate-block>
                         <div class="drop-holder"></div>
                     </div>

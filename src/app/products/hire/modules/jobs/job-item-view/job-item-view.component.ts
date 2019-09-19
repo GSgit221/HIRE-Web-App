@@ -58,7 +58,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     uploadQueue: any[] = [];
     uploadError: string;
     droppedFiles: File[] = [];
-    candidates: Candidate[];
+    candidates: Candidate[] = [];
     draggedFromStage: any = null;
     appliedCandidates: any = {
         visible: [],
@@ -88,9 +88,6 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     candidatesSubscription: Subscription;
 
     questions: any[] = [];
-    videoInterviewQuestions: any[] = [];
-    videos: any = {};
-    personalityAssessments: any = {};
     questionsAnswers: any = {};
     candidateQuestions: any = {};
 
@@ -114,6 +111,10 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
+        // Application link
+        this.href = `${environment.applicationPortalUrl}/tenant/${this.utilities.getTenant()}/applications/${
+            this.job.id
+        }/resume`;
         // Get user and users
         this.usersSubscription = this.store.pipe(select(fromSelectors.getUsersEntities)).subscribe((users: User[]) => {
             this.users = [...users];
@@ -124,6 +125,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 console.log('🎩', this.user);
             }
         });
+        // Resume treshhold
+        this.resumeThreshold = this.getJobResumeMatchingThreshold();
 
         this.resetSelection();
         this.newJobStageForm = this.fb.group({
@@ -145,69 +148,17 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.setAppliedCanidates(this.candidates);
 
                 // Get questions
-
                 const getQuestions = this.job.questionnaire
                     ? this.questionnaireService.getQuestions(this.job.questionnaire)
                     : of([]);
-                const getVideoQuestions = this.questionnaireService.getVideoQuestions();
-                forkJoin([getQuestions, getVideoQuestions]).subscribe((response: any) => {
-                    const questions = response[0];
-                    const videoInterviewQuestions = response[1];
-                    if (videoInterviewQuestions) {
-                        this.videoInterviewQuestions = videoInterviewQuestions;
-                    }
+                getQuestions.subscribe((response: any) => {
+                    const questions = response;
                     if (questions) {
                         this.questions = questions;
                         this.prepareQuestionsAnswers();
                     }
-
-                    // After all data is loaded
-                    // Attachments
-                    this.candidates.forEach((candidate) => {
-                        this.videos[candidate.id] = [];
-                        // Get assessments
-                        if (candidate.stages_data && candidate.stages_data[this.job.id]) {
-                            const stagesData = candidate.stages_data[this.job.id];
-                            for (const stageId in stagesData) {
-                                const stage = this.stages.find(({ id }) => id === stageId);
-                                if (stage) {
-                                    if (stagesData.hasOwnProperty(stageId)) {
-                                        const stageData = stagesData[stageId];
-                                        if (stage.assessment && stage.assessment.length > 0) {
-                                            this.personalityAssessments[candidate.id] = true;
-                                            stage.assessment.forEach(({ type }) => {
-                                                if (!this.personalityAssessments[candidate.id]) return;
-                                                if (type === 'personality' && !stageData.personality_assessment)
-                                                    this.personalityAssessments[candidate.id] = false;
-                                                if (
-                                                    type === 'video-interview' &&
-                                                    (!stageData.videos || !stageData.videos.completed)
-                                                )
-                                                    this.personalityAssessments[candidate.id] = false;
-                                            });
-                                        } else {
-                                            this.personalityAssessments[candidate.id] = true;
-                                        }
-                                        // console.log(candidate, stageData);
-                                    } else {
-                                        this.personalityAssessments[candidate.id] = !(
-                                            stage.assessment && stage.assessment.length > 0
-                                        );
-                                    }
-                                }
-                            }
-                        }
-                    });
                 });
             });
-
-        // Resume treshhold
-        this.resumeThreshold = this.getJobResumeMatchingThreshold();
-
-        // Application link
-        this.href = `${environment.applicationPortalUrl}/tenant/${this.utilities.getTenant()}/applications/${
-            this.job.id
-        }/resume`;
 
         // Decline modal
         this.declineModalForm = this.fb.group({});

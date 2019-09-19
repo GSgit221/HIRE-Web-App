@@ -12,8 +12,6 @@ export class CandidateBlockComponent implements OnInit {
     @Input() job: Job;
     @Input() resumeThreshold: number;
     @Input() selected: boolean;
-    @Input() personalityAssessment: any;
-    @Input() video: any;
     @Output() onDeleting = new EventEmitter<boolean>();
     @Output() deleted = new EventEmitter<string>();
     @Output() onSelect = new EventEmitter<string>();
