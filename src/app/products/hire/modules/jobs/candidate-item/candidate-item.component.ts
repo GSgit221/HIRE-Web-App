@@ -702,7 +702,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                 const columnIndex = stages.findIndex(({ id }) => id === stageId);
                 return columnIndex + 1 < stages.length;
             } else {
-                return false;
+                return stages.length > 0;
             }
         } else {
             return false;
@@ -714,7 +714,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
             job: { id: jobId },
             stages,
             user: { id: userId },
-            candidate: { id: candidateId, stage }
+            candidate: { id: candidateId, stage = {} }
         } = this;
         const stageId = stage[jobId];
 
