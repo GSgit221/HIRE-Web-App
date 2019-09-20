@@ -493,6 +493,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.candidateIsDragged = false;
         const candidate = event.dragData;
 
+        if (stageId === candidate.stage[this.job.id]) return;
+
         this.draggedCandidate = candidate;
         this.droppedStage = stageId;
 
