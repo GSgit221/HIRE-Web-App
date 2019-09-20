@@ -346,15 +346,6 @@
             // background: darken($white, 4%);
         }
 
-        &.dragged {
-            background: rgba($color: #3bb273, $alpha: 0.2);
-            box-shadow: none;
-
-            & > * {
-                opacity: 0;
-            }
-        }
-
         &.dd {
             &:before {
                 width: 30px;
