@@ -82,25 +82,23 @@ export class StageSettingsComponent implements OnInit {
                     (c) => c.stage && c.stage[this.jobId] && c.stage[this.jobId] === this.stageId
                 );
             });
-        setTimeout(() => {
-            this.jobService.getDevskillerTest().subscribe((res: any) => {
-                if (res) {
-                    res.forEach((c) => {
-                        this.devskillerOptions.push({ label: c.name, value: c.id, selected: false });
+
+        this.jobService.getDevskillerTest().subscribe((res: any) => {
+            if (res) {
+                res.forEach((c) => {
+                    this.devskillerOptions.push({ label: c.name, value: c.id, selected: false });
+                });
+                if (this.assessment && this.stage.assessment) {
+                    this.assessment['controls'].forEach((c) => {
+                        if (c['controls'].type.value === 'devskiller') {
+                            let assessment = this.stage.assessment.find((s) => c['controls'].option.value === s.option);
+                            c['controls'].option.patchValue(assessment.option);
+                        }
                     });
-                    if (this.assessment && this.stage.assessment) {
-                        this.assessment['controls'].forEach((c) => {
-                            if (c['controls'].type.value === 'devskiller') {
-                                let assessment = this.stage.assessment.find(
-                                    (s) => c['controls'].option.value === s.option
-                                );
-                                c['controls'].option.patchValue(assessment.option);
-                            }
-                        });
-                    }
                 }
-            });
-        }, 1000);
+            }
+        });
+
         this.jobService.getJob(this.jobId).subscribe((job: Job) => {
             this.job = job;
         });
@@ -177,7 +175,7 @@ export class StageSettingsComponent implements OnInit {
                                 this.questionnaireOptions = options;
                                 setTimeout(() => {
                                     this.defineAssessmentStatus2();
-                                }, 500);
+                                }, 300);
                             }
                         },
                         (error) => console.error(error)
@@ -511,13 +509,27 @@ export class StageSettingsComponent implements OnInit {
                                     return a.value !== b.option;
                                 });
                             }
-
-                            this.assessmentList.push(b);
+                            if (!this.stageHasCandidate) {
+                                let devskiller = this.devskillerOptions.find((q) => {
+                                    return q.value === b.option;
+                                });
+                                if (devskiller) {
+                                    devskiller.selected = true;
+                                }
+                            }
                         } else if (b.type === 'video-interview') {
                             if (!this.stageHasCandidate && c.id !== this.stageId) {
                                 this.questionnaireOptions = this.questionnaireOptions.filter((a) => {
                                     return a.value !== b.option;
                                 });
+                            }
+                            if (!this.stageHasCandidate) {
+                                let questionnaire = this.questionnaireOptions.find((q) => {
+                                    return q.value === b.option;
+                                });
+                                if (questionnaire) {
+                                    questionnaire.selected = true;
+                                }
                             }
                         } else if (b.type) {
                             this.assessmentList.push(b);
