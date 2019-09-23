@@ -74,7 +74,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
     videos: any[] = [];
     videoInterviewQuestions: any[] = [];
     logicTest;
-    devskillerTest;
+    devskillerTest: any[] = [];
     @ViewChild('chart') chart: UIChart;
     baseUrl: string;
 

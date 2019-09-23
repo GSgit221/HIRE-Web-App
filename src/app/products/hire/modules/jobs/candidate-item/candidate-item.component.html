@@ -348,67 +348,69 @@
                                 Devskiller Assessment
                                 <a href="" *ngIf="false" class="report-link">View report on Devskiller</a>
                             </h3>
-                            <div
-                                class="interview-holder"
-                                *ngIf="
-                                    devskillerTest &&
-                                        devskillerTest.completed &&
-                                        devskillerTest.candidate &&
-                                        devskillerTest.results;
-                                    else waitingForDevskiller
-                                "
-                            >
-                                <div class="form-content-section">
-                                    <div class="description-assessment">
-                                        <strong class="title">{{ devskillerTest.exam.name }}</strong>
-                                        <p>Invitation code: {{ devskillerTest.invitationCode }}</p>
-                                        <p>Invitation sent: {{ devskillerTest.invitationSent }}</p>
-                                        <p>Assessment complete: {{ devskillerTest.assessmentComplete }}</p>
+                            <ng-container *ngFor="let test of devskillerTest">
+                                <div
+                                    class="interview-holder"
+                                    *ngIf="
+                                        test && test.completed && test.candidate && test.results;
+                                        else waitingForDevskiller
+                                    "
+                                >
+                                    <div class="form-content-section">
+                                        <div class="description-assessment">
+                                            <strong class="title">{{ test.exam.name }}</strong>
+                                            <p>Invitation code: {{ test.invitationCode }}</p>
+                                            <p>Invitation sent: {{ test.invitationSent }}</p>
+                                            <p>Assessment complete: {{ test.assessmentComplete }}</p>
+                                        </div>
+                                        <div class="form-content-holder assessment-holder">
+                                            <div class="assessment-result" [ngClass]="{ low: true }">
+                                                <span
+                                                    >{{
+                                                        math.round(
+                                                            ((test.results.scoredPoints || 0) /
+                                                                test.results.maxPoints) *
+                                                                100
+                                                        )
+                                                    }}%</span
+                                                >
+                                                <p>
+                                                    {{ test.results.scoredPoints || 0 }} of
+                                                    {{ test.results.maxPoints }} points
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-content-holder assessment-holder">
-                                        <div class="assessment-result" [ngClass]="{ low: true }">
-                                            <span
-                                                >{{
-                                                    math.round(
-                                                        ((devskillerTest.results.scoredPoints || 0) /
-                                                            devskillerTest.results.maxPoints) *
-                                                            100
-                                                    )
-                                                }}%</span
-                                            >
-                                            <p>
-                                                {{ devskillerTest.results.scoredPoints || 0 }} of
-                                                {{ devskillerTest.results.maxPoints }} points
-                                            </p>
+                                    <div class="devskiller-skills">
+                                        <div class="item-skill" *ngFor="let skill of test.results.skills">
+                                            <div class="name">{{ skill.name }}</div>
+                                            <div class="slider">
+                                                <span
+                                                    [ngStyle]="{ width: (skill.scoredPoints / skill.maxPoints) * 100 }"
+                                                ></span>
+                                            </div>
+                                            <div class="result">
+                                                {{ math.round((skill.scoredPoints / skill.maxPoints) * 100) }}%
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="devskiller-skills">
-                                    <div class="item-skill" *ngFor="let skill of devskillerTest.results.skills">
-                                        <div class="name">{{ skill.name }}</div>
-                                        <div class="slider">
-                                            <span
-                                                [ngStyle]="{ width: (skill.scoredPoints / skill.maxPoints) * 100 }"
-                                            ></span>
-                                        </div>
-                                        <div class="result">
-                                            {{ math.round((skill.scoredPoints / skill.maxPoints) * 100) }}%
-                                        </div>
+
+                                <ng-template #waitingForDevskiller>
+                                    <div class="candidate-attention">
+                                        <img
+                                            alt="warning"
+                                            class="icon"
+                                            height="20"
+                                            src="/assets/images/warning.svg"
+                                            width="23"
+                                        />
+                                        <span
+                                            >Waiting for the candidate to submit their {{ test?.exam?.name }} test</span
+                                        >
                                     </div>
-                                </div>
-                            </div>
-                            <ng-template #waitingForDevskiller>
-                                <div class="candidate-attention">
-                                    <img
-                                        alt="warning"
-                                        class="icon"
-                                        height="20"
-                                        src="/assets/images/warning.svg"
-                                        width="23"
-                                    />
-                                    <span>Waiting for the candidate to submit their Devskiller Test</span>
-                                </div>
-                            </ng-template>
+                                </ng-template>
+                            </ng-container>
                         </ng-container>
                         <ng-container *ngIf="available_assessment['logic-test']">
                             <h3 class="interview-title">Logic Assessment</h3>
