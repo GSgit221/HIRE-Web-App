@@ -266,4 +266,62 @@ export class UtilitiesService {
         arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
         return arr;
     }
+
+    getRadarChartData() {
+        return {
+            labels: ['Extroversion', 'Agreeableness', 'Conscientiousness', 'Neuroticism', 'Openness'],
+            datasets: [
+                {
+                    label: 'Second Dataset',
+                    data: [0, 0, 0, 0, 0],
+                    fill: true,
+                    backgroundColor: 'rgba(76, 217, 100, 0.3)',
+                    borderColor: '#4cd964',
+                    borderWidth: 1,
+                    pointRadius: 0,
+                    pointHoverRadius: 0
+                },
+                {
+                    label: 'Avarage Dataset',
+                    data: [72, 72, 72, 72, 72],
+                    fill: true,
+                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                    borderColor: '#e5e5ea',
+                    borderWidth: 1,
+                    pointRadius: 0,
+                    pointHoverRadius: 0
+                }
+            ]
+        };
+    }
+
+    getRadarChartOptions() {
+        return {
+            scale: {
+                pointLabels: { fontSize: 15, fontColor: '#000000' },
+                ticks: {
+                    beginAtZero: true,
+                    min: 0,
+                    max: 120,
+                    stepSize: 40,
+                    fontColor: '#525f7f',
+                    fontStyle: 'bold',
+                    padding: 100,
+                    backdropColor: 'transparent',
+                    userCallback: (label, index, labels) => {
+                        if (index === 1) {
+                            return 'LOW';
+                        } else if (index === 2) {
+                            return 'NEUTRAL';
+                        } else if (index === 3) {
+                            return 'HIGH';
+                        } else {
+                            return '';
+                        }
+                    }
+                }
+            },
+            legend: { display: false, labels: { fontColor: 'rgb(255, 99, 132)' } }
+        };
+    }
 }
