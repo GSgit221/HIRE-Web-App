@@ -163,6 +163,10 @@ p-dropdown {
             font-size: $font-size-origin;
             line-height: 16px;
             padding: 9px 12px 9px 10px;
+
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
         }
 
         .ui-dropdown-trigger {

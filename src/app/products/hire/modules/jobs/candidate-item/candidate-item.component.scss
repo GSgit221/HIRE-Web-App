@@ -947,6 +947,9 @@
     &.low {
         border-color: #e02020;
     }
+    &.middle {
+        border-color: $orange;
+    }
     span {
         font-size: 35px;
         line-height: 33px;
