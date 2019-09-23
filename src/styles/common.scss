@@ -1801,3 +1801,13 @@ app-editor {
         }
     }
 }
+
+.stage-content {
+    &.drag-target-border {
+        .dragged {
+            & > * {
+                opacity: 0.7 !important;
+            }
+        }
+    }
+}
