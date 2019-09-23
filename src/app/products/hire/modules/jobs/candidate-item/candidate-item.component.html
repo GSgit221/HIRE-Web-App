@@ -422,7 +422,13 @@
                                         <p>Assessment complete: {{ logicTest?.completed }}</p>
                                     </div>
                                     <div class="form-content-holder assessment-holder">
-                                        <div class="assessment-result" [ngClass]="{ low: false }">
+                                        <div
+                                            class="assessment-result"
+                                            [ngClass]="{
+                                                low: logicTest?.score <= 5,
+                                                middle: logicTest?.score > 5 && logicTest?.score < 8
+                                            }"
+                                        >
                                             <span>{{ (logicTest?.score / 10) * 100 }} %</span>
                                             <p>{{ logicTest?.score }} of 10 points</p>
                                         </div>
