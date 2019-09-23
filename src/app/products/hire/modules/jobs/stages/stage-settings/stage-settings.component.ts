@@ -73,20 +73,6 @@ export class StageSettingsComponent implements OnInit {
         this.jobId = this.route.snapshot.paramMap.get('id');
         this.stageId = this.route.snapshot.paramMap.get('stageId');
         this.contentLoading = true;
-        this.jobService.getDevskillerTest().subscribe((res: any) => {
-            if (res) {
-                res.forEach((c) => {
-                    this.devskillerOptions.push({ label: c.name, value: c.id });
-                });
-                if (this.assessment && this.stage.assessment) {
-                    let control = this.assessment['controls'].find((c) => c['controls'].type.value === 'devskiller');
-                    let assessment = this.stage.assessment.find((c) => c.type === 'devskiller');
-                    if (control && assessment) {
-                        control['controls'].option.patchValue(assessment.option);
-                    }
-                }
-            }
-        });
 
         this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.jobId));
         this.jobsStore
@@ -97,9 +83,24 @@ export class StageSettingsComponent implements OnInit {
                 );
             });
 
+        this.jobService.getDevskillerTest().subscribe((res: any) => {
+            if (res) {
+                res.forEach((c) => {
+                    this.devskillerOptions.push({ label: c.name, value: c.id, selected: false });
+                });
+                if (this.assessment && this.stage.assessment) {
+                    this.assessment['controls'].forEach((c) => {
+                        if (c['controls'].type.value === 'devskiller') {
+                            let assessment = this.stage.assessment.find((s) => c['controls'].option.value === s.option);
+                            c['controls'].option.patchValue(assessment.option);
+                        }
+                    });
+                }
+            }
+        });
+
         this.jobService.getJob(this.jobId).subscribe((job: Job) => {
             this.job = job;
-            this.defineAssessmentStatus2();
         });
         this.jobService.getStage(this.jobId, this.stageId).subscribe(
             (stage: Stage) => {
@@ -153,6 +154,7 @@ export class StageSettingsComponent implements OnInit {
                         actions: this.fb.array(actions)
                     });
                     if (this.stage.assessment) {
+                        console.log(this.stage.assessment);
                         this.populateAssessment(this.stage.assessment);
                     } else {
                         // this.addAssessmentGroup();
@@ -166,10 +168,14 @@ export class StageSettingsComponent implements OnInit {
                                 this.questionnaireList.forEach((q) => {
                                     options.push({
                                         value: q.id,
-                                        label: q.title
+                                        label: q.title,
+                                        selected: false
                                     });
                                 });
                                 this.questionnaireOptions = options;
+                                setTimeout(() => {
+                                    this.defineAssessmentStatus2();
+                                }, 300);
                             }
                         },
                         (error) => console.error(error)
@@ -428,14 +434,14 @@ export class StageSettingsComponent implements OnInit {
             this.fb.group({
                 type: [type],
                 option,
-                deadline: []
+                deadline: [5]
             })
         );
         this.assessmentList.push({
             type
         });
 
-        console.log(this.assessment, this.assessmentList);
+        console.log(this.assessment, this.assessmentList, type);
     }
 
     populateAssessment(assessment) {
@@ -448,13 +454,27 @@ export class StageSettingsComponent implements OnInit {
                 })
             );
         });
-        // setTimeout(() => {
-        //     this.filterDevskillerOptions();
-        // }, 400)
     }
 
-    onDeleteAssessment(type) {
-        let index = this.assessment['controls'].findIndex((c) => c['controls'].type.value === type);
+    onDeleteAssessment(ty, index) {
+        let type = this.assessment['controls'][index]['controls'].type.value;
+        let deletedValue = this.assessment['controls'][index]['controls'].option.value;
+        if (type === 'video-interview') {
+            let questionnaire = this.questionnaireOptions.find((q) => {
+                return q.value === deletedValue;
+            });
+            if (questionnaire) {
+                questionnaire.selected = false;
+            }
+        } else if (type === 'devskiller') {
+            let devskiller = this.devskillerOptions.find((q) => {
+                return q.value === deletedValue;
+            });
+            if (devskiller) {
+                devskiller.selected = false;
+            }
+        }
+
         this.assessment.removeAt(index);
 
         let index2 = this.assessmentList.findIndex((c) => c.type === type);
@@ -483,11 +503,34 @@ export class StageSettingsComponent implements OnInit {
             this.job.stages.forEach((c) => {
                 if (c.assessment) {
                     c.assessment.forEach((b) => {
-                        // console.log(b.type);
                         if (b.type === 'devskiller') {
-                            let devskillerOption = this.devskillerOptions.find((c) => c.value === b.option);
-                            b.options = devskillerOption;
-                            this.assessmentList.push(b);
+                            if (!this.stageHasCandidate && c.id !== this.stageId) {
+                                this.devskillerOptions = this.devskillerOptions.filter((a) => {
+                                    return a.value !== b.option;
+                                });
+                            }
+                            if (!this.stageHasCandidate) {
+                                let devskiller = this.devskillerOptions.find((q) => {
+                                    return q.value === b.option;
+                                });
+                                if (devskiller) {
+                                    devskiller.selected = true;
+                                }
+                            }
+                        } else if (b.type === 'video-interview') {
+                            if (!this.stageHasCandidate && c.id !== this.stageId) {
+                                this.questionnaireOptions = this.questionnaireOptions.filter((a) => {
+                                    return a.value !== b.option;
+                                });
+                            }
+                            if (!this.stageHasCandidate) {
+                                let questionnaire = this.questionnaireOptions.find((q) => {
+                                    return q.value === b.option;
+                                });
+                                if (questionnaire) {
+                                    questionnaire.selected = true;
+                                }
+                            }
                         } else if (b.type) {
                             this.assessmentList.push(b);
                             // return false;
@@ -496,26 +539,51 @@ export class StageSettingsComponent implements OnInit {
                 }
             });
         }
+        console.log(this.assessmentList, this.devskillerOptions);
+
         // console.log(this.assessmentList);
     }
 
     defineAssessmentStatus(type) {
         return this.assessmentList.find((c) => {
-            if (type === 'devskiller') {
-                // console.log(type)
-            }
             return c.type === type;
         });
     }
 
-    filterDevskillerOptions() {
+    onChangeDropdownOptions(e, i) {
+        let index = 0;
         this.assessment['controls'].forEach((c) => {
-            if (c.value.type === 'devskiller') {
-                // console.log(c, this.devskillerOptions);
-                this.devskillerOptions = this.devskillerOptions.filter((a) => a.value !== c.value.option);
-                // console.log(c, this.devskillerOptions);
+            if (c['controls'].type.value === 'video-interview') {
+                let questionnaire = this.questionnaireOptions.find((q) => {
+                    return q.value === c['controls'].option.value;
+                });
+                if (questionnaire) {
+                    questionnaire.selected = true;
+                }
+            } else if (c['controls'].type.value === 'devskiller') {
+                let devskiller = this.devskillerOptions.find((q) => {
+                    return q.value === c['controls'].option.value;
+                });
+                if (devskiller) {
+                    devskiller.selected = true;
+                }
+            }
+            if (e.value === c['controls'].option.value) {
+                index += 1;
+                if (index > 1) {
+                    this.assessment['controls'][i]['controls'].option.patchValue(null);
+                    this.assessment['controls'][i]['controls'].option.setErrors({ selected: true });
+                }
             }
         });
-        // this.devslillerOptions = this.devslillerOptions.
+        console.log(e.value, this.questionnaireOptions, this.devskillerOptions);
+    }
+
+    isAllOptionsSelected(type) {
+        if (type === 'video') {
+            return this.questionnaireOptions.every((c) => c.selected);
+        } else if (type === 'devskiller') {
+            return this.devskillerOptions.every((c) => c.selected);
+        }
     }
 }

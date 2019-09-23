@@ -166,6 +166,22 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
         return { first_name, last_name, email };
     }
 
+    get unweightedCategoryScores() {
+        const scores = {};
+        Object.keys(this.matchingMap).forEach((key) => (scores[key] = { label: this.matchingMap[key], score: 0 }));
+        if (
+            this.candidate.matching &&
+            this.candidate.matching[this.jobId] &&
+            this.candidate.matching[this.jobId].UnweightedCategoryScores
+        ) {
+            this.candidate.matching[this.jobId].UnweightedCategoryScores.forEach(({ Category, UnweightedScore }) => {
+                if (!this.matchingMap[Category]) return;
+                scores[Category].score = UnweightedScore;
+            });
+        }
+        return Object.keys(scores).map((key) => scores[key]);
+    }
+
     isKnockout(section): boolean {
         return section === 'questions' && this.questionsAnswers && this.questionsAnswers.isKnockout;
     }

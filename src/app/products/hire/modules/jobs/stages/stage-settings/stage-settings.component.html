@@ -249,9 +249,9 @@
                                 <button
                                     *ngIf="!stageHasCandidate"
                                     class="btn btn-delete"
-                                    (click)="onDeleteAssessment('personality')"
+                                    (click)="onDeleteAssessment('personality', i)"
                                 >
-                                    +
+                                    <svg-icon [svgStyle]="{ 'width.px': 12 }" src="/assets/images/close.svg"></svg-icon>
                                 </button>
                             </div>
                             <div class="form-block" [formGroupName]="i">
@@ -259,6 +259,7 @@
                                     <label class="form-block-label">Deadline</label>
                                     <div class="input-holder">
                                         <p-dropdown
+                                            [readonly]="stageHasCandidate"
                                             [options]="assessmentDeadlineOptions"
                                             formControlName="deadline"
                                             [style]="{ width: '100%' }"
@@ -316,9 +317,9 @@
                                 <button
                                     *ngIf="!stageHasCandidate"
                                     class="btn btn-delete"
-                                    (click)="onDeleteAssessment('video')"
+                                    (click)="onDeleteAssessment('video', i)"
                                 >
-                                    +
+                                    <svg-icon [svgStyle]="{ 'width.px': 12 }" src="/assets/images/close.svg"></svg-icon>
                                 </button>
                             </div>
                             <div class="form-block fdr" [formGroupName]="i">
@@ -326,11 +327,16 @@
                                     <label class="form-block-label">Questions</label>
                                     <div class="input-holder">
                                         <p-dropdown
+                                            [readonly]="stageHasCandidate"
                                             [options]="questionnaireOptions"
+                                            (onChange)="onChangeDropdownOptions($event, i)"
                                             formControlName="option"
                                             [style]="{ width: '100%' }"
                                             placeholder="Please select questionnaire"
                                         ></p-dropdown>
+                                    </div>
+                                    <div class="error-message" *ngIf="ass['controls']?.option?.errors?.selected">
+                                        Test has already selected
                                     </div>
                                 </div>
                                 <div class="separator20"></div>
@@ -339,6 +345,7 @@
                                     <label class="form-block-label">Deadline</label>
                                     <div class="input-holder">
                                         <p-dropdown
+                                            [readonly]="stageHasCandidate"
                                             [options]="assessmentDeadlineOptions"
                                             formControlName="deadline"
                                             [style]="{ width: '100%' }"
@@ -359,9 +366,9 @@
                                 <button
                                     *ngIf="!stageHasCandidate"
                                     class="btn btn-delete"
-                                    (click)="onDeleteAssessment('logic-test')"
+                                    (click)="onDeleteAssessment('logic-test', i)"
                                 >
-                                    +
+                                    <svg-icon [svgStyle]="{ 'width.px': 12 }" src="/assets/images/close.svg"></svg-icon>
                                 </button>
                             </div>
                             <div class="form-block" [formGroupName]="i">
@@ -369,6 +376,7 @@
                                     <label class="form-block-label">Deadline</label>
                                     <div class="input-holder">
                                         <p-dropdown
+                                            [readonly]="stageHasCandidate"
                                             [options]="assessmentDeadlineOptions"
                                             formControlName="deadline"
                                             [style]="{ width: '100%' }"
@@ -389,9 +397,9 @@
                                 <button
                                     *ngIf="!stageHasCandidate"
                                     class="btn btn-delete"
-                                    (click)="onDeleteAssessment('document')"
+                                    (click)="onDeleteAssessment('document', i)"
                                 >
-                                    +
+                                    <svg-icon [svgStyle]="{ 'width.px': 12 }" src="/assets/images/close.svg"></svg-icon>
                                 </button>
                             </div>
                             <div class="form-block" [formGroupName]="i">
@@ -399,6 +407,7 @@
                                     <label class="form-block-label">Deadline</label>
                                     <div class="input-holder">
                                         <p-dropdown
+                                            [readonly]="stageHasCandidate"
                                             [options]="assessmentDeadlineOptions"
                                             formControlName="deadline"
                                             [style]="{ width: '100%' }"
@@ -416,9 +425,9 @@
                                 <button
                                     *ngIf="!stageHasCandidate"
                                     class="btn btn-delete"
-                                    (click)="onDeleteAssessment('devskiller')"
+                                    (click)="onDeleteAssessment('devskiller', i)"
                                 >
-                                    +
+                                    <svg-icon [svgStyle]="{ 'width.px': 12 }" src="/assets/images/close.svg"></svg-icon>
                                 </button>
                             </div>
                             <div class="form-block fdr" [formGroupName]="i">
@@ -426,11 +435,16 @@
                                     <label class="form-block-label">Assessment</label>
                                     <div class="input-holder">
                                         <p-dropdown
+                                            [readonly]="stageHasCandidate"
                                             [options]="devskillerOptions"
+                                            (onChange)="onChangeDropdownOptions($event, i)"
                                             formControlName="option"
                                             [style]="{ width: '100%' }"
                                             placeholder="Please select test"
                                         ></p-dropdown>
+                                    </div>
+                                    <div class="error-message" *ngIf="ass['controls']?.option?.errors?.selected">
+                                        Test has already selected
                                     </div>
                                 </div>
                                 <div class="separator20"></div>
@@ -438,6 +452,7 @@
                                     <label class="form-block-label">Deadline</label>
                                     <div class="input-holder">
                                         <p-dropdown
+                                            [readonly]="stageHasCandidate"
                                             [options]="assessmentDeadlineOptions"
                                             formControlName="deadline"
                                             [style]="{ width: '100%' }"
@@ -447,7 +462,7 @@
                             </div>
                         </div>
                     </ng-container>
-                    <div class="form-content-box">
+                    <div class="form-content-box" *ngIf="!stageHasCandidate">
                         <div class="title">Clevateam Assessments</div>
                         <div class="assessment-list">
                             <div
@@ -463,7 +478,7 @@
                             <div
                                 *ngIf="true"
                                 class="assessment-item"
-                                [ngClass]="{ active: defineAssessmentStatus('video-interview') }"
+                                [ngClass]="{ active: isAllOptionsSelected('video') }"
                                 (click)="onAddAssessment('video-interview')"
                             >
                                 <div class="assessment-img">
@@ -492,11 +507,12 @@
                                 <p>Document Request</p>
                             </div>
                         </div>
+                        <!-- [ngClass]="{ active: defineAssessmentStatus('devskiller') }" -->
                         <div class="title">Thirdparty Integrations</div>
                         <div class="assessment-list">
                             <div
                                 class="assessment-item"
-                                [ngClass]="{ active: defineAssessmentStatus('devskiller') }"
+                                [ngClass]="{ active: isAllOptionsSelected('devskiller') }"
                                 (click)="onAddAssessment('devskiller')"
                             >
                                 <div class="assessment-img">
