@@ -317,16 +317,12 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
             this.candidate.assignments[this.jobId].forEach((ass) => {
                 this.available_assessment[ass.type] = true;
                 if (ass.type === 'devskiller') {
-                    this.devskillerTest = ass;
-                    this.devskillerTest.invitationCode = this.devskillerTest.candidate.examUrl.split('?')[1];
+                    ass.invitationCode = ass.candidate.examUrl.split('?')[1];
 
-                    this.devskillerTest.invitationSent = moment
-                        .unix(this.devskillerTest.added_at)
-                        .format('DD MMMM YYYY');
+                    ass.invitationSent = moment.unix(ass.added_at).format('DD MMMM YYYY');
 
-                    this.devskillerTest.assessmentComplete = moment(
-                        this.devskillerTest.candidate.testFinishDate
-                    ).format('DD MMMM YYYY');
+                    ass.assessmentComplete = moment(ass.candidate.testFinishDate).format('DD MMMM YYYY');
+                    this.devskillerTest.push(ass);
                 }
                 // if (ass.type === 'logic-test') {
                 //     if (
