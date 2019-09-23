@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Slider } from 'primeng/slider';
@@ -87,6 +87,11 @@ export class StageSettingsComponent implements OnInit {
             if (res) {
                 res.forEach((c) => {
                     this.devskillerOptions.push({ label: c.name, value: c.id, selected: false });
+                });
+                this.devskillerOptions.sort((a, b) => {
+                    const labelA = a.label.toUpperCase();
+                    const labelB = b.label.toUpperCase();
+                    return labelA.localeCompare(labelB);
                 });
                 if (this.assessment && this.stage.assessment) {
                     this.assessment['controls'].forEach((c) => {
