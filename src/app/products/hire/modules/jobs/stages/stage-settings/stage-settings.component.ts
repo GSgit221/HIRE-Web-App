@@ -88,6 +88,11 @@ export class StageSettingsComponent implements OnInit {
                 res.forEach((c) => {
                     this.devskillerOptions.push({ label: c.name, value: c.id, selected: false });
                 });
+                this.devskillerOptions.sort((a, b) => {
+                    const labelA = a.label.toUpperCase();
+                    const labelB = b.label.toUpperCase();
+                    return labelA.localeCompare(labelB);
+                });
                 if (this.assessment && this.stage.assessment) {
                     this.assessment['controls'].forEach((c) => {
                         if (c['controls'].type.value === 'devskiller') {
