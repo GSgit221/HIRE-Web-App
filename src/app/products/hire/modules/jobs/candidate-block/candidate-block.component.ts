@@ -99,6 +99,7 @@ export class CandidateBlockComponent implements OnInit {
                             candidate.assignments[this.job.id].find((ass) => ass.stageId === stageId))
                     ) {
                         const completed = [];
+                        let lowScore = false;
                         const stageData =
                             candidate.stages_data &&
                             candidate.stages_data[this.job.id] &&
@@ -120,15 +121,16 @@ export class CandidateBlockComponent implements OnInit {
                                     completed.push(false);
                                 }
                             }
-
                             if (ass.type === 'logic-test') {
                                 if (stageData['logic-test']) {
+                                    if (stageData['logic-test'].score <= 5) {
+                                        lowScore = true;
+                                    }
                                     completed.push(true);
                                 } else {
                                     completed.push(false);
                                 }
                             }
-
                             if (ass.type === 'devskiller') {
                                 const devAss =
                                     candidate.assignments && candidate.assignments[this.job.id]
@@ -137,6 +139,12 @@ export class CandidateBlockComponent implements OnInit {
                                           )
                                         : {};
                                 if (devAss.completed) {
+                                    if (devAss.results && devAss.results.scoredPoints) {
+                                        let score = (devAss.results.scoredPoints / devAss.results.maxPoints) * 100;
+                                        if (score <= 39) {
+                                            lowScore = true;
+                                        }
+                                    }
                                     completed.push(true);
                                 } else {
                                     completed.push(false);
@@ -144,6 +152,9 @@ export class CandidateBlockComponent implements OnInit {
                             }
                         });
                         // console.log(candidate.id, candidate.first_name, completed);
+                        if (lowScore) {
+                            return 'red';
+                        }
                         return completed.every((c) => c) ? 'green' : 'grey';
                     } else {
                         return 'grey';
