@@ -15,7 +15,8 @@ import { UtilitiesService } from '@app/core/services';
 import { environment } from '@env/environment';
 import { select, Store } from '@ngrx/store';
 import { ToastrService } from 'ngx-toastr';
-import { forkJoin, of, Subscription } from 'rxjs';
+import { forkJoin, Observable, of, Subscription } from 'rxjs';
+import { filter, take, tap } from 'rxjs/operators';
 
 import { Candidate, Job, Stage, User } from '../../../../../core/models';
 import { CandidateService, EmailService, JobService, QuestionnaireService } from '../../../../../core/services';
@@ -136,7 +137,10 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.stages = this.job.stages.filter((stage) => stage.id !== 'applied').sort((a, b) => a.order - b.order);
 
         // Get candidates
-        this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.job.id));
+        // this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.job.id));
+        this.checkStoreForCandidates().subscribe(() => {
+            console.log('Checked candidates loaded');
+        });
         this.candidatesSubscription = this.jobsStore
             .pipe(select(fromJobCandiatesSelector.getJobCandidates, { jobId: this.job.id }))
             .subscribe((candidates: any) => {
@@ -915,5 +919,18 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onBackClick() {
         this.router.navigateByUrl(`${this.baseUrl}/jobs`);
+    }
+
+    checkStoreForCandidates(): Observable<boolean> {
+        return this.store.pipe(
+            select(fromJobCandiatesSelector.getJobCandidatesLoaded, { jobId: this.job.id }),
+            tap((loaded) => {
+                if (!loaded) {
+                    this.store.dispatch(new fromJobsStore.LoadJobCandidates(this.job.id));
+                }
+            }),
+            filter((loaded) => loaded),
+            take(1)
+        );
     }
 }
