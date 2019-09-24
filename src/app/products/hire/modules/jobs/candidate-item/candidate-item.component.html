@@ -256,7 +256,7 @@
                     </ng-container>
                 </div>
                 <div class="content-section" *ngIf="activeSection === 'assessments'">
-                    <ng-container *ngIf="candidate?.stage">
+                    <ng-container *ngIf="candidate?.stage && (candidate?.stage)[jobId]">
                         <ng-container *ngIf="available_assessment.personality">
                             <h3 class="personality-profile-title">Personality Profile</h3>
                             <div
