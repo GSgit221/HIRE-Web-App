@@ -364,7 +364,18 @@
                                             <p>Assessment complete: {{ test.assessmentComplete }}</p>
                                         </div>
                                         <div class="form-content-holder assessment-holder">
-                                            <div class="assessment-result" [ngClass]="{ low: true }">
+                                            <div
+                                                class="assessment-result"
+                                                [ngClass]="{
+                                                    low:
+                                                        (test.results.scoredPoints / test.results.maxPoints) * 100 <=
+                                                        39,
+                                                    middle:
+                                                        (test.results.scoredPoints / test.results.maxPoints) * 100 >
+                                                            39 &&
+                                                        (test.results.scoredPoints / test.results.maxPoints) * 100 < 59
+                                                }"
+                                            >
                                                 <span
                                                     >{{
                                                         math.round(
