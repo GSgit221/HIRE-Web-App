@@ -78,9 +78,14 @@ export class StageSettingsComponent implements OnInit {
         this.jobsStore
             .pipe(select(fromJobCandiatesSelector.getJobCandidates, { jobId: this.jobId }))
             .subscribe((candidates: any) => {
-                this.stageHasCandidate = candidates.some(
-                    (c) => c.stage && c.stage[this.jobId] && c.stage[this.jobId] === this.stageId
-                );
+                // this.stageHasCandidate = candidates.some(
+                //     (c) => c.stage && c.stage[this.jobId] && c.stage[this.jobId] === this.stageId
+                // );
+                candidates.forEach((cand) => {
+                    if (cand.assignments && cand.assignments[this.jobId]) {
+                        this.stageHasCandidate = cand.assignments[this.jobId].some((c) => c.stageId === this.stageId);
+                    }
+                });
             });
 
         this.jobService.getDevskillerTest().subscribe((res: any) => {
