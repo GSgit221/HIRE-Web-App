@@ -39,10 +39,13 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
     candidateId: string;
     candidate: Candidate;
     matchingMap = {
+        EDUCATION: 'Education',
         JOB_TITLES: 'Job Titles',
         SKILLS: 'Skills',
         INDUSTRIES: 'Industries',
+        LANGUAGES: 'Languages',
         CERTIFICATIONS: 'Certifications',
+        EXECUTIVE_TYPE: 'Executive Type',
         MANAGEMENT_LEVEL: 'Management Level'
     };
     personalityProfileScores = [

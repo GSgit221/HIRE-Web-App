@@ -158,6 +158,27 @@
                         </div>
                         <div class="form-block">
                             <div class="input-block">
+                                <label class="form-block-label">Languages</label>
+                                <div class="hc-slider-block">
+                                    <p-slider
+                                        styleClass="hc-slider"
+                                        formControlName="languages"
+                                        [animate]="true"
+                                        [min]="0"
+                                        [max]="100"
+                                        [step]="1"
+                                        (onChange)="onHcSliderChangeWeighting($event, 'languages')"
+                                        (onSlideEnd)="onHcSliderSlideEnd($event, 'languages')"
+                                    ></p-slider>
+                                </div>
+                                <div class="form-block-value">
+                                    <span>{{ getWeighting('languages') }}</span
+                                    >%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-block">
+                            <div class="input-block">
                                 <label class="form-block-label">Certifications</label>
                                 <div class="hc-slider-block">
                                     <p-slider
@@ -173,6 +194,27 @@
                                 </div>
                                 <div class="form-block-value">
                                     <span>{{ getWeighting('certifications') }}</span
+                                    >%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-block">
+                            <div class="input-block">
+                                <label class="form-block-label">Executive Type</label>
+                                <div class="hc-slider-block">
+                                    <p-slider
+                                        styleClass="hc-slider"
+                                        formControlName="executive_type"
+                                        [animate]="true"
+                                        [min]="0"
+                                        [max]="100"
+                                        [step]="1"
+                                        (onChange)="onHcSliderChangeWeighting($event, 'executive_type')"
+                                        (onSlideEnd)="onHcSliderSlideEnd($event, 'executive_type')"
+                                    ></p-slider>
+                                </div>
+                                <div class="form-block-value">
+                                    <span>{{ getWeighting('executive_type') }}</span
                                     >%
                                 </div>
                             </div>
