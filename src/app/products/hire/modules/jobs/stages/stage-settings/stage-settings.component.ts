@@ -56,7 +56,7 @@ export class StageSettingsComponent implements OnInit {
         { label: '20 Days', value: 20 }
     ];
     baseUrl: string;
-    stageHasCandidate = true;
+    stageHasCandidate = false;
     errorModalVisible = false;
 
     constructor(
