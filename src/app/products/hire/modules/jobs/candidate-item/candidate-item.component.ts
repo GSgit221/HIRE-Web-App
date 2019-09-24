@@ -403,15 +403,16 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                     // Logic test
                     if (stageData['logic-test']) {
                         // console.log(this.candidate.assignments);
+                        const assignment = this.candidate.assignments[this.jobId].find((c) => c.type === 'logic-test');
                         this.logicTest = stageData['logic-test'];
                         this.logicTest.completed = moment.unix(this.logicTest.completed_at).format('DD MMMM  YYYY');
-                        this.logicTest.invited_at = this.candidate.assignments[this.jobId].find(
-                            (c) => c.type === 'logic-test'
-                        ).added_at;
+                        this.logicTest.invited_at = assignment ? assignment.added_at : 0;
                         if (this.logicTest.score && this.logicTest.score > 10) {
                             this.logicTest.score = 10;
                         }
-                        this.logicTest.invited = moment.unix(this.logicTest.invited_at).format('DD MMMM YYYY');
+                        this.logicTest.invited = this.logicTest.invited_at
+                            ? moment.unix(this.logicTest.invited_at).format('DD MMMM YYYY')
+                            : '';
 
                         // console.log(this.logicTest);
                     }
