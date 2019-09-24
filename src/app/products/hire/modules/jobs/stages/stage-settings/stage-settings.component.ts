@@ -56,7 +56,7 @@ export class StageSettingsComponent implements OnInit {
         { label: '20 Days', value: 20 }
     ];
     baseUrl: string;
-    stageHasCandidate = true;
+    stageHasCandidate = false;
     errorModalVisible = false;
 
     constructor(
@@ -78,9 +78,18 @@ export class StageSettingsComponent implements OnInit {
         this.jobsStore
             .pipe(select(fromJobCandiatesSelector.getJobCandidates, { jobId: this.jobId }))
             .subscribe((candidates: any) => {
-                this.stageHasCandidate = candidates.some(
-                    (c) => c.stage && c.stage[this.jobId] && c.stage[this.jobId] === this.stageId
-                );
+                // this.stageHasCandidate = candidates.some(
+                //     (c) => c.stage && c.stage[this.jobId] && c.stage[this.jobId] === this.stageId
+                // );
+                candidates.forEach((cand) => {
+                    if (cand.assignments && cand.assignments[this.jobId]) {
+                        cand.assignments[this.jobId].forEach((c) => {
+                            if (c.stageId === this.stageId) {
+                                this.stageHasCandidate = true;
+                            }
+                        });
+                    }
+                });
             });
 
         this.jobService.getDevskillerTest().subscribe((res: any) => {
@@ -119,22 +128,26 @@ export class StageSettingsComponent implements OnInit {
                             this.stage.automatically_progress_matching_threshold
                         ],
                         weighting: this.fb.group({
-                            education: [17],
+                            education: [15],
                             job_titles: [28],
                             skills: [28],
-                            industries: [14],
-                            certifications: [7],
-                            management_level: [6]
+                            industries: [12],
+                            languages: [7],
+                            certifications: [4],
+                            executive_type: [3],
+                            management_level: [3]
                         })
                     });
                     if (this.stage.weighting) {
                         this.stageSettingsForm.get('weighting').patchValue({
-                            education: this.stage.weighting.education || 17,
+                            education: this.stage.weighting.education || 15,
                             job_titles: this.stage.weighting.job_titles || 28,
                             skills: this.stage.weighting.skills || 28,
-                            industries: this.stage.weighting.industries || 14,
-                            certifications: this.stage.weighting.certifications || 7,
-                            management_level: this.stage.weighting.management_level || 6
+                            industries: this.stage.weighting.industries || 12,
+                            languages: this.stage.weighting.industries || 7,
+                            certifications: this.stage.weighting.certifications || 4,
+                            executive_type: this.stage.weighting.executive_type || 3,
+                            management_level: this.stage.weighting.management_level || 3
                         });
                     }
                     // console.log(this.stage, this.stageSettingsForm.get('weighting'));
