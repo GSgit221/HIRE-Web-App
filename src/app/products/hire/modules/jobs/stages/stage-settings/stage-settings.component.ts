@@ -83,7 +83,11 @@ export class StageSettingsComponent implements OnInit {
                 // );
                 candidates.forEach((cand) => {
                     if (cand.assignments && cand.assignments[this.jobId]) {
-                        this.stageHasCandidate = cand.assignments[this.jobId].some((c) => c.stageId === this.stageId);
+                        cand.assignments[this.jobId].forEach((c) => {
+                            if (c.stageId === this.stageId) {
+                                this.stageHasCandidate = true;
+                            }
+                        });
                     }
                 });
             });
