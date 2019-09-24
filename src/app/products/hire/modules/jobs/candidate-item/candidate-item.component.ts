@@ -177,10 +177,12 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
             this.candidate.matching[this.jobId] &&
             this.candidate.matching[this.jobId].UnweightedCategoryScores
         ) {
-            this.candidate.matching[this.jobId].UnweightedCategoryScores.forEach(({ Category, UnweightedScore }) => {
-                if (!this.matchingMap[Category]) return;
-                scores[Category].score = UnweightedScore;
-            });
+            this.candidate.matching[this.jobId].UnweightedCategoryScores.forEach(
+                ({ Category, UnweightedScore, TermsFound = [] }) => {
+                    if (!this.matchingMap[Category]) return;
+                    scores[Category].score = TermsFound.length > 0 ? UnweightedScore : 0;
+                }
+            );
         }
         return Object.keys(scores).map((key) => scores[key]);
     }
