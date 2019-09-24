@@ -746,9 +746,13 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onCandidateDeleteDrop(event) {
         const deleteItem = event.dragData;
-        if (deleteItem) {
-            this.onDeleteCandidateClick(event.nativeEvent, deleteItem.id);
-        }
+        this.selection = {
+            columnId: deleteItem.stage[this.job.id],
+            candidates: {
+                [deleteItem.id]: true
+            }
+        };
+        this.onShowModal();
     }
 
     onCandidateSelect(columnId: string, candidateId: string): void {
