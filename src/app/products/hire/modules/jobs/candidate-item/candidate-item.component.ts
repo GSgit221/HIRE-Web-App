@@ -598,10 +598,6 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
         this.stars.forEach((s) => (s.hover = false));
     }
 
-    isValidField(form, key) {
-        return !this[form].get(key).valid && this.modalSubmission[form];
-    }
-
     onDecline() {
         if (this.declineModalForm.valid) {
             const {

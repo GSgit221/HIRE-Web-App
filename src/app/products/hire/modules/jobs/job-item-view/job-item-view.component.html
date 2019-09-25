@@ -54,7 +54,13 @@
     </div>
     <div class="blocks-separator mt10 mb10"></div>
     <div class="stages-section" appDragEnter="body" (dropFile)="onDropFile($event)">
-        <div class="stages-holder">
+        <div
+            class="stages-holder"
+            cdkDropList
+            cdkDropListOrientation="horizontal"
+            (cdkDropListDropped)="onStageDrop($event)"
+            [cdkDropListData]="stages"
+        >
             <div class="stage-column">
                 <div class="stage-column-holder">
                     <div class="stage-header" *ngIf="!hasSelection('applied')">
@@ -82,7 +88,7 @@
                             Progress
                         </button>
                     </div>
-                    <div
+                    <!-- <div
                         class="stage-content"
                         droppable
                         [dropScope]="['candidate']"
@@ -90,9 +96,18 @@
                         (onDrop)="onCandidateDrop($event, 'applied')"
                         [ngClass]="{ 'is-dragged-from-stage': isDraggedFromStage('applied') }"
                         appStageColumnHeight
+                    > -->
+                    <div
+                        class="stage-content"
+                        appStageColumnHeight
+                        id="applied"
+                        cdkDropList
+                        [cdkDropListConnectedTo]="getCDKConnections('applied')"
+                        [cdkDropListData]="appliedCandidates.visible"
+                        (cdkDropListDropped)="onCandidateDrop($event, 'applied')"
                     >
                         <!-- CANDIDATE BLOCK -->
-                        <app-candidate-block
+                        <!-- <app-candidate-block
                             (click)="onCandidateClick('applied', candidate.id)"
                             *ngFor="let candidate of appliedCandidates.visible"
                             draggable
@@ -105,14 +120,32 @@
                             [dragTransitClass]="'drag-transit'"
                             [candidate]="candidate"
                             [job]="job"
-                            (onDeleting)="onDeletingCandidate($event)"
-                            (deleted)="onDeletedCandidate($event)"
                             [resumeThreshold]="resumeThreshold"
                             [selected]="selection.columnId === 'applied' && selection.candidates[candidate.id]"
                             (onSelect)="onCandidateSelect('applied', $event)"
                             [candidateQuestions]="candidateQuestions[candidate.id]"
                         >
-                        </app-candidate-block>
+                        </app-candidate-block> -->
+                        <div
+                            class="candidate-block"
+                            *ngFor="let candidate of appliedCandidates.visible"
+                            cdkDrag
+                            [cdkDragData]="candidate"
+                            (cdkDragStarted)="onCDKDragStarted($event)"
+                            (cdkDragEnded)="onCDKDragEnded($event)"
+                        >
+                            <app-candidate-block
+                                (click)="onCandidateClick('applied', candidate.id)"
+                                [ngClass]="{ dd: candidate.isDdEmployee }"
+                                [candidate]="candidate"
+                                [job]="job"
+                                [resumeThreshold]="resumeThreshold"
+                                [selected]="selection.columnId === 'applied' && selection.candidates[candidate.id]"
+                                (onSelect)="onCandidateSelect('applied', $event)"
+                                [candidateQuestions]="candidateQuestions[candidate.id]"
+                            >
+                            </app-candidate-block>
+                        </div>
                         <!-- NO MATCHES -->
                         <div
                             class="no-matches-block"
@@ -142,11 +175,11 @@
                                 <span class="load-more" (click)="onLoadLess()">Show Less</span>
                             </div>
                         </div>
-                        <div class="drop-holder"></div>
+                        <!-- <div class="drop-holder"></div> -->
                     </div>
                 </div>
             </div>
-            <div
+            <!-- <div
                 class="stage-column"
                 *ngFor="let stage of stages; let i = index"
                 draggable
@@ -159,7 +192,8 @@
                 [dropScope]="['stage']"
                 [dragOverClass]="'over'"
                 (onDragOver)="onStageDragOver($event, stage.order)"
-            >
+            > -->
+            <div class="stage-column" *ngFor="let stage of stages; let i = index" cdkDrag>
                 <div class="stage-column-holder">
                     <div class="stage-header" *ngIf="!hasSelection(stage.id)">
                         <h2 class="title">{{ stage.title }}</h2>
@@ -179,17 +213,26 @@
                             Progress
                         </button>
                     </div>
-                    <div
+                    <!-- <div
                         class="stage-content"
                         droppable
                         [dropScope]="['candidate']"
                         [dragOverClass]="'drag-target-border'"
                         (onDrop)="onCandidateDrop($event, stage.id)"
                         [ngClass]="{ 'is-dragged-from-stage': isDraggedFromStage(stage.id) }"
+                    > -->
+                    <div
+                        class="stage-content"
+                        appStageColumnHeight
+                        [id]="stage.id"
+                        cdkDropList
+                        [cdkDropListConnectedTo]="getCDKConnections(stage.id)"
+                        [cdkDropListData]="candidatesByStage[stage.id]"
+                        (cdkDropListDropped)="onCandidateDrop($event, stage.id)"
                     >
-                        <app-candidate-block
+                        <!-- <app-candidate-block
                             (click)="onCandidateClick(stage.id, candidate.id)"
-                            *ngFor="let candidate of candidatesByStage[stage.id] || []"
+                            *ngFor="let candidate of candidatesByStage[stage.id]"
                             draggable
                             [dragScope]="['candidate']"
                             [dragData]="candidate"
@@ -200,14 +243,32 @@
                             [dragTransitClass]="'drag-transit'"
                             [candidate]="candidate"
                             [job]="job"
-                            (onDeleting)="onDeletingCandidate($event)"
-                            (deleted)="onDeletedCandidate($event)"
                             [resumeThreshold]="resumeThreshold"
                             [selected]="selection.columnId === stage.id && selection.candidates[candidate.id]"
                             (onSelect)="onCandidateSelect(stage.id, $event)"
                             [candidateQuestions]="candidateQuestions[candidate.id]"
-                        ></app-candidate-block>
-                        <div class="drop-holder"></div>
+                        ></app-candidate-block> -->
+                        <div
+                            class="candidate-block"
+                            *ngFor="let candidate of candidatesByStage[stage.id]"
+                            cdkDrag
+                            [cdkDragData]="candidate"
+                            (cdkDragStarted)="onCDKDragStarted($event)"
+                            (cdkDragEnded)="onCDKDragEnded($event)"
+                        >
+                            <app-candidate-block
+                                (click)="onCandidateClick(stage.id, candidate.id)"
+                                [ngClass]="{ dd: candidate.isDdEmployee }"
+                                [candidate]="candidate"
+                                [job]="job"
+                                [resumeThreshold]="resumeThreshold"
+                                [selected]="selection.columnId === stage.id && selection.candidates[candidate.id]"
+                                (onSelect)="onCandidateSelect(stage.id, $event)"
+                                [candidateQuestions]="candidateQuestions[candidate.id]"
+                            >
+                            </app-candidate-block>
+                        </div>
+                        <!-- <div class="drop-holder"></div> -->
                     </div>
                 </div>
             </div>
@@ -236,7 +297,7 @@
             </div>
         </div>
     </div>
-    <div class="remove-candidate-block" [ngClass]="{ visible: candidateIsDragged }">
+    <!-- <div class="remove-candidate-block" [ngClass]="{ visible: candidateIsDragged }">
         <div
             class="remove-candidate-block-holder"
             droppable
@@ -246,6 +307,18 @@
         >
             <svg-icon src="/assets/images/remove.svg"></svg-icon>
         </div>
+    </div> -->
+    <div class="remove-candidate-block" [ngClass]="{ visible: candidateIsDragged }">
+        <div class="remove-candidate-block-holder">
+            <svg-icon src="/assets/images/remove.svg"></svg-icon>
+        </div>
+        <div
+            class="trash-bin-holder"
+            id="trash-bin"
+            cdkDropList
+            [cdkDropListData]="trashBin"
+            (cdkDropListDropped)="onCandidateTrashDrop($event)"
+        ></div>
     </div>
 </div>
 <app-new-candidate-item
@@ -300,7 +373,7 @@
             You are about to decline <b>{{ hasSelection(selection.columnId) }}</b> candidate from
             <b>{{ job.title }}</b> role.
         </p>
-        <form [formGroup]="declineModalForm" class="action">
+        <form class="action">
             <div class="input-block"></div>
             <button class="btn danger" (click)="onSelectionDecline()">
                 Decline
@@ -352,7 +425,7 @@
         <p>
             This candidate has outstanding actions in the current stage. Are you sure you want to move this candidate?
         </p>
-        <form [formGroup]="declineModalForm" class="action">
+        <form class="action">
             <div class="input-block"></div>
             <button class="btn danger outline" (click)="proceedCandidate()">
                 Move Anyway

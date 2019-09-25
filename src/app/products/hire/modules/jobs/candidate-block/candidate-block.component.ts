@@ -12,8 +12,6 @@ export class CandidateBlockComponent implements OnInit {
     @Input() job: Job;
     @Input() resumeThreshold: number;
     @Input() selected: boolean;
-    @Output() onDeleting = new EventEmitter<boolean>();
-    @Output() deleted = new EventEmitter<string>();
     @Output() onSelect = new EventEmitter<string>();
     _candidateQuestions: any;
     @Input('candidateQuestions')
@@ -30,15 +28,6 @@ export class CandidateBlockComponent implements OnInit {
             .split(/[-|_]/g)
             .join(' ')
             .replace(/\w*\S/g, (t) => t[0].toUpperCase() + t.substr(1));
-    }
-
-    onDeleteCandidateClick(event, candidateId) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.onDeleting.next(true);
-        this.jobService.deleteCandidate(this.job.id, candidateId).subscribe(() => {
-            this.deleted.next(candidateId);
-        });
     }
 
     onSelectCandidateClick(event, candidateId) {
