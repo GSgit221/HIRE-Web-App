@@ -258,6 +258,9 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     prepareBlockData(candidate) {
+        if (!candidate.stage) {
+            candidate.stage = {};
+        }
         if (!candidate.blockData) {
             candidate.blockData = {};
         }
