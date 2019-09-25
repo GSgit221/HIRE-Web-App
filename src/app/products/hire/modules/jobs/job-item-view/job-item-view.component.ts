@@ -151,14 +151,15 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 console.log('Job candidates:', candidates);
                 this.initialLoad = true;
                 this.contentLoading = false;
-                const trashIDs = this.trashBin.map(({ id }) => id);
-                this.candidates = candidates.filter(({ id }) => !trashIDs.includes(id));
-                this.groupCandidatesByStage();
-
                 // Get questions
                 if (this.job.questions && this.job.questions.length) {
-                    this.prepareQuestionsAnswers();
+                    this.prepareQuestionsAnswers(candidates);
                 }
+                const trashIDs = this.trashBin.map(({ id }) => id);
+                this.candidates = candidates
+                    .filter(({ id }) => !trashIDs.includes(id))
+                    .map((c) => this.prepareBlockData(c));
+                this.groupCandidatesByStage();
             });
     }
 
@@ -194,8 +195,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.store.dispatch(new fromJobsStore.LoadJobCandidates(this.job.id));
     }
 
-    prepareQuestionsAnswers() {
-        this.candidates.forEach((candidate) => {
+    prepareQuestionsAnswers(candidates) {
+        candidates.forEach((candidate) => {
             if (this.job && candidate && this.job.questions) {
                 const candidateQ = {
                     hasAnswers: false,
@@ -992,4 +993,33 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     //             );
     //     }
     // }
+
+    prepareBlockData(candidate) {
+        if (!candidate.blockData) {
+            candidate.blockData = {};
+        }
+        candidate.blockData.id = candidate.id;
+        candidate.blockData.tags = candidate.tags;
+        candidate.blockData.profile_image = candidate.profile_image;
+        candidate.blockData.first_name = candidate.first_name;
+        candidate.blockData.last_name = candidate.last_name;
+        candidate.blockData.email = candidate.email;
+        candidate.blockData.score = candidate.score;
+
+        candidate.blockData.hasRead =
+            candidate.read && candidate.read.length
+                ? candidate.read.findIndex((jobId) => jobId === this.job.id) !== -1
+                : false;
+
+        candidate.blockData.employment_history =
+            candidate.employment_history && candidate.employment_history[0] ? candidate.employment_history[0] : null;
+
+        candidate.blockData.hasQuestionnaire = this.job.questionnaire ? true : false;
+        candidate.blockData.jobId = this.job.id;
+
+        candidate.blockData.complianceRateClass = this.getComplianceRateClass(candidate);
+        candidate.blockData.questionsClass = this.getQuestionsClass(candidate);
+        candidate.blockData.currentStageClass = this.getCurrentStageClass(candidate);
+        return candidate;
+    }
 }

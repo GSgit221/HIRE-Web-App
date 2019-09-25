@@ -118,12 +118,9 @@
                             [ngClass]="{ dd: candidate.isDdEmployee }"
                             [dragClass]="'dragged'"
                             [dragTransitClass]="'drag-transit'"
-                            [candidate]="candidate"
-                            [job]="job"
-                            [resumeThreshold]="resumeThreshold"
+                            [candidate]="candidate.blockData"
                             [selected]="selection.columnId === 'applied' && selection.candidates[candidate.id]"
                             (onSelect)="onCandidateSelect('applied', $event)"
-                            [candidateQuestions]="candidateQuestions[candidate.id]"
                         >
                         </app-candidate-block> -->
                         <div
@@ -137,12 +134,9 @@
                             <app-candidate-block
                                 (click)="onCandidateClick('applied', candidate.id)"
                                 [ngClass]="{ dd: candidate.isDdEmployee }"
-                                [candidate]="candidate"
-                                [job]="job"
-                                [resumeThreshold]="resumeThreshold"
+                                [candidate]="candidate.blockData"
                                 [selected]="selection.columnId === 'applied' && selection.candidates[candidate.id]"
                                 (onSelect)="onCandidateSelect('applied', $event)"
-                                [candidateQuestions]="candidateQuestions[candidate.id]"
                             >
                             </app-candidate-block>
                         </div>
@@ -241,12 +235,9 @@
                             [ngClass]="{ dd: candidate.isDdEmployee }"
                             [dragClass]="'dragged'"
                             [dragTransitClass]="'drag-transit'"
-                            [candidate]="candidate"
-                            [job]="job"
-                            [resumeThreshold]="resumeThreshold"
+                            [candidate]="candidate.blockData"
                             [selected]="selection.columnId === stage.id && selection.candidates[candidate.id]"
                             (onSelect)="onCandidateSelect(stage.id, $event)"
-                            [candidateQuestions]="candidateQuestions[candidate.id]"
                         ></app-candidate-block> -->
                         <div
                             class="candidate-block"
@@ -259,12 +250,9 @@
                             <app-candidate-block
                                 (click)="onCandidateClick(stage.id, candidate.id)"
                                 [ngClass]="{ dd: candidate.isDdEmployee }"
-                                [candidate]="candidate"
-                                [job]="job"
-                                [resumeThreshold]="resumeThreshold"
+                                [candidate]="candidate.blockData"
                                 [selected]="selection.columnId === stage.id && selection.candidates[candidate.id]"
                                 (onSelect)="onCandidateSelect(stage.id, $event)"
-                                [candidateQuestions]="candidateQuestions[candidate.id]"
                             >
                             </app-candidate-block>
                         </div>

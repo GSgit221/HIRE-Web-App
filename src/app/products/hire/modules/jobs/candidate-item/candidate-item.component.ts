@@ -127,6 +127,12 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                     return this.router.navigateByUrl('/not-found');
                 }
                 this.candidate = candidate;
+                if (!this.candidate.assignments) {
+                    this.candidate.assignments = {};
+                }
+                if (!this.candidate.assignments[this.jobId]) {
+                    this.candidate.assignments[this.jobId] = [];
+                }
                 forkJoin([this.jobService.getJob(this.jobId), this.questionnaireService.getVideoQuestions()]).subscribe(
                     (response: any) => {
                         this.contentLoading = false;
@@ -323,7 +329,6 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                 this.available_assessment[ass.type] = true;
                 if (ass.type === 'devskiller') {
                     ass.invitationCode = ass.candidate.examUrl.split('?')[1];
-
                     ass.invitationSent = moment.unix(ass.added_at).format('DD MMMM YYYY');
 
                     ass.assessmentComplete = moment(ass.candidate.testFinishDate).format('DD MMMM YYYY');
