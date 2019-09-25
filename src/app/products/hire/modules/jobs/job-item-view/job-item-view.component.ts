@@ -257,6 +257,35 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
+    prepareBlockData(candidate) {
+        if (!candidate.blockData) {
+            candidate.blockData = {};
+        }
+        candidate.blockData.id = candidate.id;
+        candidate.blockData.tags = candidate.tags;
+        candidate.blockData.profile_image = candidate.profile_image;
+        candidate.blockData.first_name = candidate.first_name;
+        candidate.blockData.last_name = candidate.last_name;
+        candidate.blockData.email = candidate.email;
+        candidate.blockData.score = candidate.score;
+
+        candidate.blockData.hasRead =
+            candidate.read && candidate.read.length
+                ? candidate.read.findIndex((jobId) => jobId === this.job.id) !== -1
+                : false;
+
+        candidate.blockData.employment_history =
+            candidate.employment_history && candidate.employment_history[0] ? candidate.employment_history[0] : null;
+
+        candidate.blockData.hasQuestionnaire = this.job.questionnaire ? true : false;
+        candidate.blockData.jobId = this.job.id;
+
+        candidate.blockData.complianceRateClass = this.getComplianceRateClass(candidate);
+        candidate.blockData.questionsClass = this.getQuestionsClass(candidate);
+        candidate.blockData.currentStageClass = this.getCurrentStageClass(candidate);
+        return candidate;
+    }
+
     getStageCompletion(candidate) {
         return this.getCurrentStageClass(candidate) === 'green';
     }
@@ -993,33 +1022,4 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     //             );
     //     }
     // }
-
-    prepareBlockData(candidate) {
-        if (!candidate.blockData) {
-            candidate.blockData = {};
-        }
-        candidate.blockData.id = candidate.id;
-        candidate.blockData.tags = candidate.tags;
-        candidate.blockData.profile_image = candidate.profile_image;
-        candidate.blockData.first_name = candidate.first_name;
-        candidate.blockData.last_name = candidate.last_name;
-        candidate.blockData.email = candidate.email;
-        candidate.blockData.score = candidate.score;
-
-        candidate.blockData.hasRead =
-            candidate.read && candidate.read.length
-                ? candidate.read.findIndex((jobId) => jobId === this.job.id) !== -1
-                : false;
-
-        candidate.blockData.employment_history =
-            candidate.employment_history && candidate.employment_history[0] ? candidate.employment_history[0] : null;
-
-        candidate.blockData.hasQuestionnaire = this.job.questionnaire ? true : false;
-        candidate.blockData.jobId = this.job.id;
-
-        candidate.blockData.complianceRateClass = this.getComplianceRateClass(candidate);
-        candidate.blockData.questionsClass = this.getQuestionsClass(candidate);
-        candidate.blockData.currentStageClass = this.getCurrentStageClass(candidate);
-        return candidate;
-    }
 }
