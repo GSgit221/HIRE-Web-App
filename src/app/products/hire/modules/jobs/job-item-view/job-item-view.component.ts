@@ -272,10 +272,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         candidate.blockData.email = candidate.email;
         candidate.blockData.score = candidate.score;
 
-        candidate.blockData.hasRead =
-            candidate.read && candidate.read.length
-                ? candidate.read.findIndex((jobId) => jobId === this.job.id) !== -1
-                : false;
+        candidate.blockData.hasRead = candidate.read ? candidate.read.includes(this.job.id) : false;
 
         candidate.blockData.employment_history =
             candidate.employment_history && candidate.employment_history[0] ? candidate.employment_history[0] : null;
@@ -735,7 +732,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.contentLoading = true;
         for (let candidateId of candidateIds) {
-            const { stage, read: originRead } = this.candidates.find(({ id }) => id === candidateId);
+            const candidate = this.candidates.find(({ id }) => id === candidateId);
+            const { stage, read: originRead } = candidate;
             const read = this.hasRead(originRead) ? [...originRead] : [...originRead, this.job.id];
             stage[jobId] = toId;
 
@@ -744,6 +742,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     if (!this.hasRead(originRead)) {
                         originRead.push(this.job.id);
                     }
+                    this.prepareBlockData(candidate);
                     console.log(`Candidate <${candidateId}> was progressed to - ${title}`);
                     this.candidateService
                         .addToAudit(jobId, candidateId, {
@@ -855,6 +854,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 if (!this.hasRead(originRead)) {
                     originRead.push(this.job.id);
                 }
+                this.prepareBlockData(this.candidates[candidateIndex]);
                 this.contentLoading = false;
                 console.log('Candidate stage was updated to:', stageId);
                 this.candidateService
@@ -875,7 +875,6 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     );
             });
         }
-        this.prepareBlockData(candidate);
         this.groupCandidatesByStage();
     }
 
