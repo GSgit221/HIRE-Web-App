@@ -258,6 +258,9 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     prepareBlockData(candidate) {
+        if (!candidate.stage) {
+            candidate.stage = {};
+        }
         if (!candidate.blockData) {
             candidate.blockData = {};
         }
@@ -872,6 +875,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     );
             });
         }
+        this.prepareBlockData(candidate);
         this.groupCandidatesByStage();
     }
 
