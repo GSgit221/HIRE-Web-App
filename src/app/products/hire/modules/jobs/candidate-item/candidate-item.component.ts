@@ -127,6 +127,12 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                     return this.router.navigateByUrl('/not-found');
                 }
                 this.candidate = candidate;
+                if (!this.candidate.assignments) {
+                    this.candidate.assignments = {};
+                }
+                if (!this.candidate.assignments[this.jobId]) {
+                    this.candidate.assignments[this.jobId] = [];
+                }
                 forkJoin([this.jobService.getJob(this.jobId), this.questionnaireService.getVideoQuestions()]).subscribe(
                     (response: any) => {
                         this.contentLoading = false;

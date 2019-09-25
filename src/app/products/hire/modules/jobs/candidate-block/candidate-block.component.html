@@ -29,16 +29,16 @@
         <strong
             class="title"
             *ngIf="candidate.first_name || candidate.last_name; else noFirstName"
-            [ngClass]="{ read: candidate.read }"
+            [ngClass]="{ read: candidate.hasRead }"
             >{{ candidate.first_name | titlecase }} {{ candidate.last_name | titlecase }}</strong
         >
         <ng-template #noFirstName>
-            <strong class="title" [ngClass]="{ read: hasRead }">{{ candidate.email }}</strong>
+            <strong class="title" [ngClass]="{ read: candidate.hasRead }">{{ candidate.email }}</strong>
         </ng-template>
-        <span class="position" *ngIf="candidate.employment_history && candidate.employment_history[0]"
-            >{{ candidate.employment_history[0].title | titlecase }}
+        <span class="position" *ngIf="candidate.employment_history"
+            >{{ candidate.employment_history.title | titlecase }}
             @
-            {{ candidate.employment_history[0].company | titlecase }}</span
+            {{ candidate.employment_history.company | titlecase }}</span
         >
         <span class="position" *ngIf="!candidate.employment_history">Unknown</span>
     </div>
@@ -46,7 +46,7 @@
 <div class="candidate-footer">
     <div class="candidate-footer-holder">
         <div class="block">
-            <div class="icon-holder" [attr.data-score]="candidate.score" [ngClass]="getComplianceRateClass()">
+            <div class="icon-holder" [attr.data-score]="candidate.score" [ngClass]="candidate.complianceRateClass">
                 <div class="status-icon success">
                     <div class="holder"></div>
                 </div>
@@ -72,8 +72,8 @@
             <span class="block-title">AI Matching</span>
         </div>
         <div class="block-separator"></div>
-        <div class="block" *ngIf="job.questionnaire">
-            <div class="icon-holder" [ngClass]="getQuestionsClass()">
+        <div class="block" *ngIf="candidate.hasQuestionnaire">
+            <div class="icon-holder" [ngClass]="candidate.questionsClass">
                 <div class="status-icon success">
                     <div class="holder"></div>
                 </div>
@@ -98,9 +98,9 @@
             </div>
             <span class="block-title">Questions</span>
         </div>
-        <div class="block-separator" *ngIf="job.questionnaire"></div>
+        <div class="block-separator" *ngIf="candidate.hasQuestionnaire"></div>
         <div class="block">
-            <div class="icon-holder" [ngClass]="getCurrentStageClass(candidate)">
+            <div class="icon-holder" [ngClass]="candidate.currentStageClass">
                 <div class="status-icon success">
                     <div class="holder"></div>
                 </div>

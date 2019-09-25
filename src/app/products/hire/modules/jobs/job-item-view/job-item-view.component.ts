@@ -147,14 +147,13 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 console.log('Job candidates:', candidates);
                 this.initialLoad = true;
                 this.contentLoading = false;
-                this.candidates = candidates;
-                this.groupCandidatesByStage();
-                this.setAppliedCanidates(this.candidates);
-
                 // Get questions
                 if (this.job.questions && this.job.questions.length) {
-                    this.prepareQuestionsAnswers();
+                    this.prepareQuestionsAnswers(candidates);
                 }
+                this.candidates = candidates.map((c) => this.prepareBlockData(c));
+                this.groupCandidatesByStage();
+                this.setAppliedCandidates(this.candidates);
             });
 
         // Decline modal
@@ -168,8 +167,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         return this.user.role === 'hiring_manager';
     }
 
-    prepareQuestionsAnswers() {
-        this.candidates.forEach((candidate) => {
+    prepareQuestionsAnswers(candidates) {
+        candidates.forEach((candidate) => {
             if (this.job && candidate && this.job.questions) {
                 const candidateQ = {
                     hasAnswers: false,
@@ -321,14 +320,15 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     stages_data: c.stages_data || {},
                     hasUser: c.hasUser || false,
                     hasUserReviewed: c.hasUserReviewed || false,
-                    matching: c.matching || null
+                    matching: c.matching || null,
+                    blockData: c.blockData
                 });
             }
         });
         // console.timeEnd('group');
     }
 
-    setAppliedCanidates(candidates: Candidate[]) {
+    setAppliedCandidates(candidates: Candidate[]) {
         // console.log('set applied candidates');
         // console.time('set');
         const sC: Candidate[] = [];
@@ -371,7 +371,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onLoadLess() {
         this.showMore = false;
-        this.setAppliedCanidates(this.candidates);
+        this.setAppliedCandidates(this.candidates);
     }
 
     onCandidateClick(columnId: string, candidateId: string) {
@@ -551,150 +551,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         }
         this.groupCandidatesByStage();
-        this.setAppliedCanidates(this.candidates);
-    }
-
-    getStageCompletion(candidate) {
-        return this.getCurrentStageClass(candidate) === 'green';
-    }
-
-    getComplianceRateClass(candidate) {
-        if ((candidate.hasUser && candidate.hasUserReviewed) || candidate.matching) {
-            if (candidate.score >= this.resumeThreshold) {
-                return 'green';
-            } else if (candidate.score >= this.resumeThreshold - 15 && candidate.score < this.resumeThreshold) {
-                return 'orange';
-            } else {
-                return 'red';
-            }
-        } else {
-            return 'yellow';
-        }
-    }
-
-    getQuestionsClass(candidate) {
-        if ((candidate.hasUser && candidate.hasUserReviewed) || candidate.matching) {
-            const _candidateQuestions = this.candidateQuestions[candidate.id];
-            if (_candidateQuestions && _candidateQuestions.hasAnswers) {
-                return _candidateQuestions.knockoutIncorrect ? 'red' : 'green';
-            } else {
-                return 'grey';
-            }
-        } else {
-            return 'grey';
-        }
-    }
-
-    getCurrentStageClass(candidate) {
-        //define stage
-        if (candidate.stage && candidate.stage[this.job.id] && candidate.stage[this.job.id] !== 'applied') {
-            const stageId = candidate.stage[this.job.id];
-            // need to check stages data
-            if (this.job && this.job.stages && this.job.stages.find((s) => s.id === stageId)) {
-                const stage = this.job.stages.find((s) => s.id === stageId);
-                if (stage && stage.assessment && stage.assessment.length) {
-                    if (
-                        (candidate.stages_data &&
-                            candidate.stages_data[this.job.id] &&
-                            candidate.stages_data[this.job.id][stageId]) ||
-                        (candidate.assignments &&
-                            candidate.assignments[this.job.id] &&
-                            candidate.assignments[this.job.id].find((ass) => ass.stageId === stageId))
-                    ) {
-                        const completed = [];
-                        const stageData =
-                            candidate.stages_data &&
-                            candidate.stages_data[this.job.id] &&
-                            candidate.stages_data[this.job.id][stageId]
-                                ? candidate.stages_data[this.job.id][stageId]
-                                : {};
-                        stage.assessment.forEach((ass) => {
-                            if (ass.type === 'personality') {
-                                if (stageData.personality_assessment) {
-                                    completed.push(true);
-                                } else {
-                                    completed.push(false);
-                                }
-                            }
-                            if (ass.type === 'video-interview') {
-                                if (stageData.videos && stageData.videos.completed) {
-                                    completed.push(true);
-                                } else {
-                                    completed.push(false);
-                                }
-                            }
-
-                            if (ass.type === 'logic-test') {
-                                if (stageData['logic-test']) {
-                                    completed.push(true);
-                                } else {
-                                    completed.push(false);
-                                }
-                            }
-
-                            if (ass.type === 'devskiller') {
-                                const devAss =
-                                    candidate.assignments && candidate.assignments[this.job.id]
-                                        ? candidate.assignments[this.job.id].find(
-                                              (a) => a.stageId === stageId && ass.type === 'devskiller'
-                                          )
-                                        : {};
-                                if (devAss.completed) {
-                                    completed.push(true);
-                                } else {
-                                    completed.push(false);
-                                }
-                            }
-                        });
-                        // console.log(candidate.id, candidate.first_name, completed);
-                        return completed.every((c) => c) ? 'green' : 'grey';
-                    } else {
-                        return 'grey';
-                    }
-                } else {
-                    return 'green';
-                }
-            } else {
-                return 'green';
-            }
-        } else {
-            // APPLIED STAGE
-            const complienceRate = this.getComplianceRateClass(candidate);
-            const questionsStatus = this.job.questionnaire ? this.getQuestionsClass(candidate) : null;
-            const values = [];
-            values.push(this._getClassValue(complienceRate));
-            if (questionsStatus) {
-                values.push(this._getClassValue(questionsStatus));
-            }
-            const minValue = Math.min(...values);
-            return this._getClassFromValue(minValue);
-        }
-    }
-
-    _getClassValue(className) {
-        switch (className) {
-            case 'green':
-                return 3;
-            case 'orange':
-                return 2;
-            case 'red':
-                return 1;
-            default:
-                return 0;
-        }
-    }
-
-    _getClassFromValue(value) {
-        switch (value) {
-            case 3:
-                return 'green';
-            case 2:
-                return 'orange';
-            case 1:
-                return 'red';
-            default:
-                return 'grey';
-        }
+        this.setAppliedCandidates(this.candidates);
     }
 
     getJobResumeMatchingThreshold() {
@@ -707,12 +564,14 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onCandidateDragStart(candidate, stageId) {
+        console.log('onCandidateDragStart');
         this.candidateIsDragged = true;
         // console.log('candidate', candidate, stageId);
         this.draggedFromStage = stageId;
     }
 
     onCandidateDragEnd(candidate, stageId) {
+        console.log('onCandidateDragEnd');
         this.candidateIsDragged = false;
         this.draggedFromStage = null;
     }
@@ -834,7 +693,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             this.contentLoading = false;
             this.onShowModal(false);
             this.groupCandidatesByStage();
-            this.setAppliedCanidates(this.candidates);
+            this.setAppliedCandidates(this.candidates);
         } else {
             this.modalSubmission['declineModalForm'] = true;
         }
@@ -886,7 +745,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.contentLoading = false;
         this.groupCandidatesByStage();
-        this.setAppliedCanidates(this.candidates);
+        this.setAppliedCandidates(this.candidates);
     }
 
     onShowModal(visible = true, modal = 'decline') {
@@ -936,5 +795,177 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             filter((loaded) => loaded),
             take(1)
         );
+    }
+
+    prepareBlockData(candidate) {
+        if (!candidate.blockData) {
+            candidate.blockData = {};
+        }
+        candidate.blockData.id = candidate.id;
+        candidate.blockData.tags = candidate.tags;
+        candidate.blockData.profile_image = candidate.profile_image;
+        candidate.blockData.first_name = candidate.first_name;
+        candidate.blockData.last_name = candidate.last_name;
+        candidate.blockData.email = candidate.email;
+        candidate.blockData.score = candidate.score;
+
+        candidate.blockData.hasRead =
+            candidate.read && candidate.read.length
+                ? candidate.read.findIndex((jobId) => jobId === this.job.id) !== -1
+                : false;
+
+        candidate.blockData.employment_history =
+            candidate.employment_history && candidate.employment_history[0] ? candidate.employment_history[0] : null;
+
+        candidate.blockData.hasQuestionnaire = this.job.questionnaire ? true : false;
+        candidate.blockData.jobId = this.job.id;
+
+        candidate.blockData.complianceRateClass = this.getComplianceRateClass(candidate);
+        candidate.blockData.questionsClass = this.getQuestionsClass(candidate);
+        candidate.blockData.currentStageClass = this.getCurrentStageClass(candidate);
+        return candidate;
+    }
+
+    getStageCompletion(candidate) {
+        return this.getCurrentStageClass(candidate) === 'green';
+    }
+
+    getComplianceRateClass(candidate) {
+        if ((candidate.hasUser && candidate.hasUserReviewed) || candidate.matching) {
+            if (candidate.score >= this.resumeThreshold) {
+                return 'green';
+            } else if (candidate.score >= this.resumeThreshold - 15 && candidate.score < this.resumeThreshold) {
+                return 'orange';
+            } else {
+                return 'red';
+            }
+        } else {
+            return 'yellow';
+        }
+    }
+
+    getQuestionsClass(candidate) {
+        if ((candidate.hasUser && candidate.hasUserReviewed) || candidate.matching) {
+            const _candidateQuestions = this.candidateQuestions[candidate.id];
+            if (_candidateQuestions && _candidateQuestions.hasAnswers) {
+                return _candidateQuestions.knockoutIncorrect ? 'red' : 'green';
+            } else {
+                return 'grey';
+            }
+        } else {
+            return 'grey';
+        }
+    }
+
+    getCurrentStageClass(candidate) {
+        //define stage
+        if (candidate.stage && candidate.stage[this.job.id] && candidate.stage[this.job.id] !== 'applied') {
+            const stageId = candidate.stage[this.job.id];
+            // need to check stages data
+            if (this.job && this.job.stages && this.job.stages.find((s) => s.id === stageId)) {
+                const stage = this.job.stages.find((s) => s.id === stageId);
+                if (stage && stage.assessment && stage.assessment.length) {
+                    if (
+                        (candidate.stages_data &&
+                            candidate.stages_data[this.job.id] &&
+                            candidate.stages_data[this.job.id][stageId]) ||
+                        (candidate.assignments &&
+                            candidate.assignments[this.job.id] &&
+                            candidate.assignments[this.job.id].find((ass) => ass.stageId === stageId))
+                    ) {
+                        const completed = [];
+                        const stageData =
+                            candidate.stages_data &&
+                            candidate.stages_data[this.job.id] &&
+                            candidate.stages_data[this.job.id][stageId]
+                                ? candidate.stages_data[this.job.id][stageId]
+                                : {};
+                        stage.assessment.forEach((ass) => {
+                            if (ass.type === 'personality') {
+                                if (stageData.personality_assessment) {
+                                    completed.push(true);
+                                } else {
+                                    completed.push(false);
+                                }
+                            }
+                            if (ass.type === 'video-interview') {
+                                if (stageData.videos && stageData.videos.completed) {
+                                    completed.push(true);
+                                } else {
+                                    completed.push(false);
+                                }
+                            }
+
+                            if (ass.type === 'logic-test') {
+                                if (stageData['logic-test']) {
+                                    completed.push(true);
+                                } else {
+                                    completed.push(false);
+                                }
+                            }
+
+                            if (ass.type === 'devskiller') {
+                                const devAss =
+                                    candidate.assignments && candidate.assignments[this.job.id]
+                                        ? candidate.assignments[this.job.id].find(
+                                              (a) => a.stageId === stageId && ass.type === 'devskiller'
+                                          )
+                                        : {};
+                                if (devAss && devAss.completed) {
+                                    completed.push(true);
+                                } else {
+                                    completed.push(false);
+                                }
+                            }
+                        });
+                        // console.log(candidate.id, candidate.first_name, completed);
+                        return completed.every((c) => c) ? 'green' : 'grey';
+                    } else {
+                        return 'grey';
+                    }
+                } else {
+                    return 'green';
+                }
+            } else {
+                return 'green';
+            }
+        } else {
+            // APPLIED STAGE
+            const complienceRate = this.getComplianceRateClass(candidate);
+            const questionsStatus = this.job.questionnaire ? this.getQuestionsClass(candidate) : null;
+            const values = [];
+            values.push(this._getClassValue(complienceRate));
+            if (questionsStatus) {
+                values.push(this._getClassValue(questionsStatus));
+            }
+            const minValue = Math.min(...values);
+            return this._getClassFromValue(minValue);
+        }
+    }
+
+    _getClassValue(className) {
+        switch (className) {
+            case 'green':
+                return 3;
+            case 'orange':
+                return 2;
+            case 'red':
+                return 1;
+            default:
+                return 0;
+        }
+    }
+
+    _getClassFromValue(value) {
+        switch (value) {
+            case 3:
+                return 'green';
+            case 2:
+                return 'orange';
+            case 1:
+                return 'red';
+            default:
+                return 'grey';
+        }
     }
 }

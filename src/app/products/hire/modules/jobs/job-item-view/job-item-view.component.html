@@ -103,14 +103,9 @@
                             [ngClass]="{ dd: candidate.isDdEmployee }"
                             [dragClass]="'dragged'"
                             [dragTransitClass]="'drag-transit'"
-                            [candidate]="candidate"
-                            [job]="job"
-                            (onDeleting)="onDeletingCandidate($event)"
-                            (deleted)="onDeletedCandidate($event)"
-                            [resumeThreshold]="resumeThreshold"
+                            [candidate]="candidate.blockData"
                             [selected]="selection.columnId === 'applied' && selection.candidates[candidate.id]"
                             (onSelect)="onCandidateSelect('applied', $event)"
-                            [candidateQuestions]="candidateQuestions[candidate.id]"
                         >
                         </app-candidate-block>
                         <!-- NO MATCHES -->
@@ -198,14 +193,9 @@
                             [ngClass]="{ dd: candidate.isDdEmployee }"
                             [dragClass]="'dragged'"
                             [dragTransitClass]="'drag-transit'"
-                            [candidate]="candidate"
-                            [job]="job"
-                            (onDeleting)="onDeletingCandidate($event)"
-                            (deleted)="onDeletedCandidate($event)"
-                            [resumeThreshold]="resumeThreshold"
+                            [candidate]="candidate.blockData"
                             [selected]="selection.columnId === stage.id && selection.candidates[candidate.id]"
                             (onSelect)="onCandidateSelect(stage.id, $event)"
-                            [candidateQuestions]="candidateQuestions[candidate.id]"
                         ></app-candidate-block>
                         <div class="drop-holder"></div>
                     </div>
