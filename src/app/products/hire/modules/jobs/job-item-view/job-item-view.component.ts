@@ -872,6 +872,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     );
             });
         }
+        this.prepareBlockData(candidate);
         this.groupCandidatesByStage();
     }
 
