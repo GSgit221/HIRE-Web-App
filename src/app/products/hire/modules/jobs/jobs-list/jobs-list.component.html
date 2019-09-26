@@ -92,7 +92,7 @@
                     </span>
                 </div> -->
                 <div class="hc-list-header">
-                    <div class="col col1 flex-4 hc-checkbox-col">
+                    <!-- <div class="col col1 flex-4 hc-checkbox-col">
                         <div class="hc-checkbox">
                             <p-checkbox
                                 binary="true"
@@ -100,11 +100,11 @@
                                 (onChange)="onSelectAllChange()"
                             ></p-checkbox>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col col2 flex-6 status-col">
                         <span class="status" style="margin-left: 11px;"></span>
                     </div>
-                    <div class="col col3 flex-25">
+                    <div class="col col3 flex-30">
                         Job Title
                         <span class="sort-icon">
                             <img src="/assets/images/sort_asc.svg" alt="" width="14" height="13" />
@@ -127,7 +127,7 @@
                     <div class="hc-blocker"></div>
                     <div class="hc-list-row" *ngFor="let item of filterByOwner; let i = index">
                         <div class="hc-list-row-content" (click)="onItemClick($event, item)">
-                            <div class="col col1 flex-4  hc-checkbox-col">
+                            <!-- <div class="col col1 flex-4  hc-checkbox-col">
                                 <div class="hc-checkbox" data-escape-click>
                                     <p-checkbox
                                         binary="true"
@@ -135,14 +135,14 @@
                                         (onChange)="onItemSeletectedChange()"
                                     ></p-checkbox>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col col2 flex-6 status-col" data-escape-click>
                                 <app-switch
                                     [value]="item.status === 'LIVE'"
                                     (onChange)="onJobStatusChange($event, item)"
                                 ></app-switch>
                             </div>
-                            <div class="col col3  flex-25 truncate-text-col">
+                            <div class="col col3  flex-30 truncate-text-col">
                                 <p class="hc-content-p">
                                     <span *ngIf="item.ref">({{ item.ref }}) - </span>{{ item.title }}
                                 </p>
