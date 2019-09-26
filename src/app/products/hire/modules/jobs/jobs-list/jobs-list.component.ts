@@ -56,8 +56,8 @@ export class JobsListComponent implements OnInit {
         });
         this.store.pipe(select(fromStoreSelectors.getAllJobs)).subscribe((jobs: Job[]) => {
             this.list = jobs.map((item) => ({ ...item }));
-            this.calculateSelectedItems();
             this.filteredList = this.list.slice(0);
+            this.calculateSelectedItems();
             this.contentLoading = false;
         });
         this.store.pipe(select(fromStoreSelectors.getJobsLoaded)).subscribe((loaded: boolean) => {
@@ -134,23 +134,18 @@ export class JobsListComponent implements OnInit {
 
     onSelectAllChange() {
         if (this.selectedAll) {
-            this.filteredList.forEach((item) => (item.selected = true));
+            this.filterByOwner.forEach((item) => (item.selected = true));
         } else {
-            this.filteredList.forEach((item) => (item.selected = false));
+            this.filterByOwner.forEach((item) => (item.selected = false));
         }
-        this.calculateSelectedItems();
     }
 
     onItemSeletectedChange() {
-        this.selectedAll = this.filteredList.every((item) => item.selected);
         this.calculateSelectedItems();
     }
 
-    private calculateSelectedItems() {
-        this.selectedItems = this.filteredList.filter((item) => item.selected).length;
-        if (!this.selectedItems) {
-            this.selectedAll = false;
-        }
+    calculateSelectedItems() {
+        this.selectedAll = this.filterByOwner.length && this.filterByOwner.every((item) => item.selected);
     }
 
     getHm(id: string) {
@@ -159,7 +154,7 @@ export class JobsListComponent implements OnInit {
 
     onItemsBulkRemove() {
         this.contentLoading = true;
-        const itemsToRemove = this.filteredList.filter((item) => item.selected).map((item) => item.id);
+        const itemsToRemove = this.filterByOwner.filter((item) => item.selected).map((item) => item.id);
         this.store.dispatch(new fromStoreActions.BulkDeleteJobs(itemsToRemove));
         this.store.dispatch(new fromStoreActions.LoadJobs());
     }
@@ -181,10 +176,12 @@ export class JobsListComponent implements OnInit {
         console.log('onFilterChanges', value);
         this.filter = value;
         this.filterItems();
+        this.calculateSelectedItems();
     }
 
     onOwnerFilterChange(value: string) {
         this.ownerFilter = value;
+        this.calculateSelectedItems();
     }
 
     get filterByOwner(): any[] {
