@@ -287,7 +287,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     getStageCompletion(candidate) {
-        return this.getCurrentStageClass(candidate) === 'green';
+        return this.getCurrentStageClass(candidate) !== 'grey';
     }
 
     getComplianceRateClass(candidate) {
@@ -399,12 +399,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             const questionsStatus = this._getClassValue(
                 this.job.questionnaire ? this.getQuestionsClass(candidate) : 'grey'
             );
-            const values = [];
-            values.push(complienceRate);
-            if (questionsStatus) {
-                values.push(questionsStatus);
-            }
-            const minValue = Math.min(...values);
+            const minValue = Math.min(complienceRate, questionsStatus);
             return this._getClassFromValue(minValue);
         }
     }
