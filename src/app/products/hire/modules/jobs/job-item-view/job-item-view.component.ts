@@ -343,24 +343,26 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                         stage.assessment.forEach((ass) => {
                             if (ass.type === 'personality') {
                                 if (stageData.personality_assessment) {
-                                    completed.push(true);
+                                    completed.push(3);
                                 } else {
-                                    completed.push(false);
+                                    completed.push(0);
                                 }
                             }
                             if (ass.type === 'video-interview') {
                                 if (stageData.videos && stageData.videos.completed) {
-                                    completed.push(true);
+                                    completed.push(3);
                                 } else {
-                                    completed.push(false);
+                                    completed.push(0);
                                 }
                             }
 
                             if (ass.type === 'logic-test') {
-                                if (stageData['logic-test']) {
-                                    completed.push(true);
+                                const logicTest = stageData['logic-test'];
+                                if (logicTest && logicTest.score >= 0) {
+                                    if (logicTest.score < 6) completed.push(1);
+                                    else completed.push(logicTest.score >= 8 ? 3 : 2);
                                 } else {
-                                    completed.push(false);
+                                    completed.push(0);
                                 }
                             }
 
@@ -370,16 +372,18 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                                         ? candidate.assignments[this.job.id].find(
                                               (a) => a.stageId === stageId && ass.type === 'devskiller'
                                           )
-                                        : {};
-                                if (devAss.completed) {
-                                    completed.push(true);
+                                        : null;
+                                if (devAss && devAss.completed) {
+                                    const score = (devAss.results.scoredPoints / devAss.results.maxPoints) * 100;
+                                    if (score < 40) completed.push(1);
+                                    else completed.push(score >= 60 ? 3 : 2);
                                 } else {
-                                    completed.push(false);
+                                    completed.push(0);
                                 }
                             }
                         });
                         // console.log(candidate.id, candidate.first_name, completed);
-                        return completed.every((c) => c) ? 'green' : 'grey';
+                        return this._getClassFromValue(Math.min(...completed));
                     } else {
                         return 'grey';
                     }
@@ -391,12 +395,14 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         } else {
             // APPLIED STAGE
-            const complienceRate = this.getComplianceRateClass(candidate);
-            const questionsStatus = this.job.questionnaire ? this.getQuestionsClass(candidate) : null;
+            const complienceRate = this._getClassValue(this.getComplianceRateClass(candidate));
+            const questionsStatus = this._getClassValue(
+                this.job.questionnaire ? this.getQuestionsClass(candidate) : 'grey'
+            );
             const values = [];
-            values.push(this._getClassValue(complienceRate));
+            values.push(complienceRate);
             if (questionsStatus) {
-                values.push(this._getClassValue(questionsStatus));
+                values.push(questionsStatus);
             }
             const minValue = Math.min(...values);
             return this._getClassFromValue(minValue);
