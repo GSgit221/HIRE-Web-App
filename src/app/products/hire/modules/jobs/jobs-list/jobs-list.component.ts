@@ -142,6 +142,7 @@ export class JobsListComponent implements OnInit {
     }
 
     onItemSeletectedChange() {
+        this.selectedAll = this.filteredList.every((item) => item.selected);
         this.calculateSelectedItems();
     }
 
