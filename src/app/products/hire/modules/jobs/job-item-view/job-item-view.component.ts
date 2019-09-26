@@ -370,7 +370,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                                 const devAss =
                                     candidate.assignments && candidate.assignments[this.job.id]
                                         ? candidate.assignments[this.job.id].find(
-                                              (a) => a.stageId === stageId && ass.type === 'devskiller'
+                                              (a) => a.stageId === stageId && a.type === 'devskiller'
                                           )
                                         : null;
                                 if (devAss && devAss.completed) {
