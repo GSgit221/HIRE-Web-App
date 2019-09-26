@@ -396,10 +396,13 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             // APPLIED STAGE
             const complienceRate = this._getClassValue(this.getComplianceRateClass(candidate));
-            const questionsStatus = this._getClassValue(
-                this.job.questionnaire ? this.getQuestionsClass(candidate) : 'grey'
-            );
-            const minValue = Math.min(complienceRate, questionsStatus);
+            const questionsStatus = this._getClassValue(this.getQuestionsClass(candidate));
+            const values = [];
+            values.push(complienceRate);
+            if (this.job.questionnaire) {
+                values.push(questionsStatus);
+            }
+            const minValue = Math.min(...values);
             return this._getClassFromValue(minValue);
         }
     }
