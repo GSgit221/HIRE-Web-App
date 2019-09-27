@@ -1,3 +1,5 @@
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop'; // CDK-Integration
+
 import {
     AfterViewInit,
     Component,
@@ -15,7 +17,8 @@ import { UtilitiesService } from '@app/core/services';
 import { environment } from '@env/environment';
 import { select, Store } from '@ngrx/store';
 import { ToastrService } from 'ngx-toastr';
-import { forkJoin, of, Subscription } from 'rxjs';
+import { forkJoin, Observable, of, Subscription } from 'rxjs';
+import { filter, take, tap } from 'rxjs/operators';
 
 import { Candidate, Job, Stage, User } from '../../../../../core/models';
 import { CandidateService, EmailService, JobService, QuestionnaireService } from '../../../../../core/services';
@@ -59,7 +62,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     uploadError: string;
     droppedFiles: File[] = [];
     candidates: Candidate[] = [];
-    draggedFromStage: any = null;
+    // draggedFromStage: any = null;
     appliedCandidates: any = {
         visible: [],
         hidden: [],
@@ -67,7 +70,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     };
     resumeThreshold = 60;
     candidateIsDragged = false;
-    draggedStage: any;
+    // draggedStage: any;
     href: any;
     showTick: boolean = false;
     showCopyBoard: boolean = true;
@@ -78,8 +81,6 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         candidates: {}
     };
     declineModalVisible: boolean = false;
-    declineModalForm: FormGroup;
-    modalSubmission: object = {};
     emailModalVisible: boolean = false;
     candidatesByStage = {};
 
@@ -94,6 +95,10 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     draggedCandidate: Candidate;
     droppedStage: string;
     confirmModalVisible: boolean = false;
+
+    // CDK-Integration
+    trashBin: any[] = [];
+    cdkEvent: CdkDragDrop<any[]> = null;
 
     constructor(
         private router: Router,
@@ -136,36 +141,62 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.stages = this.job.stages.filter((stage) => stage.id !== 'applied').sort((a, b) => a.order - b.order);
 
         // Get candidates
-        this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.job.id));
+        // this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.job.id));
+        this.checkStoreForCandidates().subscribe(() => {
+            console.log('Checked candidates loaded');
+        });
         this.candidatesSubscription = this.jobsStore
             .pipe(select(fromJobCandiatesSelector.getJobCandidates, { jobId: this.job.id }))
             .subscribe((candidates: any) => {
                 console.log('Job candidates:', candidates);
                 this.initialLoad = true;
                 this.contentLoading = false;
-                this.candidates = candidates;
-                this.groupCandidatesByStage();
-                this.setAppliedCanidates(this.candidates);
-
                 // Get questions
                 if (this.job.questions && this.job.questions.length) {
-                    this.prepareQuestionsAnswers();
+                    this.prepareQuestionsAnswers(candidates);
                 }
+                const trashIDs = this.trashBin.map(({ id }) => id);
+                this.candidates = candidates
+                    .filter(({ id }) => !trashIDs.includes(id))
+                    .map((c) => this.prepareBlockData(c));
+                this.groupCandidatesByStage();
             });
-
-        // Decline modal
-        this.declineModalForm = this.fb.group({});
     }
 
     ngAfterViewInit() {}
 
-    get isHiringManager() {
-        if (!this.user) return true;
-        return this.user.role === 'hiring_manager';
+    ngOnDestroy(): void {
+        if (this.userSubscription) {
+            this.userSubscription.unsubscribe();
+        }
+        if (this.usersSubscription) {
+            this.usersSubscription.unsubscribe();
+        }
+
+        if (this.candidatesSubscription) {
+            this.candidatesSubscription.unsubscribe();
+        }
     }
 
-    prepareQuestionsAnswers() {
-        this.candidates.forEach((candidate) => {
+    checkStoreForCandidates(): Observable<boolean> {
+        return this.store.pipe(
+            select(fromJobCandiatesSelector.getJobCandidatesLoaded, { jobId: this.job.id }),
+            tap((loaded) => {
+                if (!loaded) {
+                    this.store.dispatch(new fromJobsStore.LoadJobCandidates(this.job.id));
+                }
+            }),
+            filter((loaded) => loaded),
+            take(1)
+        );
+    }
+
+    loadJobCandidates() {
+        this.store.dispatch(new fromJobsStore.LoadJobCandidates(this.job.id));
+    }
+
+    prepareQuestionsAnswers(candidates) {
+        candidates.forEach((candidate) => {
             if (this.job && candidate && this.job.questions) {
                 const candidateQ = {
                     hasAnswers: false,
@@ -226,6 +257,200 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
+    prepareBlockData(candidate) {
+        if (!candidate.stage) {
+            candidate.stage = {};
+        }
+        if (!candidate.blockData) {
+            candidate.blockData = {};
+        }
+        candidate.blockData.id = candidate.id;
+        candidate.blockData.tags = candidate.tags;
+        candidate.blockData.profile_image = candidate.profile_image;
+        candidate.blockData.first_name = candidate.first_name;
+        candidate.blockData.last_name = candidate.last_name;
+        candidate.blockData.email = candidate.email;
+        candidate.blockData.score = candidate.score;
+
+        candidate.blockData.hasRead = candidate.read ? candidate.read.includes(this.job.id) : false;
+
+        candidate.blockData.employment_history =
+            candidate.employment_history && candidate.employment_history[0] ? candidate.employment_history[0] : null;
+
+        candidate.blockData.hasQuestionnaire = this.job.questionnaire ? true : false;
+        candidate.blockData.jobId = this.job.id;
+
+        candidate.blockData.complianceRateClass = this.getComplianceRateClass(candidate);
+        candidate.blockData.questionsClass = this.getQuestionsClass(candidate);
+        candidate.blockData.currentStageClass = this.getCurrentStageClass(candidate);
+        return candidate;
+    }
+
+    getStageCompletion(candidate) {
+        return this.getCurrentStageClass(candidate) !== 'grey';
+    }
+
+    getComplianceRateClass(candidate) {
+        if ((candidate.hasUser && candidate.hasUserReviewed) || candidate.matching) {
+            if (candidate.score >= this.resumeThreshold) {
+                return 'green';
+            } else if (candidate.score >= this.resumeThreshold - 15 && candidate.score < this.resumeThreshold) {
+                return 'orange';
+            } else {
+                return 'red';
+            }
+        } else {
+            return 'yellow';
+        }
+    }
+
+    getQuestionsClass(candidate) {
+        if ((candidate.hasUser && candidate.hasUserReviewed) || candidate.matching) {
+            const _candidateQuestions = this.candidateQuestions[candidate.id];
+            if (_candidateQuestions && _candidateQuestions.hasAnswers) {
+                return _candidateQuestions.knockoutIncorrect ? 'red' : 'green';
+            } else {
+                return 'grey';
+            }
+        } else {
+            return 'grey';
+        }
+    }
+
+    getCurrentStageClass(candidate) {
+        //define stage
+        if (candidate.stage && candidate.stage[this.job.id] && candidate.stage[this.job.id] !== 'applied') {
+            const stageId = candidate.stage[this.job.id];
+            // need to check stages data
+            if (this.job && this.job.stages && this.job.stages.find((s) => s.id === stageId)) {
+                const stage = this.job.stages.find((s) => s.id === stageId);
+                if (stage && stage.assessment && stage.assessment.length) {
+                    if (
+                        (candidate.stages_data &&
+                            candidate.stages_data[this.job.id] &&
+                            candidate.stages_data[this.job.id][stageId]) ||
+                        (candidate.assignments &&
+                            candidate.assignments[this.job.id] &&
+                            candidate.assignments[this.job.id].find((ass) => ass.stageId === stageId))
+                    ) {
+                        const completed = [];
+                        const stageData =
+                            candidate.stages_data &&
+                            candidate.stages_data[this.job.id] &&
+                            candidate.stages_data[this.job.id][stageId]
+                                ? candidate.stages_data[this.job.id][stageId]
+                                : {};
+                        stage.assessment.forEach((ass) => {
+                            if (ass.type === 'personality') {
+                                if (stageData.personality_assessment) {
+                                    completed.push(3);
+                                } else {
+                                    completed.push(0);
+                                }
+                            }
+                            if (ass.type === 'video-interview') {
+                                if (stageData.videos && stageData.videos.completed) {
+                                    completed.push(3);
+                                } else {
+                                    completed.push(0);
+                                }
+                            }
+
+                            if (ass.type === 'logic-test') {
+                                const logicTest = stageData['logic-test'];
+                                if (logicTest && logicTest.score >= 0) {
+                                    if (logicTest.score < 6) completed.push(1);
+                                    else completed.push(logicTest.score >= 8 ? 3 : 2);
+                                } else {
+                                    completed.push(0);
+                                }
+                            }
+
+                            if (ass.type === 'devskiller') {
+                                const devAss =
+                                    candidate.assignments && candidate.assignments[this.job.id]
+                                        ? candidate.assignments[this.job.id].find(
+                                              (a) => a.stageId === stageId && a.type === 'devskiller'
+                                          )
+                                        : null;
+                                if (devAss && devAss.completed) {
+                                    const score = (devAss.results.scoredPoints / devAss.results.maxPoints) * 100;
+                                    if (score < 40) completed.push(1);
+                                    else completed.push(score >= 60 ? 3 : 2);
+                                } else {
+                                    completed.push(0);
+                                }
+                            }
+                        });
+                        // console.log(candidate.id, candidate.first_name, completed);
+                        return this._getClassFromValue(Math.min(...completed));
+                    } else {
+                        return 'grey';
+                    }
+                } else {
+                    return 'green';
+                }
+            } else {
+                return 'green';
+            }
+        } else {
+            // APPLIED STAGE
+            const complienceRate = this._getClassValue(this.getComplianceRateClass(candidate));
+            const questionsStatus = this._getClassValue(this.getQuestionsClass(candidate));
+            const values = [];
+            values.push(complienceRate);
+            if (this.job.questionnaire) {
+                values.push(questionsStatus);
+            }
+            const minValue = Math.min(...values);
+            return this._getClassFromValue(minValue);
+        }
+    }
+
+    _getClassValue(className) {
+        switch (className) {
+            case 'green':
+                return 3;
+            case 'orange':
+                return 2;
+            case 'red':
+                return 1;
+            default:
+                return 0;
+        }
+    }
+
+    _getClassFromValue(value) {
+        switch (value) {
+            case 3:
+                return 'green';
+            case 2:
+                return 'orange';
+            case 1:
+                return 'red';
+            default:
+                return 'grey';
+        }
+    }
+
+    getJobResumeMatchingThreshold() {
+        let threshold = 60;
+        if (this.job && this.job.stages && this.job.stages.find((s) => s.id === 'applied')) {
+            const appliedStage = this.job.stages.find((s) => s.id === 'applied');
+            threshold = appliedStage.resume_matching_threshold;
+        }
+        return threshold;
+    }
+
+    get isHiringManager() {
+        if (!this.user) return true;
+        return this.user.role === 'hiring_manager';
+    }
+
+    getHm(id: string) {
+        return this.users.find((user: User) => user.id === id) || null;
+    }
+
     resetSelection() {
         this.selection = {
             columnId: 'applied',
@@ -233,12 +458,14 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         };
     }
 
-    onJobStatusChange(event, item) {
-        const status = event ? 'LIVE' : 'BUILD';
-        this.jobService.updateJob(item.id, { status }).subscribe(() => {
-            console.log(`Job <${item.id}> status updated`);
-            item.status = status;
-        });
+    hasRead(read: string[]) {
+        const jobId = this.job.id;
+        return read.findIndex((jId) => jId === jobId) !== -1;
+    }
+
+    isLastStage(stageId: string) {
+        const stageIndex = this.stages.findIndex(({ id }) => id === stageId);
+        return stageIndex === this.stages.length - 1;
     }
 
     copyURL(val: string) {
@@ -264,86 +491,49 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.toastr.success('The link has been copied to the dashboard.');
     }
 
-    stageCandidates(stageName: string) {
-        if (this.candidates && this.candidates.length) {
-            const sC: Candidate[] = [];
-            this.candidates.forEach((c) => {
-                if (c.stage && c.stage[this.job.id]) {
-                    if (c.stage[this.job.id] === stageName) {
-                        sC.push(c);
-                    }
-                } else {
-                    if (stageName === 'applied') {
-                        sC.push(c);
-                    }
-                }
-            });
-            // console.log('return stage candidates', stageName);
-            return sC;
-        } else {
-            return [];
-        }
-    }
+    // stageCandidates(stageName: string) {
+    //     if (this.candidates && this.candidates.length) {
+    //         const sC: Candidate[] = [];
+    //         this.candidates.forEach((c) => {
+    //             if (c.stage && c.stage[this.job.id]) {
+    //                 if (c.stage[this.job.id] === stageName) {
+    //                     sC.push(c);
+    //                 }
+    //             } else {
+    //                 if (stageName === 'applied') {
+    //                     sC.push(c);
+    //                 }
+    //             }
+    //         });
+    //         // console.log('return stage candidates', stageName);
+    //         return sC;
+    //     } else {
+    //         return [];
+    //     }
+    // }
 
-    groupCandidatesByStage() {
-        // console.time('group');
-        this.candidatesByStage = {};
+    groupCandidatesByStage(appliedOnly = false) {
+        // console.time('set');
+        const appliedCandidates = [];
+        const stageCandidates = [];
         this.candidates.forEach((c) => {
             if (c.stage && c.stage[this.job.id]) {
-                const stageName = c.stage[this.job.id];
-                if (!this.candidatesByStage[stageName]) {
-                    this.candidatesByStage[stageName] = [];
-                }
-                this.candidatesByStage[stageName].push({
-                    resume_file: c.resume_file,
-                    resume_file_new: c.resume_file_new,
-                    application_completed: c.application_completed,
-                    markedAsUnsuccessful: c.markedAsUnsuccessful,
-                    assignments: c.assignments,
-                    score: c.score,
-                    profile_image: c.profile_image,
-                    id: c.id,
-                    email: c.email,
-                    employment_history: c.employment_history,
-                    created_at_rel: c.created_at_rel,
-                    updated_at_rel: c.updated_at_rel,
-                    first_name: c.first_name,
-                    last_name: c.last_name,
-                    read: c.read.findIndex((jId) => jId === this.job.id) !== -1,
-                    tags: c.tags,
-                    questions: c.questions,
-                    job_specific: c.job_specific || {},
-                    stage: c.stage || {},
-                    stages_data: c.stages_data || {},
-                    hasUser: c.hasUser || false,
-                    hasUserReviewed: c.hasUserReviewed || false,
-                    matching: c.matching || null
-                });
-            }
-        });
-        // console.timeEnd('group');
-    }
-
-    setAppliedCanidates(candidates: Candidate[]) {
-        // console.log('set applied candidates');
-        // console.time('set');
-        const sC: Candidate[] = [];
-        candidates.forEach((c) => {
-            if (c.stage && c.stage[this.job.id]) {
                 if (c.stage[this.job.id] === 'applied') {
-                    sC.push(c);
+                    appliedCandidates.push(c);
+                } else {
+                    stageCandidates.push(c);
                 }
             } else {
-                sC.push(c);
+                appliedCandidates.push(c);
             }
         });
 
         const applied = {
             visible: [],
             hidden: [],
-            total: sC.length
+            total: appliedCandidates.length
         };
-        sC.forEach((c) => {
+        appliedCandidates.forEach((c) => {
             if (this.job.pool) {
                 applied.visible.push(c);
             } else {
@@ -355,19 +545,46 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         });
         this.appliedCandidates = applied;
-        this.resetSelection();
         // console.timeEnd('set');
+
+        if (!appliedOnly) {
+            // console.time('group');
+            const candidatesByStage = {};
+            this.stages.forEach(({ id }) => (candidatesByStage[id] = []));
+            stageCandidates.forEach(({ stage, read, matching = null, ...candidate }) => {
+                if (stage && stage[this.job.id]) {
+                    const stageId = stage[this.job.id];
+                    candidatesByStage[stageId].push({
+                        ...candidate,
+                        stage,
+                        matching,
+                        read: read.findIndex((jId) => jId === this.job.id) !== -1
+                    });
+                }
+            });
+            this.candidatesByStage = candidatesByStage;
+            // console.timeEnd('group');
+        }
+        this.resetSelection();
+    }
+
+    onJobStatusChange(event, item) {
+        const status = event ? 'LIVE' : 'BUILD';
+        this.jobService.updateJob(item.id, { status }).subscribe(() => {
+            console.log(`Job <${item.id}> status updated`);
+            item.status = status;
+        });
     }
 
     onLoadMore() {
-        const items = this.appliedCandidates.hidden.splice(0, this.appliedCandidates.hidden.length);
-        this.appliedCandidates.visible = [...this.appliedCandidates.visible, ...items];
+        this.appliedCandidates.visible = [...this.appliedCandidates.visible, ...this.appliedCandidates.hidden];
+        this.appliedCandidates.hidden = [];
         this.showMore = true;
     }
 
     onLoadLess() {
         this.showMore = false;
-        this.setAppliedCanidates(this.candidates);
+        this.groupCandidatesByStage(true);
     }
 
     onCandidateClick(columnId: string, candidateId: string) {
@@ -426,10 +643,6 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    getHm(id: string) {
-        return this.users.find((user: User) => user.id === id) || null;
-    }
-
     onAddHiringManagerClick(event) {
         event.preventDefault();
         this.router.navigateByUrl(`${this.baseUrl}/jobs/${this.job.id}?section=hiring-team&editMode=true`);
@@ -450,56 +663,177 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    onDeleteCandidateClick(event, candidateId) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.contentLoading = true;
-        this.jobService.deleteCandidate(this.job.id, candidateId).subscribe(() => {
-            this.contentLoading = false;
-            this.jobsStore.dispatch(new fromJobsStoreActions.DeleteJobCandidate({ jobId: this.job.id, candidateId }));
-            this.groupCandidatesByStage();
-            const index = this.candidates.findIndex((c) => c.id === candidateId);
-            this.candidates.splice(index, 1);
+    hasSelection(columnId: string) {
+        return columnId === this.selection.columnId ? Object.keys(this.selection.candidates).length : 0;
+    }
 
-            const visibleIndex = this.appliedCandidates.visible.findIndex((c) => c.id === candidateId);
-            this.appliedCandidates.visible.splice(visibleIndex, 1);
-
-            this.appliedCandidates.total = this.appliedCandidates.visible.length + this.appliedCandidates.hidden.length;
+    get selectionEmails(): any[] {
+        const {
+            selection: { candidates: ids },
+            candidates
+        } = this;
+        return Object.keys(ids).map((id) => {
+            const { id: matchId, first_name, last_name, email } = candidates.find(({ id: cId }) => id === cId);
+            return [matchId, { first_name, last_name, email }];
         });
     }
 
-    onDeletingCandidate(loading) {
-        console.log('onDeletingCandidate', loading);
-        this.contentLoading = loading;
+    onCandidateSelect(columnId: string, candidateId: string): void {
+        if (this.hasSelection(columnId)) {
+            if (this.selection.candidates[candidateId]) {
+                delete this.selection.candidates[candidateId];
+            } else {
+                this.selection.candidates[candidateId] = true;
+            }
+        } else {
+            this.selection = {
+                columnId,
+                candidates: {
+                    [candidateId]: true
+                }
+            };
+        }
     }
 
-    onDeletedCandidate(candidateId) {
-        console.log('onDeletedCandidate', candidateId);
+    async onSelectionDecline() {
+        const {
+            job: { id: jobId },
+            selection: { columnId, candidates }
+        } = this;
+        const candidateIds = Object.keys(candidates);
+
+        this.onShowModal(false);
+        if (this.cdkEvent && columnId === 'trash') {
+            this.onCDKDrop(this.cdkEvent);
+            this.cdkEvent = null;
+        }
+
+        this.contentLoading = true;
+        for (let candidateId of candidateIds) {
+            await new Promise((res, rej) =>
+                this.jobService.deleteCandidate(jobId, candidateId).subscribe(() => {
+                    console.log(`Candidate <${candidateId}> was declined`);
+                    res(candidateId);
+                }, rej)
+            );
+        }
         this.contentLoading = false;
-        const index = this.candidates.findIndex((c) => c.id === candidateId);
-        this.candidates.splice(index, 1);
 
-        const visibleIndex = this.appliedCandidates.visible.findIndex((c) => c.id === candidateId);
-        this.appliedCandidates.visible.splice(visibleIndex, 1);
+        this.loadJobCandidates();
+    }
 
-        this.appliedCandidates.total = this.appliedCandidates.visible.length + this.appliedCandidates.hidden.length;
+    async onSelectionProgress() {
+        const {
+            job: { id: jobId },
+            user: { id: userId },
+            selection: { columnId, candidates }
+        } = this;
+        const candidateIds = Object.keys(candidates);
 
-        this.jobsStore.dispatch(new fromJobsStoreActions.DeleteJobCandidate({ jobId: this.job.id, candidateId }));
+        const columnIndex = this.stages.findIndex(({ id }) => id === columnId);
+        const { id: fromId = 'applied' } = columnIndex === -1 ? { id: 'applied' } : this.stages[columnIndex];
+        const { id: toId, title } = this.stages[columnIndex + 1];
+
+        this.contentLoading = true;
+        for (let candidateId of candidateIds) {
+            const candidate = this.candidates.find(({ id }) => id === candidateId);
+            const { stage, read: originRead } = candidate;
+            const read = this.hasRead(originRead) ? [...originRead] : [...originRead, this.job.id];
+            stage[jobId] = toId;
+
+            await new Promise((res, rej) =>
+                this.jobService.updateCandidateStage(jobId, candidateId, { stage, read }).subscribe(() => {
+                    if (!this.hasRead(originRead)) {
+                        originRead.push(this.job.id);
+                    }
+                    this.prepareBlockData(candidate);
+                    console.log(`Candidate <${candidateId}> was progressed to - ${title}`);
+                    this.candidateService
+                        .addToAudit(jobId, candidateId, {
+                            type: 'stages_progress',
+                            user_id: userId,
+                            stage_from_id: fromId,
+                            stage_to_id: toId,
+                            created_at: new Date().getTime()
+                        })
+                        .subscribe(
+                            (response) => {
+                                res(response);
+                            },
+                            (errorResponse) => {
+                                rej(errorResponse);
+                            }
+                        );
+                })
+            );
+        }
+
+        this.contentLoading = false;
         this.groupCandidatesByStage();
     }
 
-    onCandidateDrop(event, stageId) {
-        // console.log('drop', event.dragData, stageId);
-        this.candidateIsDragged = false;
-        const candidate = event.dragData;
+    onShowModal(visible = true, modal = 'decline') {
+        this[`${modal}ModalVisible`] = visible;
+    }
 
-        this.draggedCandidate = candidate;
-        this.droppedStage = stageId;
+    onShowEmailModal(visible: boolean = true) {
+        this.emailModalVisible = visible;
+    }
 
-        if (this.getStageCompletion(candidate)) {
-            this.proceedCandidate();
+    onCreateStage() {
+        this.createStageMode = true;
+        setTimeout(() => {
+            this.stageInput.nativeElement.focus();
+        }, 1);
+    }
+
+    onBackClick() {
+        this.router.navigateByUrl(`${this.baseUrl}/jobs`);
+    }
+
+    // CDK-Integration Start
+    errorCallback(error) {
+        this.contentLoading = false;
+        console.error(error);
+    }
+
+    successCallback(res, log = '') {
+        this.contentLoading = false;
+        console.log(log || res);
+    }
+
+    getCDKConnections(except) {
+        return ['applied', ...this.stages.map(({ id }) => id), 'trash-bin'].filter((id) => id !== except);
+    }
+
+    onCDKDrop(event: CdkDragDrop<any[]>, callback = null) {
+        if (event.previousContainer === event.container) {
+            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
-            this.confirmModalVisible = true;
+            transferArrayItem(
+                event.previousContainer.data,
+                event.container.data,
+                event.previousIndex,
+                event.currentIndex
+            );
+        }
+        if (callback) callback();
+    }
+
+    onStageDrop(event: CdkDragDrop<any[]>) {
+        if (event.previousIndex !== event.currentIndex) {
+            this.onCDKDrop(event, () => {
+                this.stages.forEach((s, index) => {
+                    s.order = index + 1;
+                });
+                this.contentLoading = true;
+                this.jobService
+                    .updateStages(this.job.id, this.stages)
+                    .subscribe(
+                        (value) => this.successCallback(value, 'Stages order was updated'),
+                        (error) => this.errorCallback(error)
+                    );
+            });
         }
     }
 
@@ -524,6 +858,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 if (!this.hasRead(originRead)) {
                     originRead.push(this.job.id);
                 }
+                this.prepareBlockData(this.candidates[candidateIndex]);
                 this.contentLoading = false;
                 console.log('Candidate stage was updated to:', stageId);
                 this.candidateService
@@ -545,373 +880,153 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         }
         this.groupCandidatesByStage();
-        this.setAppliedCanidates(this.candidates);
     }
 
-    getStageCompletion(candidate) {
-        return this.getCurrentStageClass(candidate) === 'green';
-    }
+    onCandidateDrop(event: CdkDragDrop<any[]>, stageId: string) {
+        const candidate = event.item.data;
+        if (stageId === (candidate.stage[this.job.id] || 'applied')) return this.onCDKDrop(event);
 
-    getComplianceRateClass(candidate) {
-        if ((candidate.hasUser && candidate.hasUserReviewed) || candidate.matching) {
-            if (candidate.score >= this.resumeThreshold) {
-                return 'green';
-            } else if (candidate.score >= this.resumeThreshold - 15 && candidate.score < this.resumeThreshold) {
-                return 'orange';
-            } else {
-                return 'red';
-            }
+        this.draggedCandidate = candidate;
+        this.droppedStage = stageId;
+
+        if (this.getStageCompletion(candidate)) {
+            this.proceedCandidate();
         } else {
-            return 'yellow';
+            this.confirmModalVisible = true;
         }
     }
 
-    getQuestionsClass(candidate) {
-        if ((candidate.hasUser && candidate.hasUserReviewed) || candidate.matching) {
-            const _candidateQuestions = this.candidateQuestions[candidate.id];
-            if (_candidateQuestions && _candidateQuestions.hasAnswers) {
-                return _candidateQuestions.knockoutIncorrect ? 'red' : 'green';
-            } else {
-                return 'grey';
+    onCandidateTrashDrop(event: CdkDragDrop<any[]>) {
+        const candidate = event.item.data;
+        this.selection = {
+            columnId: 'trash',
+            candidates: {
+                [candidate.id]: true
             }
-        } else {
-            return 'grey';
-        }
+        };
+        this.cdkEvent = event;
+        this.onShowModal();
     }
 
-    getCurrentStageClass(candidate) {
-        //define stage
-        if (candidate.stage && candidate.stage[this.job.id] && candidate.stage[this.job.id] !== 'applied') {
-            const stageId = candidate.stage[this.job.id];
-            // need to check stages data
-            if (this.job && this.job.stages && this.job.stages.find((s) => s.id === stageId)) {
-                const stage = this.job.stages.find((s) => s.id === stageId);
-                if (stage && stage.assessment && stage.assessment.length) {
-                    if (
-                        (candidate.stages_data &&
-                            candidate.stages_data[this.job.id] &&
-                            candidate.stages_data[this.job.id][stageId]) ||
-                        (candidate.assignments &&
-                            candidate.assignments[this.job.id] &&
-                            candidate.assignments[this.job.id].find((ass) => ass.stageId === stageId))
-                    ) {
-                        const completed = [];
-                        const stageData =
-                            candidate.stages_data &&
-                            candidate.stages_data[this.job.id] &&
-                            candidate.stages_data[this.job.id][stageId]
-                                ? candidate.stages_data[this.job.id][stageId]
-                                : {};
-                        stage.assessment.forEach((ass) => {
-                            if (ass.type === 'personality') {
-                                if (stageData.personality_assessment) {
-                                    completed.push(true);
-                                } else {
-                                    completed.push(false);
-                                }
-                            }
-                            if (ass.type === 'video-interview') {
-                                if (stageData.videos && stageData.videos.completed) {
-                                    completed.push(true);
-                                } else {
-                                    completed.push(false);
-                                }
-                            }
-
-                            if (ass.type === 'logic-test') {
-                                if (stageData['logic-test']) {
-                                    completed.push(true);
-                                } else {
-                                    completed.push(false);
-                                }
-                            }
-
-                            if (ass.type === 'devskiller') {
-                                const devAss =
-                                    candidate.assignments && candidate.assignments[this.job.id]
-                                        ? candidate.assignments[this.job.id].find(
-                                              (a) => a.stageId === stageId && ass.type === 'devskiller'
-                                          )
-                                        : {};
-                                if (devAss.completed) {
-                                    completed.push(true);
-                                } else {
-                                    completed.push(false);
-                                }
-                            }
-                        });
-                        // console.log(candidate.id, candidate.first_name, completed);
-                        return completed.every((c) => c) ? 'green' : 'grey';
-                    } else {
-                        return 'grey';
-                    }
-                } else {
-                    return 'green';
-                }
-            } else {
-                return 'green';
-            }
-        } else {
-            // APPLIED STAGE
-            const complienceRate = this.getComplianceRateClass(candidate);
-            const questionsStatus = this.job.questionnaire ? this.getQuestionsClass(candidate) : null;
-            const values = [];
-            values.push(this._getClassValue(complienceRate));
-            if (questionsStatus) {
-                values.push(this._getClassValue(questionsStatus));
-            }
-            const minValue = Math.min(...values);
-            return this._getClassFromValue(minValue);
-        }
-    }
-
-    _getClassValue(className) {
-        switch (className) {
-            case 'green':
-                return 3;
-            case 'orange':
-                return 2;
-            case 'red':
-                return 1;
-            default:
-                return 0;
-        }
-    }
-
-    _getClassFromValue(value) {
-        switch (value) {
-            case 3:
-                return 'green';
-            case 2:
-                return 'orange';
-            case 1:
-                return 'red';
-            default:
-                return 'grey';
-        }
-    }
-
-    getJobResumeMatchingThreshold() {
-        let threshold = 60;
-        if (this.job && this.job.stages && this.job.stages.find((s) => s.id === 'applied')) {
-            const appliedStage = this.job.stages.find((s) => s.id === 'applied');
-            threshold = appliedStage.resume_matching_threshold;
-        }
-        return threshold;
-    }
-
-    onCandidateDragStart(candidate, stageId) {
+    onCDKDragStarted(event) {
         this.candidateIsDragged = true;
-        // console.log('candidate', candidate, stageId);
-        this.draggedFromStage = stageId;
     }
 
-    onCandidateDragEnd(candidate, stageId) {
+    onCDKDragEnded(event) {
         this.candidateIsDragged = false;
-        this.draggedFromStage = null;
     }
+    // CDK-Integration End
 
-    onStageDragStart(stage) {
-        this.draggedStage = stage;
-    }
+    // onCandidateDrop(event, stageId) {
+    //     // console.log('drop', event.dragData, stageId);
+    //     this.candidateIsDragged = false;
+    //     const candidate = event.dragData;
 
-    onStageDragEnd() {
-        this.draggedStage = null;
-    }
+    //     if (stageId === candidate.stage[this.job.id]) return;
 
-    isDraggedFromStage(stageId) {
-        return stageId === this.draggedFromStage;
-    }
+    //     this.draggedCandidate = candidate;
+    //     this.droppedStage = stageId;
 
-    onStageDragOver(event, order) {
-        if (order !== this.draggedStage.order) {
-            const draggedOverStageIndex = this.stages.findIndex((s) => s.order === order);
-            const draggedStageIndex = this.stages.findIndex((s) => s.order === this.draggedStage.order);
-            this.stages.splice(draggedStageIndex, 1);
-            this.stages.splice(draggedOverStageIndex, 0, this.draggedStage);
-            this.stages.forEach((s, index) => {
-                s.order = index + 1;
-            });
+    //     if (this.getStageCompletion(candidate)) {
+    //         this.proceedCandidate();
+    //     } else {
+    //         this.confirmModalVisible = true;
+    //     }
+    // }
 
-            this.jobService
-                .updateStages(this.job.id, this.stages)
-                .subscribe(
-                    () => console.log('Stages order was updated'),
-                    (errorResponse) => console.error(errorResponse)
-                );
-        }
-    }
+    // proceedCandidate() {
+    //     this.confirmModalVisible = false;
+    //     const candidate = this.draggedCandidate;
+    //     const stageId = this.droppedStage;
 
-    onCandidateDeleteDrop(event) {
-        const deleteItem = event.dragData;
-        if (deleteItem) {
-            this.onDeleteCandidateClick(event.nativeEvent, deleteItem.id);
-        }
-    }
+    //     const candidateIndex = this.candidates.findIndex((c) => c.id === candidate.id);
+    //     if (!this.candidates[candidateIndex].stage) {
+    //         this.candidates[candidateIndex].stage = { [this.job.id]: 'applied' };
+    //     }
+    //     const stageFromId = this.candidates[candidateIndex].stage[this.job.id] || 'applied';
+    //     const stageToId = stageId;
+    //     if (stageFromId !== stageToId) {
+    //         this.contentLoading = true;
+    //         const { stage, read: originRead } = this.candidates[candidateIndex];
+    //         const read = this.hasRead(originRead) ? [...originRead] : [...originRead, this.job.id];
+    //         stage[this.job.id] = stageId;
 
-    onCandidateSelect(columnId: string, candidateId: string): void {
-        if (this.hasSelection(columnId)) {
-            if (this.selection.candidates[candidateId]) {
-                delete this.selection.candidates[candidateId];
-            } else {
-                this.selection.candidates[candidateId] = true;
-            }
-        } else {
-            this.selection = {
-                columnId,
-                candidates: {
-                    [candidateId]: true
-                }
-            };
-        }
-    }
+    //         this.jobService.updateCandidateStage(this.job.id, candidate.id, { stage, read }).subscribe(() => {
+    //             if (!this.hasRead(originRead)) {
+    //                 originRead.push(this.job.id);
+    //             }
+    //             this.contentLoading = false;
+    //             console.log('Candidate stage was updated to:', stageId);
+    //             this.candidateService
+    //                 .addToAudit(this.job.id, candidate.id, {
+    //                     type: 'stages_progress',
+    //                     user_id: this.user.id,
+    //                     stage_from_id: stageFromId,
+    //                     stage_to_id: stageToId,
+    //                     created_at: new Date().getTime()
+    //                 })
+    //                 .subscribe(
+    //                     (response) => {
+    //                         // console.log(response);
+    //                     },
+    //                     (errorResponse) => {
+    //                         console.error(errorResponse);
+    //                     }
+    //                 );
+    //         });
+    //     }
+    //     this.groupCandidatesByStage();
+    // }
 
-    hasSelection(columnId: string) {
-        return columnId === this.selection.columnId ? Object.keys(this.selection.candidates).length : 0;
-    }
+    // onCandidateDeleteDrop(event) {
+    //     const deleteItem = event.dragData;
+    //     this.selection = {
+    //         columnId: deleteItem.stage[this.job.id],
+    //         candidates: {
+    //             [deleteItem.id]: true
+    //         }
+    //     };
+    //     this.onShowModal();
+    // }
 
-    get selectionEmails(): any[] {
-        const {
-            selection: { candidates: ids },
-            candidates
-        } = this;
-        return Object.keys(ids).map((id) => {
-            const { id: matchId, first_name, last_name, email } = candidates.find(({ id: cId }) => id === cId);
-            return [matchId, { first_name, last_name, email }];
-        });
-    }
+    // isDraggedFromStage(stageId) {
+    //     return stageId === this.draggedFromStage;
+    // }
 
-    hasRead(read: string[]) {
-        const jobId = this.job.id;
-        return read.findIndex((jId) => jId === jobId) !== -1;
-    }
+    // onCandidateDragStart(candidate, stageId) {
+    //     this.candidateIsDragged = true;
+    //     this.draggedFromStage = stageId;
+    // }
 
-    isLastStage(stageId: string) {
-        const stageIndex = this.stages.findIndex(({ id }) => id === stageId);
-        return stageIndex === this.stages.length - 1;
-    }
+    // onCandidateDragEnd(candidate, stageId) {
+    //     this.candidateIsDragged = false;
+    //     this.draggedFromStage = null;
+    // }
 
-    isValidField(form, key) {
-        return !this[form].get(key).valid && this.modalSubmission[form];
-    }
+    // onStageDragStart(stage) {
+    //     this.draggedStage = stage;
+    // }
 
-    async onSelectionDecline() {
-        if (this.declineModalForm.valid) {
-            const {
-                job: { id: jobId },
-                selection: { candidates }
-            } = this;
-            const candidateIds = Object.keys(candidates);
+    // onStageDragEnd() {
+    //     this.draggedStage = null;
+    // }
 
-            this.contentLoading = true;
-            for (let candidateId of candidateIds) {
-                await new Promise((res, rej) =>
-                    this.jobService.deleteCandidate(jobId, candidateId).subscribe(() => {
-                        console.log(`Candidate <${candidateId}> was declined`);
-                        const index = this.candidates.findIndex(({ id }) => id === candidateId);
-                        this.candidates.splice(index, 1);
+    // onStageDragOver(event, order) {
+    //     if (order !== this.draggedStage.order) {
+    //         const draggedOverStageIndex = this.stages.findIndex((s) => s.order === order);
+    //         const draggedStageIndex = this.stages.findIndex((s) => s.order === this.draggedStage.order);
+    //         this.stages.splice(draggedStageIndex, 1);
+    //         this.stages.splice(draggedOverStageIndex, 0, this.draggedStage);
+    //         this.stages.forEach((s, index) => {
+    //             s.order = index + 1;
+    //         });
 
-                        const visibleIndex = this.appliedCandidates.visible.findIndex(({ id }) => id === candidateId);
-                        this.appliedCandidates.visible.splice(visibleIndex, 1);
-
-                        this.appliedCandidates.total =
-                            this.appliedCandidates.visible.length + this.appliedCandidates.hidden.length;
-                        res(candidateId);
-                    }, rej)
-                );
-            }
-
-            this.contentLoading = false;
-            this.onShowModal(false);
-            this.groupCandidatesByStage();
-            this.setAppliedCanidates(this.candidates);
-        } else {
-            this.modalSubmission['declineModalForm'] = true;
-        }
-    }
-
-    async onSelectionProgress() {
-        const {
-            job: { id: jobId },
-            user: { id: userId },
-            selection: { columnId, candidates }
-        } = this;
-        const candidateIds = Object.keys(candidates);
-
-        const columnIndex = this.stages.findIndex(({ id }) => id === columnId);
-        const { id: fromId = 'applied' } = columnIndex === -1 ? { id: 'applied' } : this.stages[columnIndex];
-        const { id: toId, title } = this.stages[columnIndex + 1];
-
-        this.contentLoading = true;
-        for (let candidateId of candidateIds) {
-            const { stage, read: originRead } = this.candidates.find(({ id }) => id === candidateId);
-            const read = this.hasRead(originRead) ? [...originRead] : [...originRead, this.job.id];
-            stage[jobId] = toId;
-
-            await new Promise((res, rej) =>
-                this.jobService.updateCandidateStage(jobId, candidateId, { stage, read }).subscribe(() => {
-                    if (!this.hasRead(originRead)) {
-                        originRead.push(this.job.id);
-                    }
-                    console.log(`Candidate <${candidateId}> was progressed to - ${title}`);
-                    this.candidateService
-                        .addToAudit(jobId, candidateId, {
-                            type: 'stages_progress',
-                            user_id: userId,
-                            stage_from_id: fromId,
-                            stage_to_id: toId,
-                            created_at: new Date().getTime()
-                        })
-                        .subscribe(
-                            (response) => {
-                                res(response);
-                            },
-                            (errorResponse) => {
-                                rej(errorResponse);
-                            }
-                        );
-                })
-            );
-        }
-
-        this.contentLoading = false;
-        this.groupCandidatesByStage();
-        this.setAppliedCanidates(this.candidates);
-    }
-
-    onShowModal(visible = true, modal = 'decline') {
-        if (visible && modal === 'decline') {
-            this.declineModalForm.reset();
-            delete this.modalSubmission['declineModalForm'];
-        }
-        this[`${modal}ModalVisible`] = visible;
-    }
-
-    onShowEmailModal(visible: boolean = true) {
-        this.emailModalVisible = visible;
-    }
-
-    onCreateStage() {
-        this.createStageMode = true;
-        setTimeout(() => {
-            this.stageInput.nativeElement.focus();
-        }, 1);
-    }
-
-    ngOnDestroy(): void {
-        if (this.userSubscription) {
-            this.userSubscription.unsubscribe();
-        }
-        if (this.usersSubscription) {
-            this.usersSubscription.unsubscribe();
-        }
-
-        if (this.candidatesSubscription) {
-            this.candidatesSubscription.unsubscribe();
-        }
-    }
-
-    onBackClick() {
-        this.router.navigateByUrl(`${this.baseUrl}/jobs`);
-    }
+    //         this.jobService
+    //             .updateStages(this.job.id, this.stages)
+    //             .subscribe(
+    //                 () => console.log('Stages order was updated'),
+    //                 (errorResponse) => console.error(errorResponse)
+    //             );
+    //     }
+    // }
 }

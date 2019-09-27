@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Slider } from 'primeng/slider';
@@ -56,7 +56,7 @@ export class StageSettingsComponent implements OnInit {
         { label: '20 Days', value: 20 }
     ];
     baseUrl: string;
-    stageHasCandidate = true;
+    stageHasCandidate = false;
     errorModalVisible = false;
 
     constructor(
@@ -73,33 +73,48 @@ export class StageSettingsComponent implements OnInit {
         this.jobId = this.route.snapshot.paramMap.get('id');
         this.stageId = this.route.snapshot.paramMap.get('stageId');
         this.contentLoading = true;
-        this.jobService.getDevskillerTest().subscribe((res: any) => {
-            if (res) {
-                res.forEach((c) => {
-                    this.devskillerOptions.push({ label: c.name, value: c.id });
-                });
-                if (this.assessment && this.stage.assessment) {
-                    let control = this.assessment['controls'].find((c) => c['controls'].type.value === 'devskiller');
-                    let assessment = this.stage.assessment.find((c) => c.type === 'devskiller');
-                    if (control && assessment) {
-                        control['controls'].option.patchValue(assessment.option);
-                    }
-                }
-            }
-        });
 
         this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.jobId));
         this.jobsStore
             .pipe(select(fromJobCandiatesSelector.getJobCandidates, { jobId: this.jobId }))
             .subscribe((candidates: any) => {
-                this.stageHasCandidate = candidates.some(
-                    (c) => c.stage && c.stage[this.jobId] && c.stage[this.jobId] === this.stageId
-                );
+                // this.stageHasCandidate = candidates.some(
+                //     (c) => c.stage && c.stage[this.jobId] && c.stage[this.jobId] === this.stageId
+                // );
+                candidates.forEach((cand) => {
+                    if (cand.assignments && cand.assignments[this.jobId]) {
+                        cand.assignments[this.jobId].forEach((c) => {
+                            if (c.stageId === this.stageId) {
+                                this.stageHasCandidate = true;
+                            }
+                        });
+                    }
+                });
             });
+
+        this.jobService.getDevskillerTest().subscribe((res: any) => {
+            if (res) {
+                res.forEach((c) => {
+                    this.devskillerOptions.push({ label: c.name, value: c.id, selected: false });
+                });
+                this.devskillerOptions.sort((a, b) => {
+                    const labelA = a.label.toUpperCase();
+                    const labelB = b.label.toUpperCase();
+                    return labelA.localeCompare(labelB);
+                });
+                if (this.assessment && this.stage.assessment) {
+                    this.assessment['controls'].forEach((c) => {
+                        if (c['controls'].type.value === 'devskiller') {
+                            let assessment = this.stage.assessment.find((s) => c['controls'].option.value === s.option);
+                            c['controls'].option.patchValue(assessment.option);
+                        }
+                    });
+                }
+            }
+        });
 
         this.jobService.getJob(this.jobId).subscribe((job: Job) => {
             this.job = job;
-            this.defineAssessmentStatus2();
         });
         this.jobService.getStage(this.jobId, this.stageId).subscribe(
             (stage: Stage) => {
@@ -113,22 +128,26 @@ export class StageSettingsComponent implements OnInit {
                             this.stage.automatically_progress_matching_threshold
                         ],
                         weighting: this.fb.group({
-                            education: [17],
+                            education: [15],
                             job_titles: [28],
                             skills: [28],
-                            industries: [14],
-                            certifications: [7],
-                            management_level: [6]
+                            industries: [12],
+                            languages: [7],
+                            certifications: [4],
+                            executive_type: [3],
+                            management_level: [3]
                         })
                     });
                     if (this.stage.weighting) {
                         this.stageSettingsForm.get('weighting').patchValue({
-                            education: this.stage.weighting.education || 17,
+                            education: this.stage.weighting.education || 15,
                             job_titles: this.stage.weighting.job_titles || 28,
                             skills: this.stage.weighting.skills || 28,
-                            industries: this.stage.weighting.industries || 14,
-                            certifications: this.stage.weighting.certifications || 7,
-                            management_level: this.stage.weighting.management_level || 6
+                            industries: this.stage.weighting.industries || 12,
+                            languages: this.stage.weighting.industries || 7,
+                            certifications: this.stage.weighting.certifications || 4,
+                            executive_type: this.stage.weighting.executive_type || 3,
+                            management_level: this.stage.weighting.management_level || 3
                         });
                     }
                     // console.log(this.stage, this.stageSettingsForm.get('weighting'));
@@ -153,6 +172,7 @@ export class StageSettingsComponent implements OnInit {
                         actions: this.fb.array(actions)
                     });
                     if (this.stage.assessment) {
+                        console.log(this.stage.assessment);
                         this.populateAssessment(this.stage.assessment);
                     } else {
                         // this.addAssessmentGroup();
@@ -166,10 +186,14 @@ export class StageSettingsComponent implements OnInit {
                                 this.questionnaireList.forEach((q) => {
                                     options.push({
                                         value: q.id,
-                                        label: q.title
+                                        label: q.title,
+                                        selected: false
                                     });
                                 });
                                 this.questionnaireOptions = options;
+                                setTimeout(() => {
+                                    this.defineAssessmentStatus2();
+                                }, 300);
                             }
                         },
                         (error) => console.error(error)
@@ -258,114 +282,59 @@ export class StageSettingsComponent implements OnInit {
         return array;
     }
 
+    getWeighting(type) {
+        const currentValue = this.stageSettingsForm.get('weighting').value;
+        if (!currentValue) return 0;
+        let ret = Math.round(currentValue[type]);
+        let offset = 100 - this.totalWeighting;
+        const keys = Object.keys(currentValue).sort((a, b) => {
+            const offsetA = Math.round(currentValue[a]) - currentValue[a];
+            const offsetB = Math.round(currentValue[b]) - currentValue[b];
+            return offsetA - offsetB;
+        });
+
+        if (offset < 0) keys.reverse();
+        let i = 0;
+        const step = offset > 0 ? -1 : 1;
+        while (offset !== 0) {
+            if (keys[i] === type) {
+                ret -= step;
+                offset = 0;
+            } else {
+                offset += step;
+                i++;
+            }
+        }
+
+        return ret;
+    }
+
+    get totalWeighting() {
+        const currentValue = this.stageSettingsForm.get('weighting').value;
+        return Object.keys(currentValue).reduce((a, c) => (a += Math.round(currentValue[c])), 0);
+    }
+
     onHcSliderChangeWeighting(e, input) {
         const val = e.value;
-        let points = this.pointsAvailable();
-        if (points < 0) {
-            const pointsToTake = Math.ceil(Math.abs(points) / 5);
-            const currentValue = this.stageSettingsForm.get('weighting').value;
-            const keys = Object.keys(currentValue).filter((k) => k !== input);
-            // console.log(val, points, '-', 'need to TAKE from others', pointsToTake);
-            keys.forEach((key, index) => {
-                if (index !== keys.length - 1) {
-                    if (points) {
-                        // console.log('+', index, key, currentValue[key], pointsToTake, currentValue[key] - pointsToTake);
-                        if (currentValue[key] - pointsToTake >= 0) {
-                            this.stageSettingsForm.get('weighting').patchValue({
-                                [key]: currentValue[key] - pointsToTake
-                            });
-                            points = points + pointsToTake;
-                            // console.log(points);
-                        } else {
-                            // console.log(
-                            //     '-',
-                            //     index,
-                            //     key,
-                            //     currentValue[key],
-                            //     pointsToTake,
-                            //     currentValue[key] - pointsToTake
-                            // );
-                            const diff = currentValue[key] - pointsToTake;
-                            this.stageSettingsForm.get('weighting').patchValue({
-                                [key]: 0
-                            });
-                            points = points + diff;
-                            // console.log(points);
-                        }
-                    }
-                } else {
-                    // console.log('last one', index, key, currentValue[key], points);
-                    if (points) {
-                        if (currentValue[key] - points >= 0) {
-                            this.stageSettingsForm.get('weighting').patchValue({
-                                [key]: currentValue[key] - points
-                            });
-                            points = 0;
-                        } else {
-                            this.stageSettingsForm.get('weighting').patchValue({
-                                [key]: 0
-                            });
-                            points = 0;
-                        }
-                    }
-                }
+        const currentValue = this.stageSettingsForm.get('weighting').value;
+        const keys = Object.keys(currentValue).filter((k) => k !== input);
+        let points = keys.reduce((a, c) => (a += currentValue[c]), 0) + val;
+
+        if (points === 100) return;
+        points -= val;
+
+        if (points > 0) {
+            keys.forEach((key) => {
+                currentValue[key] = (currentValue[key] / points) * (100 - val + 0.00001);
             });
-        } else if (points > 0) {
-            const pointsToAdd = Math.ceil(Math.abs(points) / 5);
-            const currentValue = this.stageSettingsForm.get('weighting').value;
-            const keys = Object.keys(currentValue).filter((k) => k !== input);
-            // console.log(val, points, '-', 'need to ADD to others', pointsToAdd);
-            keys.forEach((key, index) => {
-                if (index !== keys.length - 1) {
-                    if (points) {
-                        // console.log('+', index, key, currentValue[key], pointsToAdd, currentValue[key] + pointsToAdd);
-                        if (currentValue[key] + pointsToAdd <= 100) {
-                            this.stageSettingsForm.get('weighting').patchValue({
-                                [key]: currentValue[key] + pointsToAdd
-                            });
-                            points = points - pointsToAdd;
-                            // console.log(points);
-                        } else {
-                            // console.log(
-                            //     '-',
-                            //     index,
-                            //     key,
-                            //     currentValue[key],
-                            //     pointsToAdd,
-                            //     currentValue[key] - pointsToAdd
-                            // );
-                            const diff = currentValue[key] + pointsToAdd - 100;
-                            this.stageSettingsForm.get('weighting').patchValue({
-                                [key]: 100
-                            });
-                            points = points - (pointsToAdd + diff);
-                            // console.log(points);
-                        }
-                    }
-                } else {
-                    // console.log('last one', index, key, currentValue[key], points);
-                    if (points) {
-                        if (currentValue[key] + points <= 100) {
-                            this.stageSettingsForm.get('weighting').patchValue({
-                                [key]: currentValue[key] + points
-                            });
-                            points = 0;
-                        } else {
-                            this.stageSettingsForm.get('weighting').patchValue({
-                                [key]: 100
-                            });
-                            points = 0;
-                        }
-                    }
-                }
+        } else {
+            const average = (100 - val) / keys.length;
+            keys.forEach((key) => {
+                currentValue[key] = average;
             });
         }
-        // if (points < 0) {
-        //     const correctValue = val + points;
-        //     this.stageSettingsForm.get('weighting').patchValue({
-        //         [input]: correctValue
-        //     });
-        // }
+
+        this.stageSettingsForm.get('weighting').patchValue(currentValue);
     }
 
     onHcSliderSlideEnd(e, input) {}
@@ -483,14 +452,14 @@ export class StageSettingsComponent implements OnInit {
             this.fb.group({
                 type: [type],
                 option,
-                deadline: []
+                deadline: [5]
             })
         );
         this.assessmentList.push({
             type
         });
 
-        console.log(this.assessment, this.assessmentList);
+        console.log(this.assessment, this.assessmentList, type);
     }
 
     populateAssessment(assessment) {
@@ -503,13 +472,27 @@ export class StageSettingsComponent implements OnInit {
                 })
             );
         });
-        // setTimeout(() => {
-        //     this.filterDevskillerOptions();
-        // }, 400)
     }
 
-    onDeleteAssessment(type) {
-        let index = this.assessment['controls'].findIndex((c) => c['controls'].type.value === type);
+    onDeleteAssessment(ty, index) {
+        let type = this.assessment['controls'][index]['controls'].type.value;
+        let deletedValue = this.assessment['controls'][index]['controls'].option.value;
+        if (type === 'video-interview') {
+            let questionnaire = this.questionnaireOptions.find((q) => {
+                return q.value === deletedValue;
+            });
+            if (questionnaire) {
+                questionnaire.selected = false;
+            }
+        } else if (type === 'devskiller') {
+            let devskiller = this.devskillerOptions.find((q) => {
+                return q.value === deletedValue;
+            });
+            if (devskiller) {
+                devskiller.selected = false;
+            }
+        }
+
         this.assessment.removeAt(index);
 
         let index2 = this.assessmentList.findIndex((c) => c.type === type);
@@ -538,11 +521,34 @@ export class StageSettingsComponent implements OnInit {
             this.job.stages.forEach((c) => {
                 if (c.assessment) {
                     c.assessment.forEach((b) => {
-                        // console.log(b.type);
                         if (b.type === 'devskiller') {
-                            let devskillerOption = this.devskillerOptions.find((c) => c.value === b.option);
-                            b.options = devskillerOption;
-                            this.assessmentList.push(b);
+                            if (!this.stageHasCandidate && c.id !== this.stageId) {
+                                this.devskillerOptions = this.devskillerOptions.filter((a) => {
+                                    return a.value !== b.option;
+                                });
+                            }
+                            if (!this.stageHasCandidate) {
+                                let devskiller = this.devskillerOptions.find((q) => {
+                                    return q.value === b.option;
+                                });
+                                if (devskiller) {
+                                    devskiller.selected = true;
+                                }
+                            }
+                        } else if (b.type === 'video-interview') {
+                            if (!this.stageHasCandidate && c.id !== this.stageId) {
+                                this.questionnaireOptions = this.questionnaireOptions.filter((a) => {
+                                    return a.value !== b.option;
+                                });
+                            }
+                            if (!this.stageHasCandidate) {
+                                let questionnaire = this.questionnaireOptions.find((q) => {
+                                    return q.value === b.option;
+                                });
+                                if (questionnaire) {
+                                    questionnaire.selected = true;
+                                }
+                            }
                         } else if (b.type) {
                             this.assessmentList.push(b);
                             // return false;
@@ -551,26 +557,51 @@ export class StageSettingsComponent implements OnInit {
                 }
             });
         }
+        console.log(this.assessmentList, this.devskillerOptions);
+
         // console.log(this.assessmentList);
     }
 
     defineAssessmentStatus(type) {
         return this.assessmentList.find((c) => {
-            if (type === 'devskiller') {
-                // console.log(type)
-            }
             return c.type === type;
         });
     }
 
-    filterDevskillerOptions() {
+    onChangeDropdownOptions(e, i) {
+        let index = 0;
         this.assessment['controls'].forEach((c) => {
-            if (c.value.type === 'devskiller') {
-                // console.log(c, this.devskillerOptions);
-                this.devskillerOptions = this.devskillerOptions.filter((a) => a.value !== c.value.option);
-                // console.log(c, this.devskillerOptions);
+            if (c['controls'].type.value === 'video-interview') {
+                let questionnaire = this.questionnaireOptions.find((q) => {
+                    return q.value === c['controls'].option.value;
+                });
+                if (questionnaire) {
+                    questionnaire.selected = true;
+                }
+            } else if (c['controls'].type.value === 'devskiller') {
+                let devskiller = this.devskillerOptions.find((q) => {
+                    return q.value === c['controls'].option.value;
+                });
+                if (devskiller) {
+                    devskiller.selected = true;
+                }
+            }
+            if (e.value === c['controls'].option.value) {
+                index += 1;
+                if (index > 1) {
+                    this.assessment['controls'][i]['controls'].option.patchValue(null);
+                    this.assessment['controls'][i]['controls'].option.setErrors({ selected: true });
+                }
             }
         });
-        // this.devslillerOptions = this.devslillerOptions.
+        console.log(e.value, this.questionnaireOptions, this.devskillerOptions);
+    }
+
+    isAllOptionsSelected(type) {
+        if (type === 'video') {
+            return this.questionnaireOptions.every((c) => c.selected);
+        } else if (type === 'devskiller') {
+            return this.devskillerOptions.every((c) => c.selected);
+        }
     }
 }

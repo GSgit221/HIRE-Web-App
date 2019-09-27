@@ -166,6 +166,7 @@
 
     .score-name {
         flex: 0 0 115px;
+        white-space: nowrap;
     }
 
     .score-result {
@@ -945,6 +946,9 @@
     margin: -6px 0 0 auto;
     &.low {
         border-color: #e02020;
+    }
+    &.middle {
+        border-color: $orange;
     }
     span {
         font-size: 35px;
