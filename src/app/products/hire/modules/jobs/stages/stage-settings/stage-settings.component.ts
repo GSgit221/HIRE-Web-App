@@ -51,9 +51,11 @@ export class StageSettingsComponent implements OnInit {
     assessmentBenchmarkOptions = [{ label: 'Systems Engineer (JF5593)', value: 'system_engeneer' }];
     assessmentDeadlineOptions = [
         { label: 'Default - 5 Days', value: 5 },
-        { label: '10 Days', value: 10 },
-        { label: '15 Days', value: 15 },
-        { label: '20 Days', value: 20 }
+        { label: '6 Days', value: 6 },
+        { label: '7 Days', value: 7 },
+        { label: '8 Days', value: 8 },
+        { label: '9 Days', value: 9 },
+        { label: '10 Days', value: 10 }
     ];
     baseUrl: string;
     stageHasCandidate = false;
