@@ -47,6 +47,7 @@ export class StageSettingsComponent implements OnInit {
     ];
     devskillerOptions = [];
     assessmentList = [];
+    assessmentListCompleted = false;
 
     assessmentBenchmarkOptions = [{ label: 'Systems Engineer (JF5593)', value: 'system_engeneer' }];
     assessmentDeadlineOptions = [
@@ -195,7 +196,7 @@ export class StageSettingsComponent implements OnInit {
                                 this.questionnaireOptions = options;
                                 setTimeout(() => {
                                     this.defineAssessmentStatus2();
-                                }, 300);
+                                }, 200);
                             }
                         },
                         (error) => console.error(error)
@@ -560,7 +561,7 @@ export class StageSettingsComponent implements OnInit {
             });
         }
         console.log(this.assessmentList, this.devskillerOptions);
-
+        this.assessmentListCompleted = true;
         // console.log(this.assessmentList);
     }
 
