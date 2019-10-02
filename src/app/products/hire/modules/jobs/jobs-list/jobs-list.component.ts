@@ -199,26 +199,16 @@ export class JobsListComponent implements OnInit, OnDestroy {
     }
 
     onOwnerFilterChange(value: string) {
-        console.log(value);
         this.ownerFilter = value;
         this.calculateSelectedItems();
     }
 
     get filterByOwner(): any[] {
-        // console.log(this.filteredList, this.ownerFilter, this.searchedValue);
         if (this.searchedValue.visible) {
             return this.filterBySearch();
         }
         if (this.ownerFilter === 'all') return this.filteredList;
         if (this.ownerFilter === 'mine') return this.filteredList.filter(({ owner }) => owner === this.user.id);
-        console.log(
-            this.filteredList.filter(
-                ({ owner, recuriters, hiring_managers }) =>
-                    owner === this.ownerFilter ||
-                    (recuriters || []).includes(this.ownerFilter) ||
-                    hiring_managers.includes(this.ownerFilter)
-            )
-        );
         return this.filteredList.filter(
             ({ owner, recuriters, hiring_managers }) =>
                 owner === this.ownerFilter ||
