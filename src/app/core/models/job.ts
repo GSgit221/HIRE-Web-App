@@ -54,4 +54,9 @@ export class Job {
     location_country?: string;
     pool?: boolean;
     tags?: ITag[];
+    sovren_parsed_job?: object;
+    sovren_categories?: {
+        AppliedCategoryWeights?: any[];
+        SuggestedCategoryWeights?: any[];
+    };
 }
