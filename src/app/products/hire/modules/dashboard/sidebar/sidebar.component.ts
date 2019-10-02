@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { UtilitiesService } from './../../../../../core/services/utilities.service';
@@ -27,6 +27,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     showTakeover: boolean = false;
     @ViewChild('toggleButton') toggleButton: ElementRef;
     @ViewChild('myDropdown') menu: ElementRef;
+    @ViewChild('search') search: ElementRef;
     baseUrl: string;
     constructor(
         private store: Store<fromStore.State>,
@@ -58,6 +59,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
                 console.log('🎩 ALL:', this.users);
             }
         });
+
+        this.router.events.subscribe((val) => {
+            if (val instanceof NavigationEnd) {
+                this.search.nativeElement.value = null;
+                this.jobService.setSearchValueForJobs(null);
+                this.candidateService.setSearchValueForCandidates(null);
+            }
+        });
     }
 
     onToggleOcItem(event) {
@@ -79,8 +88,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
 
     onSearch(e) {
-        console.log(this.router.url);
-        this.candidateService.setSearchValueForCandidates(e.target.value);
-        // this.jobService.setSearchValueForJobs(e.target.value);
+        const route = this.router.url.split('/');
+        if (route.length === 5 && this.router.url.includes('jobs')) {
+            this.jobService.setSearchValueForJobs(e.target.value);
+        } else if (route.length === 6 && this.router.url.includes('jobs')) {
+            this.candidateService.setSearchValueForCandidates(e.target.value);
+        }
+
+        //
     }
 }

@@ -68,6 +68,11 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         hidden: [],
         total: 0
     };
+    appliedCandidatesArray: any = {
+        visible: [],
+        hidden: [],
+        total: 0
+    };
     resumeThreshold = 60;
     candidateIsDragged = false;
     // draggedStage: any;
@@ -83,7 +88,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     declineModalVisible: boolean = false;
     emailModalVisible: boolean = false;
     candidatesByStage = {};
-    candidatesByStageGlobal = {};
+    candidatesByStageArray = {};
 
     usersSubscription: Subscription;
     userSubscription: Subscription;
@@ -174,33 +179,32 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     visible: true,
                     text: r
                 };
-                console.log(this.candidatesByStage, this.stages, this.candidatesByStageGlobal);
-
                 for (var key in this.candidatesByStage) {
-                    if (this.candidatesByStageGlobal.hasOwnProperty(key)) {
-                        // console.log(key + " -> " + this.candidatesByStage[key]);
-                        this.candidatesByStage[key] = this.candidatesByStageGlobal[key].filter((c) => {
-                            // const title = c.title.toLowerCase();
-                            // console.log(c)
+                    if (this.candidatesByStageArray.hasOwnProperty(key)) {
+                        this.candidatesByStage[key] = this.candidatesByStageArray[key].filter((c) => {
+                            const fullname = c.first_name.toLowerCase().trim() + ' ' + c.last_name.toLowerCase().trim();
                             const query = this.searchedValue.text.toLowerCase().trim();
-                            // const queryWords = query.split(' ').filter((word) => word);
-                            // const matched = queryWords.every((word) => title.indexOf(word) !== -1);
-                            return (
-                                c.last_name.toLowerCase().includes(query) ||
-                                c.first_name.toLowerCase().includes(query) ||
-                                c.email.toLowerCase().includes(query)
-                            );
+                            const queryWords = query.split(' ').filter((word) => word);
+                            const matched = queryWords.every((word) => fullname.indexOf(word) !== -1);
+                            return matched;
                         });
                     }
                 }
+                this.appliedCandidates.visible = this.appliedCandidatesArray.visible.filter((c) => {
+                    const fullname = c.first_name.toLowerCase().trim() + ' ' + c.last_name.toLowerCase().trim();
+                    const query = this.searchedValue.text.toLowerCase().trim();
+                    const queryWords = query.split(' ').filter((word) => word);
+                    const matched = queryWords.every((word) => fullname.indexOf(word) !== -1);
+                    return matched;
+                });
+                this.appliedCandidates.total = this.appliedCandidates.visible.length;
             } else {
                 this.searchedValue = {
                     visible: false,
                     text: null
                 };
-                /* tslint:disable */
-                this.candidatesByStage = Object.assign({}, this.candidatesByStageGlobal);
-                /* tslint:enable */
+                this.candidatesByStage = { ...this.candidatesByStageArray };
+                this.appliedCandidates = { ...this.appliedCandidatesArray };
             }
         });
     }
@@ -587,6 +591,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         });
         this.appliedCandidates = applied;
+        this.appliedCandidatesArray = { ...applied };
+
         // console.timeEnd('set');
 
         if (!appliedOnly) {
@@ -604,10 +610,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     });
                 }
             });
-            /* tslint:disable */
-            this.candidatesByStageGlobal = Object.assign({}, candidatesByStage);
-            /* tslint:enable */
-            console.log(this.candidatesByStageGlobal, candidatesByStage);
+            this.candidatesByStageArray = { ...candidatesByStage };
+
             this.candidatesByStage = candidatesByStage;
             // console.timeEnd('group');
         }
