@@ -177,7 +177,6 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
 
     get unweightedCategoryScores() {
         const scores = {};
-        Object.keys(this.matchingMap).forEach((key) => (scores[key] = { label: this.matchingMap[key], score: 0 }));
         if (
             this.candidate.matching &&
             this.candidate.matching[this.jobId] &&
@@ -186,7 +185,10 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
             this.candidate.matching[this.jobId].UnweightedCategoryScores.forEach(
                 ({ Category, UnweightedScore, TermsFound = [] }) => {
                     if (!this.matchingMap[Category]) return;
-                    scores[Category].score = TermsFound.length > 0 ? UnweightedScore : 0;
+                    scores[Category] = {
+                        label: this.matchingMap[Category],
+                        score: TermsFound.length > 0 ? UnweightedScore : 0
+                    };
                 }
             );
         }
