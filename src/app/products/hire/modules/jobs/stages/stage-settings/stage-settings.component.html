@@ -72,170 +72,23 @@
                 </div>
                 <div class="form-content-holder" formGroupName="weighting">
                     <div class="form-content-box">
-                        <div class="form-block">
+                        <div class="form-block" *ngFor="let category of weightingKeys">
                             <div class="input-block">
-                                <label class="form-block-label">Education</label>
+                                <label class="form-block-label">{{ matchingMap[category] }}</label>
                                 <div class="hc-slider-block">
                                     <p-slider
                                         styleClass="hc-slider"
-                                        formControlName="education"
+                                        [formControlName]="category"
                                         [animate]="true"
                                         [min]="0"
                                         [max]="100"
                                         [step]="1"
-                                        (onChange)="onHcSliderChangeWeighting($event, 'education')"
-                                        (onSlideEnd)="onHcSliderSlideEnd($event, 'education')"
+                                        (onChange)="onHcSliderChangeWeighting($event, category)"
+                                        (onSlideEnd)="onHcSliderSlideEnd($event, category)"
                                     ></p-slider>
                                 </div>
                                 <div class="form-block-value">
-                                    <span>{{ getWeighting('education') }}</span
-                                    >%
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-block">
-                            <div class="input-block">
-                                <label class="form-block-label">Job Titles</label>
-                                <div class="hc-slider-block">
-                                    <p-slider
-                                        styleClass="hc-slider"
-                                        formControlName="job_titles"
-                                        [animate]="true"
-                                        [min]="0"
-                                        [max]="100"
-                                        [step]="1"
-                                        (onChange)="onHcSliderChangeWeighting($event, 'job_titles')"
-                                        (onSlideEnd)="onHcSliderSlideEnd($event, 'job_titles')"
-                                    ></p-slider>
-                                </div>
-                                <div class="form-block-value">
-                                    <span>{{ getWeighting('job_titles') }}</span
-                                    >%
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-block">
-                            <div class="input-block">
-                                <label class="form-block-label">Skills</label>
-                                <div class="hc-slider-block">
-                                    <p-slider
-                                        styleClass="hc-slider"
-                                        formControlName="skills"
-                                        [animate]="true"
-                                        [min]="0"
-                                        [max]="100"
-                                        [step]="1"
-                                        (onChange)="onHcSliderChangeWeighting($event, 'skills')"
-                                        (onSlideEnd)="onHcSliderSlideEnd($event, 'skills')"
-                                    ></p-slider>
-                                </div>
-                                <div class="form-block-value">
-                                    <span>{{ getWeighting('skills') }}</span
-                                    >%
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-block">
-                            <div class="input-block">
-                                <label class="form-block-label">Industries</label>
-                                <div class="hc-slider-block">
-                                    <p-slider
-                                        styleClass="hc-slider"
-                                        formControlName="industries"
-                                        [animate]="true"
-                                        [min]="0"
-                                        [max]="100"
-                                        [step]="1"
-                                        (onChange)="onHcSliderChangeWeighting($event, 'industries')"
-                                        (onSlideEnd)="onHcSliderSlideEnd($event, 'industries')"
-                                    ></p-slider>
-                                </div>
-                                <div class="form-block-value">
-                                    <span>{{ getWeighting('industries') }}</span
-                                    >%
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-block">
-                            <div class="input-block">
-                                <label class="form-block-label">Languages</label>
-                                <div class="hc-slider-block">
-                                    <p-slider
-                                        styleClass="hc-slider"
-                                        formControlName="languages"
-                                        [animate]="true"
-                                        [min]="0"
-                                        [max]="100"
-                                        [step]="1"
-                                        (onChange)="onHcSliderChangeWeighting($event, 'languages')"
-                                        (onSlideEnd)="onHcSliderSlideEnd($event, 'languages')"
-                                    ></p-slider>
-                                </div>
-                                <div class="form-block-value">
-                                    <span>{{ getWeighting('languages') }}</span
-                                    >%
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-block">
-                            <div class="input-block">
-                                <label class="form-block-label">Certifications</label>
-                                <div class="hc-slider-block">
-                                    <p-slider
-                                        styleClass="hc-slider"
-                                        formControlName="certifications"
-                                        [animate]="true"
-                                        [min]="0"
-                                        [max]="100"
-                                        [step]="1"
-                                        (onChange)="onHcSliderChangeWeighting($event, 'certifications')"
-                                        (onSlideEnd)="onHcSliderSlideEnd($event, 'certifications')"
-                                    ></p-slider>
-                                </div>
-                                <div class="form-block-value">
-                                    <span>{{ getWeighting('certifications') }}</span
-                                    >%
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-block">
-                            <div class="input-block">
-                                <label class="form-block-label">Executive Type</label>
-                                <div class="hc-slider-block">
-                                    <p-slider
-                                        styleClass="hc-slider"
-                                        formControlName="executive_type"
-                                        [animate]="true"
-                                        [min]="0"
-                                        [max]="100"
-                                        [step]="1"
-                                        (onChange)="onHcSliderChangeWeighting($event, 'executive_type')"
-                                        (onSlideEnd)="onHcSliderSlideEnd($event, 'executive_type')"
-                                    ></p-slider>
-                                </div>
-                                <div class="form-block-value">
-                                    <span>{{ getWeighting('executive_type') }}</span
-                                    >%
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-block">
-                            <div class="input-block">
-                                <label class="form-block-label">Management Level</label>
-                                <div class="hc-slider-block">
-                                    <p-slider
-                                        styleClass="hc-slider"
-                                        formControlName="management_level"
-                                        [animate]="true"
-                                        [min]="0"
-                                        [max]="100"
-                                        [step]="1"
-                                        (onChange)="onHcSliderChangeWeighting($event, 'management_level')"
-                                        (onSlideEnd)="onHcSliderSlideEnd($event, 'management_level')"
-                                    ></p-slider>
-                                </div>
-                                <div class="form-block-value">
-                                    <span>{{ getWeighting('management_level') }}</span
+                                    <span>{{ getWeighting(category) }}</span
                                     >%
                                 </div>
                             </div>

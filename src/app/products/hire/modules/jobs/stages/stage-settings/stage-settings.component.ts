@@ -6,7 +6,7 @@ import { Questionnaire } from './../../../../../../core/models/questionnaire';
 import { QuestionnaireService } from './../../../../../../core/services/questionnaire.service';
 
 import { UtilitiesService } from '@app/core/services';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, first } from 'rxjs/operators';
 import { Job } from '../../../../../../core/models/job';
 import { Stage } from '../../../../../../core/models/stage';
 import { FormHelperService } from './../../../../../../core/services/form-helper.service';
@@ -61,6 +61,18 @@ export class StageSettingsComponent implements OnInit {
     baseUrl: string;
     stageHasCandidate = false;
     errorModalVisible = false;
+
+    matchingMap = {
+        education: 'Education',
+        job_titles: 'Job Titles',
+        skills: 'Skills',
+        industries: 'Industries',
+        languages: 'Languages',
+        certifications: 'Certifications',
+        executive_type: 'Executive Type',
+        management_level: 'Management Level'
+    };
+    stageWeighting: any = {};
 
     constructor(
         private jobService: JobService,
@@ -118,138 +130,152 @@ export class StageSettingsComponent implements OnInit {
 
         this.jobService.getJob(this.jobId).subscribe((job: Job) => {
             this.job = job;
-        });
-        this.jobService.getStage(this.jobId, this.stageId).subscribe(
-            (stage: Stage) => {
-                this.contentLoading = false;
-                this.stage = stage;
-                // console.log(this.stage);
-                if (this.stage.id === 'applied') {
-                    this.stageSettingsForm = this.fb.group({
-                        resume_matching_threshold: [this.stage.resume_matching_threshold],
-                        automatically_progress_matching_threshold: [
-                            this.stage.automatically_progress_matching_threshold
-                        ],
-                        weighting: this.fb.group({
-                            education: [15],
-                            job_titles: [28],
-                            skills: [28],
-                            industries: [12],
-                            languages: [7],
-                            certifications: [4],
-                            executive_type: [3],
-                            management_level: [3]
-                        })
-                    });
-                    if (this.stage.weighting) {
-                        this.stageSettingsForm.get('weighting').patchValue({
-                            education: this.stage.weighting.education || 15,
-                            job_titles: this.stage.weighting.job_titles || 28,
-                            skills: this.stage.weighting.skills || 28,
-                            industries: this.stage.weighting.industries || 12,
-                            languages: this.stage.weighting.industries || 7,
-                            certifications: this.stage.weighting.certifications || 4,
-                            executive_type: this.stage.weighting.executive_type || 3,
-                            management_level: this.stage.weighting.management_level || 3
-                        });
-                    }
-                    // console.log(this.stage, this.stageSettingsForm.get('weighting'));
 
-                    setTimeout(() => {
-                        this.onHcSliderChange();
-                    }, 100);
-                } else {
-                    const actions = [];
-                    if (this.stage.actions && this.stage.actions.length) {
-                        this.stage.actions.forEach((a) => {
-                            actions.push(this.createActionItem(a.type, a.options || null));
-                        });
-                    }
-                    this.stageSettingsForm = this.fb.group({
-                        title: [this.stage.title, Validators.required],
-                        assessment: this.fb.array([]),
-                        acceptance_criteria: [this.stage.acceptance_criteria],
-                        automatically_progress_meeting_criteria: [
-                            this.stage.automatically_progress_meeting_criteria || false
-                        ],
-                        actions: this.fb.array(actions)
-                    });
-                    if (this.stage.assessment) {
-                        console.log(this.stage.assessment);
-                        this.populateAssessment(this.stage.assessment);
-                    } else {
-                        // this.addAssessmentGroup();
-                    }
-                    this.questionnaireService.getAll().subscribe(
-                        (response: Questionnaire[]) => {
-                            this.contentLoading = false;
-                            if (response) {
-                                const options = [];
-                                this.questionnaireList = response.filter((q) => q.type === 'video');
-                                this.questionnaireList.forEach((q) => {
-                                    options.push({
-                                        value: q.id,
-                                        label: q.title,
-                                        selected: false
-                                    });
+            this.jobService.getStage(this.jobId, this.stageId).subscribe(
+                (stage: Stage) => {
+                    this.contentLoading = false;
+                    this.stage = stage;
+
+                    if (this.stage.id === 'applied') {
+                        const weighting = {};
+                        if (this.job.sovren_categories) {
+                            const { AppliedCategoryWeights, SuggestedCategoryWeights } = this.job.sovren_categories;
+                            if (AppliedCategoryWeights) {
+                                AppliedCategoryWeights.forEach(({ Category, Weight }) => {
+                                    weighting[Category.toLowerCase()] = Weight * 100;
                                 });
-                                this.questionnaireOptions = options;
-                                setTimeout(() => {
-                                    this.defineAssessmentStatus2();
-                                }, 200);
+                            } else if (SuggestedCategoryWeights) {
+                                SuggestedCategoryWeights.forEach(({ Category, Weight }) => {
+                                    if (Weight > 0) weighting[Category.toLowerCase()] = Weight * 100;
+                                });
                             }
-                        },
-                        (error) => console.error(error)
-                    );
+                        }
+                        if (this.stage.weighting) {
+                            const stageWeighting = this.stage.weighting;
+                            this.matchingKeys.forEach((key) => {
+                                if (stageWeighting[key]) {
+                                    weighting[key] = [stageWeighting[key]];
+                                }
+                            });
+                        }
+                        this.stageWeighting = weighting;
+                        const weightingKeys = Object.keys(weighting);
 
-                    setTimeout(() => {
-                        this.onHcSliderChange();
-                    }, 100);
+                        if (weightingKeys.length > 0) {
+                            const firstKey = weightingKeys[0];
+                            this.onHcSliderChangeWeighting({ value: weighting[firstKey] }, firstKey);
+                        }
 
-                    let assessmentValue = this.stageSettingsForm.get('assessment').value;
-                    this.stageSettingsForm
-                        .get('assessment')
-                        .valueChanges.pipe(distinctUntilChanged())
-                        .subscribe((val) => {
-                            if (val && val.length && !this.utilities.isEqual(val, assessmentValue)) {
-                                console.log('value changed', val);
-                                assessmentValue = val;
-                                const formArray = this.assessment;
-                                for (let fg of formArray.controls) {
-                                    const val = fg.value;
-                                    if (val.type.length || val.option.value) {
-                                        fg.get('type').setValidators([Validators.required]);
-                                        fg.get('option').setValidators([Validators.required]);
-                                        fg.get('type').updateValueAndValidity();
-                                        fg.get('option').updateValueAndValidity();
-                                    } else {
-                                        fg.get('type').clearValidators();
-                                        fg.get('option').clearValidators();
-                                        fg.get('type').updateValueAndValidity();
-                                        fg.get('option').updateValueAndValidity();
+                        this.stageSettingsForm = this.fb.group({
+                            resume_matching_threshold: [this.stage.resume_matching_threshold],
+                            automatically_progress_matching_threshold: [
+                                this.stage.automatically_progress_matching_threshold
+                            ],
+                            weighting: this.fb.group(weighting)
+                        });
+                        console.log(this.stage, this.stageWeighting);
+
+                        setTimeout(() => {
+                            this.onHcSliderChange();
+                        }, 100);
+                    } else {
+                        const actions = [];
+                        if (this.stage.actions && this.stage.actions.length) {
+                            this.stage.actions.forEach((a) => {
+                                actions.push(this.createActionItem(a.type, a.options || null));
+                            });
+                        }
+                        this.stageSettingsForm = this.fb.group({
+                            title: [this.stage.title, Validators.required],
+                            assessment: this.fb.array([]),
+                            acceptance_criteria: [this.stage.acceptance_criteria],
+                            automatically_progress_meeting_criteria: [
+                                this.stage.automatically_progress_meeting_criteria || false
+                            ],
+                            actions: this.fb.array(actions)
+                        });
+                        if (this.stage.assessment) {
+                            console.log(this.stage.assessment);
+                            this.populateAssessment(this.stage.assessment);
+                        } else {
+                            // this.addAssessmentGroup();
+                        }
+                        this.questionnaireService.getAll().subscribe(
+                            (response: Questionnaire[]) => {
+                                this.contentLoading = false;
+                                if (response) {
+                                    const options = [];
+                                    this.questionnaireList = response.filter((q) => q.type === 'video');
+                                    this.questionnaireList.forEach((q) => {
+                                        options.push({
+                                            value: q.id,
+                                            label: q.title,
+                                            selected: false
+                                        });
+                                    });
+                                    this.questionnaireOptions = options;
+                                    setTimeout(() => {
+                                        this.defineAssessmentStatus2();
+                                    }, 200);
+                                }
+                            },
+                            (error) => console.error(error)
+                        );
+
+                        setTimeout(() => {
+                            this.onHcSliderChange();
+                        }, 100);
+
+                        let assessmentValue = this.stageSettingsForm.get('assessment').value;
+                        this.stageSettingsForm
+                            .get('assessment')
+                            .valueChanges.pipe(distinctUntilChanged())
+                            .subscribe((val) => {
+                                if (val && val.length && !this.utilities.isEqual(val, assessmentValue)) {
+                                    console.log('value changed', val);
+                                    assessmentValue = val;
+                                    const formArray = this.assessment;
+                                    for (let fg of formArray.controls) {
+                                        const val = fg.value;
+                                        if (val.type.length || val.option.value) {
+                                            fg.get('type').setValidators([Validators.required]);
+                                            fg.get('option').setValidators([Validators.required]);
+                                            fg.get('type').updateValueAndValidity();
+                                            fg.get('option').updateValueAndValidity();
+                                        } else {
+                                            fg.get('type').clearValidators();
+                                            fg.get('option').clearValidators();
+                                            fg.get('type').updateValueAndValidity();
+                                            fg.get('option').updateValueAndValidity();
+                                        }
                                     }
                                 }
-                            }
-                        });
+                            });
+                    }
+                },
+                (error) => {
+                    this.contentLoading = false;
+                    console.log(error);
+                    this.router.navigateByUrl(`${this.baseUrl}/jobs/${this.jobId}`);
                 }
-            },
-            (error) => {
-                this.contentLoading = false;
-                console.log(error);
-                this.router.navigateByUrl(`${this.baseUrl}/jobs/${this.jobId}`);
-            }
-        );
+            );
+        });
     }
 
     ngOnInit() {
         this.stageSettingsForm = this.fb.group({
             resume_matching_threshold: [60],
-            automatically_progress_matching_threshold: [true]
+            automatically_progress_matching_threshold: [true],
+            weighting: this.fb.group({})
         });
+    }
 
-        setTimeout(() => {
-            // console.log(this.stageSettingsForm);
-        }, 3000);
+    get matchingKeys() {
+        return Object.keys(this.matchingMap);
+    }
+
+    get weightingKeys() {
+        return Object.keys(this.stageWeighting);
     }
 
     onHcSliderChange() {
@@ -341,15 +367,6 @@ export class StageSettingsComponent implements OnInit {
     }
 
     onHcSliderSlideEnd(e, input) {}
-
-    pointsAvailable() {
-        const val = this.stageSettingsForm.get('weighting').value;
-        let total = 100;
-        Object.keys(val).forEach((v) => {
-            total = total - val[v];
-        });
-        return total;
-    }
 
     onSave() {
         const form = this.stageSettingsForm;
