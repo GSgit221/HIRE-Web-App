@@ -27,7 +27,7 @@
     </div>
 </div>
 <form class="search-form">
-    <input type="text" name="search" class="input-text" placeholder="Search anything" />
+    <input type="text" name="search" class="input-text" placeholder="Search anything" (keyup)="onSearch($event)" />
     <span class="icon"> <img src="/assets/images/search.svg" alt="Search icon" width="13" height="13" /> </span>
 </form>
 <div class="sidebar-nav">

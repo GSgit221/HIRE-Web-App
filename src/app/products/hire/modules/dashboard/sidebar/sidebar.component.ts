@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { UtilitiesService } from './../../../../../core/services/utilities.service';
@@ -8,6 +9,8 @@ import { User } from './../../../../../core/models/user';
 import * as fromStore from './../../../../../store';
 import * as fromUsersActions from './../../../../../store/actions/users.action';
 import * as fromSelectors from './../../../../../store/selectors';
+
+import { CandidateService, JobService } from '@app/core/services';
 
 @Component({
     selector: 'app-sidebar',
@@ -28,7 +31,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     constructor(
         private store: Store<fromStore.State>,
         private renderer: Renderer2,
-        private utilities: UtilitiesService
+        private utilities: UtilitiesService,
+        private jobService: JobService,
+        private candidateService: CandidateService,
+        private router: Router
     ) {
         this.baseUrl = `/tenant/${this.utilities.getTenant()}/hire`;
         this.store.dispatch(new fromUsersActions.LoadUsers());
@@ -70,5 +76,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
     onToggleDropdown() {
         this.showMenu = !this.showMenu;
+    }
+
+    onSearch(e) {
+        console.log(this.router.url);
+        this.candidateService.setSearchValueForCandidates(e.target.value);
+        // this.jobService.setSearchValueForJobs(e.target.value);
     }
 }

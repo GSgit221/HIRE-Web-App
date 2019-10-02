@@ -28,6 +28,10 @@ export class JobsListComponent implements OnInit {
     droppedFiles: File[] = [];
     countries: any[] = [];
     baseUrl: string;
+    searchedValue = {
+        visible: false,
+        text: null
+    };
 
     ownerFilters = [
         {
@@ -92,7 +96,21 @@ export class JobsListComponent implements OnInit {
         });
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.jobService.getSearchValueForJobs().subscribe((r) => {
+            if (r && r.length) {
+                this.searchedValue = {
+                    visible: true,
+                    text: r
+                };
+            } else {
+                this.searchedValue = {
+                    visible: false,
+                    text: null
+                };
+            }
+        });
+    }
 
     get isAdmin() {
         return (
@@ -180,13 +198,26 @@ export class JobsListComponent implements OnInit {
     }
 
     onOwnerFilterChange(value: string) {
+        console.log(value);
         this.ownerFilter = value;
         this.calculateSelectedItems();
     }
 
     get filterByOwner(): any[] {
+        // console.log(this.filteredList, this.ownerFilter);
+        if (this.searchedValue.visible) {
+            return this.filterBySearch();
+        }
         if (this.ownerFilter === 'all') return this.filteredList;
         if (this.ownerFilter === 'mine') return this.filteredList.filter(({ owner }) => owner === this.user.id);
+        console.log(
+            this.filteredList.filter(
+                ({ owner, recuriters, hiring_managers }) =>
+                    owner === this.ownerFilter ||
+                    (recuriters || []).includes(this.ownerFilter) ||
+                    hiring_managers.includes(this.ownerFilter)
+            )
+        );
         return this.filteredList.filter(
             ({ owner, recuriters, hiring_managers }) =>
                 owner === this.ownerFilter ||
@@ -259,5 +290,25 @@ export class JobsListComponent implements OnInit {
             // Show full list
             this.filteredList = this.list.slice(0);
         }
+    }
+
+    filterBySearch() {
+        return this.filteredList.filter((j) => {
+            // console.log(j, this.searchedValue.text)
+            const title = j.title.toLowerCase();
+            const query = this.searchedValue.text.toLowerCase().trim();
+            const queryWords = query.split(' ').filter((word) => word);
+            const matched = queryWords.every((word) => title.indexOf(word) !== -1);
+            if (this.ownerFilter === 'all') return matched;
+            if (this.ownerFilter === 'mine') {
+                return matched && j.owner === this.user.id;
+            }
+            return (
+                (j.owner === this.ownerFilter ||
+                    (j.recuriters || []).includes(this.ownerFilter) ||
+                    j.hiring_managers.includes(this.ownerFilter)) &&
+                matched
+            );
+        });
     }
 }

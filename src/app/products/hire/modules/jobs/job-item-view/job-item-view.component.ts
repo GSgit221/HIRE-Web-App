@@ -83,6 +83,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     declineModalVisible: boolean = false;
     emailModalVisible: boolean = false;
     candidatesByStage = {};
+    candidatesByStageGlobal = {};
 
     usersSubscription: Subscription;
     userSubscription: Subscription;
@@ -99,6 +100,11 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     // CDK-Integration
     trashBin: any[] = [];
     cdkEvent: CdkDragDrop<any[]> = null;
+
+    searchedValue = {
+        visible: false,
+        text: null
+    };
 
     constructor(
         private router: Router,
@@ -161,6 +167,42 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     .map((c) => this.prepareBlockData(c));
                 this.groupCandidatesByStage();
             });
+
+        this.candidateService.getSearchValueForCandidates().subscribe((r) => {
+            if (r && r.length) {
+                this.searchedValue = {
+                    visible: true,
+                    text: r
+                };
+                console.log(this.candidatesByStage, this.stages, this.candidatesByStageGlobal);
+
+                for (var key in this.candidatesByStage) {
+                    if (this.candidatesByStageGlobal.hasOwnProperty(key)) {
+                        // console.log(key + " -> " + this.candidatesByStage[key]);
+                        this.candidatesByStage[key] = this.candidatesByStageGlobal[key].filter((c) => {
+                            // const title = c.title.toLowerCase();
+                            // console.log(c)
+                            const query = this.searchedValue.text.toLowerCase().trim();
+                            // const queryWords = query.split(' ').filter((word) => word);
+                            // const matched = queryWords.every((word) => title.indexOf(word) !== -1);
+                            return (
+                                c.last_name.toLowerCase().includes(query) ||
+                                c.first_name.toLowerCase().includes(query) ||
+                                c.email.toLowerCase().includes(query)
+                            );
+                        });
+                    }
+                }
+            } else {
+                this.searchedValue = {
+                    visible: false,
+                    text: null
+                };
+                /* tslint:disable */
+                this.candidatesByStage = Object.assign({}, this.candidatesByStageGlobal);
+                /* tslint:enable */
+            }
+        });
     }
 
     ngAfterViewInit() {}
@@ -562,6 +604,10 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     });
                 }
             });
+            /* tslint:disable */
+            this.candidatesByStageGlobal = Object.assign({}, candidatesByStage);
+            /* tslint:enable */
+            console.log(this.candidatesByStageGlobal, candidatesByStage);
             this.candidatesByStage = candidatesByStage;
             // console.timeEnd('group');
         }
