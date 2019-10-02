@@ -138,6 +138,7 @@ export class StageSettingsComponent implements OnInit {
 
                     if (this.stage.id === 'applied') {
                         const weighting = {};
+                        let stageTotalWeighting = 0;
                         if (this.job.sovren_categories) {
                             const { AppliedCategoryWeights, SuggestedCategoryWeights } = this.job.sovren_categories;
                             if (AppliedCategoryWeights) {
@@ -149,11 +150,19 @@ export class StageSettingsComponent implements OnInit {
                                     if (Weight > 0) weighting[Category.toLowerCase()] = Weight * 100;
                                 });
                             }
-                        }
-                        if (this.stage.weighting) {
+                            if (this.stage.weighting) {
+                                const stageWeighting = this.stage.weighting;
+                                this.matchingKeys.forEach((key) => {
+                                    stageTotalWeighting += stageWeighting[key] || 0;
+                                    if (weighting[key]) {
+                                        weighting[key] = [stageWeighting[key] || 0];
+                                    }
+                                });
+                            }
+                        } else if (this.stage.weighting) {
                             const stageWeighting = this.stage.weighting;
                             this.matchingKeys.forEach((key) => {
-                                if (stageWeighting[key]) {
+                                if (typeof stageWeighting[key] === 'number') {
                                     weighting[key] = [stageWeighting[key]];
                                 }
                             });
@@ -163,7 +172,10 @@ export class StageSettingsComponent implements OnInit {
 
                         if (weightingKeys.length > 0) {
                             const firstKey = weightingKeys[0];
-                            this.onHcSliderChangeWeighting({ value: weighting[firstKey] }, firstKey);
+                            this.onHcSliderChangeWeighting(
+                                { value: weighting[firstKey] + stageTotalWeighting / weightingKeys.length },
+                                firstKey
+                            );
                         }
 
                         this.stageSettingsForm = this.fb.group({
