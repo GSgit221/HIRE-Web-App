@@ -645,7 +645,10 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onAddHiringManagerClick(event) {
         event.preventDefault();
-        this.router.navigateByUrl(`${this.baseUrl}/jobs/${this.job.id}?section=hiring-team&editMode=true`);
+        const id = this.utilities.generateUID(10);
+        this.router.navigateByUrl(
+            `${this.baseUrl}/jobs/${this.job.id}?section=hiring-team&editMode=true&sectionEditId=${id}`
+        );
     }
 
     onFinishedCandidatesCreation(event) {
