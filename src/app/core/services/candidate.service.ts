@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { environment } from '@env/environment';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { UtilitiesService } from './utilities.service';
 
 @Injectable({
@@ -11,6 +12,7 @@ export class CandidateService {
     apiURL: string = environment.apiUrl;
     tenantId = 'undefined';
     baseURL = '';
+    private searchInputSubject = new BehaviorSubject<any>(null);
     constructor(private http: HttpClient, private utilities: UtilitiesService) {
         this.baseURL = `${this.apiURL}/tenants/${this.utilities.getTenant()}`;
     }
@@ -56,5 +58,13 @@ export class CandidateService {
         return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/candidates/bulk-delete`, {
             items: ids
         });
+    }
+
+    setSearchValueForCandidates(val) {
+        this.searchInputSubject.next(val);
+    }
+
+    getSearchValueForCandidates(): Observable<any> {
+        return this.searchInputSubject.asObservable();
     }
 }

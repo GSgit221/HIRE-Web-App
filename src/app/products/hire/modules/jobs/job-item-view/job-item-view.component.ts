@@ -68,6 +68,11 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         hidden: [],
         total: 0
     };
+    appliedCandidatesArray: any = {
+        visible: [],
+        hidden: [],
+        total: 0
+    };
     resumeThreshold = 60;
     candidateIsDragged = false;
     // draggedStage: any;
@@ -83,6 +88,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     declineModalVisible: boolean = false;
     emailModalVisible: boolean = false;
     candidatesByStage = {};
+    candidatesByStageArray = {};
 
     usersSubscription: Subscription;
     userSubscription: Subscription;
@@ -99,6 +105,11 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     // CDK-Integration
     trashBin: any[] = [];
     cdkEvent: CdkDragDrop<any[]> = null;
+
+    searchedValue = {
+        visible: false,
+        text: null
+    };
 
     constructor(
         private router: Router,
@@ -161,6 +172,41 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     .map((c) => this.prepareBlockData(c));
                 this.groupCandidatesByStage();
             });
+
+        this.candidateService.getSearchValueForCandidates().subscribe((r) => {
+            if (r && r.length) {
+                this.searchedValue = {
+                    visible: true,
+                    text: r
+                };
+                for (var key in this.candidatesByStage) {
+                    if (this.candidatesByStageArray.hasOwnProperty(key)) {
+                        this.candidatesByStage[key] = this.candidatesByStageArray[key].filter((c) => {
+                            const fullname = c.first_name.toLowerCase().trim() + ' ' + c.last_name.toLowerCase().trim();
+                            const query = this.searchedValue.text.toLowerCase().trim();
+                            const queryWords = query.split(' ').filter((word) => word);
+                            const matched = queryWords.every((word) => fullname.indexOf(word) !== -1);
+                            return matched;
+                        });
+                    }
+                }
+                this.appliedCandidates.visible = this.appliedCandidatesArray.visible.filter((c) => {
+                    const fullname = c.first_name.toLowerCase().trim() + ' ' + c.last_name.toLowerCase().trim();
+                    const query = this.searchedValue.text.toLowerCase().trim();
+                    const queryWords = query.split(' ').filter((word) => word);
+                    const matched = queryWords.every((word) => fullname.indexOf(word) !== -1);
+                    return matched;
+                });
+                this.appliedCandidates.total = this.appliedCandidates.visible.length;
+            } else {
+                this.searchedValue = {
+                    visible: false,
+                    text: null
+                };
+                this.candidatesByStage = { ...this.candidatesByStageArray };
+                this.appliedCandidates = { ...this.appliedCandidatesArray };
+            }
+        });
     }
 
     ngAfterViewInit() {}
@@ -545,6 +591,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         });
         this.appliedCandidates = applied;
+        this.appliedCandidatesArray = { ...applied };
+
         // console.timeEnd('set');
 
         if (!appliedOnly) {
@@ -562,6 +610,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     });
                 }
             });
+            this.candidatesByStageArray = { ...candidatesByStage };
+
             this.candidatesByStage = candidatesByStage;
             // console.timeEnd('group');
         }
