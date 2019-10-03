@@ -61,7 +61,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         });
 
         this.router.events.subscribe((val) => {
-            if (val instanceof NavigationEnd) {
+            if (val instanceof NavigationEnd && this.search.nativeElement.value.trim() !== '') {
                 this.search.nativeElement.value = null;
                 this.jobService.setSearchValueForJobs(null);
                 this.candidateService.setSearchValueForCandidates(null);
