@@ -15,6 +15,7 @@ export class JobService {
     apiURL: string = environment.apiUrl;
     baseURL = '';
     private searchInputSubject = new BehaviorSubject<any>(null);
+    private searchInputSubjectP = new BehaviorSubject<any>(null);
     constructor(private http: HttpClient, private utilities: UtilitiesService) {}
 
     getAll() {
@@ -264,5 +265,13 @@ export class JobService {
 
     getSearchValueForJobs(): Observable<any> {
         return this.searchInputSubject.asObservable();
+    }
+
+    setSearchValueForPeople(val) {
+        this.searchInputSubjectP.next(val);
+    }
+
+    getSearchValueForPeople(): Observable<any> {
+        return this.searchInputSubjectP.asObservable();
     }
 }

@@ -337,6 +337,15 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     getComplianceRateClass(candidate) {
+        if (candidate.job_id) {
+            const jobId = candidate.job_id.find((c) => c === this.job.id);
+            if (jobId && candidate.opportunities) {
+                let opportunities = candidate.opportunities.find((c) => c.jobId === jobId);
+                if (opportunities && !opportunities.approved) {
+                    return 'mellow';
+                }
+            }
+        }
         if ((candidate.hasUser && candidate.hasUserReviewed) || candidate.matching) {
             if (candidate.score >= this.resumeThreshold) {
                 return 'green';

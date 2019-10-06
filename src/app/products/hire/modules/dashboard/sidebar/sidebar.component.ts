@@ -65,6 +65,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
                 this.search.nativeElement.value = null;
                 this.jobService.setSearchValueForJobs(null);
                 this.candidateService.setSearchValueForCandidates(null);
+                this.jobService.setSearchValueForPeople(null);
             }
         });
     }
@@ -93,6 +94,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
             this.jobService.setSearchValueForJobs(e.target.value);
         } else if (route.length === 6 && this.router.url.includes('jobs')) {
             this.candidateService.setSearchValueForCandidates(e.target.value);
+        } else if (route.length === 5 && this.router.url.includes('people')) {
+            this.jobService.setSearchValueForPeople(e.target.value);
         }
 
         //
