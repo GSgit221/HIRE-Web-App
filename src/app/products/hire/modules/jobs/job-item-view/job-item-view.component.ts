@@ -337,10 +337,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     getComplianceRateClass(candidate) {
-        if (true) {
-            // console.log(candidate, this.job, this.job.id);
+        if (candidate.job_id) {
             const jobId = candidate.job_id.find((c) => c === this.job.id);
-            // console.log(jobId);
             if (jobId && candidate.opportunities) {
                 let opportunities = candidate.opportunities.find((c) => c.jobId === jobId);
                 if (opportunities && !opportunities.approved) {
@@ -944,21 +942,6 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         }
         this.groupCandidatesByStage();
-    }
-
-    onDragDisabled(candidate) {
-        const jobId = candidate.job_id.find((c) => c === this.job.id);
-        // console.log(jobId);
-        if (jobId && candidate.opportunities) {
-            let opportunities = candidate.opportunities.find((c) => c.jobId === jobId);
-            if (opportunities && !opportunities.approved) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
     }
 
     onCandidateDrop(event: CdkDragDrop<any[]>, stageId: string) {
