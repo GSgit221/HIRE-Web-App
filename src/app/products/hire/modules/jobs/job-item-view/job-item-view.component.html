@@ -128,6 +128,7 @@
                             *ngFor="let candidate of appliedCandidates.visible"
                             cdkDrag
                             [cdkDragData]="candidate"
+                            [cdkDragDisabled]="onDragDisabled(candidate)"
                             (cdkDragStarted)="onCDKDragStarted($event)"
                             (cdkDragEnded)="onCDKDragEnded($event)"
                         >

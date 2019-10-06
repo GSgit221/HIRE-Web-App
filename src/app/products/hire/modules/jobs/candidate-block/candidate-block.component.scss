@@ -104,6 +104,12 @@
                 }
             }
 
+            &.mellow {
+                .status-icon.auto-applied {
+                    display: block;
+                }
+            }
+
             &.red {
                 .status-icon.error {
                     display: block;
