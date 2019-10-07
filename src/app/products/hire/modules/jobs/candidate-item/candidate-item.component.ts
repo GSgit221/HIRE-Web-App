@@ -68,6 +68,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
     jobOwner = false;
     questions: any[];
     questionsAnswers: any = {};
+    questionnaire: any = null;
 
     personality_assessment: any = null;
     available_assessment = {};
@@ -151,6 +152,11 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
 
                         if (response[1]) {
                             this.videoInterviewQuestions = response[1];
+                        }
+                        if (this.job.questionnaire) {
+                            this.questionnaireService.getById(this.job.questionnaire).subscribe((response: any) => {
+                                this.questionnaire = response;
+                            });
                         }
 
                         this.allowShowFeedback();
@@ -237,21 +243,22 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
 
     prepareQuestionsAnswers() {
         if (this.job && this.candidate && this.job.questions) {
+            const jobId = this.job.id;
             const questionsAnswers = [];
             let isKnockout = false;
 
             let candidateQuestions = null;
+            if (this.candidate && this.candidate.questions && this.candidate.questions[jobId]) {
+                candidateQuestions = this.candidate.questions[jobId];
+            }
             if (
                 this.candidate.job_specific &&
                 this.candidate.job_specific.questions &&
-                this.candidate.job_specific.questions[this.job.id]
+                this.candidate.job_specific.questions[jobId]
             ) {
-                candidateQuestions = this.candidate.job_specific.questions[this.job.id];
+                candidateQuestions = this.candidate.job_specific.questions[jobId];
             }
 
-            if (this.candidate && this.candidate.questions && this.candidate.questions[this.job.id]) {
-                candidateQuestions = this.candidate.questions[this.job.id];
-            }
             this.job.questions.forEach((q) => {
                 const obj = {
                     text: q.text,
@@ -300,10 +307,23 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                 questionsAnswers.push(obj);
             });
             this.questionsAnswers = {
-                questions: questionsAnswers.slice(0),
-                isKnockout
+                isKnockout,
+                assignment: (this.candidate.assignments[jobId] || []).find(
+                    ({ stageId, type }) => (!stageId || stageId === 'applied') && type === 'questions'
+                ),
+                questions: questionsAnswers.slice(0)
             };
         }
+    }
+
+    get correctQuestions() {
+        return this.questionsAnswers
+            ? this.questionsAnswers.questions.filter(({ isKnockout }) => !isKnockout.includes('wrong')).length
+            : 0;
+    }
+
+    dateFormat(date) {
+        return moment.unix(date).format('DD MMMM YYYY');
     }
 
     onChangeSection(section: string) {
