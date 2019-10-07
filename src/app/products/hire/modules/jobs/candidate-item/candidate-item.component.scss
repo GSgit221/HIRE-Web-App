@@ -899,26 +899,47 @@
     }
 }
 
-.warning-knockout {
-    align-items: center;
-    background-color: $white;
-    border: dotted 2px $grey-border;
-    border-radius: 5px;
-    color: $grey;
+.question-details {
     display: flex;
-    font-size: $font-size-low;
-    line-height: 15px;
-    padding: 13px;
-    margin-bottom: 24px;
+    justify-content: space-between;
 
-    b {
-        color: $main-blue;
+    .question-info {
+        margin-top: 5px;
+
+        .question-title {
+            font-weight: bold;
+            line-height: normal;
+            margin-bottom: 8px;
+        }
+
+        .question-dates {
+            line-height: 23px;
+            color: #637381;
+        }
     }
 
-    img {
-        height: 40px;
-        margin-right: 16px;
-        width: 40px;
+    .question-status {
+        text-align: center;
+        border-radius: 5px;
+        border: 1px solid $pink;
+        padding: 9px 20px 4px;
+
+        &.fail {
+            border-color: $red;
+        }
+
+        h1 {
+            font-size: 35px;
+            font-weight: normal;
+            line-height: 41px;
+            margin: 0;
+            text-transform: capitalize;
+        }
+
+        p {
+            line-height: 17px;
+            margin: 0;
+        }
     }
 }
 
