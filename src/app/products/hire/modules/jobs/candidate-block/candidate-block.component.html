@@ -30,7 +30,8 @@
             class="title"
             *ngIf="candidate.first_name || candidate.last_name; else noFirstName"
             [ngClass]="{ read: candidate.hasRead }"
-            >{{ candidate.first_name | titlecase }} {{ candidate.last_name | titlecase }}</strong
+        >
+            {{ candidate.first_name | titlecase }} {{ candidate.last_name | titlecase }}</strong
         >
         <ng-template #noFirstName>
             <strong class="title" [ngClass]="{ read: candidate.hasRead }">{{ candidate.email }}</strong>
@@ -66,6 +67,9 @@
                     </div>
                 </div>
                 <div class="status-icon empty">
+                    <div class="holder"></div>
+                </div>
+                <div class="status-icon auto-applied">
                     <div class="holder"></div>
                 </div>
             </div>

@@ -17,6 +17,10 @@ export class PeopleListComponent implements OnInit {
         first_name: '',
         last_name: ''
     };
+    searchedValue = {
+        visible: false,
+        value: null
+    };
     candidatesCompleted = false;
     selectedAll = false;
     amountCandidates;
@@ -68,6 +72,28 @@ export class PeopleListComponent implements OnInit {
                 this.chunkRequestInProgress = false;
             }
         );
+
+        this.jobService.getSearchValueForPeople().subscribe((searchedValue) => {
+            if (searchedValue) {
+                this.searchedValue = {
+                    visible: true,
+                    value: searchedValue
+                };
+                if (
+                    this.lastCandidate.first_name &&
+                    this.lastCandidate.first_name.length &&
+                    !this.chunkRequestInProgress
+                ) {
+                    this.fetchCandidatesChunk(this.lastCandidate.first_name);
+                }
+            } else if (this.list && this.list.length) {
+                this.searchedValue = {
+                    visible: false,
+                    value: null
+                };
+                this.filteredList = this.list.slice(0);
+            }
+        });
     }
 
     ngOnInit() {}
@@ -88,22 +114,39 @@ export class PeopleListComponent implements OnInit {
         this.chunkRequestInProgress = true;
         this.jobService.getCandidatesChunk(first, len).subscribe(
             (candidates: any) => {
-                candidates.forEach((item) => {
-                    if (this.selectedAll) {
-                        item.selected = true;
-                    }
-                    item.active = item.job_id && item.job_id.length;
-                    this.list.push(item);
-                    this.filteredList.push(item);
-                });
-                this.lastCandidate = {
-                    first_name: this.list[this.list.length - 1].first_name,
-                    last_name: this.list[this.list.length - 1].last_name
-                };
-                this.jobService.getCandidatesAmount().subscribe((amount: number) => {
-                    this.amountCandidates = amount;
-                });
-                this.filterCandidates();
+                if (candidates && candidates.length > 0) {
+                    candidates.forEach((item) => {
+                        if (this.selectedAll) {
+                            item.selected = true;
+                        }
+                        item.active = item.job_id && item.job_id.length;
+                        this.list.push(item);
+                        this.filteredList.push(item);
+                    });
+                    this.lastCandidate = {
+                        first_name: this.list[this.list.length - 1].first_name,
+                        last_name: this.list[this.list.length - 1].last_name
+                    };
+                    this.jobService.getCandidatesAmount().subscribe((amount: number) => {
+                        this.amountCandidates = amount;
+                    });
+                    this.filterCandidates();
+                }
+                if (this.searchedValue.visible) {
+                    this.contentLoading = true;
+                    this.filteredList = this.list.filter((c) => {
+                        if (c.first_name && c.last_name) {
+                            const fullname = c.first_name.toLowerCase().trim() + ' ' + c.last_name.toLowerCase().trim();
+                            const query = this.searchedValue.value.toLowerCase().trim();
+                            const queryWords = query.split(' ').filter((word) => word);
+                            const matched = queryWords.every((word) => fullname.indexOf(word) !== -1);
+                            return matched;
+                        }
+                    });
+                    setTimeout(() => {
+                        this.contentLoading = false;
+                    }, 1500);
+                }
                 this.candidatesCompleted = true;
                 this.chunkRequestInProgress = false;
                 this.contentLoading = false;

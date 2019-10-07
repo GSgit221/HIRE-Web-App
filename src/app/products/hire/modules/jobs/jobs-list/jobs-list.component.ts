@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as fromUserSelectors from '@app/store/selectors';
 import { select, Store } from '@ngrx/store';
 import * as closest from 'closest';
-
+import { Subscription } from 'rxjs';
 import * as fromStore from '../store';
 import * as fromStoreActions from '../store/actions/jobs.action';
 import * as fromStoreSelectors from '../store/selectors/jobs.selector';
@@ -15,7 +15,7 @@ import { JobService, UserService, UtilitiesService } from './../../../../../core
     templateUrl: './jobs-list.component.html',
     styleUrls: ['./jobs-list.component.scss']
 })
-export class JobsListComponent implements OnInit {
+export class JobsListComponent implements OnInit, OnDestroy {
     contentLoading = true;
     list = [];
     filteredList = [];
@@ -28,6 +28,11 @@ export class JobsListComponent implements OnInit {
     droppedFiles: File[] = [];
     countries: any[] = [];
     baseUrl: string;
+    searchedValue = {
+        visible: false,
+        text: null
+    };
+    subscription: Subscription;
 
     ownerFilters = [
         {
@@ -92,7 +97,21 @@ export class JobsListComponent implements OnInit {
         });
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.subscription = this.jobService.getSearchValueForJobs().subscribe((r) => {
+            if (r && r.length) {
+                this.searchedValue = {
+                    visible: true,
+                    text: r
+                };
+            } else {
+                this.searchedValue = {
+                    visible: false,
+                    text: null
+                };
+            }
+        });
+    }
 
     get isAdmin() {
         return (
@@ -185,6 +204,9 @@ export class JobsListComponent implements OnInit {
     }
 
     get filterByOwner(): any[] {
+        if (this.searchedValue.visible) {
+            return this.filterBySearch();
+        }
         if (this.ownerFilter === 'all') return this.filteredList;
         if (this.ownerFilter === 'mine') return this.filteredList.filter(({ owner }) => owner === this.user.id);
         return this.filteredList.filter(
@@ -259,5 +281,28 @@ export class JobsListComponent implements OnInit {
             // Show full list
             this.filteredList = this.list.slice(0);
         }
+    }
+
+    filterBySearch() {
+        return this.filteredList.filter((j) => {
+            const title = j.title.toLowerCase();
+            const query = this.searchedValue.text.toLowerCase().trim();
+            const queryWords = query.split(' ').filter((word) => word);
+            const matched = queryWords.every((word) => title.indexOf(word) !== -1);
+            if (this.ownerFilter === 'all') return matched;
+            if (this.ownerFilter === 'mine') {
+                return matched && j.owner === this.user.id;
+            }
+            return (
+                (j.owner === this.ownerFilter ||
+                    (j.recuriters || []).includes(this.ownerFilter) ||
+                    j.hiring_managers.includes(this.ownerFilter)) &&
+                matched
+            );
+        });
+    }
+
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
     }
 }

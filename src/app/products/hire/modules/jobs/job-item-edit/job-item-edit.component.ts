@@ -140,7 +140,11 @@ export class JobItemEditComponent implements OnInit {
 
         this.salaryOptions = [{ label: 'per year', value: 'yearly' }, { label: 'per month', value: 'monthly' }];
 
-        this.joblistingOptions = [{ label: 'Default', value: 'default' }];
+        this.joblistingOptions = [
+            { label: 'Default - Visible', value: 'default' },
+            { label: 'Auto-matching off', value: 'auto-matching-off' },
+            { label: 'Hidden', value: 'hidden' }
+        ];
 
         this.questionnaireOptions = [];
         this.questionnaireService.getAll().subscribe((questionnaires: Questionnaire[]) => {
@@ -354,7 +358,7 @@ export class JobItemEditComponent implements OnInit {
         this.defineBullets(this.job.description, this.job.requirements);
         this.inputAddress = this.job.location;
         this.applicationsForm = this.fb.group({
-            job_listing: ['default'],
+            job_listing: [this.job.job_listing],
             resume_upload_required: [this.job.resume_upload_required],
             email_missing_info: [this.job.email_missing_info],
             email_suggestions: [this.job.email_suggestions],

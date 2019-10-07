@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment } from '@env/environment';
@@ -14,6 +14,8 @@ import { UtilitiesService } from './utilities.service';
 export class JobService {
     apiURL: string = environment.apiUrl;
     baseURL = '';
+    private searchInputSubject = new BehaviorSubject<any>(null);
+    private searchInputSubjectP = new BehaviorSubject<any>(null);
     constructor(private http: HttpClient, private utilities: UtilitiesService) {}
 
     getAll() {
@@ -255,5 +257,21 @@ export class JobService {
 
     getDevskillerTest() {
         return this.http.get(`${this.apiURL}/devskiller-tests`);
+    }
+
+    setSearchValueForJobs(val) {
+        this.searchInputSubject.next(val);
+    }
+
+    getSearchValueForJobs(): Observable<any> {
+        return this.searchInputSubject.asObservable();
+    }
+
+    setSearchValueForPeople(val) {
+        this.searchInputSubjectP.next(val);
+    }
+
+    getSearchValueForPeople(): Observable<any> {
+        return this.searchInputSubjectP.asObservable();
     }
 }
