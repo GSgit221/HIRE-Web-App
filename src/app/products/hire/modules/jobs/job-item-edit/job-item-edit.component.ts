@@ -140,7 +140,11 @@ export class JobItemEditComponent implements OnInit {
 
         this.salaryOptions = [{ label: 'per year', value: 'yearly' }, { label: 'per month', value: 'monthly' }];
 
-        this.joblistingOptions = [{ label: 'Default', value: 'default' }];
+        this.joblistingOptions = [
+            { label: 'Default - Visible', value: 'default' },
+            { label: 'Auto-matching off', value: 'auto-matching-off' },
+            { label: 'Hidden', value: 'hidden' }
+        ];
 
         this.questionnaireOptions = [];
         this.questionnaireService.getAll().subscribe((questionnaires: Questionnaire[]) => {
