@@ -225,31 +225,22 @@
                     </div>
                 </div>
                 <div class="content-section" *ngIf="activeSection === 'questions'">
-                    <ng-container *ngIf="questionsAnswers">
+                    <ng-container *ngIf="questionsAnswers.assignment?.updated_at; else waitingForQuestionsAnswers">
                         <div class="question-details">
                             <div class="question-info">
                                 <div class="question-title">{{ questionnaire?.title }}</div>
                                 <div class="question-dates">
                                     Invitation sent: {{ dateFormat(questionsAnswers.assignment?.added_at) }}
                                     <br />
-                                    Questions complete:
-                                    {{
-                                        questionsAnswers.assignment?.updated_at
-                                            ? dateFormat(questionsAnswers.assignment?.updated_at)
-                                            : 'Not completed yet.'
-                                    }}
+                                    Questions complete: {{ dateFormat(questionsAnswers.assignment?.updated_at) }}
                                 </div>
                             </div>
-                            <div
-                                class="question-status"
-                                [ngClass]="{ fail: !questionSuccess }"
-                                *ngIf="questionsAnswers.assignment?.updated_at"
-                            >
+                            <div class="question-status" [ngClass]="{ fail: !questionSuccess }">
                                 <h1>{{ questionSuccess ? 'pass' : 'fail' }}</h1>
                                 <p>{{ correctQuestions }} of {{ this.questionnaire?.questions }} questions</p>
                             </div>
                         </div>
-                        <div class="question-answers" *ngIf="questionsAnswers.assignment?.updated_at">
+                        <div class="question-answers">
                             <div
                                 class="question-block"
                                 *ngFor="let question of questionsAnswers.questions"
@@ -264,6 +255,12 @@
                             </div>
                         </div>
                     </ng-container>
+                    <ng-template #waitingForQuestionsAnswers>
+                        <div class="candidate-attention">
+                            <img alt="warning" class="icon" height="20" src="/assets/images/warning.svg" width="23" />
+                            <span>Waiting for the candidate to submit their answers</span>
+                        </div>
+                    </ng-template>
                 </div>
                 <div class="content-section" *ngIf="activeSection === 'assessments'">
                     <ng-container *ngIf="candidate?.stage && (candidate?.stage)[jobId]">
@@ -540,7 +537,8 @@
                                     class="mla"
                                     [progress]="uploadItem.progress"
                                     *ngIf="uploadItem.uploadStarted && !uploadItem.uploadFinished"
-                                ></app-progress-circle>
+                                >
+                                </app-progress-circle>
                                 <div
                                     class="status-circle mla"
                                     [ngClass]="{
@@ -685,11 +683,8 @@
                         </div>
                     </div>
                     <div class="interactivity-content" id="chat" *ngIf="activeInteractivity === 'chat'">
-                        <app-candidate-item-timeline
-                            *ngIf="job && candidate"
-                            [job]="job"
-                            [candidate]="candidate"
-                        ></app-candidate-item-timeline>
+                        <app-candidate-item-timeline *ngIf="job && candidate" [job]="job" [candidate]="candidate">
+                        </app-candidate-item-timeline>
                     </div>
                     <!-- <div class="interactivity-content" *ngIf="activeInteractivity === 'calendar'">calendar</div> -->
                     <div class="interactivity-content" *ngIf="activeInteractivity === 'report' && showFeedback">
@@ -699,7 +694,8 @@
                             [job]="job"
                             [jobId]="jobId"
                             [candidateId]="candidate.id"
-                        ></app-candidate-item-feedback>
+                        >
+                        </app-candidate-item-feedback>
                     </div>
                 </div>
             </div>
@@ -876,4 +872,5 @@
     [jobId]="[job.id]"
     [candidates]="[[candidate.id, candidateNameOrEmail]]"
     (onHide)="onShowEmailModal(false)"
-></app-email-modal>
+>
+</app-email-modal>
