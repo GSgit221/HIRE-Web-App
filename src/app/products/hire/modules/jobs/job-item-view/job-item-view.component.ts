@@ -191,11 +191,15 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     }
                 }
                 this.appliedCandidates.visible = this.appliedCandidatesArray.visible.filter((c) => {
-                    const fullname = c.first_name.toLowerCase().trim() + ' ' + c.last_name.toLowerCase().trim();
-                    const query = this.searchedValue.text.toLowerCase().trim();
-                    const queryWords = query.split(' ').filter((word) => word);
-                    const matched = queryWords.every((word) => fullname.indexOf(word) !== -1);
-                    return matched;
+                    if (c.first_name && c.last_name) {
+                        const fullname = c.first_name.toLowerCase().trim() + ' ' + c.last_name.toLowerCase().trim();
+                        const query = this.searchedValue.text.toLowerCase().trim();
+                        const queryWords = query.split(' ').filter((word) => word);
+                        const matched = queryWords.every((word) => fullname.indexOf(word) !== -1);
+                        return matched;
+                    } else {
+                        false;
+                    }
                 });
                 this.appliedCandidates.total = this.appliedCandidates.visible.length;
             } else {
