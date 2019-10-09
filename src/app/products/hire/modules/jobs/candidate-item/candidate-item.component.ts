@@ -363,40 +363,42 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
         if (this.candidate && this.candidate.assignments && this.candidate.assignments[this.jobId]) {
             this.candidate.assignments[this.jobId].forEach((ass) => {
                 const jobAss = jobAssessment.find(({ type }) => type === 'personality');
-                let expired_at =
-                    ass.expired_at ||
-                    moment
-                        .unix(ass.added_at)
-                        .add(jobAss.deadline || 5, 'days')
-                        .unix();
-                this.available_assessment[ass.type] = {
-                    invitationSent: moment.unix(ass.added_at).format('DD MMMM YYYY'),
-                    assessmentExpired: moment.unix(expired_at).format('DD MMMM YYYY'),
-                    expired: expired_at < moment().unix()
-                };
-                if (ass.type === 'devskiller') {
-                    ass.invitationCode = ass.candidate.examUrl.split('?')[1];
-                    ass.invitationSent = moment.unix(ass.added_at).format('DD MMMM YYYY');
+                if (jobAss) {
+                    let expired_at =
+                        ass.expired_at ||
+                        moment
+                            .unix(ass.added_at)
+                            .add(jobAss.deadline || 5, 'days')
+                            .unix();
+                    this.available_assessment[ass.type] = {
+                        invitationSent: moment.unix(ass.added_at).format('DD MMMM YYYY'),
+                        assessmentExpired: moment.unix(expired_at).format('DD MMMM YYYY'),
+                        expired: expired_at < moment().unix()
+                    };
+                    if (ass.type === 'devskiller') {
+                        ass.invitationCode = ass.candidate.examUrl.split('?')[1];
+                        ass.invitationSent = moment.unix(ass.added_at).format('DD MMMM YYYY');
 
-                    ass.assessmentComplete = moment(ass.candidate.testFinishDate).format('DD MMMM YYYY');
-                    this.devskillerTest.push(ass);
+                        ass.assessmentComplete = moment(ass.candidate.testFinishDate).format('DD MMMM YYYY');
+                        this.devskillerTest.push(ass);
+                    }
+                    // if (ass.type === 'logic-test') {
+                    //     if (
+                    //         !ass.data &&
+                    //         this.candidate.stages_data &&
+                    //         this.candidate.stages_data[this.jobId] &&
+                    //         this.candidate.stages_data[this.jobId]['logic-test']
+                    //     ) {
+                    //         ass.data = this.candidate.stages_data[this.jobId]['logic-test'];
+                    //     }
+
+                    //     this.assignments.push(ass);
+                    // }
+
+                    // if (ass.type === 'devskiller') {
+                    //     this.assignments.push(ass);
+                    // }
                 }
-                // if (ass.type === 'logic-test') {
-                //     if (
-                //         !ass.data &&
-                //         this.candidate.stages_data &&
-                //         this.candidate.stages_data[this.jobId] &&
-                //         this.candidate.stages_data[this.jobId]['logic-test']
-                //     ) {
-                //         ass.data = this.candidate.stages_data[this.jobId]['logic-test'];
-                //     }
-
-                //     this.assignments.push(ass);
-                // }
-
-                // if (ass.type === 'devskiller') {
-                //     this.assignments.push(ass);
-                // }
             });
         }
         if (this.candidate.stages_data && this.candidate.stages_data[this.jobId]) {
