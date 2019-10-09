@@ -235,8 +235,8 @@
                                     Questions complete: {{ dateFormat(this.questionsAnswers.assignment?.updated_at) }}
                                 </div>
                             </div>
-                            <div class="question-status" [ngClass]="{ fail: questionSuccess }">
-                                <h1>{{ questionSuccess ? 'fail' : 'pass' }}</h1>
+                            <div class="question-status" [ngClass]="{ fail: !questionSuccess }">
+                                <h1>{{ questionSuccess ? 'pass' : 'fail' }}</h1>
                                 <p>{{ correctQuestions }} of {{ this.questionnaire?.questions }} questions</p>
                             </div>
                         </div>
