@@ -318,8 +318,14 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
 
     get correctQuestions() {
         return this.questionsAnswers
-            ? this.questionsAnswers.questions.filter(({ isKnockout }) => !isKnockout.includes('wrong')).length
+            ? this.questionsAnswers.questions.filter(
+                  ({ isKnockout, answers }) => !isKnockout.includes('wrong') && answers.length
+              ).length
             : 0;
+    }
+
+    get questionSuccess() {
+        return this.correctQuestions === (this.questionsAnswers.questions || []).length;
     }
 
     dateFormat(date) {
