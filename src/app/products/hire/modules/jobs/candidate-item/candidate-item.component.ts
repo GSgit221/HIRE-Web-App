@@ -367,7 +367,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                     ass.expired_at ||
                     moment
                         .unix(ass.added_at)
-                        .add(jobAss.deadline || 5)
+                        .add(jobAss.deadline || 5, 'days')
                         .unix();
                 this.available_assessment[ass.type] = {
                     invitationSent: moment.unix(ass.added_at).format('DD MMMM YYYY'),
@@ -479,10 +479,8 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
         if (this.available_assessment[type].loading) return;
         this.available_assessment[type].loading = true;
         this.candidateService.extendAssessmentDeadline(this.jobId, this.candidateId, { type }).subscribe(
-            (response: number) => {
-                this.available_assessment[type].assessmentExpired = moment()
-                    .add(3, 'days')
-                    .unix();
+            (assignment: any) => {
+                this.available_assessment[type].assessmentExpired = assignment.expired_at;
                 this.available_assessment[type].expired = false;
                 this.available_assessment[type].loading = false;
             },
