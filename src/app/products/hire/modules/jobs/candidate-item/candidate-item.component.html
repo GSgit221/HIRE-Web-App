@@ -225,18 +225,18 @@
                     </div>
                 </div>
                 <div class="content-section" *ngIf="activeSection === 'questions'">
-                    <ng-container *ngIf="questionsAnswers">
+                    <ng-container *ngIf="questionsAnswers.assignment?.updated_at; else waitingForQuestionsAnswers">
                         <div class="question-details">
                             <div class="question-info">
-                                <div class="question-title">{{ this.questionnaire?.title }}</div>
+                                <div class="question-title">{{ questionnaire?.title }}</div>
                                 <div class="question-dates">
-                                    Invitation sent: {{ dateFormat(this.questionsAnswers.assignment?.added_at) }}
+                                    Invitation sent: {{ dateFormat(questionsAnswers.assignment?.added_at) }}
                                     <br />
-                                    Questions complete: {{ dateFormat(this.questionsAnswers.assignment?.updated_at) }}
+                                    Questions complete: {{ dateFormat(questionsAnswers.assignment?.updated_at) }}
                                 </div>
                             </div>
-                            <div class="question-status" [ngClass]="{ fail: questionsAnswers.isKnockout }">
-                                <h1>{{ questionsAnswers.isKnockout ? 'fail' : 'pass' }}</h1>
+                            <div class="question-status" [ngClass]="{ fail: !questionSuccess }">
+                                <h1>{{ questionSuccess ? 'pass' : 'fail' }}</h1>
                                 <p>{{ correctQuestions }} of {{ this.questionnaire?.questions }} questions</p>
                             </div>
                         </div>
@@ -255,10 +255,16 @@
                             </div>
                         </div>
                     </ng-container>
+                    <ng-template #waitingForQuestionsAnswers>
+                        <div class="candidate-attention">
+                            <img alt="warning" class="icon" height="20" src="/assets/images/warning.svg" width="23" />
+                            <span>Waiting for the candidate to submit their answers</span>
+                        </div>
+                    </ng-template>
                 </div>
                 <div class="content-section" *ngIf="activeSection === 'assessments'">
                     <ng-container *ngIf="candidate?.stage && (candidate?.stage)[jobId]">
-                        <ng-container *ngIf="available_assessment.personality">
+                        <ng-container *ngIf="available_assessment['personality']">
                             <h3 class="personality-profile-title">Personality Profile</h3>
                             <div
                                 class="personality-profile-holder"
@@ -293,7 +299,28 @@
                                 </div>
                             </div>
                             <ng-template #waitingForPersonalityData>
-                                <div class="candidate-attention">
+                                <div class="assessment-expired" *ngIf="available_assessment['personality'].expired">
+                                    <div class="assessment-info">
+                                        <div class="assessment-dates">
+                                            Invitation sent: {{ available_assessment['personality'].invitationSent }}
+                                            <br />
+                                            Assessment expired:
+                                            {{ available_assessment['personality'].assessmentExpired }}
+                                        </div>
+                                        <div
+                                            class="assessment-dates extend"
+                                            (click)="onExtendDeadline('personality')"
+                                            [ngClass]="{ loading: available_assessment['personality'].loading }"
+                                        >
+                                            Extend Assessment Deadline (3 Days)
+                                        </div>
+                                    </div>
+                                    <div class="assessment-status">
+                                        <img src="/assets/images/icons/danger.svg" alt="expired" />
+                                        <p>Expired</p>
+                                    </div>
+                                </div>
+                                <div class="candidate-attention" *ngIf="!available_assessment['personality'].expired">
                                     <img
                                         alt="warning"
                                         class="icon"
@@ -332,7 +359,32 @@
                                 </div>
                             </div>
                             <ng-template #waitingForInterviewData>
-                                <div class="candidate-attention">
+                                <div class="assessment-expired" *ngIf="available_assessment['video-interview'].expired">
+                                    <div class="assessment-info">
+                                        <div class="assessment-dates">
+                                            Invitation sent:
+                                            {{ available_assessment['video-interview'].invitationSent }}
+                                            <br />
+                                            Assessment expired:
+                                            {{ available_assessment['video-interview'].assessmentExpired }}
+                                        </div>
+                                        <div
+                                            class="assessment-dates extend"
+                                            (click)="onExtendDeadline('video-interview')"
+                                            [ngClass]="{ loading: available_assessment['video-interview'].loading }"
+                                        >
+                                            Extend Assessment Deadline (3 Days)
+                                        </div>
+                                    </div>
+                                    <div class="assessment-status">
+                                        <img src="/assets/images/icons/danger.svg" alt="expired" />
+                                        <p>Expired</p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="candidate-attention"
+                                    *ngIf="!available_assessment['video-interview'].expired"
+                                >
                                     <img
                                         alt="warning"
                                         class="icon"
@@ -409,7 +461,31 @@
                                 </div>
 
                                 <ng-template #waitingForDevskiller>
-                                    <div class="candidate-attention">
+                                    <div class="assessment-expired" *ngIf="available_assessment['devskiller'].expired">
+                                        <div class="assessment-info">
+                                            <div class="assessment-dates">
+                                                Invitation sent: {{ available_assessment['devskiller'].invitationSent }}
+                                                <br />
+                                                Assessment expired:
+                                                {{ available_assessment['devskiller'].assessmentExpired }}
+                                            </div>
+                                            <div
+                                                class="assessment-dates extend"
+                                                (click)="onExtendDeadline('devskiller')"
+                                                [ngClass]="{ loading: available_assessment['devskiller'].loading }"
+                                            >
+                                                Extend Assessment Deadline (3 Days)
+                                            </div>
+                                        </div>
+                                        <div class="assessment-status">
+                                            <img src="/assets/images/icons/danger.svg" alt="expired" />
+                                            <p>Expired</p>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="candidate-attention"
+                                        *ngIf="!available_assessment['devskiller'].expired"
+                                    >
                                         <img
                                             alt="warning"
                                             class="icon"
@@ -450,7 +526,28 @@
                                 </div>
                             </div>
                             <ng-template #waitingForLogic>
-                                <div class="candidate-attention">
+                                <div class="assessment-expired" *ngIf="available_assessment['logic-test'].expired">
+                                    <div class="assessment-info">
+                                        <div class="assessment-dates">
+                                            Invitation sent: {{ available_assessment['logic-test'].invitationSent }}
+                                            <br />
+                                            Assessment expired:
+                                            {{ available_assessment['logic-test'].assessmentExpired }}
+                                        </div>
+                                        <div
+                                            class="assessment-dates extend"
+                                            (click)="onExtendDeadline('logic-test')"
+                                            [ngClass]="{ loading: available_assessment['logic-test'].loading }"
+                                        >
+                                            Extend Assessment Deadline (3 Days)
+                                        </div>
+                                    </div>
+                                    <div class="assessment-status">
+                                        <img src="/assets/images/icons/danger.svg" alt="expired" />
+                                        <p>Expired</p>
+                                    </div>
+                                </div>
+                                <div class="candidate-attention" *ngIf="!available_assessment['logic-test'].expired">
                                     <img
                                         alt="warning"
                                         class="icon"
@@ -531,7 +628,8 @@
                                     class="mla"
                                     [progress]="uploadItem.progress"
                                     *ngIf="uploadItem.uploadStarted && !uploadItem.uploadFinished"
-                                ></app-progress-circle>
+                                >
+                                </app-progress-circle>
                                 <div
                                     class="status-circle mla"
                                     [ngClass]="{
@@ -676,11 +774,8 @@
                         </div>
                     </div>
                     <div class="interactivity-content" id="chat" *ngIf="activeInteractivity === 'chat'">
-                        <app-candidate-item-timeline
-                            *ngIf="job && candidate"
-                            [job]="job"
-                            [candidate]="candidate"
-                        ></app-candidate-item-timeline>
+                        <app-candidate-item-timeline *ngIf="job && candidate" [job]="job" [candidate]="candidate">
+                        </app-candidate-item-timeline>
                     </div>
                     <!-- <div class="interactivity-content" *ngIf="activeInteractivity === 'calendar'">calendar</div> -->
                     <div class="interactivity-content" *ngIf="activeInteractivity === 'report' && showFeedback">
@@ -690,7 +785,8 @@
                             [job]="job"
                             [jobId]="jobId"
                             [candidateId]="candidate.id"
-                        ></app-candidate-item-feedback>
+                        >
+                        </app-candidate-item-feedback>
                     </div>
                 </div>
             </div>
@@ -867,4 +963,5 @@
     [jobId]="[job.id]"
     [candidates]="[[candidate.id, candidateNameOrEmail]]"
     (onHide)="onShowEmailModal(false)"
-></app-email-modal>
+>
+</app-email-modal>
