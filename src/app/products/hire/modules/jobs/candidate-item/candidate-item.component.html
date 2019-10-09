@@ -299,7 +299,27 @@
                                 </div>
                             </div>
                             <ng-template #waitingForPersonalityData>
-                                <div class="candidate-attention">
+                                <div class="assessment-expired" *ngIf="available_assessment.personality.expired">
+                                    <div class="assessment-info">
+                                        <div class="assessment-dates">
+                                            Invitation sent: {{ available_assessment.personality.invitationSent }}
+                                            <br />
+                                            Assessment expired: {{ available_assessment.personality.assessmentExpired }}
+                                        </div>
+                                        <div
+                                            class="assessment-dates extend"
+                                            (click)="onExtendDeadline('personality')"
+                                            [ngClass]="{ loading: available_assessment.personality.loading }"
+                                        >
+                                            Extend Assessment Deadline (3 Days)
+                                        </div>
+                                    </div>
+                                    <div class="assessment-status">
+                                        <img src="/assets/images/icons/danger.svg" alt="expired" />
+                                        <p>Expired</p>
+                                    </div>
+                                </div>
+                                <div class="candidate-attention" *ngIf="!available_assessment.personality.expired">
                                     <img
                                         alt="warning"
                                         class="icon"
@@ -338,7 +358,13 @@
                                 </div>
                             </div>
                             <ng-template #waitingForInterviewData>
-                                <div class="candidate-attention">
+                                <div class="assessmentExpired" *ngIf="available_assessment['video-interview'].expired">
+                                    Expired
+                                </div>
+                                <div
+                                    class="candidate-attention"
+                                    *ngIf="!available_assessment['video-interview'].expired"
+                                >
                                     <img
                                         alt="warning"
                                         class="icon"
@@ -415,7 +441,13 @@
                                 </div>
 
                                 <ng-template #waitingForDevskiller>
-                                    <div class="candidate-attention">
+                                    <div class="assessmentExpired" *ngIf="available_assessment['devskiller'].expired">
+                                        Expired
+                                    </div>
+                                    <div
+                                        class="candidate-attention"
+                                        *ngIf="!available_assessment['devskiller'].expired"
+                                    >
                                         <img
                                             alt="warning"
                                             class="icon"
@@ -456,7 +488,10 @@
                                 </div>
                             </div>
                             <ng-template #waitingForLogic>
-                                <div class="candidate-attention">
+                                <div class="assessmentExpired" *ngIf="available_assessment['logic-test'].expired">
+                                    Expired
+                                </div>
+                                <div class="candidate-attention" *ngIf="!available_assessment['logic-test'].expired">
                                     <img
                                         alt="warning"
                                         class="icon"

@@ -4,14 +4,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { switchMap } from 'rxjs/operators';
-import { CandidateService } from './../../../../../core/services/candidate.service';
 
 import { UIChart } from 'primeng/chart';
 import { forkJoin, of, Subscription } from 'rxjs';
 import { Candidate, Job, Stage, User } from '../../../../../core/models';
 import * as fromJobsStore from '../store';
 import * as fromJobCandiatesSelector from '../store/selectors/jobCandidates.selector';
-import { EmailService, JobService, QuestionnaireService, UtilitiesService } from './../../../../../core/services';
+import {
+    CandidateService,
+    EmailService,
+    JobService,
+    QuestionnaireService,
+    UtilitiesService
+} from './../../../../../core/services';
 import * as fromStore from './../../../../../store';
 import * as fromSeflectors from './../../../../../store/selectors';
 
@@ -352,9 +357,23 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
     }
 
     processAssessments() {
+        const jobAssessment = this.stages
+            .reduce((a, c) => a.concat(c), [])
+            .reduce((a, c) => a.concat(c.assessment), []);
         if (this.candidate && this.candidate.assignments && this.candidate.assignments[this.jobId]) {
             this.candidate.assignments[this.jobId].forEach((ass) => {
-                this.available_assessment[ass.type] = true;
+                const jobAss = jobAssessment.find(({ type }) => type === 'personality');
+                let expired_at =
+                    ass.expired_at ||
+                    moment
+                        .unix(ass.added_at)
+                        .add(jobAss.deadline || 5)
+                        .unix();
+                this.available_assessment[ass.type] = {
+                    invitationSent: moment.unix(ass.added_at).format('DD MMMM YYYY'),
+                    assessmentExpired: moment.unix(expired_at).format('DD MMMM YYYY'),
+                    expired: expired_at < moment().unix()
+                };
                 if (ass.type === 'devskiller') {
                     ass.invitationCode = ass.candidate.examUrl.split('?')[1];
                     ass.invitationSent = moment.unix(ass.added_at).format('DD MMMM YYYY');
@@ -454,6 +473,24 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
         } else {
             console.log('No stages data for this job');
         }
+    }
+
+    onExtendDeadline(type) {
+        if (this.available_assessment[type].loading) return;
+        this.available_assessment[type].loading = true;
+        this.candidateService.extendAssessmentDeadline(this.jobId, this.candidateId, { type }).subscribe(
+            (response: number) => {
+                this.available_assessment[type].assessmentExpired = moment()
+                    .add(3, 'days')
+                    .unix();
+                this.available_assessment[type].expired = false;
+                this.available_assessment[type].loading = false;
+            },
+            (errorResponse) => {
+                console.error(errorResponse);
+                this.available_assessment[type].loading = false;
+            }
+        );
     }
 
     processFiles(files) {
