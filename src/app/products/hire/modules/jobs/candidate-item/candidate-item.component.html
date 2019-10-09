@@ -228,19 +228,28 @@
                     <ng-container *ngIf="questionsAnswers">
                         <div class="question-details">
                             <div class="question-info">
-                                <div class="question-title">{{ this.questionnaire?.title }}</div>
+                                <div class="question-title">{{ questionnaire?.title }}</div>
                                 <div class="question-dates">
-                                    Invitation sent: {{ dateFormat(this.questionsAnswers.assignment?.added_at) }}
+                                    Invitation sent: {{ dateFormat(questionsAnswers.assignment?.added_at) }}
                                     <br />
-                                    Questions complete: {{ dateFormat(this.questionsAnswers.assignment?.updated_at) }}
+                                    Questions complete:
+                                    {{
+                                        questionsAnswers.assignment?.updated_at
+                                            ? dateFormat(questionsAnswers.assignment?.updated_at)
+                                            : 'Not completed yet.'
+                                    }}
                                 </div>
                             </div>
-                            <div class="question-status" [ngClass]="{ fail: !questionSuccess }">
+                            <div
+                                class="question-status"
+                                [ngClass]="{ fail: !questionSuccess }"
+                                *ngIf="questionsAnswers.assignment?.updated_at"
+                            >
                                 <h1>{{ questionSuccess ? 'pass' : 'fail' }}</h1>
                                 <p>{{ correctQuestions }} of {{ this.questionnaire?.questions }} questions</p>
                             </div>
                         </div>
-                        <div class="question-answers">
+                        <div class="question-answers" *ngIf="questionsAnswers.assignment?.updated_at">
                             <div
                                 class="question-block"
                                 *ngFor="let question of questionsAnswers.questions"
