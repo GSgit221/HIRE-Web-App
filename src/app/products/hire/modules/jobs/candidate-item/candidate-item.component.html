@@ -359,7 +359,7 @@
                                 </div>
                             </div>
                             <ng-template #waitingForInterviewData>
-                                <div class="assessmentExpired" *ngIf="available_assessment['video-interview'].expired">
+                                <div class="assessment-expired" *ngIf="available_assessment['video-interview'].expired">
                                     <div class="assessment-info">
                                         <div class="assessment-dates">
                                             Invitation sent:
@@ -461,7 +461,7 @@
                                 </div>
 
                                 <ng-template #waitingForDevskiller>
-                                    <div class="assessmentExpired" *ngIf="available_assessment['devskiller'].expired">
+                                    <div class="assessment-expired" *ngIf="available_assessment['devskiller'].expired">
                                         <div class="assessment-info">
                                             <div class="assessment-dates">
                                                 Invitation sent: {{ available_assessment['devskiller'].invitationSent }}
@@ -526,7 +526,7 @@
                                 </div>
                             </div>
                             <ng-template #waitingForLogic>
-                                <div class="assessmentExpired" *ngIf="available_assessment['logic-test'].expired">
+                                <div class="assessment-expired" *ngIf="available_assessment['logic-test'].expired">
                                     <div class="assessment-info">
                                         <div class="assessment-dates">
                                             Invitation sent: {{ available_assessment['logic-test'].invitationSent }}
