@@ -72,18 +72,18 @@ export class EmailModalComponent implements OnInit {
         this.InsertPlaceholders.forEach(({ title, value }) => {
             if (title) content = content.replace(new RegExp(title, 'gi'), value);
         });
-        content = content.replace(
-            new RegExp('color: white;', 'gi'),
-            `
-                color: white;
-                mix-blend-mode: multiply;
-                border-radius: 11px;
-                background-color: rgb(59, 178, 115);
-                margin: 0 5px 3px;
-                display: inline-block;
-                padding: 0px 10px;
-            `
-        );
+        // content = content.replace(
+        //     new RegExp('color: white;', 'gi'),
+        //     `
+        //         color: white;
+        //         mix-blend-mode: multiply;
+        //         border-radius: 11px;
+        //         background-color: rgb(59, 178, 115);
+        //         margin: 0 5px 3px;
+        //         display: inline-block;
+        //         padding: 0px 10px;
+        //     `
+        // );
 
         this.contentLoading = true;
         const formValue = form.value;
