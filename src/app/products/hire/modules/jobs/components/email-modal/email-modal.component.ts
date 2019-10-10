@@ -69,9 +69,9 @@ export class EmailModalComponent implements OnInit {
         console.log('FORM IS VALID:', form.value);
 
         let { content } = form.value;
-        // this.InsertPlaceholders.forEach(({ title, value }) => {
-        //     if (title) content = content.replace(new RegExp(title, 'gi'), value);
-        // });
+        this.InsertPlaceholders.forEach(({ title, value }) => {
+            if (title) content = content.replace(new RegExp(title, 'gi'), value);
+        });
         // content = content.replace(
         //     new RegExp('color: white;', 'gi'),
         //     `
