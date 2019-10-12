@@ -179,6 +179,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     visible: true,
                     text: r
                 };
+                this.onLoadMore();
                 for (var key in this.candidatesByStage) {
                     if (this.candidatesByStageArray.hasOwnProperty(key)) {
                         this.candidatesByStage[key] = this.candidatesByStageArray[key].filter((c) => {
@@ -189,6 +190,13 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                             return matched;
                         });
                     }
+                }
+                if (this.appliedCandidatesArray.hidden.length) {
+                    this.appliedCandidatesArray.visible = [
+                        ...this.appliedCandidatesArray.visible,
+                        ...this.appliedCandidatesArray.hidden
+                    ];
+                    this.appliedCandidatesArray.hidden = [];
                 }
                 this.appliedCandidates.visible = this.appliedCandidatesArray.visible.filter((c) => {
                     if (c.first_name && c.last_name) {
