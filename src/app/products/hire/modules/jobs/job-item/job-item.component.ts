@@ -52,7 +52,8 @@ export class JobItemComponent implements OnInit {
     ngOnInit() {}
 
     onSetEditMode(value) {
-        this.editMode = this.job.status === 'BUILD' ? false : value;
+        // this.editMode = this.job.status === 'BUILD' ? false : value;
+        this.editMode = value;
     }
 
     onJobUpdate() {
