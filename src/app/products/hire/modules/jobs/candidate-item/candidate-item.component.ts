@@ -151,7 +151,9 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                             .filter((stage) => stage.id !== 'applied')
                             .sort((a, b) => a.order - b.order);
                         if (this.job.questions) {
-                            this.sections.splice(2, 0, 'questions');
+                            if (!this.sections.includes('questions')) {
+                                this.sections.splice(2, 0, 'questions');
+                            }
                             this.prepareQuestionsAnswers();
                         }
 
@@ -364,7 +366,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
             .filter((ass) => ass);
         if (this.candidate && this.candidate.assignments && this.candidate.assignments[this.jobId]) {
             this.candidate.assignments[this.jobId].forEach((ass) => {
-                const jobAss = jobAssessment.find(({ type }) => type === 'personality');
+                const jobAss = jobAssessment.find(({ type }) => type === ass.type);
                 if (jobAss) {
                     let expired_at =
                         ass.expired_at ||
@@ -382,7 +384,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                         ass.invitationSent = moment.unix(ass.added_at).format('DD MMMM YYYY');
 
                         ass.assessmentComplete = moment(ass.candidate.testFinishDate).format('DD MMMM YYYY');
-                        this.devskillerTest.push(ass);
+                        this.devskillerTest = [ass];
                     }
                     // if (ass.type === 'logic-test') {
                     //     if (
@@ -487,6 +489,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                 this.available_assessment[type].assessmentExpired = assignment.expired_at;
                 this.available_assessment[type].expired = false;
                 this.available_assessment[type].loading = false;
+                this.store.dispatch(new fromJobsStore.LoadJobCandidates(this.jobId));
             },
             (errorResponse) => {
                 console.error(errorResponse);

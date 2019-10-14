@@ -1,5 +1,4 @@
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop'; // CDK-Integration
-
 import {
     AfterViewInit,
     Component,
@@ -16,6 +15,7 @@ import { Router } from '@angular/router';
 import { UtilitiesService } from '@app/core/services';
 import { environment } from '@env/environment';
 import { select, Store } from '@ngrx/store';
+import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin, Observable, of, Subscription } from 'rxjs';
 import { filter, take, tap } from 'rxjs/operators';
@@ -388,6 +388,19 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         //define stage
         if (candidate.stage && candidate.stage[this.job.id] && candidate.stage[this.job.id] !== 'applied') {
             const stageId = candidate.stage[this.job.id];
+
+            const getAssignmentClass = (ass, stageAss) => {
+                if (!ass) return 0;
+                if (ass.completed) return 3;
+                return (ass.expired_at ||
+                    moment
+                        .unix(ass.added_at)
+                        .add(stageAss.deadline || 5, 'days')
+                        .unix()) < moment().unix()
+                    ? 1
+                    : 0;
+            };
+
             // need to check stages data
             if (this.job && this.job.stages && this.job.stages.find((s) => s.id === stageId)) {
                 const stage = this.job.stages.find((s) => s.id === stageId);
@@ -402,50 +415,36 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     ) {
                         const completed = [];
                         const stageData =
-                            candidate.stages_data &&
-                            candidate.stages_data[this.job.id] &&
-                            candidate.stages_data[this.job.id][stageId]
-                                ? candidate.stages_data[this.job.id][stageId]
-                                : {};
+                            candidate.assignments &&
+                            candidate.assignments[this.job.id] &&
+                            candidate.assignments[this.job.id].filter((ass) => ass.stageId === stageId);
                         stage.assessment.forEach((ass) => {
+                            const candidateAss = stageData.find(({ type }) => type === ass.type);
                             if (ass.type === 'personality') {
-                                if (stageData.personality_assessment) {
-                                    completed.push(3);
-                                } else {
-                                    completed.push(0);
-                                }
+                                completed.push(getAssignmentClass(candidateAss, ass));
                             }
                             if (ass.type === 'video-interview') {
-                                if (stageData.videos && stageData.videos.completed) {
-                                    completed.push(3);
-                                } else {
-                                    completed.push(0);
-                                }
+                                completed.push(getAssignmentClass(candidateAss, ass));
                             }
 
                             if (ass.type === 'logic-test') {
-                                const logicTest = stageData['logic-test'];
+                                const logicTest = candidateAss;
                                 if (logicTest && logicTest.score >= 0) {
                                     if (logicTest.score < 6) completed.push(1);
                                     else completed.push(logicTest.score >= 8 ? 3 : 2);
                                 } else {
-                                    completed.push(0);
+                                    completed.push(getAssignmentClass(logicTest, ass));
                                 }
                             }
 
                             if (ass.type === 'devskiller') {
-                                const devAss =
-                                    candidate.assignments && candidate.assignments[this.job.id]
-                                        ? candidate.assignments[this.job.id].find(
-                                              (a) => a.stageId === stageId && a.type === 'devskiller'
-                                          )
-                                        : null;
+                                const devAss = candidateAss;
                                 if (devAss && devAss.completed) {
                                     const score = (devAss.results.scoredPoints / devAss.results.maxPoints) * 100;
                                     if (score < 40) completed.push(1);
                                     else completed.push(score >= 60 ? 3 : 2);
                                 } else {
-                                    completed.push(0);
+                                    completed.push(getAssignmentClass(devAss, ass));
                                 }
                             }
                         });
