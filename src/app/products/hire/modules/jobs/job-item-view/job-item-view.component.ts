@@ -95,7 +95,6 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     candidatesSubscription: Subscription;
 
     questions: any[] = [];
-    questionsAnswers: any = {};
     candidateQuestions: any = {};
 
     draggedCandidate: Candidate;
@@ -254,65 +253,63 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     prepareQuestionsAnswers(candidates) {
-        candidates.forEach((candidate) => {
-            if (this.job && candidate && this.job.questions) {
+        if (this.job && this.job.questions) {
+            candidates.forEach((candidate) => {
                 const candidateQ = {
                     hasAnswers: false,
-                    knockoutIncorrect: false
+                    isKnockout: false,
+                    isExpired: false
                 };
-                const questionsAnswers = [];
-                let isKnockout = false;
-                let candidateQuestions = null;
-                if (
-                    candidate.job_specific &&
-                    candidate.job_specific.questions &&
-                    candidate.job_specific.questions[this.job.id]
-                ) {
-                    candidateQuestions = candidate.job_specific.questions[this.job.id];
-                }
 
-                if (candidate && candidate.questions && candidate.questions[this.job.id]) {
-                    candidateQuestions = candidate.questions[this.job.id];
-                }
-
-                if (candidateQuestions && Object.keys(candidateQuestions).length === this.job.questions.length) {
-                    candidateQ.hasAnswers = true;
-                }
-                this.job.questions.forEach((q) => {
-                    const obj = {
-                        isKnockout: ''
-                    };
-                    function applyKnockout(answer) {
-                        if (answer.is_knockout !== undefined && this.isKnockout !== 'knockout wrong') {
-                            this.isKnockout = !answer.is_knockout ? 'knockout' : 'knockout wrong';
-                            if (!isKnockout && answer.is_knockout) isKnockout = true;
-                        }
+                let candidateQuestions = {};
+                if (candidate.assignments) {
+                    const assignment = (candidate.assignments[this.job.id] || []).find(
+                        ({ type }) => type === 'questions'
+                    );
+                    if (assignment) {
+                        candidateQ.hasAnswers = assignment.completed;
+                        candidateQ.isExpired =
+                            (assignment.expired_at ||
+                                moment
+                                    .unix(assignment.added_at)
+                                    .add(5, 'days')
+                                    .unix()) < moment().unix()
+                                ? true
+                                : false;
+                        candidateQuestions = assignment.data;
                     }
-                    if (candidateQuestions && candidateQuestions[q.id]) {
+                }
+
+                if (candidateQ.hasAnswers && !candidateQ.isKnockout) {
+                    this.job.questions.forEach((q) => {
+                        let questionKnockout = '';
+                        function applyKnockout(answer) {
+                            if (answer.is_knockout !== undefined && questionKnockout !== 'knockout wrong') {
+                                questionKnockout = !answer.is_knockout ? 'knockout' : 'knockout wrong';
+                                if (!candidateQ.isKnockout && answer.is_knockout) candidateQ.isKnockout = true;
+                            }
+                        }
                         if (q.answers) {
                             if (Array.isArray(candidateQuestions[q.id])) {
                                 candidateQuestions[q.id].forEach((qa) => {
                                     const answer = q.answers.find((a) => a.id === qa);
                                     if (answer) {
-                                        applyKnockout.call(obj, answer);
+                                        applyKnockout(answer);
                                     }
                                 });
                             } else {
                                 const qa = candidateQuestions[q.id];
                                 const answer = q.answers.find((a) => a.id === qa);
                                 if (answer) {
-                                    applyKnockout.call(obj, answer);
+                                    applyKnockout(answer);
                                 }
                             }
                         }
-                    }
-                    questionsAnswers.push(obj);
-                });
-                candidateQ.knockoutIncorrect = isKnockout;
-                this.questionsAnswers[candidate.id] = isKnockout;
+                    });
+                }
                 this.candidateQuestions[candidate.id] = candidateQ;
-            }
-        });
+            });
+        }
     }
 
     prepareBlockData(candidate) {
@@ -372,15 +369,15 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     getQuestionsClass(candidate) {
+        const _candidateQuestions = this.candidateQuestions[candidate.id];
         if ((candidate.hasUser && candidate.hasUserReviewed) || candidate.matching) {
-            const _candidateQuestions = this.candidateQuestions[candidate.id];
-            if (_candidateQuestions && _candidateQuestions.hasAnswers) {
-                return _candidateQuestions.knockoutIncorrect ? 'red' : 'green';
+            if (_candidateQuestions.hasAnswers) {
+                return _candidateQuestions.isKnockout ? 'red' : 'green';
             } else {
-                return 'grey';
+                return _candidateQuestions.isExpired ? 'red' : 'grey';
             }
         } else {
-            return 'grey';
+            return _candidateQuestions.isExpired ? 'red' : 'grey';
         }
     }
 
