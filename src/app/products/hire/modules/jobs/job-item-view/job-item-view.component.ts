@@ -272,7 +272,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                             (assignment.expired_at ||
                                 moment
                                     .unix(assignment.added_at)
-                                    .add(5, 'days')
+                                    .add(10, 'days')
                                     .unix()) < moment().unix()
                                 ? true
                                 : false;
