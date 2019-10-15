@@ -636,6 +636,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
             this.jobService.deleteCandidate(jobId, candidateId).subscribe(
                 () => {
                     console.log(`Candidate <${candidateId}> was declined`);
+                    this.jobsStore.dispatch(new fromJobsStore.DeleteJobCandidate({ jobId, candidateId }));
                     this.onBackClick();
                 },
                 (error) => {

@@ -775,13 +775,14 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             await new Promise((res, rej) =>
                 this.jobService.deleteCandidate(jobId, candidateId).subscribe(() => {
                     console.log(`Candidate <${candidateId}> was declined`);
+                    this.jobsStore.dispatch(new fromJobsStore.DeleteJobCandidate({ jobId, candidateId }));
                     res(candidateId);
                 }, rej)
             );
         }
         this.contentLoading = false;
 
-        this.loadJobCandidates();
+        // this.loadJobCandidates();
     }
 
     async onSelectionProgress() {
