@@ -151,7 +151,9 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                             .filter((stage) => stage.id !== 'applied')
                             .sort((a, b) => a.order - b.order);
                         if (this.job.questions) {
-                            this.sections.splice(2, 0, 'questions');
+                            if (!this.sections.includes('questions')) {
+                                this.sections.splice(2, 0, 'questions');
+                            }
                             this.prepareQuestionsAnswers();
                         }
 
@@ -364,42 +366,56 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
             .filter((ass) => ass);
         if (this.candidate && this.candidate.assignments && this.candidate.assignments[this.jobId]) {
             this.candidate.assignments[this.jobId].forEach((ass) => {
-                const jobAss = jobAssessment.find(({ type }) => type === 'personality');
-                if (jobAss) {
-                    let expired_at =
+                if (ass.type === 'questions') {
+                    const expired_at =
                         ass.expired_at ||
                         moment
                             .unix(ass.added_at)
-                            .add(jobAss.deadline || 5, 'days')
+                            .add(10, 'days')
                             .unix();
                     this.available_assessment[ass.type] = {
                         invitationSent: moment.unix(ass.added_at).format('DD MMMM YYYY'),
                         assessmentExpired: moment.unix(expired_at).format('DD MMMM YYYY'),
                         expired: expired_at < moment().unix()
                     };
-                    if (ass.type === 'devskiller') {
-                        ass.invitationCode = ass.candidate.examUrl.split('?')[1];
-                        ass.invitationSent = moment.unix(ass.added_at).format('DD MMMM YYYY');
+                } else {
+                    const jobAss = jobAssessment.find(({ type }) => type === ass.type);
+                    if (jobAss) {
+                        const expired_at =
+                            ass.expired_at ||
+                            moment
+                                .unix(ass.added_at)
+                                .add(jobAss.deadline || 5, 'days')
+                                .unix();
+                        this.available_assessment[ass.type] = {
+                            invitationSent: moment.unix(ass.added_at).format('DD MMMM YYYY'),
+                            assessmentExpired: moment.unix(expired_at).format('DD MMMM YYYY'),
+                            expired: expired_at < moment().unix()
+                        };
+                        if (ass.type === 'devskiller') {
+                            ass.invitationCode = ass.candidate.examUrl.split('?')[1];
+                            ass.invitationSent = moment.unix(ass.added_at).format('DD MMMM YYYY');
 
-                        ass.assessmentComplete = moment(ass.candidate.testFinishDate).format('DD MMMM YYYY');
-                        this.devskillerTest.push(ass);
+                            ass.assessmentComplete = moment(ass.candidate.testFinishDate).format('DD MMMM YYYY');
+                            this.devskillerTest = [ass];
+                        }
+                        // if (ass.type === 'logic-test') {
+                        //     if (
+                        //         !ass.data &&
+                        //         this.candidate.stages_data &&
+                        //         this.candidate.stages_data[this.jobId] &&
+                        //         this.candidate.stages_data[this.jobId]['logic-test']
+                        //     ) {
+                        //         ass.data = this.candidate.stages_data[this.jobId]['logic-test'];
+                        //     }
+
+                        //     this.assignments.push(ass);
+                        // }
+
+                        // if (ass.type === 'devskiller') {
+                        //     this.assignments.push(ass);
+                        // }
                     }
-                    // if (ass.type === 'logic-test') {
-                    //     if (
-                    //         !ass.data &&
-                    //         this.candidate.stages_data &&
-                    //         this.candidate.stages_data[this.jobId] &&
-                    //         this.candidate.stages_data[this.jobId]['logic-test']
-                    //     ) {
-                    //         ass.data = this.candidate.stages_data[this.jobId]['logic-test'];
-                    //     }
-
-                    //     this.assignments.push(ass);
-                    // }
-
-                    // if (ass.type === 'devskiller') {
-                    //     this.assignments.push(ass);
-                    // }
                 }
             });
         }
@@ -487,6 +503,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                 this.available_assessment[type].assessmentExpired = assignment.expired_at;
                 this.available_assessment[type].expired = false;
                 this.available_assessment[type].loading = false;
+                this.store.dispatch(new fromJobsStore.LoadJobCandidates(this.jobId));
             },
             (errorResponse) => {
                 console.error(errorResponse);

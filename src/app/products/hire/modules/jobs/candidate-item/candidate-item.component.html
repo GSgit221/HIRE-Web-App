@@ -256,7 +256,28 @@
                         </div>
                     </ng-container>
                     <ng-template #waitingForQuestionsAnswers>
-                        <div class="candidate-attention">
+                        <div class="assessment-expired" *ngIf="available_assessment['questions'].expired">
+                            <div class="assessment-info">
+                                <div class="assessment-dates">
+                                    Invitation sent: {{ available_assessment['questions'].invitationSent }}
+                                    <br />
+                                    Questions expired:
+                                    {{ available_assessment['questions'].assessmentExpired }}
+                                </div>
+                                <div
+                                    class="assessment-dates extend"
+                                    (click)="onExtendDeadline('questions')"
+                                    [ngClass]="{ loading: available_assessment['questions'].loading }"
+                                >
+                                    Extend Questions Deadline (3 Days)
+                                </div>
+                            </div>
+                            <div class="assessment-status">
+                                <img src="/assets/images/icons/danger.svg" alt="expired" />
+                                <p>Expired</p>
+                            </div>
+                        </div>
+                        <div class="candidate-attention" *ngIf="!available_assessment['questions'].expired">
                             <img alt="warning" class="icon" height="20" src="/assets/images/warning.svg" width="23" />
                             <span>Waiting for the candidate to submit their answers</span>
                         </div>
