@@ -207,7 +207,11 @@ p-dropdown {
         }
     }
 }
-
+body .permission-holder p-checkbox {
+    .ui-chkbox {
+        margin-right: 23px;
+    }
+}
 body p-checkbox {
     .ui-chkbox {
         // vertical-align: top;
@@ -259,6 +263,10 @@ body p-checkbox {
 
     .color-grey {
         color: $grey;
+    }
+    .main-blue {
+        color: $main-blue;
+        font-size: 15px;
     }
 }
 

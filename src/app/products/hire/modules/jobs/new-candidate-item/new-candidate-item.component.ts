@@ -52,7 +52,8 @@ export class NewCandidateItemComponent implements OnInit {
         this.form = this.fb.group({
             // send_email: [true],
             file: [''],
-            emails: this.fb.array([this.fb.control('', [Validators.required, Validators.email])])
+            emails: this.fb.array([this.fb.control('', [Validators.required, Validators.email])]),
+            permission: [false, Validators.requiredTrue]
         });
     }
 
@@ -213,6 +214,12 @@ export class NewCandidateItemComponent implements OnInit {
                         } else {
                             item.missingEmail = false;
                         }
+
+                        if (item.text.includes('Candidate with email') && item.text.includes('already exists.')) {
+                            item.colorGreen = true;
+                            item.success = true;
+                        }
+
                         item.progress = 100;
                         item.uploadFinished = true;
                         clearInterval(uploadProgressInterval);

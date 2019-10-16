@@ -154,6 +154,12 @@ h2 {
 
     .text {
         font-size: $font-size;
+        &.green {
+            color: $pink;
+        }
+        &.started {
+            color: $grey;
+        }
     }
 }
 
@@ -232,21 +238,53 @@ h2 {
         max-width: 100%;
         outline: 0 !important;
         box-shadow: none;
-        font-size: $font-size;
+        font-size: 15px;
         line-height: normal;
 
         &::placeholder,
         &:-ms-input-placeholder,
+        &::-webkit-input-placeholder,
+        &:-moz-placeholder,
         &::-ms-input-placeholder {
-            color: $dark-blue;
+            color: red;
             font-size: $font-size;
             font-weight: 400;
             line-height: normal;
         }
     }
+    ::-webkit-input-placeholder {
+        color: $main-blue;
+    }
+
+    ::-moz-placeholder {
+        color: $main-blue;
+    }
+
+    :-ms-input-placeholder {
+        color: $main-blue;
+    }
+
+    :-moz-placeholder {
+        color: $main-blue;
+    }
 
     label {
         font-size: 12px;
         color: #637381;
+    }
+}
+.permission-holder {
+    color: $main-blue;
+    font-size: 15px;
+    margin: 0 0 36px;
+    h5 {
+        font-size: 15px;
+        margin: 0 0 21px;
+    }
+}
+.btn-holder {
+    .btn-primary:disabled {
+        background: $grey-border;
+        border-color: $grey-border;
     }
 }
