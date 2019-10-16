@@ -95,11 +95,11 @@ export class NewCandidateItemComponent implements OnInit {
         }
     }
 
-    onFinishClicked(event, save = true) {
+    onFinishClicked(event, consent = true) {
         event.preventDefault();
-        if (this.emails.length && save) {
+        if (this.emails.length && consent) {
             this.jobService
-                .setCandidatesEmailNotifications(this.jobId, this.emails)
+                .sendJobNotifications(this.jobId, this.emails)
                 .subscribe((response) => console.log(response), (error) => console.error(error));
             this.uploadQueue = [];
             this.emails = [];

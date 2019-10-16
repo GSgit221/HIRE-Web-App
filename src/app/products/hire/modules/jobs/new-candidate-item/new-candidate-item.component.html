@@ -141,7 +141,7 @@
                 <button
                     class="btn btn-primary w140 mla"
                     [disabled]="!form.get('permission').valid"
-                    (click)="onFinishClicked($event)"
+                    (click)="onFinishClicked($event, true)"
                 >
                     Finish
                 </button>

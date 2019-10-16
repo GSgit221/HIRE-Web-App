@@ -210,6 +210,15 @@ export class JobService {
         );
     }
 
+    sendJobNotifications(jobId: string, emails: string[]) {
+        return this.http.post(
+            `${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/send-job-notifications`,
+            {
+                emails
+            }
+        );
+    }
+
     createJobFromCv(formData: object) {
         return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/spec`, formData);
     }
