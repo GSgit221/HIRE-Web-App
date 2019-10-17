@@ -52,7 +52,8 @@ export class NewCandidateItemComponent implements OnInit {
         this.form = this.fb.group({
             // send_email: [true],
             file: [''],
-            emails: this.fb.array([this.fb.control('', [Validators.required, Validators.email])])
+            emails: this.fb.array([this.fb.control('', [Validators.required, Validators.email])]),
+            permission: [false, Validators.requiredTrue]
         });
     }
 
@@ -94,11 +95,11 @@ export class NewCandidateItemComponent implements OnInit {
         }
     }
 
-    onFinishClicked(event, save = true) {
+    onFinishClicked(event, consent = true) {
         event.preventDefault();
-        if (this.emails.length && save) {
+        if (this.emails.length && consent) {
             this.jobService
-                .setCandidatesEmailNotifications(this.jobId, this.emails)
+                .sendJobNotifications(this.jobId, this.emails)
                 .subscribe((response) => console.log(response), (error) => console.error(error));
             this.uploadQueue = [];
             this.emails = [];
@@ -213,6 +214,12 @@ export class NewCandidateItemComponent implements OnInit {
                         } else {
                             item.missingEmail = false;
                         }
+
+                        if (item.text.includes('Candidate with email') && item.text.includes('already exists.')) {
+                            item.colorGreen = true;
+                            item.success = true;
+                        }
+
                         item.progress = 100;
                         item.uploadFinished = true;
                         clearInterval(uploadProgressInterval);
