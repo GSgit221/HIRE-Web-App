@@ -371,7 +371,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                         ass.expired_at ||
                         moment
                             .unix(ass.added_at)
-                            .add(10, 'days')
+                            .add(7, 'days')
                             .unix();
                     this.available_assessment[ass.type] = {
                         invitationSent: moment.unix(ass.added_at).format('DD MMMM YYYY'),
