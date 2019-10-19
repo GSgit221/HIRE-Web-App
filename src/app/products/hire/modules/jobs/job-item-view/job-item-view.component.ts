@@ -370,6 +370,9 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     getQuestionsClass(candidate) {
         const _candidateQuestions = this.candidateQuestions[candidate.id];
+        if (!_candidateQuestions) {
+            return false;
+        }
         if ((candidate.hasUser && candidate.hasUserReviewed) || candidate.matching) {
             if (_candidateQuestions.hasAnswers) {
                 return _candidateQuestions.isKnockout ? 'red' : 'green';

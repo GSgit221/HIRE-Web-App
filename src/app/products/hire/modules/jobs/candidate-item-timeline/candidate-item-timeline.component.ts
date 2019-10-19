@@ -1,8 +1,9 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { FindVariables } from 'app/libs/util';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { Candidate, ITag, Job, User } from './../../../../../core/models';
 import { CandidateService, JobService, UserService, UtilitiesService } from './../../../../../core/services';
 import * as fromStore from './../../../../../store';
@@ -15,11 +16,12 @@ declare var Quill: any;
     templateUrl: './candidate-item-timeline.component.html',
     styleUrls: ['./candidate-item-timeline.component.scss']
 })
-export class CandidateItemTimelineComponent implements OnInit {
+export class CandidateItemTimelineComponent implements OnInit, OnDestroy {
     @Input() job: Job;
     @Input() candidate: Candidate;
     user: User;
     users: User[];
+    usersSubscription: Subscription;
 
     commentForm: FormGroup;
     contentLoading = false;
@@ -74,7 +76,13 @@ export class CandidateItemTimelineComponent implements OnInit {
     ngOnInit() {
         this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
             this.user = user;
-            this.loadAudit();
+            // this.loadAudit();
+        });
+        this.usersSubscription = this.store.pipe(select(fromSelectors.getUsersEntities)).subscribe((users: User[]) => {
+            this.users = [...users];
+            if (this.users && this.users.length) {
+                this.loadAudit();
+            }
         });
         this.commentForm = this.fb.group({
             description: ['', Validators.required]
@@ -338,15 +346,12 @@ export class CandidateItemTimelineComponent implements OnInit {
     }
 
     loadAudit() {
-        this.userService.getUsers().subscribe((users: User[]) => {
-            this.users = users;
-            if (this.candidate.audit && this.candidate.audit[this.job.id]) {
-                this.auditData = this.candidate.audit[this.job.id];
-                this.audit = this.transformAudit(this.auditData);
-            } else {
-                this.audit = this.transformAudit([]);
-            }
-        });
+        if (this.candidate.audit && this.candidate.audit[this.job.id]) {
+            this.auditData = this.candidate.audit[this.job.id];
+            this.audit = this.transformAudit(this.auditData);
+        } else {
+            this.audit = this.transformAudit([]);
+        }
     }
 
     transformAudit(auditData: any[]) {
@@ -480,6 +485,12 @@ export class CandidateItemTimelineComponent implements OnInit {
                     }
                 );
             }
+        }
+    }
+
+    ngOnDestroy() {
+        if (this.usersSubscription) {
+            this.usersSubscription.unsubscribe();
         }
     }
 }
