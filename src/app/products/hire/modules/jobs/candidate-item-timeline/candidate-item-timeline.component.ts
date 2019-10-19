@@ -74,10 +74,10 @@ export class CandidateItemTimelineComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        // this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
-        //     this.user = user;
-        //     this.loadAudit();
-        // });
+        this.store.pipe(select(fromSelectors.getUserEntity)).subscribe((user: User) => {
+            this.user = user;
+            // this.loadAudit();
+        });
         this.usersSubscription = this.store.pipe(select(fromSelectors.getUsersEntities)).subscribe((users: User[]) => {
             this.users = [...users];
             if (this.users && this.users.length) {
