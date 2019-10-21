@@ -205,6 +205,24 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                 }
             );
         }
+        if (this.job && this.job.sovren_categories) {
+            if (
+                this.job.sovren_categories.AppliedCategoryWeights ||
+                this.job.sovren_categories.SuggestedCategoryWeights
+            ) {
+                (
+                    this.job.sovren_categories.AppliedCategoryWeights ||
+                    this.job.sovren_categories.SuggestedCategoryWeights
+                ).forEach(({ Category }) => {
+                    if (scores[Category] === undefined && this.matchingMap[Category]) {
+                        scores[Category] = {
+                            label: this.matchingMap[Category],
+                            score: 0
+                        };
+                    }
+                });
+            }
+        }
         return Object.keys(scores).map((key) => scores[key]);
     }
 
