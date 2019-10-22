@@ -416,7 +416,9 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                                 ass.invitationCode = ass.candidate ? ass.candidate.examUrl.split('?')[1] : 'Unknown';
                                 ass.invitationSent = moment.unix(ass.added_at).format('DD MMMM YYYY');
 
-                                ass.assessmentComplete = moment(ass.candidate.testFinishDate).format('DD MMMM YYYY');
+                                ass.assessmentComplete = ass.candidate
+                                    ? moment(ass.candidate.testFinishDate).format('DD MMMM YYYY')
+                                    : '';
                             }
                             this.devskillerTest = [ass];
                         }
