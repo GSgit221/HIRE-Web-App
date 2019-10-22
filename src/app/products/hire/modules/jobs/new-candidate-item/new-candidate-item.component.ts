@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, Renderer2 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -37,7 +37,8 @@ export class NewCandidateItemComponent implements OnInit {
         private route: ActivatedRoute,
         private fb: FormBuilder,
         private formHelper: FormHelperService,
-        private utilities: UtilitiesService
+        private utilities: UtilitiesService,
+        private renderer: Renderer2
     ) {
         this.supportedFileTypes = [
             'application/pdf',
@@ -109,6 +110,7 @@ export class NewCandidateItemComponent implements OnInit {
             this.emails = [];
             this.finishedCadidatesCreation.next(true);
         }
+        this.renderer.removeClass(document.body, 'over');
     }
 
     processFiles(files) {
