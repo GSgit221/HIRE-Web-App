@@ -413,7 +413,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                         };
                         if (ass.type === 'devskiller') {
                             if (ass.candidate || ass.added_at) {
-                                ass.invitationCode = ass.candidate.examUrl.split('?')[1];
+                                ass.invitationCode = ass.candidate ? ass.candidate.examUrl.split('?')[1] : 'Unknown';
                                 ass.invitationSent = moment.unix(ass.added_at).format('DD MMMM YYYY');
 
                                 ass.assessmentComplete = moment(ass.candidate.testFinishDate).format('DD MMMM YYYY');
