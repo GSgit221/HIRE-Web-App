@@ -383,6 +383,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
             .reduce((a, c) => a.concat(c.assessment), [])
             .filter((ass) => ass);
         if (this.candidate && this.candidate.assignments && this.candidate.assignments[this.jobId]) {
+            console.log(this.candidate.assignments[this.jobId]);
             this.candidate.assignments[this.jobId].forEach((ass) => {
                 if (ass.type === 'questions') {
                     const expired_at =
@@ -411,10 +412,12 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                             expired: expired_at < moment().unix()
                         };
                         if (ass.type === 'devskiller') {
-                            ass.invitationCode = ass.candidate.examUrl.split('?')[1];
-                            ass.invitationSent = moment.unix(ass.added_at).format('DD MMMM YYYY');
+                            if (ass.candidate || ass.added_at) {
+                                ass.invitationCode = ass.candidate.examUrl.split('?')[1];
+                                ass.invitationSent = moment.unix(ass.added_at).format('DD MMMM YYYY');
 
-                            ass.assessmentComplete = moment(ass.candidate.testFinishDate).format('DD MMMM YYYY');
+                                ass.assessmentComplete = moment(ass.candidate.testFinishDate).format('DD MMMM YYYY');
+                            }
                             this.devskillerTest = [ass];
                         }
                         // if (ass.type === 'logic-test') {

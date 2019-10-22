@@ -951,6 +951,17 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                             console.error(errorResponse);
                         }
                     );
+                if (candidate.assignments) {
+                    if (!candidate.assignments[this.job.id]) {
+                        candidate.assignments[this.job.id] = [];
+                    }
+                    let stage = this.stages.find((s) => s.id === stageId);
+                    if (stage.assessment) {
+                        stage.assessment.forEach((as) => {
+                            candidate.assignments[this.job.id].push({ id: stageId, type: as.type });
+                        });
+                    }
+                }
             });
         }
         this.groupCandidatesByStage();
