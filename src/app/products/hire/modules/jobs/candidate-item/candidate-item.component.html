@@ -256,7 +256,10 @@
                         </div>
                     </ng-container>
                     <ng-template #waitingForQuestionsAnswers>
-                        <div class="assessment-expired" *ngIf="available_assessment['questions'].expired">
+                        <div
+                            class="assessment-expired"
+                            *ngIf="available_assessment['questions'] && available_assessment['questions'].expired"
+                        >
                             <div class="assessment-info">
                                 <div class="assessment-dates">
                                     Invitation sent: {{ available_assessment['questions'].invitationSent }}
@@ -277,7 +280,10 @@
                                 <p>Expired</p>
                             </div>
                         </div>
-                        <div class="candidate-attention" *ngIf="!available_assessment['questions'].expired">
+                        <div
+                            class="candidate-attention"
+                            *ngIf="!available_assessment['questions'] || !available_assessment['questions'].expired"
+                        >
                             <img alt="warning" class="icon" height="20" src="/assets/images/warning.svg" width="23" />
                             <span>Waiting for the candidate to submit their answers</span>
                         </div>
