@@ -355,7 +355,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             }
         }
-        if ((candidate.hasUser && candidate.hasUserReviewed) || candidate.matching) {
+        if (candidate.hasUser && candidate.hasUserReviewed) {
             if (candidate.score >= this.resumeThreshold) {
                 return 'green';
             } else if (candidate.score >= this.resumeThreshold - 15 && candidate.score < this.resumeThreshold) {
