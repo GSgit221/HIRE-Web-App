@@ -778,7 +778,17 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
         this.contentLoading = true;
         stage[jobId] = toId;
 
-        this.jobService.updateCandidateStage(jobId, candidateId, { stage }).subscribe(() => {
+        this.jobService.updateCandidateStage(jobId, candidateId, { stage }).subscribe((response: any) => {
+            if (response.assignments) {
+                this.store.dispatch(
+                    new fromJobsStore.UpdateJobCandidate({
+                        jobId: this.job.id,
+                        candidateId,
+                        data: { assignments: response.assignments }
+                    })
+                );
+                console.log('RESPONSE ASSIGNMENTS:', response.assignments);
+            }
             console.log(`Candidate <${candidateId}> was progressed to - ${title}`);
             this.contentLoading = false;
             this.candidateService

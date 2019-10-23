@@ -929,41 +929,54 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             const read = this.hasRead(originRead) ? [...originRead] : [...originRead, this.job.id];
             stage[this.job.id] = stageId;
 
-            this.jobService.updateCandidateStage(this.job.id, candidate.id, { stage, read }).subscribe(() => {
-                if (!this.hasRead(originRead)) {
-                    originRead.push(this.job.id);
-                }
-                this.prepareBlockData(this.candidates[candidateIndex]);
-                this.contentLoading = false;
-                console.log('Candidate stage was updated to:', stageId);
-                this.candidateService
-                    .addToAudit(this.job.id, candidate.id, {
-                        type: 'stages_progress',
-                        user_id: this.user.id,
-                        stage_from_id: stageFromId,
-                        stage_to_id: stageToId,
-                        created_at: new Date().getTime()
-                    })
-                    .subscribe(
-                        (response) => {
-                            // console.log(response);
-                        },
-                        (errorResponse) => {
-                            console.error(errorResponse);
+            this.jobService
+                .updateCandidateStage(this.job.id, candidate.id, { stage, read })
+                .subscribe((response: any) => {
+                    if (response.assignments) {
+                        this.store.dispatch(
+                            new fromJobsStore.UpdateJobCandidate({
+                                jobId: this.job.id,
+                                candidateId: candidate.id,
+                                data: { assignments: response.assignments }
+                            })
+                        );
+                        console.log('RESPONSE ASSIGNMENTS:', response.assignments);
+                    }
+
+                    if (!this.hasRead(originRead)) {
+                        originRead.push(this.job.id);
+                    }
+                    this.prepareBlockData(this.candidates[candidateIndex]);
+                    this.contentLoading = false;
+                    console.log('Candidate stage was updated to:', stageId);
+                    this.candidateService
+                        .addToAudit(this.job.id, candidate.id, {
+                            type: 'stages_progress',
+                            user_id: this.user.id,
+                            stage_from_id: stageFromId,
+                            stage_to_id: stageToId,
+                            created_at: new Date().getTime()
+                        })
+                        .subscribe(
+                            (response) => {
+                                // console.log(response);
+                            },
+                            (errorResponse) => {
+                                console.error(errorResponse);
+                            }
+                        );
+                    if (candidate.assignments) {
+                        if (!candidate.assignments[this.job.id]) {
+                            candidate.assignments[this.job.id] = [];
                         }
-                    );
-                if (candidate.assignments) {
-                    if (!candidate.assignments[this.job.id]) {
-                        candidate.assignments[this.job.id] = [];
+                        let stage = this.stages.find((s) => s.id === stageId);
+                        if (stage.assessment) {
+                            stage.assessment.forEach((as) => {
+                                candidate.assignments[this.job.id].push({ id: stageId, type: as.type });
+                            });
+                        }
                     }
-                    let stage = this.stages.find((s) => s.id === stageId);
-                    if (stage.assessment) {
-                        stage.assessment.forEach((as) => {
-                            candidate.assignments[this.job.id].push({ id: stageId, type: as.type });
-                        });
-                    }
-                }
-            });
+                });
         }
         this.groupCandidatesByStage();
     }
