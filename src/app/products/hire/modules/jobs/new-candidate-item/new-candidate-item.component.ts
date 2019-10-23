@@ -24,6 +24,7 @@ export class NewCandidateItemComponent implements OnInit {
     }
 
     contentLoading = false;
+    uploading = false;
     job: Job;
     form: FormGroup;
     emails: string[] = [];
@@ -135,6 +136,7 @@ export class NewCandidateItemComponent implements OnInit {
             }
         }
         this.processQueue();
+        this.uploading = true;
     }
 
     onDropFile(event) {
@@ -188,7 +190,7 @@ export class NewCandidateItemComponent implements OnInit {
                         item.success = true;
                         clearInterval(uploadProgressInterval);
                         this.emails.push(resp.candidate.email);
-
+                        this.uploading = false;
                         // setTimeout(() => {
                         //     item.fadeout = true;
                         // }, 2000);
@@ -221,7 +223,7 @@ export class NewCandidateItemComponent implements OnInit {
                             item.colorGreen = true;
                             item.success = true;
                         }
-
+                        this.uploading = false;
                         item.progress = 100;
                         item.uploadFinished = true;
                         clearInterval(uploadProgressInterval);

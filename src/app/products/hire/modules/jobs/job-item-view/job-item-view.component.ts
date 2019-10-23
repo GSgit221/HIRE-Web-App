@@ -725,6 +725,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.contentLoading = true;
         this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.job.id));
         this.createCandidateMode = false;
+        this.droppedFiles = [];
     }
 
     onDropFile(event) {
