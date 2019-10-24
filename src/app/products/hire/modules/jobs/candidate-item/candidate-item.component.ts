@@ -4,14 +4,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { switchMap } from 'rxjs/operators';
-import { CandidateService } from './../../../../../core/services/candidate.service';
 
 import { UIChart } from 'primeng/chart';
 import { forkJoin, of, Subscription } from 'rxjs';
 import { Candidate, Job, Stage, User } from '../../../../../core/models';
 import * as fromJobsStore from '../store';
 import * as fromJobCandiatesSelector from '../store/selectors/jobCandidates.selector';
-import { EmailService, JobService, QuestionnaireService, UtilitiesService } from './../../../../../core/services';
+import {
+    CandidateService,
+    EmailService,
+    JobService,
+    QuestionnaireService,
+    UtilitiesService
+} from './../../../../../core/services';
 import * as fromStore from './../../../../../store';
 import * as fromSeflectors from './../../../../../store/selectors';
 
@@ -146,7 +151,9 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                             .filter((stage) => stage.id !== 'applied')
                             .sort((a, b) => a.order - b.order);
                         if (this.job.questions) {
-                            this.sections.splice(2, 0, 'questions');
+                            if (!this.sections.includes('questions')) {
+                                this.sections.splice(2, 0, 'questions');
+                            }
                             this.prepareQuestionsAnswers();
                         }
 
@@ -197,6 +204,24 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                     };
                 }
             );
+        }
+        if (this.job && this.job.sovren_categories) {
+            if (
+                this.job.sovren_categories.AppliedCategoryWeights ||
+                this.job.sovren_categories.SuggestedCategoryWeights
+            ) {
+                (
+                    this.job.sovren_categories.AppliedCategoryWeights ||
+                    this.job.sovren_categories.SuggestedCategoryWeights
+                ).forEach(({ Category }) => {
+                    if (scores[Category] === undefined && this.matchingMap[Category]) {
+                        scores[Category] = {
+                            label: this.matchingMap[Category],
+                            score: 0
+                        };
+                    }
+                });
+            }
         }
         return Object.keys(scores).map((key) => scores[key]);
     }
@@ -318,8 +343,14 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
 
     get correctQuestions() {
         return this.questionsAnswers
-            ? this.questionsAnswers.questions.filter(({ isKnockout }) => !isKnockout.includes('wrong')).length
+            ? this.questionsAnswers.questions.filter(
+                  ({ isKnockout, answers }) => !isKnockout.includes('wrong') && answers.length
+              ).length
             : 0;
+    }
+
+    get questionSuccess() {
+        return this.correctQuestions === (this.questionsAnswers.questions || []).length;
     }
 
     dateFormat(date) {
@@ -346,32 +377,69 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
     }
 
     processAssessments() {
+        console.log(this.stages);
+        const jobAssessment = this.stages
+            .reduce((a, c) => a.concat(c), [])
+            .reduce((a, c) => a.concat(c.assessment), [])
+            .filter((ass) => ass);
         if (this.candidate && this.candidate.assignments && this.candidate.assignments[this.jobId]) {
+            console.log(this.candidate.assignments[this.jobId]);
             this.candidate.assignments[this.jobId].forEach((ass) => {
-                this.available_assessment[ass.type] = true;
-                if (ass.type === 'devskiller') {
-                    ass.invitationCode = ass.candidate.examUrl.split('?')[1];
-                    ass.invitationSent = moment.unix(ass.added_at).format('DD MMMM YYYY');
+                if (ass.type === 'questions') {
+                    const expired_at =
+                        ass.expired_at ||
+                        moment
+                            .unix(ass.added_at)
+                            .add(7, 'days')
+                            .unix();
+                    this.available_assessment[ass.type] = {
+                        invitationSent: moment.unix(ass.added_at).format('DD MMMM YYYY'),
+                        assessmentExpired: moment.unix(expired_at).format('DD MMMM YYYY'),
+                        expired: expired_at < moment().unix()
+                    };
+                } else {
+                    const jobAss = jobAssessment.find(({ type }) => type === ass.type);
+                    if (jobAss) {
+                        const expired_at =
+                            ass.expired_at ||
+                            moment
+                                .unix(ass.added_at)
+                                .add(jobAss.deadline || 5, 'days')
+                                .unix();
+                        this.available_assessment[ass.type] = {
+                            invitationSent: moment.unix(ass.added_at).format('DD MMMM YYYY'),
+                            assessmentExpired: moment.unix(expired_at).format('DD MMMM YYYY'),
+                            expired: expired_at < moment().unix()
+                        };
+                        if (ass.type === 'devskiller') {
+                            if (ass.candidate || ass.added_at) {
+                                ass.invitationCode = ass.candidate ? ass.candidate.examUrl.split('?')[1] : 'Unknown';
+                                ass.invitationSent = moment.unix(ass.added_at).format('DD MMMM YYYY');
 
-                    ass.assessmentComplete = moment(ass.candidate.testFinishDate).format('DD MMMM YYYY');
-                    this.devskillerTest.push(ass);
+                                ass.assessmentComplete = ass.candidate
+                                    ? moment(ass.candidate.testFinishDate).format('DD MMMM YYYY')
+                                    : '';
+                            }
+                            this.devskillerTest = [ass];
+                        }
+                        // if (ass.type === 'logic-test') {
+                        //     if (
+                        //         !ass.data &&
+                        //         this.candidate.stages_data &&
+                        //         this.candidate.stages_data[this.jobId] &&
+                        //         this.candidate.stages_data[this.jobId]['logic-test']
+                        //     ) {
+                        //         ass.data = this.candidate.stages_data[this.jobId]['logic-test'];
+                        //     }
+
+                        //     this.assignments.push(ass);
+                        // }
+
+                        // if (ass.type === 'devskiller') {
+                        //     this.assignments.push(ass);
+                        // }
+                    }
                 }
-                // if (ass.type === 'logic-test') {
-                //     if (
-                //         !ass.data &&
-                //         this.candidate.stages_data &&
-                //         this.candidate.stages_data[this.jobId] &&
-                //         this.candidate.stages_data[this.jobId]['logic-test']
-                //     ) {
-                //         ass.data = this.candidate.stages_data[this.jobId]['logic-test'];
-                //     }
-
-                //     this.assignments.push(ass);
-                // }
-
-                // if (ass.type === 'devskiller') {
-                //     this.assignments.push(ass);
-                // }
             });
         }
         if (this.candidate.stages_data && this.candidate.stages_data[this.jobId]) {
@@ -448,6 +516,23 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
         } else {
             console.log('No stages data for this job');
         }
+    }
+
+    onExtendDeadline(type) {
+        if (this.available_assessment[type].loading) return;
+        this.available_assessment[type].loading = true;
+        this.candidateService.extendAssessmentDeadline(this.jobId, this.candidateId, { type }).subscribe(
+            (assignment: any) => {
+                this.available_assessment[type].assessmentExpired = assignment.expired_at;
+                this.available_assessment[type].expired = false;
+                this.available_assessment[type].loading = false;
+                this.store.dispatch(new fromJobsStore.LoadJobCandidates(this.jobId));
+            },
+            (errorResponse) => {
+                console.error(errorResponse);
+                this.available_assessment[type].loading = false;
+            }
+        );
     }
 
     processFiles(files) {
@@ -693,7 +778,17 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
         this.contentLoading = true;
         stage[jobId] = toId;
 
-        this.jobService.updateCandidateStage(jobId, candidateId, { stage }).subscribe(() => {
+        this.jobService.updateCandidateStage(jobId, candidateId, { stage }).subscribe((response: any) => {
+            if (response.assignments) {
+                this.store.dispatch(
+                    new fromJobsStore.UpdateJobCandidate({
+                        jobId: this.job.id,
+                        candidateId,
+                        data: { assignments: response.assignments }
+                    })
+                );
+                console.log('RESPONSE ASSIGNMENTS:', response.assignments);
+            }
             console.log(`Candidate <${candidateId}> was progressed to - ${title}`);
             this.contentLoading = false;
             this.candidateService

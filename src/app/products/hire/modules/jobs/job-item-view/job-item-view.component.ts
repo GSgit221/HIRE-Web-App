@@ -1,5 +1,4 @@
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop'; // CDK-Integration
-
 import {
     AfterViewInit,
     Component,
@@ -16,6 +15,7 @@ import { Router } from '@angular/router';
 import { UtilitiesService } from '@app/core/services';
 import { environment } from '@env/environment';
 import { select, Store } from '@ngrx/store';
+import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin, Observable, of, Subscription } from 'rxjs';
 import { filter, take, tap } from 'rxjs/operators';
@@ -95,7 +95,6 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     candidatesSubscription: Subscription;
 
     questions: any[] = [];
-    questionsAnswers: any = {};
     candidateQuestions: any = {};
 
     draggedCandidate: Candidate;
@@ -179,6 +178,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     visible: true,
                     text: r
                 };
+                this.onLoadMore();
                 for (var key in this.candidatesByStage) {
                     if (this.candidatesByStageArray.hasOwnProperty(key)) {
                         this.candidatesByStage[key] = this.candidatesByStageArray[key].filter((c) => {
@@ -190,12 +190,23 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                         });
                     }
                 }
+                if (this.appliedCandidatesArray.hidden.length) {
+                    this.appliedCandidatesArray.visible = [
+                        ...this.appliedCandidatesArray.visible,
+                        ...this.appliedCandidatesArray.hidden
+                    ];
+                    this.appliedCandidatesArray.hidden = [];
+                }
                 this.appliedCandidates.visible = this.appliedCandidatesArray.visible.filter((c) => {
-                    const fullname = c.first_name.toLowerCase().trim() + ' ' + c.last_name.toLowerCase().trim();
-                    const query = this.searchedValue.text.toLowerCase().trim();
-                    const queryWords = query.split(' ').filter((word) => word);
-                    const matched = queryWords.every((word) => fullname.indexOf(word) !== -1);
-                    return matched;
+                    if (c.first_name && c.last_name) {
+                        const fullname = c.first_name.toLowerCase().trim() + ' ' + c.last_name.toLowerCase().trim();
+                        const query = this.searchedValue.text.toLowerCase().trim();
+                        const queryWords = query.split(' ').filter((word) => word);
+                        const matched = queryWords.every((word) => fullname.indexOf(word) !== -1);
+                        return matched;
+                    } else {
+                        false;
+                    }
                 });
                 this.appliedCandidates.total = this.appliedCandidates.visible.length;
             } else {
@@ -242,65 +253,63 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     prepareQuestionsAnswers(candidates) {
-        candidates.forEach((candidate) => {
-            if (this.job && candidate && this.job.questions) {
+        if (this.job && this.job.questions) {
+            candidates.forEach((candidate) => {
                 const candidateQ = {
                     hasAnswers: false,
-                    knockoutIncorrect: false
+                    isKnockout: false,
+                    isExpired: false
                 };
-                const questionsAnswers = [];
-                let isKnockout = false;
-                let candidateQuestions = null;
-                if (
-                    candidate.job_specific &&
-                    candidate.job_specific.questions &&
-                    candidate.job_specific.questions[this.job.id]
-                ) {
-                    candidateQuestions = candidate.job_specific.questions[this.job.id];
-                }
 
-                if (candidate && candidate.questions && candidate.questions[this.job.id]) {
-                    candidateQuestions = candidate.questions[this.job.id];
-                }
-
-                if (candidateQuestions && Object.keys(candidateQuestions).length === this.job.questions.length) {
-                    candidateQ.hasAnswers = true;
-                }
-                this.job.questions.forEach((q) => {
-                    const obj = {
-                        isKnockout: ''
-                    };
-                    function applyKnockout(answer) {
-                        if (answer.is_knockout !== undefined && this.isKnockout !== 'knockout wrong') {
-                            this.isKnockout = !answer.is_knockout ? 'knockout' : 'knockout wrong';
-                            if (!isKnockout && answer.is_knockout) isKnockout = true;
-                        }
+                let candidateQuestions = {};
+                if (candidate.assignments) {
+                    const assignment = (candidate.assignments[this.job.id] || []).find(
+                        ({ type }) => type === 'questions'
+                    );
+                    if (assignment) {
+                        candidateQ.hasAnswers = assignment.completed;
+                        candidateQ.isExpired =
+                            (assignment.expired_at ||
+                                moment
+                                    .unix(assignment.added_at)
+                                    .add(7, 'days')
+                                    .unix()) < moment().unix()
+                                ? true
+                                : false;
+                        candidateQuestions = assignment.data;
                     }
-                    if (candidateQuestions && candidateQuestions[q.id]) {
+                }
+
+                if (candidateQ.hasAnswers && !candidateQ.isKnockout) {
+                    this.job.questions.forEach((q) => {
+                        let questionKnockout = '';
+                        function applyKnockout(answer) {
+                            if (answer.is_knockout !== undefined && questionKnockout !== 'knockout wrong') {
+                                questionKnockout = !answer.is_knockout ? 'knockout' : 'knockout wrong';
+                                if (!candidateQ.isKnockout && answer.is_knockout) candidateQ.isKnockout = true;
+                            }
+                        }
                         if (q.answers) {
                             if (Array.isArray(candidateQuestions[q.id])) {
                                 candidateQuestions[q.id].forEach((qa) => {
                                     const answer = q.answers.find((a) => a.id === qa);
                                     if (answer) {
-                                        applyKnockout.call(obj, answer);
+                                        applyKnockout(answer);
                                     }
                                 });
                             } else {
                                 const qa = candidateQuestions[q.id];
                                 const answer = q.answers.find((a) => a.id === qa);
                                 if (answer) {
-                                    applyKnockout.call(obj, answer);
+                                    applyKnockout(answer);
                                 }
                             }
                         }
-                    }
-                    questionsAnswers.push(obj);
-                });
-                candidateQ.knockoutIncorrect = isKnockout;
-                this.questionsAnswers[candidate.id] = isKnockout;
+                    });
+                }
                 this.candidateQuestions[candidate.id] = candidateQ;
-            }
-        });
+            });
+        }
     }
 
     prepareBlockData(candidate) {
@@ -346,7 +355,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             }
         }
-        if ((candidate.hasUser && candidate.hasUserReviewed) || candidate.matching) {
+        if (candidate.hasUser && candidate.hasUserReviewed) {
             if (candidate.score >= this.resumeThreshold) {
                 return 'green';
             } else if (candidate.score >= this.resumeThreshold - 15 && candidate.score < this.resumeThreshold) {
@@ -360,15 +369,18 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     getQuestionsClass(candidate) {
+        const _candidateQuestions = this.candidateQuestions[candidate.id];
+
+        if (!_candidateQuestions) return 'grey';
+
         if ((candidate.hasUser && candidate.hasUserReviewed) || candidate.matching) {
-            const _candidateQuestions = this.candidateQuestions[candidate.id];
-            if (_candidateQuestions && _candidateQuestions.hasAnswers) {
-                return _candidateQuestions.knockoutIncorrect ? 'red' : 'green';
+            if (_candidateQuestions.hasAnswers) {
+                return _candidateQuestions.isKnockout ? 'red' : 'green';
             } else {
-                return 'grey';
+                return _candidateQuestions.isExpired ? 'red' : 'grey';
             }
         } else {
-            return 'grey';
+            return _candidateQuestions.isExpired ? 'red' : 'grey';
         }
     }
 
@@ -376,6 +388,19 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         //define stage
         if (candidate.stage && candidate.stage[this.job.id] && candidate.stage[this.job.id] !== 'applied') {
             const stageId = candidate.stage[this.job.id];
+
+            const getAssignmentClass = (ass, stageAss) => {
+                if (!ass) return 0;
+                if (ass.completed) return 3;
+                return (ass.expired_at ||
+                    moment
+                        .unix(ass.added_at)
+                        .add(stageAss.deadline || 5, 'days')
+                        .unix()) < moment().unix()
+                    ? 1
+                    : 0;
+            };
+
             // need to check stages data
             if (this.job && this.job.stages && this.job.stages.find((s) => s.id === stageId)) {
                 const stage = this.job.stages.find((s) => s.id === stageId);
@@ -390,50 +415,36 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     ) {
                         const completed = [];
                         const stageData =
-                            candidate.stages_data &&
-                            candidate.stages_data[this.job.id] &&
-                            candidate.stages_data[this.job.id][stageId]
-                                ? candidate.stages_data[this.job.id][stageId]
-                                : {};
+                            candidate.assignments &&
+                            candidate.assignments[this.job.id] &&
+                            candidate.assignments[this.job.id].filter((ass) => ass.stageId === stageId);
                         stage.assessment.forEach((ass) => {
+                            const candidateAss = stageData.find(({ type }) => type === ass.type);
                             if (ass.type === 'personality') {
-                                if (stageData.personality_assessment) {
-                                    completed.push(3);
-                                } else {
-                                    completed.push(0);
-                                }
+                                completed.push(getAssignmentClass(candidateAss, ass));
                             }
                             if (ass.type === 'video-interview') {
-                                if (stageData.videos && stageData.videos.completed) {
-                                    completed.push(3);
-                                } else {
-                                    completed.push(0);
-                                }
+                                completed.push(getAssignmentClass(candidateAss, ass));
                             }
 
                             if (ass.type === 'logic-test') {
-                                const logicTest = stageData['logic-test'];
+                                const logicTest = candidateAss;
                                 if (logicTest && logicTest.score >= 0) {
                                     if (logicTest.score < 6) completed.push(1);
                                     else completed.push(logicTest.score >= 8 ? 3 : 2);
                                 } else {
-                                    completed.push(0);
+                                    completed.push(getAssignmentClass(logicTest, ass));
                                 }
                             }
 
                             if (ass.type === 'devskiller') {
-                                const devAss =
-                                    candidate.assignments && candidate.assignments[this.job.id]
-                                        ? candidate.assignments[this.job.id].find(
-                                              (a) => a.stageId === stageId && a.type === 'devskiller'
-                                          )
-                                        : null;
+                                const devAss = candidateAss;
                                 if (devAss && devAss.completed) {
                                     const score = (devAss.results.scoredPoints / devAss.results.maxPoints) * 100;
                                     if (score < 40) completed.push(1);
                                     else completed.push(score >= 60 ? 3 : 2);
                                 } else {
-                                    completed.push(0);
+                                    completed.push(getAssignmentClass(devAss, ass));
                                 }
                             }
                         });
@@ -714,6 +725,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.contentLoading = true;
         this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.job.id));
         this.createCandidateMode = false;
+        this.droppedFiles = [];
     }
 
     onDropFile(event) {
@@ -777,6 +789,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     console.log(`Candidate <${candidateId}> was declined`);
                     this.jobsStore.dispatch(new fromJobsStore.DeleteJobCandidate({ jobId, candidateId }));
                     res(candidateId);
+                    this.jobsStore.dispatch(new fromJobsStore.DeleteJobCandidate({ jobId, candidateId }));
                 }, rej)
             );
         }
@@ -917,30 +930,54 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             const read = this.hasRead(originRead) ? [...originRead] : [...originRead, this.job.id];
             stage[this.job.id] = stageId;
 
-            this.jobService.updateCandidateStage(this.job.id, candidate.id, { stage, read }).subscribe(() => {
-                if (!this.hasRead(originRead)) {
-                    originRead.push(this.job.id);
-                }
-                this.prepareBlockData(this.candidates[candidateIndex]);
-                this.contentLoading = false;
-                console.log('Candidate stage was updated to:', stageId);
-                this.candidateService
-                    .addToAudit(this.job.id, candidate.id, {
-                        type: 'stages_progress',
-                        user_id: this.user.id,
-                        stage_from_id: stageFromId,
-                        stage_to_id: stageToId,
-                        created_at: new Date().getTime()
-                    })
-                    .subscribe(
-                        (response) => {
-                            // console.log(response);
-                        },
-                        (errorResponse) => {
-                            console.error(errorResponse);
+            this.jobService
+                .updateCandidateStage(this.job.id, candidate.id, { stage, read })
+                .subscribe((response: any) => {
+                    if (response.assignments) {
+                        this.store.dispatch(
+                            new fromJobsStore.UpdateJobCandidate({
+                                jobId: this.job.id,
+                                candidateId: candidate.id,
+                                data: { assignments: response.assignments }
+                            })
+                        );
+                        console.log('RESPONSE ASSIGNMENTS:', response.assignments);
+                    }
+
+                    if (!this.hasRead(originRead)) {
+                        originRead.push(this.job.id);
+                    }
+                    this.prepareBlockData(this.candidates[candidateIndex]);
+                    this.contentLoading = false;
+                    console.log('Candidate stage was updated to:', stageId);
+                    this.candidateService
+                        .addToAudit(this.job.id, candidate.id, {
+                            type: 'stages_progress',
+                            user_id: this.user.id,
+                            stage_from_id: stageFromId,
+                            stage_to_id: stageToId,
+                            created_at: new Date().getTime()
+                        })
+                        .subscribe(
+                            (response) => {
+                                // console.log(response);
+                            },
+                            (errorResponse) => {
+                                console.error(errorResponse);
+                            }
+                        );
+                    if (candidate.assignments) {
+                        if (!candidate.assignments[this.job.id]) {
+                            candidate.assignments[this.job.id] = [];
                         }
-                    );
-            });
+                        let stage = this.stages.find((s) => s.id === stageId);
+                        if (stage.assessment) {
+                            stage.assessment.forEach((as) => {
+                                candidate.assignments[this.job.id].push({ id: stageId, type: as.type });
+                            });
+                        }
+                    }
+                });
         }
         this.groupCandidatesByStage();
     }

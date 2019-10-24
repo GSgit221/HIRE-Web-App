@@ -32,6 +32,16 @@ export class CandidateService {
             { data }
         );
     }
+
+    extendAssessmentDeadline(jobId: string, candidateId: string, data: any) {
+        return this.http.put(
+            `${
+                this.apiURL
+            }/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/${candidateId}/assessment-deadline`,
+            { data }
+        );
+    }
+
     saveFeed(jobId: string, candidateId: string, data: any) {
         return this.http.put(
             `${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/${candidateId}/feed`,

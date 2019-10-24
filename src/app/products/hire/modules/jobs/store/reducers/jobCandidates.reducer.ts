@@ -54,6 +54,19 @@ export function reducer(state = {}, action: fromJobCandidatesActions.JobCandidat
             }
             return newState;
         }
+
+        case fromJobCandidatesActions.UPDATE_JOB_CANDIDATE: {
+            const jobId = action.payload.jobId;
+            const candidateId = action.payload.candidateId;
+            const data = action.payload.data;
+            const newState = { ...state };
+            if (newState[jobId]) {
+                const entity = { ...newState[jobId].entities[candidateId], ...data };
+                newState[jobId].entities[candidateId] = entity;
+                // console.log('UPDATED ENTITY:', entity);
+            }
+            return newState;
+        }
     }
 
     return state;

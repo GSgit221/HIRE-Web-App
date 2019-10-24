@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, Renderer2 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -24,6 +24,7 @@ export class NewCandidateItemComponent implements OnInit {
     }
 
     contentLoading = false;
+    uploading = false;
     job: Job;
     form: FormGroup;
     emails: string[] = [];
@@ -37,7 +38,8 @@ export class NewCandidateItemComponent implements OnInit {
         private route: ActivatedRoute,
         private fb: FormBuilder,
         private formHelper: FormHelperService,
-        private utilities: UtilitiesService
+        private utilities: UtilitiesService,
+        private renderer: Renderer2
     ) {
         this.supportedFileTypes = [
             'application/pdf',
@@ -52,7 +54,8 @@ export class NewCandidateItemComponent implements OnInit {
         this.form = this.fb.group({
             // send_email: [true],
             file: [''],
-            emails: this.fb.array([this.fb.control('', [Validators.required, Validators.email])])
+            emails: this.fb.array([this.fb.control('', [Validators.required, Validators.email])]),
+            permission: [false, Validators.requiredTrue]
         });
     }
 
@@ -94,11 +97,11 @@ export class NewCandidateItemComponent implements OnInit {
         }
     }
 
-    onFinishClicked(event, save = true) {
+    onFinishClicked(event, consent = true) {
         event.preventDefault();
-        if (this.emails.length && save) {
+        if (this.emails.length && consent) {
             this.jobService
-                .setCandidatesEmailNotifications(this.jobId, this.emails)
+                .sendJobNotifications(this.jobId, this.emails)
                 .subscribe((response) => console.log(response), (error) => console.error(error));
             this.uploadQueue = [];
             this.emails = [];
@@ -108,6 +111,7 @@ export class NewCandidateItemComponent implements OnInit {
             this.emails = [];
             this.finishedCadidatesCreation.next(true);
         }
+        this.renderer.removeClass(document.body, 'over');
     }
 
     processFiles(files) {
@@ -132,6 +136,7 @@ export class NewCandidateItemComponent implements OnInit {
             }
         }
         this.processQueue();
+        this.uploading = true;
     }
 
     onDropFile(event) {
@@ -185,7 +190,7 @@ export class NewCandidateItemComponent implements OnInit {
                         item.success = true;
                         clearInterval(uploadProgressInterval);
                         this.emails.push(resp.candidate.email);
-
+                        this.uploading = false;
                         // setTimeout(() => {
                         //     item.fadeout = true;
                         // }, 2000);
@@ -213,6 +218,12 @@ export class NewCandidateItemComponent implements OnInit {
                         } else {
                             item.missingEmail = false;
                         }
+
+                        if (item.text.includes('Candidate with email') && item.text.includes('already exists.')) {
+                            item.colorGreen = true;
+                            item.success = true;
+                        }
+                        this.uploading = false;
                         item.progress = 100;
                         item.uploadFinished = true;
                         clearInterval(uploadProgressInterval);
