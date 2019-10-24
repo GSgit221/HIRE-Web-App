@@ -961,6 +961,28 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                         .subscribe(
                             (response) => {
                                 // console.log(response);
+                                // console.log(candidate.audit, this.job.id)
+                                // if (candidate.audit && candidate.audit[this.job.id]) {
+                                //     candidate.audit[this.job.id].push({
+                                //         candidate_name: candidate.first_name,
+                                //         created_at: new Date().getTime(),
+                                //         job_title: this.job.title,
+                                //         user_id: this.user.id,
+                                //         stage_from_id: stageFromId,
+                                //         stage_to_id: stageToId,
+                                //         type: 'stages_progress'
+                                //     })
+                                // } else {
+                                //     candidate.audit[this.job.id] = {
+                                //         candidate_name: candidate.first_name,
+                                //         created_at: new Date().getTime(),
+                                //         job_title: this.job.title,
+                                //         user_id: this.user.id,
+                                //         stage_from_id: stageFromId,
+                                //         stage_to_id: stageToId,
+                                //         type: 'stages_progress'
+                                //     }
+                                // }
                             },
                             (errorResponse) => {
                                 console.error(errorResponse);

@@ -360,7 +360,10 @@ export class CandidateItemTimelineComponent implements OnInit, OnDestroy {
             let created_app = this.candidate.assignments[this.job.id].find((a) => a.type === 'questions');
             auditData.push({
                 type: 'created',
-                created_at: created_app.added_at ? created_app.added_at * 1000 : this.candidate.created_at * 1000,
+                created_at:
+                    created_app && created_app.added_at
+                        ? created_app.added_at * 1000
+                        : this.candidate.created_at * 1000,
                 source: this.candidate.source
             });
         }
