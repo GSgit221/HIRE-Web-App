@@ -33,4 +33,5 @@ export class Candidate {
     hasUserReviewed: boolean;
     assignments?: any;
     blockData?: any;
+    applicaitons?: any[];
 }

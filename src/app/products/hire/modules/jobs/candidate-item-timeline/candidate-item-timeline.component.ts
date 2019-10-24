@@ -357,13 +357,10 @@ export class CandidateItemTimelineComponent implements OnInit, OnDestroy {
     transformAudit(auditData: any[]) {
         const creationEntry = auditData.find((e) => e.type === 'created');
         if (!creationEntry) {
-            let created_app = this.candidate.assignments[this.job.id].find((a) => a.type === 'questions');
+            let created_app = this.candidate.applicaitons[this.job.id].created_at;
             auditData.push({
                 type: 'created',
-                created_at:
-                    created_app && created_app.added_at
-                        ? created_app.added_at * 1000
-                        : this.candidate.created_at * 1000,
+                created_at: created_app ? created_app * 1000 : this.candidate.created_at * 1000,
                 source: this.candidate.source
             });
         }
