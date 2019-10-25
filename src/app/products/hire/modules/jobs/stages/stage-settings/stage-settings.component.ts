@@ -104,6 +104,14 @@ export class StageSettingsComponent implements OnInit {
                             }
                         });
                     }
+                    if (
+                        !this.stageHasCandidate &&
+                        cand.stage &&
+                        cand.stage[this.jobId] &&
+                        cand.stage[this.jobId] === this.stageId
+                    ) {
+                        this.stageHasCandidate = true;
+                    }
                 });
             });
 

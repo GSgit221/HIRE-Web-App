@@ -2,8 +2,9 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output, Renderer2 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Candidate } from '@app/core/models';
 import { select, Store } from '@ngrx/store';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { JobService } from '../../../../../core/services/job.service';
 import * as fromJobsStore from '../store';
@@ -36,7 +37,6 @@ export class NewCandidateItemComponent implements OnInit {
     uploadQueue: any[] = [];
     uploadError: string;
     supportedFileTypes: string[];
-    onEmailInput = false;
 
     constructor(
         private jobService: JobService,
@@ -128,12 +128,18 @@ export class NewCandidateItemComponent implements OnInit {
         event.preventDefault();
         console.log(this.emails, consent);
         if (this.emails.length && consent) {
-            this.jobService
-                .addJob(this.jobId, this.emails)
-                .subscribe((response) => console.log(response), (error) => console.error(error));
+            this.contentLoading = true;
+            this.jobService.addJob(this.jobId, this.emails).subscribe(
+                (response) => {
+                    console.log(response);
+                    this.contentLoading = false;
+                    this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.jobId));
+                    this.finishedCadidatesCreation.next(true);
+                },
+                (error) => console.error(error)
+            );
             this.uploadQueue = [];
             this.emails = [];
-            this.finishedCadidatesCreation.next(true);
         } else {
             this.uploadQueue = [];
             this.emails = [];
@@ -268,23 +274,6 @@ export class NewCandidateItemComponent implements OnInit {
         const email = item.email;
         if (this.formHelper.validateEmail(email)) {
             this.uploadFile(item);
-        }
-    }
-
-    onAddEmails() {
-        // this.emails = ['lionmof+new8@gmail.com', 'lionmof+new9@gmail.com']
-        if (this.emails.length) {
-            console.log(this.emails);
-            let emailObservables = [];
-            this.emails.forEach((c) => {
-                emailObservables.push(
-                    this.jobService.createCandidateFromEmail(this.jobId, c).pipe(catchError((error) => of(null)))
-                );
-            });
-            forkJoin(emailObservables).subscribe((res) => {
-                console.log(res);
-                this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.jobId));
-            });
         }
     }
 }
