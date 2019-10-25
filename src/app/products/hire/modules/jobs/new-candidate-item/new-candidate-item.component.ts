@@ -37,9 +37,6 @@ export class NewCandidateItemComponent implements OnInit {
     uploadQueue: any[] = [];
     uploadError: string;
     supportedFileTypes: string[];
-    onEmailInput = false;
-    subscription: Subscription;
-    candidates: Candidate[] = [];
 
     constructor(
         private jobService: JobService,
@@ -131,24 +128,23 @@ export class NewCandidateItemComponent implements OnInit {
         event.preventDefault();
         console.log(this.emails, consent);
         if (this.emails.length && consent) {
-            this.jobService
-                .addJob(this.jobId, this.emails)
-                .subscribe((response) => console.log(response), (error) => console.error(error));
+            this.contentLoading = true;
+            this.jobService.addJob(this.jobId, this.emails).subscribe(
+                (response) => {
+                    console.log(response);
+                    this.contentLoading = false;
+                    this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.jobId));
+                    this.finishedCadidatesCreation.next(true);
+                },
+                (error) => console.error(error)
+            );
             this.uploadQueue = [];
             this.emails = [];
-            this.finishedCadidatesCreation.next(true);
         } else {
             this.uploadQueue = [];
             this.emails = [];
             this.finishedCadidatesCreation.next(true);
         }
-        this.renderer.removeClass(document.body, 'over');
-    }
-
-    onCloseWindow() {
-        this.uploadQueue = [];
-        this.emails = [];
-        this.finishedCadidatesCreation.next(true);
         this.renderer.removeClass(document.body, 'over');
     }
 

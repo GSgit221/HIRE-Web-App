@@ -219,6 +219,12 @@ export class JobService {
         );
     }
 
+    addJob(jobId: string, emails: string[]) {
+        return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/add-job`, {
+            emails
+        });
+    }
+
     createJobFromCv(formData: object) {
         return this.http.post(`${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/spec`, formData);
     }

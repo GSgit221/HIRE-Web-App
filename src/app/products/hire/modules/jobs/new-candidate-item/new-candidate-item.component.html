@@ -1,5 +1,5 @@
 <div class="dropzone" appDragEnter (dropFile)="onDropFile($event)">
-    <div class="close" (click)="onCloseWindow()">
+    <div class="close" (click)="onFinishClicked($event, false)">
         <img src="/assets/images/icons-8-delete-sign.svg" alt="" />
     </div>
     <div class="content">
@@ -149,3 +149,5 @@
         </form>
     </div>
 </div>
+
+<app-loader *ngIf="contentLoading"></app-loader>
