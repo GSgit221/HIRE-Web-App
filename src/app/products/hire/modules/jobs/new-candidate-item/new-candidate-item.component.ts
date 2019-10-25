@@ -78,6 +78,26 @@ export class NewCandidateItemComponent implements OnInit {
     }
 
     onEmailInputKeydown(event, formControl) {
+        // if (event.keyCode === 13 && formControl.valid) {
+        //     this.jobsStore
+        //         .pipe(select(fromJobCandiatesSelector.getJobCandidates, { jobId: this.jobId }))
+        //         .subscribe((candidates: any) => {
+        //             const candidate = candidates.find((c) => c.email === formControl.value);
+        //             console.log(candidate);
+        //             if (!candidate) {
+        //                 formControl.requestStatus = 'success';
+        //                 formControl.pendingRequest = false;
+        //                 this.emails.push(formControl.value);
+        //             } else {
+        //                 formControl.requestStatus = 'warning';
+        //                 formControl.requestError = `Candidate with email ${formControl.value} already exists.`;
+        //             }
+        //             formControl.disable();
+        //             formControl.pendingRequest = true;
+        //             this.addEmailInput();
+        //             this.onEmailInput = true;
+        //         });
+        // }
         if (event.keyCode === 13) {
             event.preventDefault();
             console.log(formControl);
@@ -109,9 +129,10 @@ export class NewCandidateItemComponent implements OnInit {
 
     onFinishClicked(event, consent = true) {
         event.preventDefault();
+        console.log(this.emails, consent);
         if (this.emails.length && consent) {
             this.jobService
-                .sendJobNotifications(this.jobId, this.emails)
+                .addJob(this.jobId, this.emails)
                 .subscribe((response) => console.log(response), (error) => console.error(error));
             this.uploadQueue = [];
             this.emails = [];
@@ -121,7 +142,6 @@ export class NewCandidateItemComponent implements OnInit {
             this.emails = [];
             this.finishedCadidatesCreation.next(true);
         }
-        this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.jobId));
         this.renderer.removeClass(document.body, 'over');
     }
 
