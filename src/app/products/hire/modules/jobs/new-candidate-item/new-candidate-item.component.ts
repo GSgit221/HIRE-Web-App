@@ -2,11 +2,17 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output, Renderer2 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { Candidate } from '@app/core/models';
+import { select, Store } from '@ngrx/store';
+import { forkJoin, of, Subscription } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { JobService } from '../../../../../core/services/job.service';
+import * as fromJobsStore from '../store';
 import { Job } from './../../../../../core/models/job';
 import { FormHelperService } from './../../../../../core/services/form-helper.service';
 import { UtilitiesService } from './../../../../../core/services/utilities.service';
+
+import * as fromJobCandiatesSelector from '../store/selectors/jobCandidates.selector';
 
 @Component({
     selector: 'app-new-candidate-item',
@@ -39,7 +45,8 @@ export class NewCandidateItemComponent implements OnInit {
         private fb: FormBuilder,
         private formHelper: FormHelperService,
         private utilities: UtilitiesService,
-        private renderer: Renderer2
+        private renderer: Renderer2,
+        private jobsStore: Store<fromJobsStore.JobsState>
     ) {
         this.supportedFileTypes = [
             'application/pdf',
@@ -68,6 +75,26 @@ export class NewCandidateItemComponent implements OnInit {
     }
 
     onEmailInputKeydown(event, formControl) {
+        // if (event.keyCode === 13 && formControl.valid) {
+        //     this.jobsStore
+        //         .pipe(select(fromJobCandiatesSelector.getJobCandidates, { jobId: this.jobId }))
+        //         .subscribe((candidates: any) => {
+        //             const candidate = candidates.find((c) => c.email === formControl.value);
+        //             console.log(candidate);
+        //             if (!candidate) {
+        //                 formControl.requestStatus = 'success';
+        //                 formControl.pendingRequest = false;
+        //                 this.emails.push(formControl.value);
+        //             } else {
+        //                 formControl.requestStatus = 'warning';
+        //                 formControl.requestError = `Candidate with email ${formControl.value} already exists.`;
+        //             }
+        //             formControl.disable();
+        //             formControl.pendingRequest = true;
+        //             this.addEmailInput();
+        //             this.onEmailInput = true;
+        //         });
+        // }
         if (event.keyCode === 13) {
             event.preventDefault();
             console.log(formControl);
@@ -99,13 +126,20 @@ export class NewCandidateItemComponent implements OnInit {
 
     onFinishClicked(event, consent = true) {
         event.preventDefault();
+        console.log(this.emails, consent);
         if (this.emails.length && consent) {
-            this.jobService
-                .sendJobNotifications(this.jobId, this.emails)
-                .subscribe((response) => console.log(response), (error) => console.error(error));
+            this.contentLoading = true;
+            this.jobService.addJob(this.jobId, this.emails).subscribe(
+                (response) => {
+                    console.log(response);
+                    this.contentLoading = false;
+                    this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.jobId));
+                    this.finishedCadidatesCreation.next(true);
+                },
+                (error) => console.error(error)
+            );
             this.uploadQueue = [];
             this.emails = [];
-            this.finishedCadidatesCreation.next(true);
         } else {
             this.uploadQueue = [];
             this.emails = [];
