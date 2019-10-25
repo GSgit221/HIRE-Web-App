@@ -2,8 +2,9 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output, Renderer2 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Candidate } from '@app/core/models';
 import { select, Store } from '@ngrx/store';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { JobService } from '../../../../../core/services/job.service';
 import * as fromJobsStore from '../store';
@@ -37,6 +38,8 @@ export class NewCandidateItemComponent implements OnInit {
     uploadError: string;
     supportedFileTypes: string[];
     onEmailInput = false;
+    subscription: Subscription;
+    candidates: Candidate[] = [];
 
     constructor(
         private jobService: JobService,
@@ -75,63 +78,37 @@ export class NewCandidateItemComponent implements OnInit {
     }
 
     onEmailInputKeydown(event, formControl) {
-        if (event.keyCode === 13 && formControl.valid) {
-            this.jobsStore
-                .pipe(select(fromJobCandiatesSelector.getJobCandidates, { jobId: this.jobId }))
-                .subscribe((candidates: any) => {
-                    const candidate = candidates.find((c) => c.email === formControl.value);
-                    console.log(candidate);
-                    if (!candidate) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            console.log(formControl);
+            if (formControl.valid && formControl.value) {
+                formControl.disable();
+                formControl.pendingRequest = true;
+                this.jobService.createCandidateFromEmail(this.jobId, formControl.value).subscribe(
+                    (candidate) => {
+                        console.log(candidate);
                         formControl.requestStatus = 'success';
                         formControl.pendingRequest = false;
-                        this.emails.push(formControl.value);
-                    } else {
-                        formControl.requestStatus = 'warning';
-                        formControl.requestError = `Candidate with email ${formControl.value} already exists.`;
-                    }
-                    formControl.disable();
-                    formControl.pendingRequest = true;
-                    this.addEmailInput();
-                    this.onEmailInput = true;
-                });
-        }
-        // if (event.keyCode === 13) {
-        //     event.preventDefault();
-        //     console.log(formControl);
-        //     if (formControl.valid && formControl.value) {
-        //         formControl.disable();
-        //         formControl.pendingRequest = true;
-        //         this.jobService.createCandidateFromEmail(this.jobId, formControl.value).subscribe(
-        //             (candidate) => {
-        //                 console.log(candidate);
-        //                 formControl.requestStatus = 'success';
-        //                 formControl.pendingRequest = false;
-        //                 this.addEmailInput();
+                        this.addEmailInput();
 
-        //                 this.emails.push(formControl.value);
-        //             },
-        //             (response) => {
-        //                 formControl.requestStatus = 'warning';
-        //                 if (response && response.error && response.error.error) {
-        //                     formControl.requestError = response.error.error;
-        //                     console.error(response.error.error);
-        //                 }
-        //                 formControl.pendingRequest = false;
-        //                 this.addEmailInput();
-        //             }
-        //         );
-        //     }
-        // }
+                        this.emails.push(formControl.value);
+                    },
+                    (response) => {
+                        formControl.requestStatus = 'warning';
+                        if (response && response.error && response.error.error) {
+                            formControl.requestError = response.error.error;
+                            console.error(response.error.error);
+                        }
+                        formControl.pendingRequest = false;
+                        this.addEmailInput();
+                    }
+                );
+            }
+        }
     }
 
     onFinishClicked(event, consent = true) {
         event.preventDefault();
-        if (this.onEmailInput) {
-            this.onAddEmails();
-            this.finishedCadidatesCreation.next(true);
-            this.onEmailInput = false;
-            return true;
-        }
         if (this.emails.length && consent) {
             this.jobService
                 .sendJobNotifications(this.jobId, this.emails)
@@ -144,6 +121,14 @@ export class NewCandidateItemComponent implements OnInit {
             this.emails = [];
             this.finishedCadidatesCreation.next(true);
         }
+        this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.jobId));
+        this.renderer.removeClass(document.body, 'over');
+    }
+
+    onCloseWindow() {
+        this.uploadQueue = [];
+        this.emails = [];
+        this.finishedCadidatesCreation.next(true);
         this.renderer.removeClass(document.body, 'over');
     }
 
@@ -273,23 +258,6 @@ export class NewCandidateItemComponent implements OnInit {
         const email = item.email;
         if (this.formHelper.validateEmail(email)) {
             this.uploadFile(item);
-        }
-    }
-
-    onAddEmails() {
-        // this.emails = ['lionmof+new8@gmail.com', 'lionmof+new9@gmail.com']
-        if (this.emails.length) {
-            console.log(this.emails);
-            let emailObservables = [];
-            this.emails.forEach((c) => {
-                emailObservables.push(
-                    this.jobService.createCandidateFromEmail(this.jobId, c).pipe(catchError((error) => of(null)))
-                );
-            });
-            forkJoin(emailObservables).subscribe((res) => {
-                console.log(res);
-                this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.jobId));
-            });
         }
     }
 }
