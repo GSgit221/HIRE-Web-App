@@ -75,66 +75,61 @@ export class NewCandidateItemComponent implements OnInit {
     }
 
     onEmailInputKeydown(event, formControl) {
-        if (event.keyCode === 13 && formControl.valid) {
-            this.jobsStore
-                .pipe(select(fromJobCandiatesSelector.getJobCandidates, { jobId: this.jobId }))
-                .subscribe((candidates: any) => {
-                    const candidate = candidates.find((c) => c.email === formControl.value);
-                    console.log(candidate);
-                    if (!candidate) {
-                        formControl.requestStatus = 'success';
-                        formControl.pendingRequest = false;
-                        this.emails.push(formControl.value);
-                    } else {
-                        formControl.requestStatus = 'warning';
-                        formControl.requestError = `Candidate with email ${formControl.value} already exists.`;
-                    }
-                    formControl.disable();
-                    formControl.pendingRequest = true;
-                    this.addEmailInput();
-                    this.onEmailInput = true;
-                });
-        }
-        // if (event.keyCode === 13) {
-        //     event.preventDefault();
-        //     console.log(formControl);
-        //     if (formControl.valid && formControl.value) {
-        //         formControl.disable();
-        //         formControl.pendingRequest = true;
-        //         this.jobService.createCandidateFromEmail(this.jobId, formControl.value).subscribe(
-        //             (candidate) => {
-        //                 console.log(candidate);
+        // if (event.keyCode === 13 && formControl.valid) {
+        //     this.jobsStore
+        //         .pipe(select(fromJobCandiatesSelector.getJobCandidates, { jobId: this.jobId }))
+        //         .subscribe((candidates: any) => {
+        //             const candidate = candidates.find((c) => c.email === formControl.value);
+        //             console.log(candidate);
+        //             if (!candidate) {
         //                 formControl.requestStatus = 'success';
         //                 formControl.pendingRequest = false;
-        //                 this.addEmailInput();
-
         //                 this.emails.push(formControl.value);
-        //             },
-        //             (response) => {
+        //             } else {
         //                 formControl.requestStatus = 'warning';
-        //                 if (response && response.error && response.error.error) {
-        //                     formControl.requestError = response.error.error;
-        //                     console.error(response.error.error);
-        //                 }
-        //                 formControl.pendingRequest = false;
-        //                 this.addEmailInput();
+        //                 formControl.requestError = `Candidate with email ${formControl.value} already exists.`;
         //             }
-        //         );
-        //     }
+        //             formControl.disable();
+        //             formControl.pendingRequest = true;
+        //             this.addEmailInput();
+        //             this.onEmailInput = true;
+        //         });
         // }
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            console.log(formControl);
+            if (formControl.valid && formControl.value) {
+                formControl.disable();
+                formControl.pendingRequest = true;
+                this.jobService.createCandidateFromEmail(this.jobId, formControl.value).subscribe(
+                    (candidate) => {
+                        console.log(candidate);
+                        formControl.requestStatus = 'success';
+                        formControl.pendingRequest = false;
+                        this.addEmailInput();
+
+                        this.emails.push(formControl.value);
+                    },
+                    (response) => {
+                        formControl.requestStatus = 'warning';
+                        if (response && response.error && response.error.error) {
+                            formControl.requestError = response.error.error;
+                            console.error(response.error.error);
+                        }
+                        formControl.pendingRequest = false;
+                        this.addEmailInput();
+                    }
+                );
+            }
+        }
     }
 
     onFinishClicked(event, consent = true) {
         event.preventDefault();
-        if (this.onEmailInput) {
-            this.onAddEmails();
-            this.finishedCadidatesCreation.next(true);
-            this.onEmailInput = false;
-            return true;
-        }
+        console.log(this.emails, consent);
         if (this.emails.length && consent) {
             this.jobService
-                .sendJobNotifications(this.jobId, this.emails)
+                .addJob(this.jobId, this.emails)
                 .subscribe((response) => console.log(response), (error) => console.error(error));
             this.uploadQueue = [];
             this.emails = [];
