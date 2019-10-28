@@ -1,9 +1,9 @@
 import { Directive, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Directive({
-    selector: '[appDragEnter]'
+    selector: '[appDragEnter1]'
 })
-export class DragEnterDirective implements OnInit {
+export class DragEnter1Directive implements OnInit {
     @Input() appDragEnter: string;
     @Input() appDragEnterParentClass: string;
     @Output() dropFile = new EventEmitter<File>();
