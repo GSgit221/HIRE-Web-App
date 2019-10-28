@@ -570,9 +570,8 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
         this.processQueue();
     }
 
-    onDropFile(event) {
-        const files = event.target.files || event.dataTransfer.files;
-        // console.log('📥 onDropFile', files);
+    onDropFile(files) {
+        console.log('📥 onDropFile', files);
         this.processFiles(files);
     }
 

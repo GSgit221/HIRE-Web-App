@@ -13,7 +13,7 @@
             <button class="btn btn-primary w140 mla btn-align" routerLink="{{ baseUrl }}/jobs/new">Add Job</button>
         </div>
     </div>
-    <div class="job-list-container" appDragEnter (dropFile)="onDropFile($event)">
+    <div class="job-list-container" appDragEnter="body" (dropFile)="onDropFile($event)">
         <div *ngIf="!list || (!list.length && !contentLoading && user && user.role !== 'hiring_manager')">
             <div class="section-separator"></div>
             <div class="placeholder-block">

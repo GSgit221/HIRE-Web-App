@@ -76,8 +76,7 @@ export class JobItemNewComponent implements OnInit {
         this.processQueue();
     }
 
-    onDropFile(event) {
-        const files = event.target.files || event.dataTransfer.files;
+    onDropFile(files) {
         console.log('📥 onDropFile', files);
         this.processFiles(files);
     }

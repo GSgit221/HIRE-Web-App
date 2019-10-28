@@ -109,8 +109,7 @@ export class ThemeComponent implements OnInit {
         return types.indexOf(file.type) !== -1;
     }
 
-    onDropFile(event) {
-        const files = event.target.files || event.dataTransfer.files;
+    onDropFile(files) {
         if (files && files.length) {
             const file = files[0];
             console.log('📥 onDropFile', file);
