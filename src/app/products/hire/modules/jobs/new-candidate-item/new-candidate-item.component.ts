@@ -165,10 +165,7 @@ export class NewCandidateItemComponent implements OnInit {
         this.uploading = true;
     }
 
-    onDropFile(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        const files = event.target.files || event.dataTransfer.files;
+    onDropFile(files) {
         console.log('📥 onDropFile', files);
         this.processFiles(files);
     }

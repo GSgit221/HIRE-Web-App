@@ -184,8 +184,7 @@ export class JobsListComponent implements OnInit, OnDestroy {
         this.uploadJobSpecMode = false;
     }
 
-    onDropFile(event) {
-        const files = event.target.files || event.dataTransfer.files;
+    onDropFile(files) {
         console.log('📥 onDropFiles', files);
         this.droppedFiles = files;
         this.uploadJobSpecMode = true;

@@ -143,8 +143,7 @@ export class DocumentsComponent implements OnInit {
         return this.form.controls['proofOfBankingDetails'];
     }
 
-    onDropFile(event, controlName, parentControlName = null) {
-        const files = event.target.files || event.dataTransfer.files;
+    onDropFile(files, controlName, parentControlName = null) {
         const file = files[0];
         console.log('📥 onDropFile', file);
         if (file) {
