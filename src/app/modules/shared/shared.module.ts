@@ -34,6 +34,7 @@ import { GetFirstLetterPipe } from '../../core/pipes/get-first-letter.pipe';
 import { HireEditorModule } from '../../libs/editor/editor.module';
 import { DisableControlDirective } from './../../core/directives/disable-control.directive';
 import { DragEnterDirective } from './../../core/directives/drag-enter.directive';
+import { DragEnter1Directive } from './../../core/directives/drag-enter1.directive';
 import { ToggleDetailsDirective } from './../../core/directives/toggle-details.directive';
 import { httpInterceptorProviders } from './../../core/interceptors';
 import { AccountTypePipe } from './../../core/pipes/account-type.pipe';
@@ -70,6 +71,7 @@ import { StageColumnHeightDirective } from './stage-column-height.directive';
         UploadFileNamePipe,
         DisableControlDirective,
         DragEnterDirective,
+        DragEnter1Directive,
         ToggleDetailsDirective,
         ListFilterComponent,
         InputPhoneComponent,
@@ -127,6 +129,7 @@ import { StageColumnHeightDirective } from './stage-column-height.directive';
         UploadFileNamePipe,
         DisableControlDirective,
         DragEnterDirective,
+        DragEnter1Directive,
         ToggleDetailsDirective,
         CommonModule,
         ReactiveFormsModule,
