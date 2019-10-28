@@ -87,6 +87,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     };
     declineModalVisible: boolean = false;
     emailModalVisible: boolean = false;
+    progressModalVisible: boolean = false;
     candidatesByStage = {};
     candidatesByStageArray = {};
 
@@ -808,6 +809,19 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         const columnIndex = this.stages.findIndex(({ id }) => id === columnId);
         const { id: fromId = 'applied' } = columnIndex === -1 ? { id: 'applied' } : this.stages[columnIndex];
         const { id: toId, title } = this.stages[columnIndex + 1];
+        for (let candidateId of candidateIds) {
+            const candidate = this.candidates.find(({ id }) => id === candidateId);
+            if (
+                candidate &&
+                candidate.blockData &&
+                (candidate.blockData.complianceRateClass === 'yellow' ||
+                    candidate.blockData.complianceRateClass === 'mellow')
+            ) {
+                this.progressModalVisible = true;
+                this.contentLoading = false;
+                return false;
+            }
+        }
 
         this.contentLoading = true;
         for (let candidateId of candidateIds) {
@@ -834,11 +848,13 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                         .subscribe(
                             (response) => {
                                 res(response);
+                                this.updateAuditForCandidate(candidate, fromId, toId);
                             },
                             (errorResponse) => {
                                 rej(errorResponse);
                             }
                         );
+                    this.updateAssessmentsForCandidate(candidate, stage[jobId]);
                 })
             );
         }
@@ -959,45 +975,15 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                         })
                         .subscribe(
                             (response) => {
-                                // console.log(response);
-                                // console.log(candidate.audit, this.job.id)
-                                // if (candidate.audit && candidate.audit[this.job.id]) {
-                                //     candidate.audit[this.job.id].push({
-                                //         candidate_name: candidate.first_name,
-                                //         created_at: new Date().getTime(),
-                                //         job_title: this.job.title,
-                                //         user_id: this.user.id,
-                                //         stage_from_id: stageFromId,
-                                //         stage_to_id: stageToId,
-                                //         type: 'stages_progress'
-                                //     })
-                                // } else {
-                                //     candidate.audit[this.job.id] = {
-                                //         candidate_name: candidate.first_name,
-                                //         created_at: new Date().getTime(),
-                                //         job_title: this.job.title,
-                                //         user_id: this.user.id,
-                                //         stage_from_id: stageFromId,
-                                //         stage_to_id: stageToId,
-                                //         type: 'stages_progress'
-                                //     }
-                                // }
+                                console.log(response);
+                                this.updateAuditForCandidate(candidate, stageFromId, stageToId);
                             },
                             (errorResponse) => {
                                 console.error(errorResponse);
                             }
                         );
-                    if (candidate.assignments) {
-                        if (!candidate.assignments[this.job.id]) {
-                            candidate.assignments[this.job.id] = [];
-                        }
-                        let stage = this.stages.find((s) => s.id === stageId);
-                        if (stage.assessment) {
-                            stage.assessment.forEach((as) => {
-                                candidate.assignments[this.job.id].push({ id: stageId, type: as.type });
-                            });
-                        }
-                    }
+
+                    this.updateAssessmentsForCandidate(candidate, stageId);
                 });
         }
         this.groupCandidatesByStage();
@@ -1150,4 +1136,45 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     //             );
     //     }
     // }
+
+    updateAuditForCandidate(candidate, stageFromId, stageToId) {
+        if (candidate.audit && candidate.audit[this.job.id]) {
+            candidate.audit[this.job.id].push({
+                candidate_name: candidate.first_name,
+                created_at: new Date().getTime(),
+                job_title: this.job.title,
+                user_id: this.user.id,
+                stage_from_id: stageFromId,
+                stage_to_id: stageToId,
+                type: 'stages_progress'
+            });
+        } else {
+            candidate.audit[this.job.id] = [];
+            candidate.audit[this.job.id] = [
+                {
+                    candidate_name: candidate.first_name,
+                    created_at: new Date().getTime(),
+                    job_title: this.job.title,
+                    user_id: this.user.id,
+                    stage_from_id: stageFromId,
+                    stage_to_id: stageToId,
+                    type: 'stages_progress'
+                }
+            ];
+        }
+    }
+
+    updateAssessmentsForCandidate(candidate, stageId) {
+        if (candidate.assignments) {
+            if (!candidate.assignments[this.job.id]) {
+                candidate.assignments[this.job.id] = [];
+            }
+            let stage = this.stages.find((s) => s.id === stageId);
+            if (stage && stage.assessment) {
+                stage.assessment.forEach((as) => {
+                    candidate.assignments[this.job.id].push({ id: stageId, type: as.type });
+                });
+            }
+        }
+    }
 }
