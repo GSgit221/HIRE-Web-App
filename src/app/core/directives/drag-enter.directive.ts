@@ -1,4 +1,4 @@
-import { Directive, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 @Directive({
     selector: '[appDragEnter]'
@@ -7,120 +7,106 @@ export class DragEnterDirective implements OnInit {
     @Input() appDragEnter: string;
     @Input() appDragEnterParentClass: string;
     @Output() dropFile = new EventEmitter<File>();
-    supportedFileTypes: string[];
+    supportedFileTypes: string[] = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.oasis.opendocument.text',
+        'text/rtf'
+    ];
     first: boolean = false;
     second: boolean = false;
 
-    constructor(private _elementRef: ElementRef) {
-        this.supportedFileTypes = [
-            'application/pdf',
-            'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'application/vnd.oasis.opendocument.text',
-            'text/rtf'
-        ];
-    }
+    element: any = null;
+
+    constructor(private _elementRef: ElementRef) {}
 
     ngOnInit() {
-        // Get the current element
-        const el = this.appDragEnter === 'body' ? document.body : this._elementRef.nativeElement;
+        this.element = this.appDragEnter === 'body' ? document.body : this._elementRef.nativeElement;
 
-        // Add a style to indicate that this element is a drop target
-        el.addEventListener('dragenter', (e) => {
-            // console.log('dragenter', e);
-            // el.classList.add('over');
-            const type = e.dataTransfer.types && e.dataTransfer.types[0] ? e.dataTransfer.types[0] : null;
-            if (type === 'Files') {
-                if (this.first) this.second = true;
-                else this.first = true;
-                el.classList.add('over');
-                if (e.preventDefault) {
-                    e.preventDefault();
-                }
-                e.dataTransfer.dropEffect = 'move';
-                return false;
-            }
-        });
-
-        // Remove the style
-        el.addEventListener('dragleave', (e) => {
-            const type = e.dataTransfer.types && e.dataTransfer.types[0] ? e.dataTransfer.types[0] : null;
-            if (type === 'Files') {
-                if (this.second) this.second = false;
-                else if (this.first) this.first = false;
-
-                if (!this.first && !this.second) {
-                    el.classList.remove('over');
-                }
-            } else {
-                const leaveTarget = e.target;
-                // console.log(leaveTarget);
-                el.classList.remove('over');
-                if (this.appDragEnterParentClass) {
-                    el.parentNode.classList.remove(this.appDragEnterParentClass);
-                }
-            }
-        });
-
-        el.addEventListener('dragover', (e) => {
-            const type =
-                e.dataTransfer && e.dataTransfer.types && e.dataTransfer.types[0] ? e.dataTransfer.types[0] : null;
-            if (type === 'Files') {
-                el.classList.add('over');
-                if (e.preventDefault) {
-                    e.preventDefault();
-                }
-                e.dataTransfer.dropEffect = 'move';
-                return false;
-            }
-            if (
-                this.appDragEnter &&
-                e.dataTransfer &&
-                e.dataTransfer.types &&
-                e.dataTransfer.types[1] &&
-                this.appDragEnter === e.dataTransfer.types[1]
-            ) {
-                if (this.appDragEnterParentClass) {
-                    el.parentNode.classList.add(this.appDragEnterParentClass);
-                }
-                el.classList.add('over');
-                if (e.preventDefault) {
-                    e.preventDefault();
-                }
-                e.dataTransfer.dropEffect = 'move';
-                return false;
-            }
-        });
-
-        // On drop, get the data and convert it back to a JSON object
-        // and fire off an event passing the data
-        el.addEventListener('drop', (e) => {
-            const fileType =
-                e.dataTransfer &&
-                e.dataTransfer.items &&
-                e.dataTransfer &&
-                e.dataTransfer.items[0] &&
-                e.dataTransfer.items[0].type
-                    ? e.dataTransfer.items[0].type
-                    : null;
-            if (this.appDragEnterParentClass) {
-                el.parentNode.classList.remove(this.appDragEnterParentClass);
-            }
-            if (fileType && fileType !== 'text/plain') {
-                if (e.stopPropagation) {
-                    e.stopPropagation(); // Stops some browsers from redirecting.
-                }
-                this.dropFile.emit(e);
-                e.preventDefault();
-
-                el.classList.remove('over');
-                // const data = JSON.parse(e.dataTransfer.getData('text'));
-                return false;
-            }
-        });
+        if (this.appDragEnter === 'body') {
+            document.body.addEventListener('dragenter', this.onDragEnter.bind(this));
+            document.body.addEventListener('dragleave', this.onDragLeave.bind(this));
+            document.body.addEventListener('dragover', this.onDragOver.bind(this));
+            document.body.addEventListener('drop', this.onDrop.bind(this));
+        }
     }
 
-    private validateFileType(type: string, types: string[]) {
-        return types.indexOf(type) !== -1;
+    get parentNode() {
+        return this.element.parentNode;
+    }
+
+    getDataType(e) {
+        return e.dataTransfer.types && e.dataTransfer.types[0] ? e.dataTransfer.types[0] : null;
+    }
+
+    isAppDataType(e) {
+        return (
+            this.appDragEnter &&
+            e.dataTransfer &&
+            e.dataTransfer.types &&
+            e.dataTransfer.types[1] &&
+            this.appDragEnter === e.dataTransfer.types[1]
+        );
+    }
+
+    getFileType(e) {
+        return e.dataTransfer && e.dataTransfer.items && e.dataTransfer.items[0] && e.dataTransfer.items[0].type
+            ? e.dataTransfer.items[0].type
+            : null;
+    }
+
+    @HostListener('dragenter', ['$event']) onDragEnter(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (this.getDataType(e) === 'Files') {
+            this.element.classList.add('over');
+            e.dataTransfer.dropEffect = 'move';
+        }
+    }
+
+    @HostListener('dragleave', ['$event']) onDragLeave(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.element.classList.remove('over');
+        if (this.appDragEnterParentClass && this.getDataType(e) !== 'Files') {
+            this.parentNode.classList.remove(this.appDragEnterParentClass);
+        }
+    }
+
+    @HostListener('dragover', ['$event']) onDragOver(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (this.getDataType(e) === 'Files') {
+            this.element.classList.add('over');
+            e.dataTransfer.dropEffect = 'move';
+        } else if (this.isAppDataType(e)) {
+            if (this.appDragEnterParentClass) {
+                this.parentNode.classList.add(this.appDragEnterParentClass);
+            }
+            this.element.classList.add('over');
+            e.dataTransfer.dropEffect = 'move';
+        }
+    }
+
+    @HostListener('drop', ['$event']) onDrop(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (this.appDragEnterParentClass) {
+            this.parentNode.classList.remove(this.appDragEnterParentClass);
+        }
+        if (this.getFileType(e) !== 'text/plain') {
+            this.dropFile.emit(e);
+            this.element.classList.remove('over');
+        }
+    }
+
+    ngOnDestroy(): void {
+        if (this.appDragEnter === 'body') {
+            document.body.removeEventListener('dragenter', this.onDragEnter.bind(this), false);
+            document.body.removeEventListener('dragleave', this.onDragLeave.bind(this), false);
+            document.body.removeEventListener('dragover', this.onDragOver.bind(this), false);
+            document.body.removeEventListener('drop', this.onDrop.bind(this), false);
+        }
     }
 }
