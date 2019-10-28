@@ -3,7 +3,7 @@ import { Directive, ElementRef, EventEmitter, HostListener, Input, OnDestroy, On
 @Directive({
     selector: '[appDragEnter]'
 })
-export class DragEnterDirective implements OnInit {
+export class DragEnterDirective implements OnInit, OnDestroy {
     @Input() appDragEnter: string;
     @Input() appDragEnterParentClass: string;
     @Output() dropFile = new EventEmitter<File>();
