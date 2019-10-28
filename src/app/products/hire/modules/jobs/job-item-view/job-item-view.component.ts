@@ -730,6 +730,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onDropFile(event) {
+        event.preventDefault();
+        event.stopPropagation();
         const files = event.target.files || event.dataTransfer.files;
         console.log('📥 onDropFiles', files);
         this.droppedFiles = files;

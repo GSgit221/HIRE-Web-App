@@ -1,18 +1,12 @@
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output, Renderer2 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Candidate } from '@app/core/models';
-import { select, Store } from '@ngrx/store';
-import { forkJoin, of, Subscription } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 import { JobService } from '../../../../../core/services/job.service';
 import * as fromJobsStore from '../store';
 import { Job } from './../../../../../core/models/job';
 import { FormHelperService } from './../../../../../core/services/form-helper.service';
 import { UtilitiesService } from './../../../../../core/services/utilities.service';
-
-import * as fromJobCandiatesSelector from '../store/selectors/jobCandidates.selector';
 
 @Component({
     selector: 'app-new-candidate-item',
@@ -40,8 +34,6 @@ export class NewCandidateItemComponent implements OnInit {
 
     constructor(
         private jobService: JobService,
-        private router: Router,
-        private route: ActivatedRoute,
         private fb: FormBuilder,
         private formHelper: FormHelperService,
         private utilities: UtilitiesService,
@@ -149,12 +141,12 @@ export class NewCandidateItemComponent implements OnInit {
     }
 
     processFiles(files) {
-        console.log(files);
+        // console.log(files);
         for (let i = 0, file; (file = files[i]); i++) {
-            console.log(file);
+            // console.log(file);
             if (this.validateFileType(file, this.supportedFileTypes)) {
                 // ADD TO THE QUEUE
-                console.log('We need to upload that file 🎈');
+                // console.log('We need to upload that file 🎈');
                 this.uploadQueue.push({
                     id: this.utilities.generateUID(10),
                     file,
@@ -174,6 +166,8 @@ export class NewCandidateItemComponent implements OnInit {
     }
 
     onDropFile(event) {
+        event.preventDefault();
+        event.stopPropagation();
         const files = event.target.files || event.dataTransfer.files;
         console.log('📥 onDropFile', files);
         this.processFiles(files);
@@ -271,6 +265,7 @@ export class NewCandidateItemComponent implements OnInit {
     }
 
     onMissingEmailSumbit(event, item) {
+        event.preventDefault();
         const email = item.email;
         if (this.formHelper.validateEmail(email)) {
             this.uploadFile(item);
