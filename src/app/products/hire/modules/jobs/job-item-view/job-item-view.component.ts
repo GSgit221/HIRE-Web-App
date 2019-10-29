@@ -187,7 +187,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                             const query = this.searchedValue.text.toLowerCase().trim();
                             const queryWords = query.split(' ').filter((word) => word);
                             const matched = queryWords.every((word) => fullname.indexOf(word) !== -1);
-                            return matched;
+                            const emailIncluded = c.email.toLowerCase().includes(query);
+                            return matched || emailIncluded;
                         });
                     }
                 }
@@ -204,7 +205,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                         const query = this.searchedValue.text.toLowerCase().trim();
                         const queryWords = query.split(' ').filter((word) => word);
                         const matched = queryWords.every((word) => fullname.indexOf(word) !== -1);
-                        return matched;
+                        const emailIncluded = c.email.toLowerCase().includes(query);
+                        return matched || emailIncluded;
                     } else {
                         false;
                     }
