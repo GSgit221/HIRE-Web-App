@@ -372,7 +372,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     getQuestionsClass(candidate) {
         const _candidateQuestions = this.candidateQuestions[candidate.id];
 
-        if (!_candidateQuestions) return 'grey';
+        if (!_candidateQuestions || !candidate.hasUser) return 'grey';
 
         if ((candidate.hasUser && candidate.hasUserReviewed) || candidate.matching) {
             if (_candidateQuestions.hasAnswers) {
@@ -729,7 +729,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.droppedFiles = [];
     }
 
-    onDropFile(files) {
+    onDropFile(event) {
+        const files = event.target.files || event.dataTransfer.files;
         console.log('📥 onDropFiles', files);
         this.droppedFiles = files;
         if (this.droppedFiles && this.droppedFiles.length) {
