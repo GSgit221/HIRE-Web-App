@@ -1,15 +1,22 @@
-import { Directive, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output } from '@angular/core';
+import {
+    Directive,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    /*HostListener, */ Input,
+    OnInit,
+    Output
+} from '@angular/core';
 
 @Directive({
     selector: '[appDragEnter]'
 })
-export class DragEnterDirective {
+export class DragEnterDirective implements OnInit {
     @Output('dropFile') fileDrop = new EventEmitter<File[]>();
-    @Input() preventBodyDrop = true;
     @Input() appDragEnter: string;
-
     @HostBinding('class.over')
     active = false;
+    // captureBody = false;
     supportedFileTypes: string[] = [];
 
     constructor(private _elementRef: ElementRef) {
@@ -22,15 +29,22 @@ export class DragEnterDirective {
         ];
     }
 
+    ngOnInit() {
+        const el = this.appDragEnter === 'body' ? document.body : this._elementRef.nativeElement;
+        el.addEventListener('dragenter', this.onDragEnter.bind(this), true);
+        el.addEventListener('dragleave', this.onDragLeave.bind(this), true);
+        el.addEventListener('dragover', this.onDragOver.bind(this), true);
+        el.addEventListener('drop', this.onDrop.bind(this), true);
+    }
+
     isFileDrag(e) {
         return e.dataTransfer.types && e.dataTransfer.types[0] ? e.dataTransfer.types[0] === 'Files' : false;
     }
 
-    @HostListener('drop', ['$event'])
+    // @HostListener('drop', ['$event'])
     onDrop(event: DragEvent) {
         event.preventDefault();
         if (!this.active) return;
-        this.active = false;
 
         const { dataTransfer } = event;
 
@@ -51,54 +65,77 @@ export class DragEnterDirective {
             dataTransfer.clearData();
             this.fileDrop.emit(Array.from(files));
         }
+
+        this.active = false;
     }
 
-    @HostListener('dragover', ['$event'])
-    onDragOver(event: DragEvent) {
-        event.stopPropagation();
+    // @HostListener('dragenter', ['$event'])
+    onDragEnter(event: DragEvent) {
         event.preventDefault();
-        if (this.isFileDrag(event)) {
+        event.stopPropagation();
+        if (!this.active) {
             this.active = true;
         }
+        // console.log('dragenter', this.active);
     }
 
-    @HostListener('dragleave', ['$event'])
+    // @HostListener('dragover', ['$event'])
+    onDragOver(event: DragEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!this.active) {
+            this.active = true;
+        }
+        // console.log('dragover', this.active);
+    }
+
+    // @HostListener('dragleave', ['$event'])
     onDragLeave(event: DragEvent) {
-        if (this.appDragEnter !== 'body') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.active) {
             this.active = false;
         }
+        // console.log('dragleave', this.active);
     }
 
-    @HostListener('body:dragover', ['$event'])
-    onBodyDragOver(event: DragEvent) {
-        if (this.preventBodyDrop) {
-            event.preventDefault();
-            event.stopPropagation();
+    // @HostListener('body:dragenter', ['$event'])
+    // onBodyDragEnter(event: DragEvent) {
+    //     event.preventDefault();
+    //     event.stopPropagation();
+    //     if (!this.active && this.captureBody) {
+    //         this.active = true;
+    //     }
+    //     console.log('body:dragenter', this.active);
+    // }
 
-            if (this.appDragEnter === 'body' && this.isFileDrag(event)) {
-                this.active = true;
-            }
-        }
-    }
+    // @HostListener('body:dragover', ['$event'])
+    // onBodyDragOver(event: DragEvent) {
+    //     event.preventDefault();
+    //     event.stopPropagation();
+    //     if (!this.active && this.captureBody) {
+    //         this.active = true;
+    //     }
+    //     console.log('body:dragover', this.active);
+    // }
 
-    @HostListener('body:dragLeave', ['$event'])
-    onBodyDragLeave(event: DragEvent) {
-        if (this.preventBodyDrop) {
-            event.preventDefault();
-            event.stopPropagation();
+    // @HostListener('body:dragleave', ['$event'])
+    // onBodyDragLeave(event: DragEvent) {
+    //     event.preventDefault();
+    //     event.stopPropagation();
+    //     if (this.active && this.captureBody) {
+    //         this.active = false;
+    //     }
+    //     console.log('body:dragLeave', this.active);
+    // }
 
-            this.active = false;
-        }
-    }
+    // @HostListener('body:drop', ['$event'])
+    // onBodyDrop(event: DragEvent) {
+    //     event.preventDefault();
+    //     event.stopPropagation();
 
-    @HostListener('body:drop', ['$event'])
-    onBodyDrop(event: DragEvent) {
-        if (this.preventBodyDrop) {
-            event.preventDefault();
-
-            if (this.active) {
-                this.onDrop(event);
-            }
-        }
-    }
+    //     if (this.captureBody) {
+    //         this.onDrop(event);
+    //     }
+    // }
 }
