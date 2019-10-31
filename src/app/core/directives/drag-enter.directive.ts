@@ -13,6 +13,7 @@ import {
 })
 export class DragEnterDirective implements OnInit {
     @Output('dropFile') fileDrop = new EventEmitter<File[]>();
+    @Output('dragOverFile') fileDragOver = new EventEmitter<boolean>();
     @Input() appDragEnter: string;
     @HostBinding('class.over')
     active = false;
@@ -85,6 +86,7 @@ export class DragEnterDirective implements OnInit {
         event.stopPropagation();
         if (!this.active) {
             this.active = true;
+            this.fileDragOver.emit(false);
         }
         // console.log('dragover', this.active);
     }
@@ -95,6 +97,7 @@ export class DragEnterDirective implements OnInit {
         event.stopPropagation();
         if (this.active) {
             this.active = false;
+            this.fileDragOver.emit(true);
         }
         // console.log('dragleave', this.active);
     }

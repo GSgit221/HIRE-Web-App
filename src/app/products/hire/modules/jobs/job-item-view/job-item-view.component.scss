@@ -143,6 +143,9 @@
     overflow: hidden;
     position: relative;
     z-index: 2;
+    &.over {
+        overflow: visible;
+    }
 }
 
 .stages-holder {

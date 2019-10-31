@@ -8,7 +8,9 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    ViewChild
+    ViewChild,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -41,7 +43,8 @@ interface ISelect {
 @Component({
     selector: 'app-job-item-view',
     templateUrl: './job-item-view.component.html',
-    styleUrls: ['./job-item-view.component.scss']
+    styleUrls: ['./job-item-view.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input() job: Job;
@@ -121,7 +124,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         private toastr: ToastrService,
         private store: Store<fromStore.State>,
         private jobsStore: Store<fromJobsStore.JobsState>,
-        private utilities: UtilitiesService
+        private utilities: UtilitiesService,
+        private cdr: ChangeDetectorRef
     ) {
         this.baseUrl = this.utilities.getHireBaseUrl();
     }
@@ -171,6 +175,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     .filter(({ id }) => !trashIDs.includes(id))
                     .map((c) => this.prepareBlockData(c));
                 this.groupCandidatesByStage();
+                this.cdr.detectChanges();
             });
 
         this.candidateService.getSearchValueForCandidates().subscribe((r) => {
@@ -729,6 +734,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.job.id));
         this.createCandidateMode = false;
         this.droppedFiles = [];
+        this.cdr.detectChanges();
     }
 
     onDropFile(files) {
@@ -736,7 +742,12 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.droppedFiles = files;
         if (files && files.length) {
             this.createCandidateMode = true;
+            this.cdr.detectChanges();
         }
+    }
+
+    onDragOverFile(e) {
+        this.cdr.detectChanges();
     }
 
     hasSelection(columnId: string) {
@@ -862,6 +873,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.contentLoading = false;
         this.groupCandidatesByStage();
+        this.cdr.detectChanges();
     }
 
     onShowModal(visible = true, modal = 'decline') {

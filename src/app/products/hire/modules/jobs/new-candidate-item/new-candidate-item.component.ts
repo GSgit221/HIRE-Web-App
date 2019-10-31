@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnInit, Output, Renderer2 } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, Renderer2, ChangeDetectorRef } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { JobService } from '../../../../../core/services/job.service';
@@ -38,7 +38,8 @@ export class NewCandidateItemComponent implements OnInit {
         private formHelper: FormHelperService,
         private utilities: UtilitiesService,
         private renderer: Renderer2,
-        private jobsStore: Store<fromJobsStore.JobsState>
+        private jobsStore: Store<fromJobsStore.JobsState>,
+        private cdr: ChangeDetectorRef
     ) {
         this.supportedFileTypes = [
             'application/pdf',
@@ -188,12 +189,16 @@ export class NewCandidateItemComponent implements OnInit {
         if (item.success) {
             return;
         }
+
         this.utilities
             .readFile(item.file)
             .then((fileValue: any) => {
                 item.uploadStarted = true;
                 item.uploadFinished = false;
                 item.progress = 0;
+                let handle = setInterval(() => {
+                    this.cdr.detectChanges();
+                }, 100);
 
                 const uploadProgressInterval = setInterval(() => {
                     item.progress = item.progress + 1 < 100 ? item.progress + 1 : item.progress;
@@ -207,6 +212,7 @@ export class NewCandidateItemComponent implements OnInit {
                 this.jobService.createCandidateFromCv(this.jobId, formData).subscribe(
                     (response: HttpResponse<any>) => {
                         console.log('📬 Uploaded:', response);
+
                         const resp: any = response;
                         item.text = resp.candidate.email;
                         item.missingEmail = false;
@@ -214,6 +220,9 @@ export class NewCandidateItemComponent implements OnInit {
                         item.uploadFinished = true;
                         item.success = true;
                         clearInterval(uploadProgressInterval);
+                        setTimeout(() => {
+                            clearInterval(handle);
+                        }, 1000);
                         this.emails.push(resp.candidate.email);
                         this.uploading = false;
                         // setTimeout(() => {
@@ -252,6 +261,9 @@ export class NewCandidateItemComponent implements OnInit {
                         item.progress = 100;
                         item.uploadFinished = true;
                         clearInterval(uploadProgressInterval);
+                        setTimeout(() => {
+                            clearInterval(handle);
+                        }, 1000);
                     }
                 );
             })

@@ -53,7 +53,12 @@
         <!-- <button class="btn btn-primary w140 mla add-btn" (click)="onAddCandidateClick()">Add Candidate</button> -->
     </div>
     <div class="blocks-separator mt10 mb10"></div>
-    <div class="stages-section" appDragEnter="body" (dropFile)="onDropFile($event)">
+    <div
+        class="stages-section"
+        appDragEnter="body"
+        (dropFile)="onDropFile($event)"
+        (dragOverFile)="onDragOverFile($event)"
+    >
         <div
             class="stages-holder"
             cdkDropList
