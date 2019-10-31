@@ -217,6 +217,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     }
                 });
                 this.appliedCandidates.total = this.appliedCandidates.visible.length;
+                this.cdr.markForCheck();
             } else {
                 this.searchedValue = {
                     visible: false,
@@ -224,6 +225,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 };
                 this.candidatesByStage = { ...this.candidatesByStageArray };
                 this.appliedCandidates = { ...this.appliedCandidatesArray };
+                this.cdr.markForCheck();
             }
         });
     }

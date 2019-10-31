@@ -202,7 +202,7 @@ export class NewCandidateItemComponent implements OnInit {
 
                 const uploadProgressInterval = setInterval(() => {
                     item.progress = item.progress + 1 < 100 ? item.progress + 1 : item.progress;
-                }, 400);
+                }, 25);
                 const formData: { resume: any; email?: string } = {
                     resume: fileValue
                 };
