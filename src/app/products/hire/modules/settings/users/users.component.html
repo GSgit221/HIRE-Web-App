@@ -163,15 +163,11 @@
                         </div>
                         <div class="col col4 flex-25">{{ user | accountType }}</div>
                         <div class="col col5 flex-15">
-                            <div class="status" [ngClass]="'build'" *ngIf="user.invitation_code"></div>
-                            <div class="status" [ngClass]="'live'" *ngIf="!user.invitation_code"></div>
-                            {{ user.invitation_code ? 'Pending' : 'Active' }}
+                            <div class="status" [ngClass]="'build'" *ngIf="!user.activated"></div>
+                            <div class="status" [ngClass]="'live'" *ngIf="user.activated"></div>
+                            {{ user.activated ? 'Active' : 'Pending' }}
                         </div>
-                        <div
-                            class="col col6 flex-5"
-                            *ngIf="user.invitation_code"
-                            (click)="onResendClick($event, user.id)"
-                        >
+                        <div class="col col6 flex-5" *ngIf="!user.activated" (click)="onResendClick($event, user.id)">
                             <img
                                 src="/assets/images/email-send.svg"
                                 class="resend-invitation"
