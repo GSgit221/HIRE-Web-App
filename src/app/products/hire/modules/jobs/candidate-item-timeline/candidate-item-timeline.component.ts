@@ -371,6 +371,10 @@ export class CandidateItemTimelineComponent implements OnInit, OnDestroy {
 
         const result = [];
         auditData.forEach((e) => {
+            // temprorary code
+            if (e.created_at.toString(10).split('').length === 10 && e.type === 'created') {
+                e.created_at = e.created_at * 1000;
+            }
             e.created_at_rel = this.utilities.fromNow(e.created_at);
             e.job_title = this.job.title;
             e.candidate_name = this.candidate.first_name + ' ' + this.candidate.last_name;
