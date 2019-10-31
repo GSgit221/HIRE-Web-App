@@ -355,7 +355,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             }
         }
-        if (candidate.hasUser && candidate.hasUserReviewed) {
+
+        if (candidate.hasUser && (candidate.hasUserReviewed || candidate.matching)) {
             if (candidate.score >= this.resumeThreshold) {
                 return 'green';
             } else if (candidate.score >= this.resumeThreshold - 15 && candidate.score < this.resumeThreshold) {
@@ -371,7 +372,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
     getQuestionsClass(candidate) {
         const _candidateQuestions = this.candidateQuestions[candidate.id];
 
-        if (!_candidateQuestions) return 'grey';
+        if (!_candidateQuestions || !candidate.hasUser) return 'grey';
 
         if ((candidate.hasUser && candidate.hasUserReviewed) || candidate.matching) {
             if (_candidateQuestions.hasAnswers) {
