@@ -366,13 +366,22 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         }
         if (candidate.hasUser && (candidate.hasUserReviewed || candidate.matching)) {
-            if (candidate.score >= this.resumeThreshold) {
+            let averageMin = this.resumeThreshold / 3;
+            let averageMax = this.resumeThreshold;
+            if (candidate.score >= averageMax || this.resumeThreshold === 0) {
                 return 'green';
-            } else if (candidate.score >= this.resumeThreshold - 15 && candidate.score < this.resumeThreshold) {
+            } else if (candidate.score < averageMax && candidate.score >= averageMin) {
                 return 'orange';
             } else {
                 return 'red';
             }
+            // if (candidate.score >= this.resumeThreshold) {
+            //     return 'green';
+            // } else if (candidate.score >= this.resumeThreshold - 15 && candidate.score < this.resumeThreshold) {
+            //     return 'orange';
+            // } else {
+            //     return 'red';
+            // }
         } else {
             return 'yellow';
         }
