@@ -110,15 +110,17 @@
                     </ng-container>
                     <div *ngIf="candidate.matching && candidate.matching[jobId]">
                         <h3>AI Matching</h3>
-                        <div class="matching-candidate">
+                        <div class="matching-candidate" *ngIf="resumeThreshold">
                             <div class="candidate-wrapper">
                                 <app-candidate-fit-circle
+                                    [resumeThreshold]="resumeThreshold"
                                     [value]="candidate.matching[jobId].WeightedScore"
                                     [title]="'Candidate Fit'"
                                 ></app-candidate-fit-circle>
                             </div>
                             <div class="candidate-wrapper">
                                 <app-candidate-fit-circle
+                                    [resumeThreshold]="resumeThreshold"
                                     [value]="candidate.matching[jobId].ReverseCompatibilityScore"
                                     [title]="'Job Fit'"
                                 ></app-candidate-fit-circle>

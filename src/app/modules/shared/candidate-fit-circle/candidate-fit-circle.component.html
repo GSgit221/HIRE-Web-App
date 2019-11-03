@@ -1,6 +1,6 @@
 <div
     class="candidate-fit"
-    [ngClass]="{ 'green-bg': value >= 60, 'orange-bg': value >= 50 && value < 60, 'red-bg': value < 50 }"
+    [ngClass]="{ 'green-bg': text === 'Good', 'orange-bg': text === 'Average', 'red-bg': text === 'Poor' }"
 >
     <div class="circle">
         <svg class="progress" width="80" height="80">

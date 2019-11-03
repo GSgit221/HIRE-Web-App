@@ -94,6 +94,7 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
 
     candidateSubscription: Subscription;
     userSubscription: Subscription;
+    resumeThreshold: number;
 
     constructor(
         private jobService: JobService,
@@ -143,6 +144,10 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                     (response: any) => {
                         this.contentLoading = false;
                         this.job = response[0];
+                        if (this.job && this.job.stages && this.job.stages.find((s) => s.id === 'applied')) {
+                            const appliedStage = this.job.stages.find((s) => s.id === 'applied');
+                            this.resumeThreshold = appliedStage.resume_matching_threshold;
+                        }
                         if (this.candidate.stage && this.candidate.stage[this.jobId]) {
                             this.stageId = this.candidate.stage[this.jobId];
                         }

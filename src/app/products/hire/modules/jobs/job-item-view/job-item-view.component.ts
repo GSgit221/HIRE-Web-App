@@ -366,8 +366,9 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         }
         if (candidate.hasUser && (candidate.hasUserReviewed || candidate.matching)) {
-            let averageMin = this.resumeThreshold / 3;
+            let averageMin = this.resumeThreshold - this.resumeThreshold / 3;
             let averageMax = this.resumeThreshold;
+            console.log(averageMin, averageMax);
             if (candidate.score >= averageMax || this.resumeThreshold === 0) {
                 return 'green';
             } else if (candidate.score < averageMax && candidate.score >= averageMin) {
