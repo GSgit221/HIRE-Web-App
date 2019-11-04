@@ -15,8 +15,12 @@
         <div *ngIf="candidate">
             <div class="candidate-header">
                 <div class="img-block">
-                    <img [src]="candidate.profile_image" alt="profile image" *ngIf="candidate.profile_image" />
-                    <span *ngIf="!candidate.profile_image">{{ candidate | initials }}</span>
+                    <img
+                        [src]="candidate.profile_image_link"
+                        alt="profile image"
+                        *ngIf="candidate.profile_image_link"
+                    />
+                    <span *ngIf="!candidate.profile_image_link">{{ candidate | initials }}</span>
                 </div>
                 <div class="information-block">
                     <div class="name">{{ candidate.first_name | titlecase }} {{ candidate.last_name | titlecase }}</div>

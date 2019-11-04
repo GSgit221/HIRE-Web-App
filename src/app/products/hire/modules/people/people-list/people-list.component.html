@@ -92,10 +92,10 @@
                                     ></p-checkbox>
                                 </div>
                                 <div class="img-block" *ngIf="!item.selected" [ngClass]="{ inactive: !item.active }">
-                                    <div class="initial" *ngIf="!item.profile_image">{{ item | initials }}</div>
+                                    <div class="initial" *ngIf="!item.profile_image_link">{{ item | initials }}</div>
                                     <img
-                                        *ngIf="item.profile_image"
-                                        [src]="item.profile_image"
+                                        *ngIf="item.profile_image_link"
+                                        [src]="item.profile_image_link"
                                         width="30"
                                         height="30"
                                         [alt]="item.first_name"

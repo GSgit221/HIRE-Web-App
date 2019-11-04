@@ -55,6 +55,10 @@ export class CandidateService {
         return this.http.get(`${this.apiURL}/tenants/${this.utilities.getTenant()}/resume-link?file=${resumeFile}`);
     }
 
+    getProfileImageLink(resumeFile: string) {
+        return this.http.get(`${this.apiURL}/link?url=${resumeFile}`);
+    }
+
     addToAudit(jobId, candidateId, data) {
         return this.http.post(
             `${this.apiURL}/tenants/${this.utilities.getTenant()}/jobs/${jobId}/candidates/${candidateId}/audit`,

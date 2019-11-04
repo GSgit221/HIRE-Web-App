@@ -23,6 +23,7 @@ export class Candidate {
     stages_data?: any;
     markedAsUnsuccessful?: any;
     profile_image?: any;
+    profile_image_link?: any;
     created_at_rel?: any;
     updated_at_rel?: any;
     job_specific?: any;

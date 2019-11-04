@@ -10,8 +10,8 @@
 <div class="candidate-info">
     <div class="ava-column">
         <div class="ava">
-            <img [src]="candidate.profile_image" alt="profile image" *ngIf="candidate.profile_image" />
-            <div class="ava-placeholder" *ngIf="!candidate.profile_image">
+            <img [src]="candidate.profile_image_link" alt="profile image" *ngIf="candidate.profile_image_link" />
+            <div class="ava-placeholder" *ngIf="!candidate.profile_image_link">
                 {{ candidate | initials }}
             </div>
             <div

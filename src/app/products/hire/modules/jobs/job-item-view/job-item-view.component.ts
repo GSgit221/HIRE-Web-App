@@ -331,7 +331,18 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         candidate.blockData.id = candidate.id;
         candidate.blockData.tags = candidate.tags;
-        candidate.blockData.profile_image = candidate.profile_image;
+        if (candidate.profile_image && !candidate.profile_image_link) {
+            this.candidateService.getProfileImageLink(`${candidate.profile_image}&collection=Users`).subscribe(
+                (response: string) => {
+                    candidate.profile_image_link = response;
+                    candidate.blockData.profile_image_link = response;
+                    this.cdr.detectChanges();
+                },
+                (errorResponse) => console.error(errorResponse)
+            );
+        } else {
+            candidate.blockData.profile_image = candidate.profile_image;
+        }
         candidate.blockData.first_name = candidate.first_name;
         candidate.blockData.last_name = candidate.last_name;
         candidate.blockData.email = candidate.email;
@@ -368,7 +379,6 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         if (candidate.hasUser && (candidate.hasUserReviewed || candidate.matching)) {
             let averageMin = this.resumeThreshold - this.resumeThreshold / 3;
             let averageMax = this.resumeThreshold;
-            console.log(averageMin, averageMax);
             if (candidate.score >= averageMax || this.resumeThreshold === 0) {
                 return 'green';
             } else if (candidate.score < averageMax && candidate.score >= averageMin) {

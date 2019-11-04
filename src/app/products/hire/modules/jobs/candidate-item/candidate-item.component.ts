@@ -140,6 +140,14 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                 if (!this.candidate.assignments[this.jobId]) {
                     this.candidate.assignments[this.jobId] = [];
                 }
+                if (this.candidate.profile_image && !this.candidate.profile_image_link) {
+                    this.candidateService
+                        .getProfileImageLink(`${this.candidate.profile_image}&collection=Users`)
+                        .subscribe(
+                            (response: string) => (this.candidate.profile_image_link = response),
+                            (errorResponse) => console.error(errorResponse)
+                        );
+                }
                 forkJoin([this.jobService.getJob(this.jobId), this.questionnaireService.getVideoQuestions()]).subscribe(
                     (response: any) => {
                         this.contentLoading = false;
