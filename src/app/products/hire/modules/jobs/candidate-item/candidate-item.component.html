@@ -114,7 +114,7 @@
                     </ng-container>
                     <div *ngIf="candidate.matching && candidate.matching[jobId]">
                         <h3>AI Matching</h3>
-                        <div class="matching-candidate" *ngIf="resumeThreshold">
+                        <div class="matching-candidate" *ngIf="resumeThreshold >= 0">
                             <div class="candidate-wrapper">
                                 <app-candidate-fit-circle
                                     [resumeThreshold]="resumeThreshold"
