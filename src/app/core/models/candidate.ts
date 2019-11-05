@@ -35,4 +35,5 @@ export class Candidate {
     assignments?: any;
     blockData?: any;
     applicaitons?: any[];
+    opportunities?: any[];
 }

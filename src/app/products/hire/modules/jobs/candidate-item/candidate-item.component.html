@@ -85,7 +85,7 @@
                     <button class="btn grey" (click)="onShowModal()">
                         <img src="/assets/images/icons/icons-close.svg" alt="" style="width: 12px; height: 12px;" />
                     </button>
-                    <button class="btn" (click)="onProgress()" [disabled]="!isProgressable">
+                    <button class="btn" (click)="onProgress()" [disabled]="!isProgressable || !candidateIsActive">
                         Progress
                     </button>
                 </div>

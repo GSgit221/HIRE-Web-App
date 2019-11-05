@@ -334,16 +334,21 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         candidate.blockData.id = candidate.id;
         candidate.blockData.tags = candidate.tags;
         if (candidate.profile_image) {
-            this.candidateService.getProfileImageLink(`${candidate.profile_image}&collection=Users`).subscribe(
-                (response: string) => {
-                    candidate.profile_image_link = response;
-                    candidate.blockData.profile_image_link = response;
-                    setTimeout(() => {
-                        this.cdr.detectChanges();
-                    }, 200);
-                },
-                (errorResponse) => console.error(errorResponse)
-            );
+            if (candidate.profile_image.includes('https://')) {
+                candidate.profile_image_link = candidate.profile_image;
+                candidate.blockData.profile_image_link = candidate.profile_image;
+            } else {
+                this.candidateService.getProfileImageLink(`${candidate.profile_image}&collection=Users`).subscribe(
+                    (response: string) => {
+                        candidate.profile_image_link = response;
+                        candidate.blockData.profile_image_link = response;
+                        setTimeout(() => {
+                            this.cdr.detectChanges();
+                        }, 200);
+                    },
+                    (errorResponse) => console.error(errorResponse)
+                );
+            }
         } else {
             candidate.blockData.profile_image = candidate.profile_image;
         }

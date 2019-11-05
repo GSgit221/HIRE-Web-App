@@ -141,12 +141,16 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
                     this.candidate.assignments[this.jobId] = [];
                 }
                 if (this.candidate.profile_image && !this.candidate.profile_image_link) {
-                    this.candidateService
-                        .getProfileImageLink(`${this.candidate.profile_image}&collection=Users`)
-                        .subscribe(
-                            (response: string) => (this.candidate.profile_image_link = response),
-                            (errorResponse) => console.error(errorResponse)
-                        );
+                    if (this.candidate.profile_image.includes('https://')) {
+                        this.candidate.profile_image_link = this.candidate.profile_image;
+                    } else {
+                        this.candidateService
+                            .getProfileImageLink(`${this.candidate.profile_image}&collection=Users`)
+                            .subscribe(
+                                (response: string) => (this.candidate.profile_image_link = response),
+                                (errorResponse) => console.error(errorResponse)
+                            );
+                    }
                 }
                 forkJoin([this.jobService.getJob(this.jobId), this.questionnaireService.getVideoQuestions()]).subscribe(
                     (response: any) => {
@@ -769,6 +773,21 @@ export class CandidateItemComponent implements OnInit, OnDestroy {
             } else {
                 return stages.length > 0;
             }
+        } else {
+            return false;
+        }
+    }
+
+    get candidateIsActive() {
+        if (this.jobId && this.candidate.opportunities.length) {
+            let opportunities = this.candidate.opportunities.find((c) => c.jobId === this.jobId);
+            if (opportunities && !opportunities.approved) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (this.candidate.hasUser && (this.candidate.hasUserReviewed || this.candidate.matching)) {
+            return true;
         } else {
             return false;
         }
