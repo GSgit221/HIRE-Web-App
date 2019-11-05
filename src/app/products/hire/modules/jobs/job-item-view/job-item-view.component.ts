@@ -190,12 +190,16 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 for (var key in this.candidatesByStage) {
                     if (this.candidatesByStageArray.hasOwnProperty(key)) {
                         this.candidatesByStage[key] = this.candidatesByStageArray[key].filter((c) => {
-                            const fullname = c.first_name.toLowerCase().trim() + ' ' + c.last_name.toLowerCase().trim();
-                            const query = this.searchedValue.text.toLowerCase().trim();
-                            const queryWords = query.split(' ').filter((word) => word);
-                            const matched = queryWords.every((word) => fullname.indexOf(word) !== -1);
-                            const emailIncluded = c.email.toLowerCase().includes(query);
-                            return matched || emailIncluded;
+                            if (c.first_name && c.last_name) {
+                                const fullname = c.first_name.toLowerCase().trim() + ' ' + c.last_name.toLowerCase().trim();
+                                const query = this.searchedValue.text.toLowerCase().trim();
+                                const queryWords = query.split(' ').filter((word) => word);
+                                const matched = queryWords.every((word) => fullname.indexOf(word) !== -1);
+                                const emailIncluded = c.email.toLowerCase().includes(query);
+                                return matched || emailIncluded;
+                            } else {
+                                false;
+                            }
                         });
                     }
                 }
@@ -831,6 +835,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             await new Promise((res, rej) =>
                 this.jobService.deleteCandidate(jobId, candidateId).subscribe(() => {
                     console.log(`Candidate <${candidateId}> was declined`);
+                    this.jobsStore.dispatch(new fromJobsStore.DeleteJobCandidate({ jobId, candidateId }));
                     res(candidateId);
                     this.jobsStore.dispatch(new fromJobsStore.DeleteJobCandidate({ jobId, candidateId }));
                 }, rej)
