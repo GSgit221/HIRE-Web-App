@@ -175,7 +175,9 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     .filter(({ id }) => !trashIDs.includes(id))
                     .map((c) => this.prepareBlockData(c));
                 this.groupCandidatesByStage();
-                this.cdr.detectChanges();
+                setTimeout(() => {
+                    this.cdr.detectChanges();
+                }, 1000);
             });
 
         this.candidateService.getSearchValueForCandidates().subscribe((r) => {
@@ -331,12 +333,14 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         candidate.blockData.id = candidate.id;
         candidate.blockData.tags = candidate.tags;
-        if (candidate.profile_image && !candidate.profile_image_link) {
+        if (candidate.profile_image) {
             this.candidateService.getProfileImageLink(`${candidate.profile_image}&collection=Users`).subscribe(
                 (response: string) => {
                     candidate.profile_image_link = response;
                     candidate.blockData.profile_image_link = response;
-                    this.cdr.detectChanges();
+                    setTimeout(() => {
+                        this.cdr.detectChanges();
+                    }, 200);
                 },
                 (errorResponse) => console.error(errorResponse)
             );
