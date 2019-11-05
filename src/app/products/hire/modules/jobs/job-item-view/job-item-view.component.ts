@@ -191,7 +191,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     if (this.candidatesByStageArray.hasOwnProperty(key)) {
                         this.candidatesByStage[key] = this.candidatesByStageArray[key].filter((c) => {
                             if (c.first_name && c.last_name) {
-                                const fullname = c.first_name.toLowerCase().trim() + ' ' + c.last_name.toLowerCase().trim();
+                                const fullname =
+                                    c.first_name.toLowerCase().trim() + ' ' + c.last_name.toLowerCase().trim();
                                 const query = this.searchedValue.text.toLowerCase().trim();
                                 const queryWords = query.split(' ').filter((word) => word);
                                 const matched = queryWords.every((word) => fullname.indexOf(word) !== -1);
@@ -346,9 +347,8 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     (response: string) => {
                         candidate.profile_image_link = response;
                         candidate.blockData.profile_image_link = response;
-                        setTimeout(() => {
-                            this.cdr.detectChanges();
-                        }, 200);
+
+                        this.cdr.detectChanges();
                     },
                     (errorResponse) => console.error(errorResponse)
                 );
