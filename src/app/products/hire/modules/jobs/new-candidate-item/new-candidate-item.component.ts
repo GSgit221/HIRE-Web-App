@@ -172,6 +172,13 @@ export class NewCandidateItemComponent implements OnInit {
     }
 
     private validateFileType(file: File, types: string[]) {
+        if (file.name && file.name.split('.')) {
+            let extension = file.name.split('.');
+            if (extension[extension.length - 1] === 'doc' || extension[extension.length - 1] === 'docx') {
+                console.log('external doc');
+                return true;
+            }
+        }
         return types.indexOf(file.type) !== -1;
     }
 
