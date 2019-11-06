@@ -53,6 +53,10 @@ export class CandidateItemTimelineComponent implements OnInit, OnDestroy {
                 color: '#3bb273'
             },
             {
+                hash: '#ex-internal',
+                color: '#7a6ff0'
+            },
+            {
                 hash: '#do-not-hire',
                 color: '#ff3b30'
             }
