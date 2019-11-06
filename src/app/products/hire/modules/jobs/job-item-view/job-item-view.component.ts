@@ -10,7 +10,8 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    ViewChild
+    ViewChild,
+    ViewRef
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -175,9 +176,9 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                     .filter(({ id }) => !trashIDs.includes(id))
                     .map((c) => this.prepareBlockData(c));
                 this.groupCandidatesByStage();
-                setTimeout(() => {
+                if (!(this.cdr as ViewRef).destroyed) {
                     this.cdr.detectChanges();
-                }, 1000);
+                }
             });
 
         this.candidateService.getSearchValueForCandidates().subscribe((r) => {
@@ -250,6 +251,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.candidatesSubscription) {
             this.candidatesSubscription.unsubscribe();
         }
+        // this.cdr.detach();
     }
 
     checkStoreForCandidates(): Observable<boolean> {
@@ -348,7 +350,9 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
                         candidate.profile_image_link = response;
                         candidate.blockData.profile_image_link = response;
 
-                        this.cdr.detectChanges();
+                        if (!(this.cdr as ViewRef).destroyed) {
+                            this.cdr.detectChanges();
+                        }
                     },
                     (errorResponse) => console.error(errorResponse)
                 );
@@ -769,7 +773,10 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.jobsStore.dispatch(new fromJobsStore.LoadJobCandidates(this.job.id));
         this.createCandidateMode = false;
         this.droppedFiles = [];
-        this.cdr.detectChanges();
+        if (!(this.cdr as ViewRef).destroyed) {
+            this.cdr.detectChanges();
+        }
+        // this.cdr.detectChanges();
     }
 
     onDropFile(files) {
@@ -777,13 +784,10 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.droppedFiles = files;
         if (files && files.length) {
             this.createCandidateMode = true;
-            this.cdr.detectChanges();
         }
     }
 
-    onDragOverFile(e) {
-        this.cdr.detectChanges();
-    }
+    onDragOverFile(e) {}
 
     hasSelection(columnId: string) {
         return columnId === this.selection.columnId ? Object.keys(this.selection.candidates).length : 0;
@@ -909,7 +913,9 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.contentLoading = false;
         this.groupCandidatesByStage();
-        this.cdr.detectChanges();
+        if (!(this.cdr as ViewRef).destroyed) {
+            this.cdr.detectChanges();
+        }
     }
 
     onShowModal(visible = true, modal = 'decline') {

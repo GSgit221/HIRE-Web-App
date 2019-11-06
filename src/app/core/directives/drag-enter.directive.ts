@@ -6,7 +6,8 @@ import {
     HostBinding,
     /*HostListener, */ Input,
     OnInit,
-    Output
+    Output,
+    ViewRef
 } from '@angular/core';
 
 @Directive({
@@ -47,6 +48,10 @@ export class DragEnterDirective implements OnInit {
     onDrop(event: DragEvent) {
         console.log('onDROP FILE', event);
         this.cdr.detectChanges();
+        if (!(this.cdr as ViewRef).destroyed) {
+            this.cdr.detectChanges();
+            // do other tasks
+        }
         event.preventDefault();
         if (!this.active) return;
 

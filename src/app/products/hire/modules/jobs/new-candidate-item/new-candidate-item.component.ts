@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, Renderer2, ViewRef } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { JobService } from '../../../../../core/services/job.service';
@@ -102,6 +102,9 @@ export class NewCandidateItemComponent implements OnInit {
                         this.addEmailInput();
 
                         this.emails.push(formControl.value);
+                        if (!(this.cdr as ViewRef).destroyed) {
+                            this.cdr.detectChanges();
+                        }
                     },
                     (response) => {
                         formControl.requestStatus = 'warning';
@@ -119,7 +122,6 @@ export class NewCandidateItemComponent implements OnInit {
 
     onFinishClicked(event, consent = true) {
         event.preventDefault();
-        console.log(this.emails, consent);
         if (this.emails.length && consent) {
             this.contentLoading = true;
             this.jobService.addJob(this.jobId, this.emails).subscribe(
@@ -142,9 +144,7 @@ export class NewCandidateItemComponent implements OnInit {
     }
 
     processFiles(files) {
-        // console.log(files);
         for (let i = 0, file; (file = files[i]); i++) {
-            // console.log(file);
             if (this.validateFileType(file, this.supportedFileTypes)) {
                 // ADD TO THE QUEUE
                 // console.log('We need to upload that file 🎈');
@@ -168,7 +168,7 @@ export class NewCandidateItemComponent implements OnInit {
 
     onDropFile(files) {
         console.log('📥 onDropFile', files);
-        this.processFiles(files);
+        this.processFiles(files.target.files);
     }
 
     private validateFileType(file: File, types: string[]) {
