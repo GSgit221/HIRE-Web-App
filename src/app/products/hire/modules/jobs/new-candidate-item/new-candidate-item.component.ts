@@ -114,6 +114,9 @@ export class NewCandidateItemComponent implements OnInit {
                         }
                         formControl.pendingRequest = false;
                         this.addEmailInput();
+                        if (!(this.cdr as ViewRef).destroyed) {
+                            this.cdr.detectChanges();
+                        }
                     }
                 );
             }
