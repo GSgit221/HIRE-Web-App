@@ -1,4 +1,5 @@
 import {
+    ChangeDetectorRef,
     Directive,
     ElementRef,
     EventEmitter,
@@ -20,7 +21,7 @@ export class DragEnterDirective implements OnInit {
     // captureBody = false;
     supportedFileTypes: string[] = [];
 
-    constructor(private _elementRef: ElementRef) {
+    constructor(private _elementRef: ElementRef, private cdr: ChangeDetectorRef) {
         this.supportedFileTypes = [
             'application/pdf',
             'application/msword',
@@ -44,6 +45,8 @@ export class DragEnterDirective implements OnInit {
 
     // @HostListener('drop', ['$event'])
     onDrop(event: DragEvent) {
+        console.log('onDROP FILE', event);
+        this.cdr.detectChanges();
         event.preventDefault();
         if (!this.active) return;
 
@@ -66,6 +69,7 @@ export class DragEnterDirective implements OnInit {
             dataTransfer.clearData();
             this.fileDrop.emit(Array.from(files));
         }
+        console.log('files', dataTransfer.files);
 
         this.active = false;
     }
