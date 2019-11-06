@@ -650,7 +650,7 @@ export class JobItemViewComponent implements OnInit, OnDestroy, AfterViewInit {
             if (this.job.pool) {
                 applied.visible.push(c);
             } else {
-                if (c.score >= this.resumeThreshold - 15 || this.showMore) {
+                if (c.score >= this.resumeThreshold - this.resumeThreshold / 3 || this.resumeThreshold === 0) {
                     applied.visible.push(c);
                 } else {
                     applied.hidden.push(c);
